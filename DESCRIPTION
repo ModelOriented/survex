@@ -43,4 +43,4 @@ Suggests:
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 URL: https://modeloriented.github.io/survex/
-BugReports: https://modeloriented.github.io/survex/issues
+BugReports: https://github.com/ModelOriented/survex/issues
