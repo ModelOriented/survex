@@ -1,5 +1,7 @@
 # survex: Explainable Machine Learning in Survival Analysis <img src="man/figures/survex.png" align="right" width="150px"/>
 
+[![R-CMD-check](https://github.com/ModelOriented/survex/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ModelOriented/survex/actions/workflows/R-CMD-check.yaml)
+
 ## Overview 
 
 Survival analysis is a task dealing with time-to-event prediction. Aside from the well understood models, many others have recently emerged, however most of them lack interpretability as they are black-box models. Due to the unusual, functional type of prediction (either in the form of survival function or cumulative hazard function) standard model agnostic explanations cannot be applied directly.
