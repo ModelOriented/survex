@@ -1,53 +1,49 @@
-url: ~
+url: https://modeloriented.github.io/survex/
 template:
   bootstrap: 5
   bootswatch: flatly
-
 reference:
 - title: Explainers
   desc: Create a model agnostic explainer for further processing
-- contents:
-    - starts_with("explain")
+- contents: starts_with("explain")
 - title: Dataset level explanations
-- contents:
-    - starts_with("model_p")
+- contents: starts_with("model_p")
 - title: Instance level explanations
-- contents:
-    - starts_with("predict")
+- contents: starts_with("predict")
 - title: Metrics and loss functions
 - contents:
-    - starts_with("loss_")
-    - brier_score
-    - cd_auc
-    - c_index
-    - starts_with("integrated_")
+  - starts_with("loss_")
+  - brier_score
+  - cd_auc
+  - c_index
+  - starts_with("integrated_")
 - title: Plotting functions
   desc: Plot results created by different functions
 - subtitle: Model Performance
 - contents:
-    - plot.model_performance_survival
-    - plot.surv_model_performance
-    - plot.surv_model_performance_rocs
+  - plot.model_performance_survival
+  - plot.surv_model_performance
+  - plot.surv_model_performance_rocs
 - subtitle: Model Parts
 - contents:
-    - plot.model_parts_survival
-    - plot.surv_feature_importance
+  - plot.model_parts_survival
+  - plot.surv_feature_importance
 - subtitle: Model Profile
-- contents:
-    - plot.model_profile_survival
+- contents: plot.model_profile_survival
 - subtitle: Predict Parts
 - contents:
-    - plot.predict_parts_survival
-    - plot.surv_shap
-    - plot.surv_lime
+  - plot.predict_parts_survival
+  - plot.surv_shap
+  - plot.surv_lime
 - subtitle: Predict Profile
 - contents:
-    - plot.predict_profile_survival
-    - plot.surv_ceteris_paribus
+  - plot.predict_profile_survival
+  - plot.surv_ceteris_paribus
 - title: Utility functions
 - contents:
-    - transform_to_stepfunction
-    - risk_from_chf
-    - cumulative_hazard_to_survival
-    - survival_to_cumulative_hazard
-    - surv_model_info
+  - transform_to_stepfunction
+  - risk_from_chf
+  - cumulative_hazard_to_survival
+  - survival_to_cumulative_hazard
+  - surv_model_info
+

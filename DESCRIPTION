@@ -42,3 +42,4 @@ Suggests:
     xgboost
 Config/testthat/edition: 3
 VignetteBuilder: knitr
+URL: https://modeloriented.github.io/survex/
