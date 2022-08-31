@@ -26,7 +26,7 @@ devtools::install_github("https://github.com/ModelOriented/survex")
 
 ## Usage
 
-![`survex` usage cheatsheet](man/figures/cheatsheet.png)
+[![`survex` usage cheatsheet](man/figures/cheatsheet.png)](https://github.com/ModelOriented/survex/blob/main/misc/cheatsheet.pdf)
 
 
 ## Related work
