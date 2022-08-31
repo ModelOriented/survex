@@ -1,0 +1,12 @@
+^survex\.Rproj$
+^\.Rproj\.user$
+^LICENSE\.md$
+^\.github$
+^codecov\.yml$
+^python$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+survex.Rproj
+LICENSE
+^misc$

@@ -1,0 +1,114 @@
+---
+title: "Creating custom explainers"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Creating custom explainers}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+The `survex` package strives to include the functionality for the automatic creation of explainers for as many survival models as possible. However, it is impossible to include them all because of the great variety of available packages and models. We provide the functionality to create an explainer for any survival model manually.
+
+# Automatic explainer creation
+
+In the best case, creating an explainer for your desired model is already implemented. This means that everything can be extracted from the model object (sometimes, you need to set additional parameters). For example, this is the case for the proportional hazards model from the `survival` package:
+
+```{r setup}
+library(survex)
+library(survival)
+
+cph <- coxph(Surv(time, status) ~ ., data = veteran, model = TRUE, x = TRUE)
+
+auto_cph_explainer <- explain(cph)
+```
+
+It can be seen that the only required parameter of the `explain()` function is the proportional hazards model itself. However, we needed to set `model = TRUE, x = TRUE` while creating it. If you forget to set these arguments, an error will be shown.
+
+# Manual explainer creation
+
+The next base case is when all types of predictions can be made using your desired model. It is then possible to manually create an explainer using the `explain_survival()` function. Let's look at an example - how to set all parameters of a `coxph` explainer by hand:
+
+``` {r}
+cph <- coxph(Surv(time, status) ~ ., data=veteran)
+
+# data must not include the target columns
+veteran_data <- veteran[, -c(3,4)]
+veteran_y <- Surv(veteran$time, veteran$status)
+
+# set prediction functions of the required format
+risk_pred <- function(model, newdata) predict(model, newdata, type = "risk")
+surv_pred <- function(model, newdata, times) pec::predictSurvProb(model, newdata, times)
+chf_pred <- function(model, newdata, times) -log(surv_pred(model, newdata, times))
+
+manual_cph_explainer <- explain_survival(model = cph,
+                                         data = veteran_data,
+                                         y = veteran_y,
+                                         predict_function = risk_pred,
+                                         predict_survival_function = surv_pred,
+                                         predict_cumulative_hazard_function = chf_pred,
+                                         label="manual coxph")
+```
+
+# Helpful utility functions
+
+Sometimes, the survival model provides only one type of prediction, for example, the survival function. This package provides helpful utilities for converting between types of prediction and standardizing them for explainer creation.
+
+For example, the random survival forest from the `randomForestSRC` package only provides the survival function predictions at the unique times from the training data set (`predict.rsfrc()$survival`). Let's try to create an explainer for it using the utility function for converting this type of prediction to a step function that can be used for prediction at any time points.
+
+``` {r}
+surv_pred_rsf <- transform_to_stepfunction(predict,
+                                           type="survival",
+                                           prediction_element = "survival",
+                                           times_element = "time.interest")
+```
+
+Because the `predict.rsfrc()` returns a list with the times at which the survival function was evaluated, we provide the name of the list element which contains the prediction and the evaluation times. If in your case, the prediction function returns only a matrix, you can pass the times at which the predictions were evaluated in the `eval_times` argument.
+
+We could use the same utility to get the cumulative hazard predictions (commented code below). Still, to demonstrate another function, we make use of the mathematical relationship between the survival function ($\hat{S}$) and the cumulative hazard function ($\hat{H}$), i.e., $\hat{H} = \exp(-\hat{S})$.
+
+``` {r}
+# would also work 
+# chf_pred_rsf <- transform_to_stepfunction(predict,
+#                                           type="chf",
+#                                           prediction_element = "chf",
+#                                           times_element = "time.interest")
+
+chf_pred_rsf <- function(model, newdata, times) {
+  survival_to_cumulative_hazard(surv_pred_rsf(model, newdata, times))
+}
+```
+
+The reverse utility (`cumulative_hazard_to_survival()`) also exists.
+
+If no risk prediction is provided for your model, you can use a utility to sum the cumulative hazard function for each observation to achieve risk scores. This approach is recommended by Ishwaran et al. [(1)](#references) and Sonabend et al. [(2)](#references). 
+
+``` {r}
+times <- unique(veteran$times)
+risk_pred_rsf <- risk_from_chf(chf_pred_rsf, times)
+```
+
+Now that we have all predictions prepared, we can finally create the explainer:
+
+```{r}
+library(randomForestSRC)
+rsf <- rfsrc(Surv(time, status) ~ ., data = veteran)
+
+manual_rsf_explainer <- explain_survival(model = rsf,
+                                         data = veteran_data,
+                                         y = veteran_y,
+                                         predict_function = risk_pred_rsf,
+                                         predict_survival_function = surv_pred_rsf,
+                                         predict_cumulative_hazard_function = chf_pred_rsf,
+                                         label = "manual rsf")
+```
+
+# References {#references}
+* (1) [Hemant Ishwaran, Udaya B. Kogalur, Eugene H. Blackstone, Michael S. Lauer, *Random survival forests*, The Annals of Applied Statistics, 2008.](https://projecteuclid.org/journals/annals-of-applied-statistics/volume-2/issue-3/Random-survival-forests/10.1214/08-AOAS169.full)
+* (2) [Raphael Sonabend, Andreas Bender, Sebastian Vollmer, *Avoiding C-hacking when evaluating survival distribution predictions with discrimination measures*, Bioinformatics, 2022.](https://academic.oup.com/bioinformatics/advance-article/doi/10.1093/bioinformatics/btac451/6640155)

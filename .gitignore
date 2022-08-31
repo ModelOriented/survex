@@ -37,3 +37,9 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
+.Rproj.user
+
+# PDFs produced in tests
+tests/testthat/Rplots.pdf
+docs
+inst/doc
