@@ -36,7 +36,13 @@ The explanations are calculated as an extention of Partial Dependence Profiles w
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
-      <ul class="navbar-nav"></ul></div>
+      <ul class="navbar-nav"><li class="nav-item">
+  <a class="external-link nav-link" href="https://github.com/ModelOriented/survex/" aria-label="github">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul></div>
 
     
   </div>
@@ -44,7 +50,7 @@ The explanations are calculated as an extention of Partial Dependence Profiles w
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Dataset Level Variable Profile as Partial Dependence Explanations for Survival Models</h1>
-      
+      <small class="dont-index">Source: <a href="https://github.com/ModelOriented/survex/blob/HEAD/R/model_profile.R" class="external-link"><code>R/model_profile.R</code></a></small>
       <div class="d-none name"><code>model_profile.surv_explainer.Rd</code></div>
     </div>
 
@@ -175,19 +181,19 @@ The explanations are calculated as an extention of Partial Dependence Profiles w
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cph_model_profile</span><span class="op">$</span><span class="va">result</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   _vname_   _vtype_ _label_   _x_ _times_    _yhat_ _ids_</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     age numerical   coxph 34.00       1 0.9811134     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     age numerical   coxph 34.94       1 0.9812645     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     age numerical   coxph 35.00       1 0.9812741     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4     age numerical   coxph 35.88       1 0.9814144     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5     age numerical   coxph 36.00       1 0.9814335     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6     age numerical   coxph 36.82       1 0.9815632     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     age numerical   coxph 34.00       1 0.9827215     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     age numerical   coxph 34.94       1 0.9828602     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     age numerical   coxph 35.00       1 0.9828690     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4     age numerical   coxph 35.88       1 0.9829978     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5     age numerical   coxph 36.00       1 0.9830153     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6     age numerical   coxph 36.82       1 0.9831344     0</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cph_model_profile</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="model_profile.surv_explainer-1.png" alt="" width="700" height="433"></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> TableGrob (3 x 1) "arrange": 3 grobs</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   z     cells    name                grob</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 1 (1-1,1-1) arrange text[GRID.text.697]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 2 (2-2,1-1) arrange text[GRID.text.698]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 1 (1-1,1-1) arrange text[GRID.text.691]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 2 (2-2,1-1) arrange text[GRID.text.692]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3 3 (3-3,1-1) arrange     gtable[arrange]</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">rsf_model_profile</span> <span class="op">&lt;-</span> <span class="fu">model_profile</span><span class="op">(</span><span class="va">rsf_src_exp</span>, output_type <span class="op">=</span> <span class="st">"survival"</span>,</span></span>
@@ -195,19 +201,19 @@ The explanations are calculated as an extention of Partial Dependence Profiles w
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">rsf_model_profile</span><span class="op">$</span><span class="va">result</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     _vname_   _vtype_ _label_ _x_ _times_    _yhat_ _ids_</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1       age numerical   rfsrc  34    1.00 0.8558703     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 89      age numerical   rfsrc  34    1.36 0.8558703     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 177     age numerical   rfsrc  34    2.72 0.8498167     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 265     age numerical   rfsrc  34    4.24 0.7792156     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 353     age numerical   rfsrc  34    7.00 0.7630387     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 441     age numerical   rfsrc  34    8.00 0.7434176     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1       age numerical   rfsrc  34    1.00 0.8839832     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 87      age numerical   rfsrc  34    1.36 0.8839832     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 173     age numerical   rfsrc  34    2.72 0.8762293     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 259     age numerical   rfsrc  34    4.24 0.7823274     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 345     age numerical   rfsrc  34    7.00 0.7661261     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 431     age numerical   rfsrc  34    8.00 0.7425834     0</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">rsf_model_profile</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"age"</span>, <span class="st">"celltype"</span><span class="op">)</span>, numerical_plot_type <span class="op">=</span> <span class="st">"contours"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="model_profile.surv_explainer-2.png" alt="" width="700" height="433"></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> TableGrob (3 x 1) "arrange": 3 grobs</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   z     cells    name                grob</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 1 (1-1,1-1) arrange text[GRID.text.763]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 2 (2-2,1-1) arrange text[GRID.text.764]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 1 (1-1,1-1) arrange text[GRID.text.757]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 2 (2-2,1-1) arrange text[GRID.text.758]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3 3 (3-3,1-1) arrange     gtable[arrange]</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
