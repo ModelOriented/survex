@@ -115,6 +115,7 @@ explain.default <-     function(model,
 #' @rdname explain_survival
 #'
 #' @examples
+#' \donttest{
 #' library(survival)
 #' library(survex)
 #'
@@ -137,7 +138,7 @@ explain.default <-     function(model,
 #'    parsnip::set_mode("censored regression") %>%
 #'    generics::fit(survival::Surv(time, status) ~ ., data = veteran)
 #' bt_exp <- explain(bt, data = veteran[, -c(3, 4)], y = Surv(veteran$time, veteran$status))
-#'
+#' }
 #' @export
 #' @importFrom utils tail
 #' @importFrom stats model.frame
