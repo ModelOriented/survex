@@ -1,5 +1,3 @@
-
-
 test_that("coxph prediction functions work correctly", {
     rotterdam <- survival::rotterdam
     rotterdam$pid <- NULL
@@ -350,6 +348,57 @@ test_that("default methods for creating explainers work correctly", {
     expect_s3_class(exp_dal, "explainer")
 })
 
+
+test_that("warnings in explain_survival work correctly", {
+
+    veteran <- survival::veteran
+    cph <- survival::coxph(survival::Surv(time, status) ~ ., data = veteran, model = TRUE, x = TRUE, y = TRUE)
+    cph_exp <- explain(cph, verbose = FALSE, colorize = FALSE)
+
+    expect_warning(explain_survival(cph,
+                                    data = veteran,
+                                    survival::Surv(veteran$time, veteran$status),
+                                    predict_survival_function = pec::predictSurvProb,
+                                    verbose = FALSE,
+                                    label = matrix(1)))
+
+
+    expect_warning(explain_survival(cph,
+                                    data = veteran,
+                                    times = c(1,2,3),
+                                    predict_cumulative_hazard_function = pec::predictSurvProb,
+                                    verbose = FALSE))
+    expect_warning(
+    expect_warning(explain_survival(cph,
+                                    data = veteran,
+                                    predict_survival_function = pec::predictSurvProb,
+                                    verbose = FALSE,
+                                    label = "my label")))
+
+    expect_warning(explain_survival(cph,
+                                    data = veteran,
+                                    survival::Surv(veteran$time, veteran$status),
+                                    times = c(1,2,3),
+                                    predict_cumulative_hazard_function = pec::predictSurvProb,
+                                    predict_function = "aaa",
+                                    verbose = FALSE))
+
+    expect_warning(explain_survival(cph,
+                                    data = veteran,
+                                    survival::Surv(veteran$time, veteran$status),
+                                    times = c(1,2,3),
+                                    predict_cumulative_hazard_function = pec::predictSurvProb,
+                                    predict_survival_function = "aaa",
+                                    verbose = FALSE))
+
+    expect_warning(explain_survival(cph,
+                                    data = veteran,
+                                    survival::Surv(veteran$time, veteran$status),
+                                    times = c(1,2,3),
+                                    predict_survival_function = pec::predictSurvProb,
+                                    predict_cumulative_hazard_function = "",
+                                    verbose = FALSE))
+})
 
 test_that("default method for creating explainers for mlr3proba works correctly", {
     skip_on_ci()

@@ -59,10 +59,11 @@ test_that("survlime explanations work", {
     ranger_survlime <- predict_parts(rsf_ranger_exp, new_observation = veteran[1, -c(3, 4)], type = "survlime")
     rsf_survlime <- predict_parts(rsf_src_exp, new_observation = veteran[1, -c(3, 4)], type = "survlime")
 
-    plot(cph_survlime)
+    plot(cph_survlime, type = "coefficients")
     plot(cph_survlime, type = "local_importance")
     plot(cph_survlime, show_survival_function = FALSE)
 
+    expect_error(plot(cph_survlime, type = "nonexistent"))
 
     expect_s3_class(cph_survlime, c("predict_parts_survival", "surv_lime"))
     expect_s3_class(ranger_survlime, c("predict_parts_survival", "surv_lime"))

@@ -54,6 +54,9 @@ test_that("model_profile works", {
 
     model_profile(rsf_ranger_exp, varaibles = "trt", grid_points = 6)
 
+    expect_error(model_profile(rsf_ranger_exp, type = "accumulated"))
+    expect_error(model_profile(rsf_ranger_exp, type = "conditional"))
+
     })
 
 test_that("default DALEX::model_profile is ok", {
