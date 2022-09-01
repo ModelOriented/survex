@@ -13,7 +13,7 @@
 #'
 #' @return A `ggplot2` plot.
 #'
-#' @family functions for plotting `model_performance_survival` objects
+#' @family functions for plotting 'model_performance_survival' objects
 #'
 #' @examples
 #' library(survival)

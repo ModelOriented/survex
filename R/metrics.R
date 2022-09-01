@@ -14,6 +14,7 @@
 #' @seealso [loss_one_minus_c_index()]
 #'
 #' @examples
+#' \donttest{
 #' library(survival)
 #' library(survex)
 #'
@@ -26,7 +27,7 @@
 #'
 #' risk <- coxph_explainer$predict_function(coxph_explainer$model, coxph_explainer$data)
 #' c_index(y_true = coxph_explainer$y, risk = risk)
-#'
+#' }
 #' @import survival
 #' @export
 c_index <- function(y_true = NULL, risk = NULL, surv = NULL, times = NULL) {
@@ -61,6 +62,7 @@ attr(c_index, "loss_name") <- "C-index"
 #' @seealso [c_index()]
 #'
 #' @examples
+#' \donttest{
 #' library(survival)
 #' library(survex)
 #'
@@ -73,7 +75,7 @@ attr(c_index, "loss_name") <- "C-index"
 #'
 #' risk <- coxph_explainer$predict_function(coxph_explainer$model, coxph_explainer$data)
 #' loss_one_minus_c_index(y_true = coxph_explainer$y, risk = risk)
-#'
+#' }
 #' @export
 loss_one_minus_c_index <- function(y_true = NULL, risk = NULL, surv = NULL, times = NULL) {
     1 - c_index(y_true = y_true, risk = risk, surv = surv, times = times)

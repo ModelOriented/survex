@@ -10,7 +10,7 @@
 #'
 #' @return A `ggplot2` plot.
 #'
-#' @family functions for plotting `predict_parts_survival` objects
+#' @family functions for plotting 'predict_parts_survival' objects
 #'
 #' @examples
 #' \donttest{

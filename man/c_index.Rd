@@ -22,6 +22,7 @@ numeric from 0 to 1, higher values indicate better performance
 A function to calculate Harells' concordance index of a survival model.
 }
 \examples{
+\donttest{
 library(survival)
 library(survex)
 
@@ -34,7 +35,7 @@ coxph_explainer <- explain(cox_rotterdam_rec)
 
 risk <- coxph_explainer$predict_function(coxph_explainer$model, coxph_explainer$data)
 c_index(y_true = coxph_explainer$y, risk = risk)
-
+}
 }
 \seealso{
 \code{\link[=loss_one_minus_c_index]{loss_one_minus_c_index()}}

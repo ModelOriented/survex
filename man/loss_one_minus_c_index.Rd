@@ -22,6 +22,7 @@ numeric from 0 to 1, lower values indicate better performance
 This function subtracts the C-index metric from one to obtain a loss function whose lower values indicate better model performance (useful for permutational feature importance)
 }
 \examples{
+\donttest{
 library(survival)
 library(survex)
 
@@ -34,7 +35,7 @@ coxph_explainer <- explain(cox_rotterdam_rec)
 
 risk <- coxph_explainer$predict_function(coxph_explainer$model, coxph_explainer$data)
 loss_one_minus_c_index(y_true = coxph_explainer$y, risk = risk)
-
+}
 }
 \seealso{
 \code{\link[=c_index]{c_index()}}

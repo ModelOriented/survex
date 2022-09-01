@@ -49,7 +49,7 @@ plot(mp, mp_rf)
 }
 }
 \seealso{
-Other functions for plotting \code{model_parts_survival} objects: 
+Other functions for plotting 'model_parts_survival' objects: 
 \code{\link{plot.model_parts_survival}()}
 }
-\concept{functions for plotting \code{model_parts_survival} objects}
+\concept{functions for plotting 'model_parts_survival' objects}

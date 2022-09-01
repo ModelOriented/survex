@@ -10,8 +10,8 @@ Authors@R:
     )
 Description: Survival analysis models are commonly used in medicine and other areas. Many of them
     are too complex to be interpreted by human. Exploration and explanation is needed, but
-    standard methods do not give a broad enough picture. survex provides easy-to-apply
-    methods for explaining survival models, both complex blackboxes and simpler statistical models.
+    standard methods do not give a broad enough picture. 'survex' provides easy-to-apply
+    methods for explaining survival models, both complex black-boxes and simpler statistical models.
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

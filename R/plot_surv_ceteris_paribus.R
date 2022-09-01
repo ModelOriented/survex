@@ -14,7 +14,7 @@
 #'
 #' @return A grid of `ggplot2` plots arranged by the `gridExtra::grid.arrange` function.
 #'
-#' @family functions for plotting `predict_profile_survival` objects
+#' @family functions for plotting 'predict_profile_survival' objects
 #'
 #' @examples
 #' \donttest{

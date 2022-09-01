@@ -29,7 +29,7 @@
 #' * `colors` - character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")
 #' * `facet_ncol` - number of columns for arranging subplots
 #'
-#' @family functions for plotting `model_performance_survival` objects
+#' @family functions for plotting 'model_performance_survival' objects
 #'
 #' @examples
 #' library(survival)

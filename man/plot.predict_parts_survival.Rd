@@ -58,8 +58,8 @@ plot(p_parts_lime)
 }
 }
 \seealso{
-Other functions for plotting \code{predict_parts_survival} objects: 
+Other functions for plotting 'predict_parts_survival' objects: 
 \code{\link{plot.surv_lime}()},
 \code{\link{plot.surv_shap}()}
 }
-\concept{functions for plotting \code{predict_parts_survival} objects}
+\concept{functions for plotting 'predict_parts_survival' objects}

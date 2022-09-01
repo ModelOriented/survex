@@ -27,7 +27,7 @@
 #' * `subtitle` -  character, subtitle of the plot, if `NULL` automaticaly generated as "created for XXX, YYY models", where XXX and YYY are explainer labels
 #' * `colors` -  character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")
 #'
-#' @family functions for plotting `predict_parts_survival` objects
+#' @family functions for plotting 'predict_parts_survival' objects
 #'
 #' @examples
 #' \donttest{

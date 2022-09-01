@@ -40,7 +40,7 @@ plot(mp)
 
 }
 \seealso{
-Other functions for plotting \code{model_parts_survival} objects: 
+Other functions for plotting 'model_parts_survival' objects: 
 \code{\link{plot.surv_feature_importance}()}
 }
-\concept{functions for plotting \code{model_parts_survival} objects}
+\concept{functions for plotting 'model_parts_survival' objects}

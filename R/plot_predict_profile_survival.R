@@ -22,7 +22,7 @@
 #' * `subtitle` - character, subtitle of the plot, if `NULL` automaticaly generated as "created for XXX, YYY models", where XXX and YYY are explainer labels
 #'
 #'
-#' @family functions for plotting `predict_profile_survival` objects
+#' @family functions for plotting 'predict_profile_survival' objects
 #'
 #' @examples
 #' \donttest{

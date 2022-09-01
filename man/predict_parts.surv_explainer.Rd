@@ -62,6 +62,7 @@ There are additional parameters that are passed to internal functions
 }
 
 \examples{
+\donttest{
 library(survival)
 library(survex)
 
@@ -76,5 +77,5 @@ cph_predict_parts_survlime <- predict_parts(cph_exp, new_observation = veteran[1
                                             type = "survlime")
 head(cph_predict_parts_survlime$result)
 plot(cph_predict_parts_survlime, type = "local_importance")
-
+}
 }

@@ -59,8 +59,8 @@ plot(m_perf_roc)
 
 }
 \seealso{
-Other functions for plotting \code{model_performance_survival} objects: 
+Other functions for plotting 'model_performance_survival' objects: 
 \code{\link{plot.surv_model_performance_rocs}()},
 \code{\link{plot.surv_model_performance}()}
 }
-\concept{functions for plotting \code{model_performance_survival} objects}
+\concept{functions for plotting 'model_performance_survival' objects}

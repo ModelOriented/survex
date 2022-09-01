@@ -63,7 +63,7 @@ plot(p_profile_with_cat)
 }
 }
 \seealso{
-Other functions for plotting \code{predict_profile_survival} objects: 
+Other functions for plotting 'predict_profile_survival' objects: 
 \code{\link{plot.predict_profile_survival}()}
 }
-\concept{functions for plotting \code{predict_profile_survival} objects}
+\concept{functions for plotting 'predict_profile_survival' objects}

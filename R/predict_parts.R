@@ -39,6 +39,7 @@ predict_parts <- function(explainer, ...) UseMethod("predict_parts", explainer)
 #' @rdname predict_parts.surv_explainer
 #'
 #' @examples
+#' \donttest{
 #' library(survival)
 #' library(survex)
 #'
@@ -53,7 +54,7 @@ predict_parts <- function(explainer, ...) UseMethod("predict_parts", explainer)
 #'                                             type = "survlime")
 #' head(cph_predict_parts_survlime$result)
 #' plot(cph_predict_parts_survlime, type = "local_importance")
-#'
+#' }
 #' @export
 predict_parts.surv_explainer <- function(explainer, new_observation, ..., N = NULL, type = "survshap", output_type = "survival") {
 
