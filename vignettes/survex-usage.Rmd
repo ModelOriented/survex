@@ -77,7 +77,7 @@ From this comparison, we see that the Random Survival Forest model is better in 
 
 ## Variable importance
 
-Next, we check how each variable influences the models' predictions on a global level. For this purpose, we use the `model_parts()` function. It calculates [permutational variable importance]("https://ema.drwhy.ai/featureImportance.html") with the difference being that the loss function is time-dependent (by default it is `loss_brier_score()`), so the influence of each variable can be different at each considered time point.
+Next, we check how each variable influences the models' predictions on a global level. For this purpose, we use the `model_parts()` function. It calculates [permutational variable importance](https://ema.drwhy.ai/featureImportance.html) with the difference being that the loss function is time-dependent (by default it is `loss_brier_score()`), so the influence of each variable can be different at each considered time point.
 
 ``` {r}
 model_parts_rsf <- model_parts(rsf_exp)
@@ -104,7 +104,7 @@ We observe that the results are consistent with `loss_brier_score()`. That's goo
 
 ## Partial dependence
 
-The next type of global explanation this package provides is partial dependence plots. This is calculated using the `model_profile()` function. These plots show how setting one variable to a different value would, on average, influence the model's prediction. Again, this is an extension of [partial dependence]("https://ema.drwhy.ai/partialDependenceProfiles.html") known from regression and classification tasks, applied to survival models by extending it to take the time dimension into account.
+The next type of global explanation this package provides is partial dependence plots. This is calculated using the `model_profile()` function. These plots show how setting one variable to a different value would, on average, influence the model's prediction. Again, this is an extension of [partial dependence](https://ema.drwhy.ai/partialDependenceProfiles.html) known from regression and classification tasks, applied to survival models by extending it to take the time dimension into account.
 
 Note that we need to set the `categorical_variables` parameter in order to avoid nonsensical values, such as the treatment value of 0.5. All factors are automatically detected as categories, but if you want to treat a numerical variable as a categorical one, you need to set it here.
 

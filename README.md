@@ -31,7 +31,7 @@ devtools::install_github("https://github.com/ModelOriented/survex")
 
 ## Related work
 
-- H. Ishwaran, U. B. Kogalur, E. H. Blackstone, M. S. Lauer. [Random survival forests](https://doi.org/10.1214/08-AOAS169). Annals of Applied Statistics, 2008.
+- H. Ishwaran, U. B. Kogalur, E. H. Blackstone, M. S. Lauer. [Random survival forests](https://projecteuclid.org/journalArticle/Download?urlId=10.1214%2F08-AOAS169). Annals of Applied Statistics, 2008.
 - M. S. Kovalev, L. V. Utkin, E. M. Kasimov. [SurvLIME: A method for explaining machine learning survival models](https://doi.org/10.1016/j.knosys.2020.106164). Knowledge-Based Systems, 2020.
 - R. Sonabend, F. J. Király, A. Bender, B. Bischl, M. Lang. [mlr3proba: an R package for machine learning in survival analysis](https://doi.org/10.1093/bioinformatics/btab039). Bioinformatics, 2021.
 - E. Hvitfeldt, H. Frick. [censored: 'parsnip' Engines for Survival Models](https://github.com/tidymodels/censored). CRAN v0.1.0, 2022.

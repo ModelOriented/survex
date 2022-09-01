@@ -225,6 +225,7 @@ This function can be used manually to create explainers for models which
 are not covered by the \code{survex} package.
 }
 \examples{
+\donttest{
 library(survival)
 library(survex)
 
@@ -247,5 +248,5 @@ bt <- parsnip::boost_tree() \%>\%
    parsnip::set_mode("censored regression") \%>\%
    generics::fit(survival::Surv(time, status) ~ ., data = veteran)
 bt_exp <- explain(bt, data = veteran[, -c(3, 4)], y = Surv(veteran$time, veteran$status))
-
+}
 }
