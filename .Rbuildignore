@@ -10,3 +10,4 @@
 survex.Rproj
 LICENSE
 ^misc$
+^cran-comments\.md$
