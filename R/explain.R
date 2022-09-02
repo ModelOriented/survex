@@ -719,7 +719,7 @@ explain.model_fit <-
                 }
                 attr(predict_function, "verbose_info") <- "predict.model_fit with type = 'linear_pred' will be used"
             } else {
-                predict_function <<- function(model, newdata, times) {
+                predict_function <- function(model, newdata, times) {
                     rowSums(predict_cumulative_hazard_function(model, newdata, times = times))
                 }
                 attr(predict_function, "verbose_info") <- "sum over the predict_cumulative_hazard_function will be used"
