@@ -12,6 +12,9 @@ Description: Survival analysis models are commonly used in medicine and other ar
     are too complex to be interpreted by human. Exploration and explanation is needed, but
     standard methods do not give a broad enough picture. 'survex' provides easy-to-apply
     methods for explaining survival models, both complex black-boxes and simpler statistical models.
+    They include methods specific to survival analysis such as SurvSHAP(t) described in Krzyzinski et al., (2022)
+    <arXiv:2208.11080>, SurvLIME introduced in Kovalev et al., (2020) <doi:10.1016/j.knosys.2020.106164> as well as
+    extensions of existing ones described in Biecek et al., (2021) <doi:10.1201/9780429027192>.
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
