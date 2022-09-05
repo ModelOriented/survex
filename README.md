@@ -6,7 +6,7 @@
 
 ## Overview 
 
-Survival analysis is a task dealing with time-to-event prediction. Aside from the well understood models, many others have recently emerged, however most of them lack interpretability as they are black-box models. Due to the unusual, functional type of prediction (either in the form of survival function or cumulative hazard function) standard model agnostic explanations cannot be applied directly.
+Survival analysis is a task dealing with time-to-event prediction. Aside from the well understood models, many others have recently emerged, however most of them lack interpretability as they are black-box models. Due to the unusual, functional type of the prediction (either in the form of survival function or cumulative hazard function) standard model agnostic explanations cannot be applied directly.
 
 The `survex` package provides model agnostic explanations for survival models. If you're unfamiliar with model agnostic explanations, consider looking at the [Explanatory Model Analysis](https://ema.drwhy.ai/) e-book, as most of the methods included in this package are extensions of those described in the book for models with functional outputs. 
 
