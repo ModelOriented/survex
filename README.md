@@ -2,7 +2,7 @@
 
 [![R-CMD-check](https://github.com/ModelOriented/survex/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ModelOriented/survex/actions/workflows/R-CMD-check.yaml)
 [![Codecov test coverage](https://codecov.io/gh/ModelOriented/survex/branch/main/graph/badge.svg)](https://app.codecov.io/gh/ModelOriented/survex?branch=main)
-
+[![CRAN status](https://www.r-pkg.org/badges/version/survex)](https://cran.r-project.org/package=survex)
 
 ## Overview 
 
@@ -17,9 +17,15 @@ However, an explainer can be created for **any** survival model, using the `expl
 
 ## Installation
 
-The package can be installed from github using `devtools::install_github()`:
+The package is available on [CRAN](https://cran.r-project.org/package=survex):
 
+```r
+install.packages("survex")
 ```
+
+The latest development version can be installed from GitHub using `devtools::install_github()`:
+
+```r
 devtools::install_github("https://github.com/ModelOriented/survex")
 ```
 
