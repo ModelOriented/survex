@@ -29,6 +29,30 @@ The latest development version can be installed from GitHub using `devtools::ins
 devtools::install_github("https://github.com/ModelOriented/survex")
 ```
 
+## Simple demo
+
+```r
+library("survex")
+library("survival")
+library("ranger")
+
+# create a model
+model <- ranger(Surv(time, status) ~ ., data = veteran)
+
+# create an explainer
+explainer <- explain(model, 
+                     data = veteran[, -c(3, 4)],
+                     y = Surv(veteran$time, veteran$status))
+
+# evaluate the model
+model_performance(explainer)
+
+# visualize permutation-based feature importance
+plot(model_parts(explainer))
+
+# explain one prediction with SurvSHAP(t)
+plot(predict_parts(explainer, veteran[1, -c(3, 4)]))
+```
 
 ## Usage
 
