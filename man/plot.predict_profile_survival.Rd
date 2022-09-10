@@ -12,7 +12,7 @@
 \item{...}{additional parameters passed to the \code{plot.surv_ceteris_paribus} function}
 }
 \value{
-A grid of \code{ggplot2} plots arranged by the \code{gridExtra::grid.arrange} function.
+A grid of \code{ggplot} objects arranged with the \code{gridExtra::grid.arrange} function.
 }
 \description{
 This function plots objects of class \code{"predict_profile_survival"} - local explanations for survival models

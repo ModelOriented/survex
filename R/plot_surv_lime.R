@@ -10,7 +10,7 @@
 #' @param subtitle character, subtitle of the plot, if `NULL` automaticaly generated as "created for XXX, YYY models", where XXX and YYY are explainer labels
 #' @param colors character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")
 #'
-#' @return A `ggplot2` plot.
+#' @return An object of the class `ggplot`.
 #'
 #' @family functions for plotting 'predict_parts_survival' objects
 #'

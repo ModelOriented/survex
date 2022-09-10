@@ -11,7 +11,7 @@
 #' @param facet_ncol number of columns for arranging subplots
 #' @param colors character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")
 #'
-#' @return A `ggplot2` plot.
+#' @return An object of the class `ggplot`.
 #'
 #' @family functions for plotting 'model_performance_survival' objects
 #'
@@ -89,7 +89,7 @@ plot_scalar_surv_model_performance <- function(x, ..., metrics = NULL, title = N
 
 }
 
-#' @importFrom utils stack
+
 concatenate_td_dfs <- function(x, ...) {
     all_things <- c(list(x), list(...))
 
@@ -107,7 +107,7 @@ concatenate_td_dfs <- function(x, ...) {
 
 }
 
-#' @importFrom utils stack
+
 concatenate_dfs <- function(x, ...) {
     all_things <- c(list(x), list(...))
 

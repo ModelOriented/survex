@@ -1,6 +1,6 @@
-#' Plot SurvSHAP Explanations for Survival Models
+#' Plot SurvSHAP(t) Explanations for Survival Models
 #'
-#' This functions plots objects of class `surv_shap` - SHAP explanations of survival models.
+#' This functions plots objects of class `surv_shap` - SurvSHAP time-dependent explanations of survival models.
 #'
 #' @param x an object of class `"surv_shap"` to be plotted
 #' @param ... additional objects of class `surv_shap` to be plotted together
@@ -8,7 +8,7 @@
 #' @param subtitle character, subtitle of the plot, if `NULL` automatically generated as "created for XXX, YYY models", where XXX and YYY are explainer labels
 #' @param colors character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")
 #'
-#' @return A `ggplot2` plot.
+#' @return An object of the class `ggplot`.
 #'
 #' @family functions for plotting 'predict_parts_survival' objects
 #'
@@ -23,7 +23,6 @@
 #' p_parts_shap <- predict_parts(exp, veteran[1, -c(3, 4)], type = "survshap")
 #' plot(p_parts_shap)
 #' }
-#' @importFrom utils stack
 #' @importFrom DALEX theme_drwhy
 #' @export
 plot.surv_shap <- function(x, ..., title = "SurvSHAP(t)", subtitle = NULL, colors = NULL) {
@@ -36,8 +35,11 @@ plot.surv_shap <- function(x, ..., title = "SurvSHAP(t)", subtitle = NULL, color
         times <- x$eval_times
         transposed <- as.data.frame(cbind(times = times, sv))
         rownames(transposed) <- NULL
-        long_df <- cbind(times = transposed$times, stack(transposed, select = -times), label = label)
-
+        long_df <- cbind(
+            times = transposed$times,
+            stack(transposed, select = -times),
+            label = label
+        )
     })
 
     long_df <- do.call(rbind, long_df)

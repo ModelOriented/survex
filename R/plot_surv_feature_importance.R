@@ -9,7 +9,7 @@
 #' @param max_vars maximum number of variables to be plotted (least important variables are ignored)
 #' @param colors character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")
 #'
-#' @return A `ggplot2` plot.
+#' @return An object of the class `ggplot`.
 #'
 #' @family functions for plotting 'model_parts_survival' objects
 #'
@@ -28,7 +28,7 @@
 #'
 #' plot(mp, mp_rf)
 #' }
-#' @importFrom utils stack head
+#'
 #' @importFrom DALEX theme_drwhy
 #' @export
 plot.surv_feature_importance <- function(x, ...,

@@ -36,7 +36,7 @@
 \item{colors}{character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")}
 }
 \value{
-A grid of \code{ggplot2} plots arranged by the \code{gridExtra::grid.arrange} function.
+A grid of \code{ggplot} objects arranged with the \code{gridExtra::grid.arrange} function.
 }
 \description{
 This function plots objects of class \code{"model_profile_survival"}.

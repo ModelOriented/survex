@@ -5,7 +5,7 @@
 #' @param x an object of class  `"predict_profile_survival"` to be plotted
 #' @param ... additional parameters passed to the `plot.surv_ceteris_paribus` function
 #'
-#' @return A grid of `ggplot2` plots arranged by the `gridExtra::grid.arrange` function.
+#' @return A grid of `ggplot` objects arranged with the `gridExtra::grid.arrange` function.
 #'
 #' @section Plot options:
 #'

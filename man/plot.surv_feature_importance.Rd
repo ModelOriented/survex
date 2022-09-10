@@ -27,7 +27,7 @@
 \item{colors}{character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")}
 }
 \value{
-A \code{ggplot2} plot.
+An object of the class \code{ggplot}.
 }
 \description{
 This function plots feature importance objects created for survival models.
@@ -47,6 +47,7 @@ mp_rf <- model_parts(explainer_rf)
 
 plot(mp, mp_rf)
 }
+
 }
 \seealso{
 Other functions for plotting 'model_parts_survival' objects: 

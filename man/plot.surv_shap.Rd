@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_surv_shap.R
 \name{plot.surv_shap}
 \alias{plot.surv_shap}
-\title{Plot SurvSHAP Explanations for Survival Models}
+\title{Plot SurvSHAP(t) Explanations for Survival Models}
 \usage{
 \method{plot}{surv_shap}(x, ..., title = "SurvSHAP(t)", subtitle = NULL, colors = NULL)
 }
@@ -18,10 +18,10 @@
 \item{colors}{character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")}
 }
 \value{
-A \code{ggplot2} plot.
+An object of the class \code{ggplot}.
 }
 \description{
-This functions plots objects of class \code{surv_shap} - SHAP explanations of survival models.
+This functions plots objects of class \code{surv_shap} - SurvSHAP time-dependent explanations of survival models.
 }
 \examples{
 \donttest{

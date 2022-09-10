@@ -12,7 +12,7 @@
 \item{...}{additional parameters passed to the \code{plot.surv_shap} or \code{plot.surv_lime} functions}
 }
 \value{
-A \code{ggplot2} plot.
+An object of the class \code{ggplot}.
 }
 \description{
 This function plots objects of class \code{"predict_parts_survival"} - local explanations for survival models

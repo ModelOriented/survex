@@ -140,7 +140,7 @@ explain.default <-     function(model,
 #' bt_exp <- explain(bt, data = veteran[, -c(3, 4)], y = Surv(veteran$time, veteran$status))
 #' }
 #' @export
-#' @importFrom utils tail
+#' @importFrom utils tail stack head
 #' @importFrom stats model.frame
 explain_survival <-
     function(model,

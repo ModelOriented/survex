@@ -12,7 +12,7 @@
 #' @param title character, title of the plot
 #' @param subtitle character, subtitle of the plot, if `NULL` automaticaly generated as "created for XXX, YYY models", where XXX and YYY are explainer labels
 #'
-#' @return A grid of `ggplot2` plots arranged by the `gridExtra::grid.arrange` function.
+#' @return A grid of `ggplot` objects arranged with the `gridExtra::grid.arrange` function.
 #'
 #' @family functions for plotting 'predict_profile_survival' objects
 #'

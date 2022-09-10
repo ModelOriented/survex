@@ -9,7 +9,7 @@
 #' @param colors character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")
 #' @param facet_ncol number of columns for arranging subplots
 #'
-#' @return A `ggplot2` plot.
+#' @return An object of the class `ggplot`.
 #'
 #' @family functions for plotting 'model_performance_survival' objects
 #'

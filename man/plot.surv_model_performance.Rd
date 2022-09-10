@@ -33,7 +33,7 @@
 \item{colors}{character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")}
 }
 \value{
-A \code{ggplot2} plot.
+An object of the class \code{ggplot}.
 }
 \description{
 This function plots objects of class \code{"surv_model_performance"} - visualization of metrics of different models

@@ -5,7 +5,7 @@
 #' @param x an object of class  `"predict_parts_survival"` to be plotted
 #' @param ... additional parameters passed to the `plot.surv_shap` or `plot.surv_lime` functions
 #'
-#' @return A `ggplot2` plot.
+#' @return An object of the class `ggplot`.
 #'
 #' @section Plot options:
 #'

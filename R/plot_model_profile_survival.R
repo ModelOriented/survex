@@ -12,7 +12,7 @@
 #' @param subtitle character, subtitle of the plot, if `NULL` automaticaly generated as "created for XXX, YYY models", where XXX and YYY are explainer labels
 #' @param colors character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")
 #'
-#' @return A grid of `ggplot2` plots arranged by the `gridExtra::grid.arrange` function.
+#' @return A grid of `ggplot` objects arranged with the `gridExtra::grid.arrange` function.
 #'
 #' @examples
 #' \donttest{

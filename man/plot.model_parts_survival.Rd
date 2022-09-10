@@ -12,7 +12,7 @@
 \item{...}{additional parameters passed to the \code{plot.surv_feature_importance} function}
 }
 \value{
-A \code{ggplot2} plot.
+An object of the class \code{ggplot}.
 }
 \description{
 This function is a wrapper for plotting \code{model_parts} objects created for survival models.

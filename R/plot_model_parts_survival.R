@@ -5,7 +5,7 @@
 #' @param x an object of class `"model_parts_survival"` to be plotted
 #' @param ... additional parameters passed to the `plot.surv_feature_importance` function
 #'
-#' @return A `ggplot2` plot.
+#' @return An object of the class `ggplot`.
 #'
 #' @section Plot options:
 #'

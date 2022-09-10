@@ -5,7 +5,7 @@
 #' @param x an object of class `"model_performance_survival"` to be plotted
 #' @param ... additional parameters passed to the `plot.surv_model_performance` or `plot.surv_model_performance_rocs` function
 #'
-#' @return A `ggplot2` plot.
+#' @return An object of the class `ggplot`.
 #'
 #' @section Plot options:
 #'

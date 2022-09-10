@@ -36,7 +36,7 @@
 \item{subtitle}{character, subtitle of the plot, if \code{NULL} automaticaly generated as "created for XXX, YYY models", where XXX and YYY are explainer labels}
 }
 \value{
-A grid of \code{ggplot2} plots arranged by the \code{gridExtra::grid.arrange} function.
+A grid of \code{ggplot} objects arranged with the \code{gridExtra::grid.arrange} function.
 }
 \description{
 This function plots objects of class \code{"predict_profile_survival"}.

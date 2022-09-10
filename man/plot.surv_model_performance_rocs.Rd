@@ -27,7 +27,7 @@
 \item{facet_ncol}{number of columns for arranging subplots}
 }
 \value{
-A \code{ggplot2} plot.
+An object of the class \code{ggplot}.
 }
 \description{
 This function plots objects of class \code{"surv_model_performance_rocs"} - ROC curves for specific time points for survival models
