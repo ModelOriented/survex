@@ -6,13 +6,13 @@
 
 ## Overview 
 
-Survival analysis is a task dealing with time-to-event prediction. Aside from the well understood models, many others have recently emerged, however most of them lack interpretability as they are black-box models. Due to the unusual, functional type of the prediction (either in the form of survival function or cumulative hazard function) standard model agnostic explanations cannot be applied directly.
+Survival analysis is a task dealing with time-to-event prediction. Aside from the well-understood models like CPH, many more complex models have recently emerged, but most lack interpretability. Due to a functional type of prediction, either in the form of survival function or cumulative hazard function, standard model-agnostic explanations cannot be applied directly.
 
-The `survex` package provides model agnostic explanations for survival models. If you're unfamiliar with model agnostic explanations, consider looking at the [Explanatory Model Analysis](https://ema.drwhy.ai/) e-book, as most of the methods included in this package are extensions of those described in the book for models with functional outputs. 
+The `survex` package provides model-agnostic explanations for machine learning survival models. It is based on the [`DALEX` package](https://github.com/ModelOriented/DALEX). If you're unfamiliar with explainable machine learning, consider referring to the [Explanatory Model Analysis](https://ema.drwhy.ai) book -- most of the methods included in `survex` extend these described in EMA and implemented in `DALEX` but to models with functional output. 
 
-The main function `explain()` creates a standardized wrapper for a model, which is further used for calculating predictions. If you work with models from `mlr3proba`, `censored`, `ranger`, `randomForestSRC` or `survival` packages, creating explainers is automated, most often you only need to supply the `model` parameter to the `explain()` function.
+The main `explain()` function uses a model and data to create a standardized `explainer` object, which is further used as an interface for calculating predictions. We automate creating explainers from the following packages: `mlr3proba`, `censored`, `ranger`, `randomForestSRC`, and `survival`. **Raise an Issue on GitHub if you find models from other packages that we can incorporate into the `explain()` interface.**
 
-However, an explainer can be created for **any** survival model, using the `explain_survival()` function by passing `model`, `data`, `y`, and `predict_survival_function` arguments.
+Note that an explainer can be created for **any** survival model, using the `explain_survival()` function by passing `model`, `data`, `y`, and `predict_survival_function` arguments.
 
 
 ## Installation
