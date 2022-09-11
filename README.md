@@ -66,3 +66,4 @@ plot(predict_parts(explainer, veteran[1, -c(3, 4)]))
 - R. Sonabend, F. J. Király, A. Bender, B. Bischl, M. Lang. [mlr3proba: an R package for machine learning in survival analysis](https://doi.org/10.1093/bioinformatics/btab039). Bioinformatics, 2021.
 - E. Hvitfeldt, H. Frick. [censored: 'parsnip' Engines for Survival Models](https://github.com/tidymodels/censored). CRAN v0.1.0, 2022.
 - M. Krzyziński, M. Spytek, H. Baniecki, P. Biecek. [SurvSHAP(t): Time-dependent explanations of machine learning survival models](https://arxiv.org/abs/2208.11080). arXiv preprint arXiv:2208.11080, 2022.
+- A. Grudziąż, A. Gosiewska, P.Biecek. [survxai: an R package for structure-agnostic explanations of survival models](https://doi.org/10.21105/joss.00961). Journal of Open Source Software, 2018.
