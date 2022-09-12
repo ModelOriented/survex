@@ -1,6 +1,6 @@
 #' Plot SurvSHAP(t) Explanations for Survival Models
 #'
-#' This functions plots objects of class `surv_shap` - SurvSHAP time-dependent explanations of survival models.
+#' This functions plots objects of class `surv_shap` - time-dependent explanations of survival models.
 #'
 #' @param x an object of class `"surv_shap"` to be plotted
 #' @param ... additional objects of class `surv_shap` to be plotted together
@@ -23,7 +23,7 @@
 #' p_parts_shap <- predict_parts(exp, veteran[1, -c(3, 4)], type = "survshap")
 #' plot(p_parts_shap)
 #' }
-#' @importFrom DALEX theme_drwhy
+#'
 #' @export
 plot.surv_shap <- function(x, ..., title = "SurvSHAP(t)", subtitle = NULL, colors = NULL) {
 

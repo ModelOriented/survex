@@ -1,10 +1,6 @@
-#' @rdname model_parts.surv_explainer
-#' @export
-model_parts <- function(explainer, ...) UseMethod("model_parts", explainer)
-
 #' Dataset Level Variable Importance for Survival Models
 #'
-#' This function calculates variable importance as change in the loss function after variable permutations.
+#' This function calculates variable importance as a change in the loss function after the variable values permutations.
 #'
 #'
 #' @param explainer a model to be explained, preprocessed by the `explain()` function
@@ -17,11 +13,10 @@ model_parts <- function(explainer, ...) UseMethod("model_parts", explainer)
 #' @inheritDotParams surv_integrated_feature_importance -x
 #'
 #'
-#' @return An object of class `c("model_parts_survival", "surv_feature_importance")`. It's a list with the explanations in the `result` element
+#' @return An object of class `c("model_parts_survival", "surv_feature_importance")`. It's a list with the explanations in the `result` element.
 #'
 #' @details
 #' *Note*: This function can be run within `progressr::with_progress()` to display a progress bar, as the execution can take long, especially on large datasets.
-#' @rdname model_parts.surv_explainer
 #'
 #' @examples
 #' \donttest{
@@ -53,7 +48,10 @@ model_parts <- function(explainer, ...) UseMethod("model_parts", explainer)
 #' print(head(rsf_ranger_model_parts$result))
 #' plot(cph_model_parts_brier, rsf_ranger_model_parts)
 #' }
-#'
+#' @rdname model_parts.surv_explainer
+#' @export
+model_parts <- function(explainer, ...) UseMethod("model_parts", explainer)
+
 #' @export
 model_parts.surv_explainer <- function(explainer,
                                        loss_function = survex::loss_brier_score,
@@ -101,7 +99,6 @@ model_parts.surv_explainer <- function(explainer,
     stop("Type should be either `survival` or `risk`")
   )
 }
-
 
 #' @export
 model_parts.default <- DALEX::model_parts

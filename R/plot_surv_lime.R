@@ -24,9 +24,6 @@
 #' p_parts_lime <- predict_parts(exp, veteran[1, -c(3, 4)], type = "survlime")
 #' plot(p_parts_lime)
 #'
-#' @import ggplot2 gridExtra
-#' @importFrom stats reorder
-#' @importFrom DALEX theme_drwhy theme_drwhy_vertical
 #' @export
 plot.surv_lime <- function(x, type = "local_importance", show_survival_function = TRUE, ..., title = "SurvLIME", subtitle = NULL, colors = NULL) {
     if (!type %in% c("coefficients", "local_importance"))

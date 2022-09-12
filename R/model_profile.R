@@ -1,20 +1,7 @@
-#' @rdname model_profile.surv_explainer
-#' @export
-model_profile <- function(explainer,
-                          variables = NULL,
-                          N = 100,
-                          ...,
-                          groups = NULL,
-                          k = NULL,
-                          center = TRUE,
-                          type = "partial",
-                          output_type = "survival") UseMethod("model_profile", explainer)
-
-
 #' Dataset Level Variable Profile as Partial Dependence Explanations for Survival Models
 #'
 #' This function calculates explanations on a dataset level that help explore model response as a function of selected variables.
-#' The explanations are calculated as an extention of Partial Dependence Profiles with the inclusion of the time dimension.
+#' The explanations are calculated as an extension of Partial Dependence Profiles with the inclusion of the time dimension.
 #'
 #'
 #' @param explainer a model to be explained, preprocessed by the `explain()` function
@@ -32,7 +19,6 @@ model_profile <- function(explainer,
 #' @return An object of class `model_profile_survival`. It is a list with the element `result` containing the results of the calculation.
 #'
 #'
-#' @rdname model_profile.surv_explainer
 #'
 #' @examples
 #' \donttest{
@@ -59,6 +45,19 @@ model_profile <- function(explainer,
 #'
 #' plot(rsf_model_profile, variables = c("age", "celltype"), numerical_plot_type = "contours")
 #' }
+#'
+#' @rdname model_profile.surv_explainer
+#' @export
+model_profile <- function(explainer,
+                          variables = NULL,
+                          N = 100,
+                          ...,
+                          groups = NULL,
+                          k = NULL,
+                          center = TRUE,
+                          type = "partial",
+                          output_type = "survival") UseMethod("model_profile", explainer)
+
 #' @export
 model_profile.surv_explainer <- function(explainer,
                                          variables = NULL,

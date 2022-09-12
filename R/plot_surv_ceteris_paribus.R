@@ -36,8 +36,7 @@
 #'
 #' plot(p_profile_with_cat)
 #' }
-#' @import ggplot2
-#' @importFrom stats median
+#'
 #' @export
 plot.surv_ceteris_paribus <- function(x,
                                       ...,

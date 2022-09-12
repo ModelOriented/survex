@@ -29,7 +29,6 @@
 #' plot(mp, mp_rf)
 #' }
 #'
-#' @importFrom DALEX theme_drwhy
 #' @export
 plot.surv_feature_importance <- function(x, ...,
                                                     title = "Time-dependent feature importance",

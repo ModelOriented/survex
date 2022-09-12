@@ -30,7 +30,7 @@
 #'
 #' plot(m_prof, variables = c("trt", "age"), facet_ncol = 1)
 #' }
-#' @import ggplot2
+#'
 #' @export
 plot.model_profile_survival <- function(x,
                                         ...,
@@ -95,7 +95,5 @@ plot.model_profile_survival <- function(x,
                                                               grid::grobHeight(subtitleGrob) + margin,
                                                               grid::unit(1, "null")))
     return(plot_grid)
-
-
 
 }

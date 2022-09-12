@@ -11,7 +11,6 @@
 #' @return A data.frame with calculated results.
 #'
 #' @keywords internal
-#' @importFrom stats na.omit aggregate
 surv_aggregate_profiles <- function(x, ...,
                                          variable_type = NULL,
                                          groups = NULL,
@@ -96,6 +95,4 @@ surv_aggregate_profiles_partial <- function(all_profiles) {
     }
 
     aggregated_profiles
-
-
 }

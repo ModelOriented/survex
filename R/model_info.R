@@ -1,11 +1,11 @@
-#' Extract info from model
+#' Extract additional information from the model
 #'
 #' This generic function let user extract base information about model. The function returns a named list of class \code{model_info} that
 #' contain information about package of model, version and task type. For wrappers like \code{mlr} or \code{parsnip} both, package and wrapper
 #' information are stored
 #'
 #' @param model - model object
-#' @param ... - another arguments
+#' @param ... - other arguments
 #'
 #' @details
 #' Currently supported packages are:

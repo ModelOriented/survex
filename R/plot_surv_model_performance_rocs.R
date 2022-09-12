@@ -23,7 +23,6 @@
 #' m_perf_roc <- model_performance(exp, type = "roc", times = c(100, 300))
 #' plot(m_perf_roc)
 #'
-#' @importFrom DALEX theme_drwhy
 #' @export
 plot.surv_model_performance_rocs <- function(x, ..., title = "ROC curves for selected timepoints", subtitle = NULL, colors = NULL, facet_ncol = NULL) {
 

@@ -1,6 +1,6 @@
-#' Calculate Harell's Concordance index
+#' Compute the Harell's Concordance index
 #'
-#' A function to calculate Harells' concordance index of a survival model.
+#' A function to compute the Harells' concordance index of a survival model.
 #'
 #'
 #' @param y_true a `survival::Surv` object containing the times and statuses of observations for which the metric will be evaluated
@@ -28,7 +28,7 @@
 #' risk <- coxph_explainer$predict_function(coxph_explainer$model, coxph_explainer$data)
 #' c_index(y_true = coxph_explainer$y, risk = risk)
 #' }
-#' @import survival
+#'
 #' @export
 c_index <- function(y_true = NULL, risk = NULL, surv = NULL, times = NULL) {
 
@@ -83,8 +83,6 @@ loss_one_minus_c_index <- function(y_true = NULL, risk = NULL, surv = NULL, time
 attr(loss_one_minus_c_index, "loss_name") <- "One minus C-Index"
 
 
-
-
 #' Calculate Brier score
 #'
 #' A function for calculating the Brier score for a survival model.
@@ -100,7 +98,6 @@ attr(loss_one_minus_c_index, "loss_name") <- "One minus C-Index"
 #' @return numeric from 0 to 1, lower scores are better (brier score of 0.25 represents a model which returns always returns 0.5 as the predicted survival function)
 #'
 #' @rdname brier_score
-#'
 #' @seealso [cd_auc()]
 #'
 #' @examples
@@ -117,7 +114,6 @@ attr(loss_one_minus_c_index, "loss_name") <- "One minus C-Index"
 #' brier_score(y, surv = surv, times = times)
 #' loss_brier_score(y, surv = surv, times = times)
 #'
-#' @import survival
 #' @export
 brier_score <- function(y_true = NULL, risk = NULL, surv = NULL, times = NULL) {
     # if times is not provided use
@@ -185,7 +181,6 @@ attr(loss_brier_score, "loss_name") <- "Brier score"
 #'
 #' cd_auc(y, surv = surv, times = times)
 #'
-#' @import survival
 #' @export
 cd_auc <- function(y_true = NULL, risk = NULL, surv = NULL, times = NULL) {
 
@@ -346,6 +341,7 @@ loss_one_minus_integrated_cd_auc <- function(y_true = NULL, risk = NULL, surv = 
     1 - integrated_cd_auc(y_true = y_true, risk = risk, surv = surv, times = times, auc = auc)
 }
 attr(loss_one_minus_integrated_cd_auc, "loss_name") <- "One minus integrated C/D AUC"
+
 
 #' Calculate integrated Brier score
 #'

@@ -10,7 +10,7 @@
 #' @param B ignored, placeholder the not implemented `"sampling"` method
 #' @param exact ignored, placeholder the not implemented `"sampling"` method
 #'
-#' @return A list, containing the calculated SurvSHAP results in the `$result` field
+#' @return A list, containing the calculated SurvSHAP(t) results in the `result` field
 #'
 #'
 #' @keywords internal

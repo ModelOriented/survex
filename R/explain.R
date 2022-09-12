@@ -1,82 +1,9 @@
-#' @rdname explain_survival
-#' @export
-explain <-
-    function(model,
-             data = NULL,
-             y = NULL,
-             predict_function = NULL,
-             predict_function_target_column = NULL,
-             residual_function = NULL,
-             weights = NULL,
-             ...,
-             label = NULL,
-             verbose = TRUE,
-             colorize = !isTRUE(getOption('knitr.in.progress')),
-             model_info = NULL,
-             type = NULL)
-UseMethod("explain", model)
-
-#' @rdname explain_survival
-#' @export
-explain.default <-     function(model,
-                                data = NULL,
-                                y = NULL,
-                                predict_function = NULL,
-                                predict_function_target_column = NULL,
-                                residual_function = NULL,
-                                weights = NULL,
-                                ...,
-                                label = NULL,
-                                verbose = TRUE,
-                                colorize = !isTRUE(getOption('knitr.in.progress')),
-                                model_info = NULL,
-                                type = NULL) {
-    supported_models <- c("aalen", "riskRegression", "cox.aalen", "cph", "coxph", "selectCox", "pecCforest", "prodlim", "psm", "survfit", "pecRpart")
-    if (inherits(model, supported_models)) {
-        return(
-            explain_survival(
-                model,
-                data = data,
-                y = y,
-                predict_function = predict_function,
-                predict_function_target_column = predict_function_target_column,
-                residual_function = residual_function,
-                weights = weights,
-                ...,
-                label = label,
-                verbose = verbose,
-                colorize = colorize,
-                model_info = model_info,
-                type = type,
-                predict_survival_function = pec::predictSurvProb
-            )
-        )
-    } else {
-        DALEX::explain(model,
-                       data = data,
-                       y = y,
-                       predict_function = predict_function,
-                       predict_function_target_column = predict_function_target_column,
-                       residual_function = residual_function,
-                       weights = weights,
-                       ...,
-                       label = label,
-                       verbose = verbose,
-                       colorize = !isTRUE(getOption('knitr.in.progress')),
-                       model_info = model_info,
-                       type = type)
-    }
-}
-
-
-#' A model agnostic explainer for survival models
+#' A model-agnostic explainer for survival models
 #'
 #' Black-box models have vastly different structures. `explain_survival()`
-#' returns an object which can be further processed for creating prediction
-#' explanations and their visualizations.
-#'
-#' This function can be used manually to create explainers for models which
-#' are not covered by the `survex` package.
+#' returns an explainer object that can be further processed for creating
+#' prediction explanations and their visualizations. It can be used to manually
+#' create explainers for models not covered by the `survex` package.
 #'
 #' @param model object - a survival model to be explained
 #' @param data data.frame - data which will be used to calculate the explanations. If not provided, then it will be extracted from the model if possible. It should not contain the target columns. NOTE: If the target variable is present in the `data` some functionality breaks.
@@ -139,9 +66,15 @@ explain.default <-     function(model,
 #'    generics::fit(survival::Surv(time, status) ~ ., data = veteran)
 #' bt_exp <- explain(bt, data = veteran[, -c(3, 4)], y = Surv(veteran$time, veteran$status))
 #' }
-#' @export
+#'
+#' @import survival
+#' @import ggplot2
+#' @import gridExtra
+#' @importFrom DALEX theme_drwhy theme_drwhy_vertical
 #' @importFrom utils tail stack head
-#' @importFrom stats model.frame
+#' @importFrom stats median model.frame predict stepfun reorder na.omit aggregate
+#'
+#' @export
 explain_survival <-
     function(model,
              data = NULL,
@@ -401,7 +334,75 @@ explain_survival <-
     }
 
 #' @rdname explain_survival
-#' @importFrom stats predict stepfun
+#' @export
+explain <-
+    function(model,
+             data = NULL,
+             y = NULL,
+             predict_function = NULL,
+             predict_function_target_column = NULL,
+             residual_function = NULL,
+             weights = NULL,
+             ...,
+             label = NULL,
+             verbose = TRUE,
+             colorize = !isTRUE(getOption('knitr.in.progress')),
+             model_info = NULL,
+             type = NULL)
+UseMethod("explain", model)
+
+#' @rdname explain_survival
+#' @export
+explain.default <-     function(model,
+                                data = NULL,
+                                y = NULL,
+                                predict_function = NULL,
+                                predict_function_target_column = NULL,
+                                residual_function = NULL,
+                                weights = NULL,
+                                ...,
+                                label = NULL,
+                                verbose = TRUE,
+                                colorize = !isTRUE(getOption('knitr.in.progress')),
+                                model_info = NULL,
+                                type = NULL) {
+    supported_models <- c("aalen", "riskRegression", "cox.aalen", "cph", "coxph", "selectCox", "pecCforest", "prodlim", "psm", "survfit", "pecRpart")
+    if (inherits(model, supported_models)) {
+        return(
+            explain_survival(
+                model,
+                data = data,
+                y = y,
+                predict_function = predict_function,
+                predict_function_target_column = predict_function_target_column,
+                residual_function = residual_function,
+                weights = weights,
+                ...,
+                label = label,
+                verbose = verbose,
+                colorize = colorize,
+                model_info = model_info,
+                type = type,
+                predict_survival_function = pec::predictSurvProb
+            )
+        )
+    } else {
+        DALEX::explain(model,
+                       data = data,
+                       y = y,
+                       predict_function = predict_function,
+                       predict_function_target_column = predict_function_target_column,
+                       residual_function = residual_function,
+                       weights = weights,
+                       ...,
+                       label = label,
+                       verbose = verbose,
+                       colorize = !isTRUE(getOption('knitr.in.progress')),
+                       model_info = model_info,
+                       type = type)
+    }
+}
+
 #' @export
 explain.coxph <-
     function(model,
@@ -493,8 +494,7 @@ explain.coxph <-
         )
     }
 
-#' @rdname explain_survival
-#' @importFrom stats predict stepfun
+
 #' @export
 explain.ranger <-
     function(model,
@@ -570,8 +570,7 @@ explain.ranger <-
         )
     }
 
-#' @rdname explain_survival
-#' @importFrom stats predict stepfun
+
 #' @export
 explain.rfsrc <-
     function(model,
@@ -663,7 +662,6 @@ explain.rfsrc <-
     }
 
 
-#' @rdname explain_survival
 #' @export
 explain.model_fit <-
     function(model,
@@ -752,9 +750,6 @@ explain.model_fit <-
     }
 
 
-
-#' @rdname explain_survival
-#' @importFrom stats predict stepfun
 #' @export
 explain.LearnerSurv <-
     function(model,
@@ -840,11 +835,6 @@ explain.LearnerSurv <-
 
 
 
-
-
-
-
-
 verbose_cat <- function(..., is.default = NULL, verbose = TRUE) {
     if (verbose) {
         if (!is.null(is.default)) {
@@ -859,8 +849,6 @@ verbose_cat <- function(..., is.default = NULL, verbose = TRUE) {
 get_times_stats <- function(times) {
     c(length(times), min(times), mean(times), max(times))
 }
-
-
 
 #
 # colors for WARNING, NOTE, DEFAULT

@@ -1,14 +1,3 @@
-#' @rdname predict_profile.surv_explainer
-#' @export
-predict_profile <- function(explainer,
-                            new_observation,
-                            variables = NULL,
-                            categorical_variables = NULL,
-                            ...,
-                            type = "ceteris_paribus",
-                            variable_splits_type = "uniform")
-    UseMethod("predict_profile", explainer)
-
 #' Instance Level Profile as Ceteris Paribus for Survival Models
 #'
 #' This function calculates Ceteris Paribus Proifles for a specific observation with the possibility to take the time dimension into account.
@@ -24,7 +13,6 @@ predict_profile <- function(explainer,
 #'
 #' @return An object of class `c("predict_profile_survival", "surv_ceteris_paribus")`. It is a list with the final result in the `result` element.
 #'
-#' @rdname predict_profile.surv_explainer
 #'
 #' @examples
 #' \donttest{
@@ -46,6 +34,19 @@ predict_profile <- function(explainer,
 #' rsf_predict_profile <- predict_profile(rsf_src_exp, veteran[5, -c(3, 4)], variables = "karno")
 #' plot(cph_predict_profile, numerical_plot_type = "contours")
 #' }
+#'
+#' @rdname predict_profile.surv_explainer
+#' @export
+predict_profile <- function(explainer,
+                            new_observation,
+                            variables = NULL,
+                            categorical_variables = NULL,
+                            ...,
+                            type = "ceteris_paribus",
+                            variable_splits_type = "uniform")
+    UseMethod("predict_profile", explainer)
+
+
 #' @export
 predict_profile.surv_explainer <- function(explainer,
                                            new_observation,
