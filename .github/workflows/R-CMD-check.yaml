@@ -31,7 +31,7 @@ jobs:
     steps:
     # added for builds failing on macos when generating vignette outputs     
       - if: runner.os == 'macOS'
-        run: brew install --cask xquartz
+        run: brew install --cask xquartz && brew tap homebrew/cask && brew tap homebrew/cask-fonts && brew cask install font-arial 
         
       - uses: actions/checkout@v2
 
