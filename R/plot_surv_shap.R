@@ -1,7 +1,7 @@
 #' Plot SurvSHAP(t) Explanations for Survival Models
 #'
 #' This functions plots objects of class `surv_shap` - time-dependent explanations of
-#' survival models created using the `predict_parts(..., type="survshap)` function.
+#' survival models created using the `predict_parts(..., type="survshap")` function.
 #'
 #' @param x an object of class `"surv_shap"` to be plotted
 #' @param ... additional objects of class `surv_shap` to be plotted together
