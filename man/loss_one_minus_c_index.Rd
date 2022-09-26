@@ -21,6 +21,14 @@ numeric from 0 to 1, lower values indicate better performance
 \description{
 This function subtracts the C-index metric from one to obtain a loss function whose lower values indicate better model performance (useful for permutational feature importance)
 }
+\section{References}{
+
+\itemize{
+\item [\link{1} Harrell Jr, Frank E., et al. "Regression modelling strategies for improved prognostic prediction." Statistics in medicine 3.2 (1984): 143-152.](https://onlinelibrary.wiley.com/doi/abs/10.1002/sim.4780030207)
+\item [\link{2} pysurvival documentation entry](https://square.github.io/pysurvival/metrics/c_index.html)
+}
+}
+
 \examples{
 \donttest{
 library(survival)

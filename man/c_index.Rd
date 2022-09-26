@@ -19,8 +19,16 @@ c_index(y_true = NULL, risk = NULL, surv = NULL, times = NULL)
 numeric from 0 to 1, higher values indicate better performance
 }
 \description{
-A function to compute the Harells' concordance index of a survival model.
+A function to compute the Harrell's concordance index of a survival model.
 }
+\section{References}{
+
+\itemize{
+\item [\link{1} Harrell Jr, Frank E., et al. "Regression modelling strategies for improved prognostic prediction." Statistics in medicine 3.2 (1984): 143-152.](https://onlinelibrary.wiley.com/doi/abs/10.1002/sim.4780030207)
+\item [\link{2} pysurvival documentation entry](https://square.github.io/pysurvival/metrics/c_index.html)
+}
+}
+
 \examples{
 \donttest{
 library(survival)

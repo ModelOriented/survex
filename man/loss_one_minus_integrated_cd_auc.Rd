@@ -25,6 +25,13 @@ loss_one_minus_integrated_cd_auc(
 }
 \value{
 numeric from 0 to 1, lower values indicate better performance
+
+#' @section References:
+\itemize{
+\item [\link{1} Uno, Hajime, et al. "Evaluating prediction rules for t-year survivors with censored regression models." Journal of the American Statistical Association 102.478 (2007): 527-537.](https://www.jstor.org/stable/27639883#metadata_info_tab_contents)
+\item [\link{2} Hung, Hung, and Chin‐tsang Chiang. "Optimal composite markers for time‐dependent receiver operating characteristic curves with censored survival data." Scandinavian journal of statistics 37.4 (2010): 664-679.](https://www.jstor.org/stable/41000414#metadata_info_tab_contents)
+\item [\link{3} scikit-survival documentation entry](https://scikit-survival.readthedocs.io/en/stable/api/generated/sksurv.metrics.cumulative_dynamic_auc.html)
+}
 }
 \description{
 This function subtracts integrated the C/D AUC metric from one to obtain a loss function whose lower values indicate better model performance (useful for permutational feature importance)
