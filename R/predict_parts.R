@@ -31,6 +31,9 @@
 #'     * `calculation_method` -  a character, only `"kernel"` is implemented for now.
 #'     * `aggregation_method` -  a character, either `"mean_absolute"` or `"integral"`, `"max_absolute"`, `"sum_of_squares"`
 #'
+#' @section References:
+#' - [Krzyziński, Mateusz, et al. "SurvSHAP (t): Time-dependent explanations of machine learning survival models." arXiv preprint arXiv:2208.11080 (2022).](https://arxiv.org/abs/2208.11080)
+#' - [Kovalev, Maxim S., Lev V. Utkin, and Ernest M. Kasimov. "SurvLIME: A method for explaining machine learning survival models." Knowledge-Based Systems 203 (2020): 106164.](https://www.sciencedirect.com/science/article/pii/S0950705120304044?casa_token=6e9cyk_ji3AAAAAA:tbqo33MsZvNC9nrSGabZdLfPtZTsvsvZTHYQCM2aEhumLI5D46U7ovhr37EaYUhmKZrw45JzDhg)
 #'
 #' @examples
 #' \donttest{

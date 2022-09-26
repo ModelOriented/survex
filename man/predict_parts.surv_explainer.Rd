@@ -61,6 +61,13 @@ There are additional parameters that are passed to internal functions
 }
 }
 
+\section{References}{
+
+\itemize{
+\item \href{https://arxiv.org/abs/2208.11080}{Krzyziński, Mateusz, et al. "SurvSHAP (t): Time-dependent explanations of machine learning survival models." arXiv preprint arXiv:2208.11080 (2022).}
+}
+}
+
 \examples{
 \donttest{
 library(survival)

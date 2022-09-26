@@ -47,4 +47,11 @@ A list, with the SurvLIME result in the \verb{$result} field.
 \description{
 Helper functions for \code{predict_parts.R}
 }
+\section{References}{
+
+\itemize{
+\item \href{https://www.sciencedirect.com/science/article/pii/S0950705120304044?casa_token=6e9cyk_ji3AAAAAA:tbqo33MsZvNC9nrSGabZdLfPtZTsvsvZTHYQCM2aEhumLI5D46U7ovhr37EaYUhmKZrw45JzDhg}{Kovalev, Maxim S., Lev V. Utkin, and Ernest M. Kasimov. "SurvLIME: A method for explaining machine learning survival models." Knowledge-Based Systems 203 (2020): 106164.}
+}
+}
+
 \keyword{internal}

@@ -12,6 +12,8 @@
 #'
 #' @return A list, containing the calculated SurvSHAP(t) results in the `result` field
 #'
+#' @section References:
+#' - [Krzyziński, Mateusz, et al. "SurvSHAP (t): Time-dependent explanations of machine learning survival models." arXiv preprint arXiv:2208.11080 (2022).](https://arxiv.org/abs/2208.11080)
 #'
 #' @keywords internal
 surv_shap <- function(explainer,
