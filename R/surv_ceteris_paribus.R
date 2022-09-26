@@ -7,7 +7,7 @@ surv_ceteris_paribus <- function(x, ...) UseMethod("surv_ceteris_paribus", x)
 #'
 #' @rdname surv_ceteris_paribus
 #'
-#' @param x a model to be explained, preprocessed by the `explain` function
+#' @param x an explainer object - model preprocessed by the `explain()` function
 #' @param new_observation a new observation for which predictions need to be explained
 #' @param variables character, names of the variables to be included in the calculations
 #' @param categorical_variables character vector, names of variables that should be treated as categories (factors are included by default)

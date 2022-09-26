@@ -39,7 +39,8 @@
 A grid of \code{ggplot} objects arranged with the \code{gridExtra::grid.arrange} function.
 }
 \description{
-This function plots objects of class \code{"predict_profile_survival"}.
+This function plots objects of class \code{"predict_profile_survival"} created using
+the \code{predict_profile()} function.
 }
 \examples{
 \donttest{
@@ -61,6 +62,7 @@ p_profile_with_cat <- predict_profile(
 
 plot(p_profile_with_cat)
 }
+
 }
 \seealso{
 Other functions for plotting 'predict_profile_survival' objects: 

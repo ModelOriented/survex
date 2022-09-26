@@ -30,7 +30,8 @@
 An object of the class \code{ggplot}.
 }
 \description{
-This function plots objects of class \code{"surv_model_performance_rocs"} - ROC curves for specific time points for survival models
+This function plots objects of class \code{"surv_model_performance_rocs"} - ROC curves for
+specific time points for survival models created using the \code{model_performance(..., type="roc")}.
 }
 \examples{
 library(survival)

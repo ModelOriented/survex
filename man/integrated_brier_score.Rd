@@ -41,6 +41,14 @@ This function calculates the integrated Brier score metric for a survival model.
 \details{
 It is useful to see how a model performs as a whole, not at specific time points, for example for easier comparison. This function allows for calculating the integral of Brier score metric numerically using the trapezoid method.
 }
+\section{References}{
+
+\itemize{
+\item [1] Brier, Glenn W. \href{https://journals.ametsoc.org/view/journals/mwre/78/1/1520-0493_1950_078_0001_vofeit_2_0_co_2.xml}{"Verification of forecasts expressed in terms of probability."} Monthly Weather Review 78.1 (1950): 1-3.
+\item [2] Graf, Erika, et al. \href{https://onlinelibrary.wiley.com/doi/abs/10.1002/\%28SICI\%291097-0258\%2819990915/30\%2918\%3A17/18\%3C2529\%3A\%3AAID-SIM274\%3E3.0.CO\%3B2-5}{"Assessment and comparison of prognostic classification schemes for survival data."} Statistics in Medicine 18.17‐18 (1999): 2529-2545.
+}
+}
+
 \examples{
 
 library(survival)

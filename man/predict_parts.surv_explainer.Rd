@@ -17,9 +17,9 @@ predict_parts(explainer, ...)
 )
 }
 \arguments{
-\item{explainer}{a model to be explained, preprocessed by the \code{explain()} function}
+\item{explainer}{an explainer object - model preprocessed by the \code{explain()} function}
 
-\item{...}{other parameters which are passed to \code{IBreakDown::break_down} if \code{output_type=="risk"}, or if \code{output_type=="survival"} to \code{surv_shap()} or \code{surv_lime()} functions depending on the selected type}
+\item{...}{other parameters which are passed to \code{iBreakDown::break_down} if \code{output_type=="risk"}, or if \code{output_type=="survival"} to \code{surv_shap()} or \code{surv_lime()} functions depending on the selected type}
 
 \item{new_observation}{a new observation for which prediction need to be explained}
 
@@ -61,6 +61,14 @@ There are additional parameters that are passed to internal functions
 }
 }
 
+\section{References}{
+
+\itemize{
+\item [1] Krzyziński, Mateusz, et al. \href{https://arxiv.org/abs/2208.11080}{"SurvSHAP(t): Time-dependent explanations of machine learning survival models."} arXiv preprint arXiv:2208.11080 (2022).
+\item [2] Kovalev, Maxim S., et al. \href{https://www.sciencedirect.com/science/article/pii/S0950705120304044?casa_token=6e9cyk_ji3AAAAAA:tbqo33MsZvNC9nrSGabZdLfPtZTsvsvZTHYQCM2aEhumLI5D46U7ovhr37EaYUhmKZrw45JzDhg}{"SurvLIME: A method for explaining machine learning survival models."} Knowledge-Based Systems 203 (2020): 106164.
+}
+}
+
 \examples{
 \donttest{
 library(survival)
@@ -78,4 +86,5 @@ cph_predict_parts_survlime <- predict_parts(cph_exp, new_observation = veteran[1
 head(cph_predict_parts_survlime$result)
 plot(cph_predict_parts_survlime, type = "local_importance")
 }
+
 }

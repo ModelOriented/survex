@@ -1,6 +1,7 @@
 #' Plot Model Parts for Survival Models
 #'
-#' This function is a wrapper for plotting `model_parts` objects created for survival models.
+#' This function is a wrapper for plotting `model_parts` objects created for survival models
+#' using the `model_parts()` function.
 #'
 #' @param x an object of class `"model_parts_survival"` to be plotted
 #' @param ... additional parameters passed to the `plot.surv_feature_importance` function

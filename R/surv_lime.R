@@ -1,7 +1,7 @@
 #' Helper functions for `predict_parts.R`
 #'
 #'
-#' @param explainer a model to be explained, preprocessed by the `explain` function
+#' @param explainer an explainer object - model preprocessed by the `explain()` function
 #' @param new_observation a new observation for which predictions need to be explained
 #' @param ... additional parameters, passed to internal functions
 #' @param N a positive integer, number of observations generated in the neighbourhood
@@ -14,6 +14,9 @@
 #' @param k a small positive number > 1, added to chf before taking log, so that weigths aren't negative
 #'
 #' @return A list, with the SurvLIME result in the `$result` field.
+#'
+#' @section References:
+#' - \[1\] Kovalev, Maxim S., et al. ["SurvLIME: A method for explaining machine learning survival models."](https://www.sciencedirect.com/science/article/pii/S0950705120304044?casa_token=6e9cyk_ji3AAAAAA:tbqo33MsZvNC9nrSGabZdLfPtZTsvsvZTHYQCM2aEhumLI5D46U7ovhr37EaYUhmKZrw45JzDhg) Knowledge-Based Systems 203 (2020): 106164.
 #'
 #' @keywords internal
 #' @importFrom stats optim

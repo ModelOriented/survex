@@ -1,6 +1,7 @@
 #' Plot Predict Parts for Survival Models
 #'
-#' This function plots objects of class `"predict_parts_survival"` - local explanations for survival models
+#' This function plots objects of class `"predict_parts_survival"` - local explanations
+#' for survival models created using the `predict_parts()` function.
 #'
 #' @param x an object of class  `"predict_parts_survival"` to be plotted
 #' @param ... additional parameters passed to the `plot.surv_shap` or `plot.surv_lime` functions

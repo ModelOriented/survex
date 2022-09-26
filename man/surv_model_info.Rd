@@ -9,7 +9,7 @@
 \alias{surv_model_info.cph}
 \alias{surv_model_info.LearnerSurv}
 \alias{surv_model_info.default}
-\title{Extract info from model}
+\title{Extract additional information from the model}
 \usage{
 surv_model_info(model, ...)
 
@@ -33,7 +33,7 @@ surv_model_info(model, ...)
 }}
 
 \item{...}{\itemize{
-\item another arguments
+\item other arguments
 }}
 }
 \value{

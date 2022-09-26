@@ -1,6 +1,6 @@
 #' Helper functions for `model_performance.R`
 #'
-#' @param explainer a model to be explained, preprocessed by the `explain` function
+#' @param explainer an explainer object - model preprocessed by the `explain()` function
 #' @param ... other parameters, currently ignored
 #' @param times a numeric vector, time points at which ROC curves are calculated if `type == "roc"` or at which metrics are calculated if `type == "metrics"`. Note: if `type=="roc"` this parameter is obligatory
 #' @param type character, either `"metrics"` which calculates performance metrics or `"roc"` which calculates ROC curves at specific time points

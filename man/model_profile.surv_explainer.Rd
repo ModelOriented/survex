@@ -32,7 +32,7 @@ model_profile(
 )
 }
 \arguments{
-\item{explainer}{a model to be explained, preprocessed by the \code{explain()} function}
+\item{explainer}{an explainer object - model preprocessed by the \code{explain()} function}
 
 \item{variables}{character, a vector of names of variables to be explained}
 
@@ -59,7 +59,7 @@ An object of class \code{model_profile_survival}. It is a list with the element 
 }
 \description{
 This function calculates explanations on a dataset level that help explore model response as a function of selected variables.
-The explanations are calculated as an extention of Partial Dependence Profiles with the inclusion of the time dimension.
+The explanations are calculated as an extension of Partial Dependence Profiles with the inclusion of the time dimension.
 }
 \examples{
 \donttest{
@@ -86,4 +86,5 @@ head(rsf_model_profile$result)
 
 plot(rsf_model_profile, variables = c("age", "celltype"), numerical_plot_type = "contours")
 }
+
 }

@@ -15,7 +15,8 @@
 An object of the class \code{ggplot}.
 }
 \description{
-This function is a wrapper for plotting \code{model_parts} objects created for survival models.
+This function is a wrapper for plotting \code{model_parts} objects created for survival models
+using the \code{model_parts()} function.
 }
 \section{Plot options}{
 

@@ -2,8 +2,12 @@
 #'
 #' Black-box models have vastly different structures. `explain_survival()`
 #' returns an explainer object that can be further processed for creating
-#' prediction explanations and their visualizations. It can be used to manually
-#' create explainers for models not covered by the `survex` package.
+#' prediction explanations and their visualizations. This function is used to manually
+#' create explainers for models not covered by the `survex` package. For selected
+#' models the extraction of information can be done automatically. To do
+#' this, you can call the `explain()` function for survival models from  `mlr3proba`, `censored`,
+#' `randomForestSRC`, `ranger`, `survival` packages and any other model
+#' with `pec::predictSurvProb()` method.
 #'
 #' @param model object - a survival model to be explained
 #' @param data data.frame - data which will be used to calculate the explanations. If not provided, then it will be extracted from the model if possible. It should not contain the target columns. NOTE: If the target variable is present in the `data` some functionality breaks.
@@ -65,6 +69,24 @@
 #'    parsnip::set_mode("censored regression") %>%
 #'    generics::fit(survival::Surv(time, status) ~ ., data = veteran)
 #' bt_exp <- explain(bt, data = veteran[, -c(3, 4)], y = Surv(veteran$time, veteran$status))
+#'
+#' ###### explain_survival() ######
+#'
+#' cph <- coxph(Surv(time, status) ~ ., data=veteran)
+#'
+#' veteran_data <- veteran[, -c(3,4)]
+#' veteran_y <- Surv(veteran$time, veteran$status)
+#' risk_pred <- function(model, newdata) predict(model, newdata, type = "risk")
+#' surv_pred <- function(model, newdata, times) pec::predictSurvProb(model, newdata, times)
+#' chf_pred <- function(model, newdata, times) -log(surv_pred(model, newdata, times))
+#'
+#' manual_cph_explainer <- explain_survival(model = cph,
+#'                                          data = veteran_data,
+#'                                          y = veteran_y,
+#'                                          predict_function = risk_pred,
+#'                                          predict_survival_function = surv_pred,
+#'                                          predict_cumulative_hazard_function = chf_pred,
+#'                                          label = "manual coxph")
 #' }
 #'
 #' @import survival

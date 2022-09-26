@@ -1,6 +1,6 @@
-#' Compute the Harell's Concordance index
+#' Compute the Harrell's Concordance index
 #'
-#' A function to compute the Harells' concordance index of a survival model.
+#' A function to compute the Harrell's concordance index of a survival model.
 #'
 #'
 #' @param y_true a `survival::Surv` object containing the times and statuses of observations for which the metric will be evaluated
@@ -9,6 +9,9 @@
 #' @param times ignored, left for compatibility with other metrics
 #'
 #' @return numeric from 0 to 1, higher values indicate better performance
+#'
+#' @section References:
+#' - \[1\] Harrell, F.E., Jr., et al. ["Regression modelling strategies for improved prognostic prediction."](https://onlinelibrary.wiley.com/doi/abs/10.1002/sim.4780030207) Statistics in Medicine 3.2 (1984): 143-152.
 #'
 #' @rdname c_index
 #' @seealso [loss_one_minus_c_index()]
@@ -58,6 +61,9 @@ attr(c_index, "loss_name") <- "C-index"
 #'
 #' @return numeric from 0 to 1, lower values indicate better performance
 #'
+#' @section References:
+#' - \[1\] Harrell, F.E., Jr., et al. ["Regression modelling strategies for improved prognostic prediction."](https://onlinelibrary.wiley.com/doi/abs/10.1002/sim.4780030207) Statistics in Medicine 3.2 (1984): 143-152.
+#'
 #' @rdname loss_one_minus_c_index
 #' @seealso [c_index()]
 #'
@@ -96,6 +102,10 @@ attr(loss_one_minus_c_index, "loss_name") <- "One minus C-Index"
 #' @param times a vector of time points at which the survival function was evaluated
 #'
 #' @return numeric from 0 to 1, lower scores are better (brier score of 0.25 represents a model which returns always returns 0.5 as the predicted survival function)
+#'
+#' @section References:
+#' - \[1\] Brier, Glenn W. ["Verification of forecasts expressed in terms of probability."](https://journals.ametsoc.org/view/journals/mwre/78/1/1520-0493_1950_078_0001_vofeit_2_0_co_2.xml) Monthly Weather Review 78.1 (1950): 1-3.
+#' - \[2\] Graf, Erika, et al. ["Assessment and comparison of prognostic classification schemes for survival data."](https://onlinelibrary.wiley.com/doi/abs/10.1002/%28SICI%291097-0258%2819990915/30%2918%3A17/18%3C2529%3A%3AAID-SIM274%3E3.0.CO%3B2-5) Statistics in Medicine 18.17‐18 (1999): 2529-2545.
 #'
 #' @rdname brier_score
 #' @seealso [cd_auc()]
@@ -154,9 +164,13 @@ attr(loss_brier_score, "loss_name") <- "Brier score"
 
 #' Calculate Cumulative/Dynamic AUC
 #'
-#' This function calculates the Cumulative/Dynamic AUC metric for a survival model.
+#' This function calculates the Cumulative/Dynamic AUC metric for a survival model. It is done using the
+#' estimator proposed proposed by Uno et al. \[[1](https://www.jstor.org/stable/27639883#metadata_info_tab_contents)\],
+#' and Hung and Chang \[[2](https://www.jstor.org/stable/41000414#metadata_info_tab_contents)\].
 #'
-#' C/D AUC is an extension of the AUC metric known from classification models. Its values represent the model's performance at specific time points. It can be integrated over the considered time point
+#' C/D AUC is an extension of the AUC metric known from classification models.
+#' Its values represent the model's performance at specific time points.
+#' It can be integrated over the considered time range.
 #'
 #' @param y_true a `survival::Surv` object containing the times and statuses of observations for which the metric will be evaluated
 #' @param risk ignored, left for compatibility with other metrics
@@ -164,6 +178,10 @@ attr(loss_brier_score, "loss_name") <- "Brier score"
 #' @param times a vector of time points at which the survival function was evaluated
 #'
 #' @return a numeric vector of length equal to the length of the times vector, each value (from the range from 0 to 1) represents the AUC metric at a specific time point, with higher values indicating better performance.
+#'
+#' @section References:
+#' - \[1\] Uno, Hajime, et al. ["Evaluating prediction rules for t-year survivors with censored regression models."](https://www.jstor.org/stable/27639883#metadata_info_tab_contents) Journal of the American Statistical Association 102.478 (2007): 527-537.
+#' - \[2\] Hung, Hung, and Chin‐Tsang Chiang. ["Optimal composite markers for time‐dependent receiver operating characteristic curves with censored survival data."](https://www.jstor.org/stable/41000414#metadata_info_tab_contents) Scandinavian Journal of Statistics 37.4 (2010): 664-679.
 #'
 #' @rdname cd_auc
 #' @seealso [loss_one_minus_cd_auc()] [integrated_cd_auc()] [brier_score()]
@@ -227,6 +245,10 @@ attr(cd_auc, "loss_name") <- "C/D AUC"
 #'
 #' @return a numeric vector of length equal to the length of the times vector, each value (from the range from 0 to 1) represents 1 - AUC metric at a specific time point, with lower values indicating better performance.
 #'
+#' #' @section References:
+#' - \[1\] Uno, Hajime, et al. ["Evaluating prediction rules for t-year survivors with censored regression models."](https://www.jstor.org/stable/27639883#metadata_info_tab_contents) Journal of the American Statistical Association 102.478 (2007): 527-537.
+#' - \[2\] Hung, Hung, and Chin‐Tsang Chiang. ["Optimal composite markers for time‐dependent receiver operating characteristic curves with censored survival data."](https://www.jstor.org/stable/41000414#metadata_info_tab_contents) Scandinavian Journal of Statistics 37.4 (2010): 664-679.
+#'
 #' @rdname loss_one_minus_cd_auc
 #' @seealso [cd_auc()]
 #'
@@ -262,6 +284,10 @@ attr(loss_one_minus_cd_auc, "loss_name") <- "One minus C/D AUC"
 #' @param auc a vector containing already calculated AUC metric at the time points specified in the times parameter. If this is provided all arguments except `times` and `auc` are ignored
 #'
 #' @return numeric from 0 to 1, higher values indicate better performance
+#'
+#' #' @section References:
+#' - \[1\] Uno, Hajime, et al. ["Evaluating prediction rules for t-year survivors with censored regression models."](https://www.jstor.org/stable/27639883#metadata_info_tab_contents) Journal of the American Statistical Association 102.478 (2007): 527-537.
+#' - \[2\] Hung, Hung, and Chin‐Tsang Chiang. ["Optimal composite markers for time‐dependent receiver operating characteristic curves with censored survival data."](https://www.jstor.org/stable/41000414#metadata_info_tab_contents) Scandinavian Journal of Statistics 37.4 (2010): 664-679.
 #'
 #' @rdname integrated_cd_auc
 #' @seealso [cd_auc()] [loss_one_minus_cd_auc()]
@@ -313,6 +339,10 @@ attr(integrated_cd_auc, "loss_name") <- "integrated C/D AUC"
 #'
 #' @return numeric from 0 to 1, lower values indicate better performance
 #'
+#' #' @section References:
+#' - \[1\] Uno, Hajime, et al. ["Evaluating prediction rules for t-year survivors with censored regression models."](https://www.jstor.org/stable/27639883#metadata_info_tab_contents) Journal of the American Statistical Association 102.478 (2007): 527-537.
+#' - \[2\] Hung, Hung, and Chin‐Tsang Chiang. ["Optimal composite markers for time‐dependent receiver operating characteristic curves with censored survival data."](https://www.jstor.org/stable/41000414#metadata_info_tab_contents) Scandinavian Journal of Statistics 37.4 (2010): 664-679.
+#'
 #' @rdname loss_one_minus_integrated_cd_auc
 #' @seealso [integrated_cd_auc()] [cd_auc()] [loss_one_minus_cd_auc()]
 #'
@@ -356,6 +386,10 @@ attr(loss_one_minus_integrated_cd_auc, "loss_name") <- "One minus integrated C/D
 #' @param brier a vector containing already calculated Brier score metric at the time points specified in the times parameter. If this is provided all arguments except `times` and `brier` are ignored
 #'
 #' @return numeric from 0 to 1, lower values indicate better performance
+#'
+#' @section References:
+#' - \[1\] Brier, Glenn W. ["Verification of forecasts expressed in terms of probability."](https://journals.ametsoc.org/view/journals/mwre/78/1/1520-0493_1950_078_0001_vofeit_2_0_co_2.xml) Monthly Weather Review 78.1 (1950): 1-3.
+#' - \[2\] Graf, Erika, et al. ["Assessment and comparison of prognostic classification schemes for survival data."](https://onlinelibrary.wiley.com/doi/abs/10.1002/%28SICI%291097-0258%2819990915/30%2918%3A17/18%3C2529%3A%3AAID-SIM274%3E3.0.CO%3B2-5) Statistics in Medicine 18.17‐18 (1999): 2529-2545.
 #'
 #' @rdname integrated_brier_score
 #' @seealso [brier_score()] [integrated_cd_auc()] [loss_one_minus_integrated_cd_auc()]

@@ -39,7 +39,8 @@
 A grid of \code{ggplot} objects arranged with the \code{gridExtra::grid.arrange} function.
 }
 \description{
-This function plots objects of class \code{"model_profile_survival"}.
+This function plots objects of class \code{"model_profile_survival"} created
+using the \code{model_profile()} function.
 }
 \examples{
 \donttest{
@@ -57,4 +58,5 @@ plot(m_prof, numerical_plot_type = "contours", facet_ncol = 1)
 
 plot(m_prof, variables = c("trt", "age"), facet_ncol = 1)
 }
+
 }

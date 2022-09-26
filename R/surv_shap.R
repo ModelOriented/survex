@@ -1,6 +1,6 @@
 #' Helper functions for `predict_parts.R`
 #'
-#' @param explainer a model to be explained, preprocessed by the `explain` function
+#' @param explainer an explainer object - model preprocessed by the `explain()` function
 #' @param new_observation a new observation for which predictions need to be explained
 #' @param ... additional parameters, passed to internal functions
 #' @param y_true a two element numeric vector or matrix of one row and two columns, the first element being the true observed time and the second the status of the observation, used for plotting
@@ -12,6 +12,8 @@
 #'
 #' @return A list, containing the calculated SurvSHAP(t) results in the `result` field
 #'
+#' @section References:
+#' - \[1\] Krzyziński, Mateusz, et al. ["SurvSHAP(t): Time-dependent explanations of machine learning survival models."](https://arxiv.org/abs/2208.11080) arXiv preprint arXiv:2208.11080 (2022).
 #'
 #' @keywords internal
 surv_shap <- function(explainer,
