@@ -3,11 +3,11 @@
 #' Black-box models have vastly different structures. `explain_survival()`
 #' returns an explainer object that can be further processed for creating
 #' prediction explanations and their visualizations. This function is used to manually
-#' create explainers for models not covered by the `survex` package.
-#'
-#' For some models the extraction of some information can be done automatically. To do
-#' this you can call the `explain()` function for survival models from  `mlr3proba`, `censored`,
-#' `randomForestSRC`, `ranger` and `survival` packages.
+#' create explainers for models not covered by the `survex` package. For selected
+#' models the extraction of information can be done automatically. To do
+#' this, you can call the `explain()` function for survival models from  `mlr3proba`, `censored`,
+#' `randomForestSRC`, `ranger`, `survival` packages and any other model
+#' with `pec::predictSurvProb()` method.
 #'
 #' @param model object - a survival model to be explained
 #' @param data data.frame - data which will be used to calculate the explanations. If not provided, then it will be extracted from the model if possible. It should not contain the target columns. NOTE: If the target variable is present in the `data` some functionality breaks.
