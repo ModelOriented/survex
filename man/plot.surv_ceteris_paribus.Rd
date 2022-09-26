@@ -62,7 +62,6 @@ p_profile_with_cat <- predict_profile(
 
 plot(p_profile_with_cat)
 }
-
 }
 \seealso{
 Other functions for plotting 'predict_profile_survival' objects: 

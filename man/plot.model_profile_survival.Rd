@@ -58,5 +58,4 @@ plot(m_prof, numerical_plot_type = "contours", facet_ncol = 1)
 
 plot(m_prof, variables = c("trt", "age"), facet_ncol = 1)
 }
-
 }
