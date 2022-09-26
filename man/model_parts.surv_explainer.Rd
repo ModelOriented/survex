@@ -2,19 +2,9 @@
 % Please edit documentation in R/model_parts.R
 \name{model_parts}
 \alias{model_parts}
-\alias{model_parts.surv_explainer}
 \title{Dataset Level Variable Importance for Survival Models}
 \usage{
 model_parts(explainer, ...)
-
-\method{model_parts}{surv_explainer}(
-  explainer,
-  loss_function = survex::loss_brier_score,
-  ...,
-  type = "raw",
-  output_type = "survival",
-  N = 1000
-)
 }
 \arguments{
 \item{explainer}{a model to be explained, preprocessed by the \code{explain()} function}
@@ -37,10 +27,10 @@ model_parts(explainer, ...)
 \item{N}{number of observations that should be sampled for calculation of variable importance. If \code{NULL} then variable importance will be calculated on the whole dataset.}
 }
 \value{
-An object of class \code{c("model_parts_survival", "surv_feature_importance")}. It's a list with the explanations in the \code{result} element
+An object of class \code{c("model_parts_survival", "surv_feature_importance")}. It's a list with the explanations in the \code{result} element.
 }
 \description{
-This function calculates variable importance as change in the loss function after variable permutations.
+This function calculates variable importance as a change in the loss function after the variable values permutations.
 }
 \details{
 \emph{Note}: This function can be run within \code{progressr::with_progress()} to display a progress bar, as the execution can take long, especially on large datasets.
@@ -75,5 +65,4 @@ rsf_ranger_model_parts <- model_parts(rsf_ranger_exp)
 print(head(rsf_ranger_model_parts$result))
 plot(cph_model_parts_brier, rsf_ranger_model_parts)
 }
-
 }

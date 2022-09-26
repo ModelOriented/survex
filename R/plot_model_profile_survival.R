@@ -84,8 +84,8 @@ plot.model_profile_survival <- function(x,
 
     pl <- plot_individual_ceteris_paribus_survival(aggregated_profiles, variables, facet_ncol, colors, numerical_plot_type, title, subtitle)
 
-    titleGrob <- grid::textGrob(title, just = "left", x = 0.05, gp = grid::gpar(fontsize = 16, col = "#371ea3"))
-    subtitleGrob <- grid::textGrob(subtitle, just = "left", x = 0.05, gp = grid::gpar(fontsize = 11, col = "#371ea3"))
+    titleGrob <- grid::textGrob(title, just = "left", x = 0.05, gp = grid::gpar(fontsize = 16, col = "#371ea3", fontfamily = "Arial"))
+    subtitleGrob <- grid::textGrob(subtitle, just = "left", x = 0.05, gp = grid::gpar(fontsize = 11, col = "#371ea3", fontfamily = "Arial"))
     grided <-  do.call(gridExtra::arrangeGrob, c(pl, list(ncol = facet_ncol)))
     margin <- grid::unit(0.5, "line")
     plot_grid <- gridExtra::grid.arrange(titleGrob, subtitleGrob,

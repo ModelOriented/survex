@@ -26,7 +26,7 @@
 
 \item{title}{character, title of the plot}
 
-\item{subtitle}{character, subtitle of the plot, if \code{NULL} automaticaly generated as "created for XXX, YYY models", where XXX and YYY are explainer labels}
+\item{subtitle}{character, subtitle of the plot, if \code{NULL} automatically generated as "created for XXX, YYY models", where XXX and YYY are explainer labels}
 
 \item{facet_ncol}{number of columns for arranging subplots}
 

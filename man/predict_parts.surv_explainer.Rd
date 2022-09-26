@@ -2,24 +2,14 @@
 % Please edit documentation in R/predict_parts.R
 \name{predict_parts}
 \alias{predict_parts}
-\alias{predict_parts.surv_explainer}
 \title{Instance Level Parts of Survival Model Predictions}
 \usage{
 predict_parts(explainer, ...)
-
-\method{predict_parts}{surv_explainer}(
-  explainer,
-  new_observation,
-  ...,
-  N = NULL,
-  type = "survshap",
-  output_type = "survival"
-)
 }
 \arguments{
 \item{explainer}{a model to be explained, preprocessed by the \code{explain()} function}
 
-\item{...}{other parameters which are passed to \code{IBreakDown::break_down} if \code{output_type=="risk"}, or if \code{output_type=="survival"} to \code{surv_shap()} or \code{surv_lime()} functions depending on the selected type}
+\item{...}{other parameters which are passed to \code{iBreakDown::break_down} if \code{output_type=="risk"}, or if \code{output_type=="survival"} to \code{surv_shap()} or \code{surv_lime()} functions depending on the selected type}
 
 \item{new_observation}{a new observation for which prediction need to be explained}
 
@@ -78,4 +68,5 @@ cph_predict_parts_survlime <- predict_parts(cph_exp, new_observation = veteran[1
 head(cph_predict_parts_survlime$result)
 plot(cph_predict_parts_survlime, type = "local_importance")
 }
+
 }

@@ -2,16 +2,16 @@
 % Please edit documentation in R/predict_surv_explainer.R
 \name{predict.surv_explainer}
 \alias{predict.surv_explainer}
-\title{Model predictions for survival models}
+\title{Model Predictions for Survival Models}
 \usage{
 \method{predict}{surv_explainer}(object, newdata = NULL, output_type = "survival", times = NULL, ...)
 }
 \arguments{
-\item{object}{a model to make the predictions, preprocessed by the \code{explain} function.}
+\item{object}{a model to make the predictions, preprocessed by the \code{explain()} function.}
 
 \item{newdata}{data used for the prediction}
 
-\item{output_type}{character, either "risk", "survival" or "chf" depending on the desired output}
+\item{output_type}{character, either \code{"risk"}, \code{"survival"} or \code{"chf"} depending on the desired output}
 
 \item{times}{a numeric vector of times for the survival and cumulative hazard function predictions to be evaluated at. If \verb{"output_type == "risk"} this argument is ignored, if left \code{NULL} then it is extracted from \code{object$times}.}
 

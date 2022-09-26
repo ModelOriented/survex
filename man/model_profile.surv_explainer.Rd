@@ -2,7 +2,6 @@
 % Please edit documentation in R/model_profile.R
 \name{model_profile}
 \alias{model_profile}
-\alias{model_profile.surv_explainer}
 \title{Dataset Level Variable Profile as Partial Dependence Explanations for Survival Models}
 \usage{
 model_profile(
@@ -10,20 +9,6 @@ model_profile(
   variables = NULL,
   N = 100,
   ...,
-  groups = NULL,
-  k = NULL,
-  center = TRUE,
-  type = "partial",
-  output_type = "survival"
-)
-
-\method{model_profile}{surv_explainer}(
-  explainer,
-  variables = NULL,
-  N = 100,
-  ...,
-  categorical_variables = NULL,
-  grid_points = 51,
   groups = NULL,
   k = NULL,
   center = TRUE,
@@ -59,7 +44,7 @@ An object of class \code{model_profile_survival}. It is a list with the element 
 }
 \description{
 This function calculates explanations on a dataset level that help explore model response as a function of selected variables.
-The explanations are calculated as an extention of Partial Dependence Profiles with the inclusion of the time dimension.
+The explanations are calculated as an extension of Partial Dependence Profiles with the inclusion of the time dimension.
 }
 \examples{
 \donttest{
@@ -86,4 +71,5 @@ head(rsf_model_profile$result)
 
 plot(rsf_model_profile, variables = c("age", "celltype"), numerical_plot_type = "contours")
 }
+
 }

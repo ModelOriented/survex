@@ -2,7 +2,6 @@
 % Please edit documentation in R/predict_profile.R
 \name{predict_profile}
 \alias{predict_profile}
-\alias{predict_profile.surv_explainer}
 \title{Instance Level Profile as Ceteris Paribus for Survival Models}
 \usage{
 predict_profile(
@@ -12,17 +11,6 @@ predict_profile(
   categorical_variables = NULL,
   ...,
   type = "ceteris_paribus",
-  variable_splits_type = "uniform"
-)
-
-\method{predict_profile}{surv_explainer}(
-  explainer,
-  new_observation,
-  variables = NULL,
-  categorical_variables = NULL,
-  ...,
-  type = "ceteris_paribus",
-  output_type = "survival",
   variable_splits_type = "uniform"
 )
 }
@@ -69,4 +57,5 @@ plot(cph_predict_profile, facet_ncol = 2)
 rsf_predict_profile <- predict_profile(rsf_src_exp, veteran[5, -c(3, 4)], variables = "karno")
 plot(cph_predict_profile, numerical_plot_type = "contours")
 }
+
 }
