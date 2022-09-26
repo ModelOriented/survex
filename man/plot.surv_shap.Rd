@@ -22,7 +22,7 @@ An object of the class \code{ggplot}.
 }
 \description{
 This functions plots objects of class \code{surv_shap} - time-dependent explanations of
-survival models created using the \verb{predict_parts(..., type="survshap)} function.
+survival models created using the \code{predict_parts(..., type="survshap")} function.
 }
 \examples{
 \donttest{
@@ -35,6 +35,7 @@ exp <- explain(model)
 p_parts_shap <- predict_parts(exp, veteran[1, -c(3, 4)], type = "survshap")
 plot(p_parts_shap)
 }
+
 }
 \seealso{
 Other functions for plotting 'predict_parts_survival' objects: 

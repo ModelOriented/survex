@@ -36,7 +36,7 @@ surv_shap(
 \item{exact}{ignored, placeholder the not implemented \code{"sampling"} method}
 }
 \value{
-A list, containing the calculated SurvSHAP results in the \verb{$result} field
+A list, containing the calculated SurvSHAP(t) results in the \code{result} field
 }
 \description{
 Helper functions for \code{predict_parts.R}
@@ -44,7 +44,7 @@ Helper functions for \code{predict_parts.R}
 \section{References}{
 
 \itemize{
-\item \href{https://arxiv.org/abs/2208.11080}{Krzyziński, Mateusz, et al. "SurvSHAP (t): Time-dependent explanations of machine learning survival models." arXiv preprint arXiv:2208.11080 (2022).}
+\item [1] Krzyziński, Mateusz, et al. \href{https://arxiv.org/abs/2208.11080}{"SurvSHAP(t): Time-dependent explanations of machine learning survival models."} arXiv preprint arXiv:2208.11080 (2022).
 }
 }
 

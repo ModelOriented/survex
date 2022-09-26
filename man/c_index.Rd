@@ -2,7 +2,7 @@
 % Please edit documentation in R/metrics.R
 \name{c_index}
 \alias{c_index}
-\title{Calculate Harell's Concordance index}
+\title{Compute the Harrell's Concordance index}
 \usage{
 c_index(y_true = NULL, risk = NULL, surv = NULL, times = NULL)
 }
@@ -20,13 +20,11 @@ numeric from 0 to 1, higher values indicate better performance
 }
 \description{
 A function to compute the Harrell's concordance index of a survival model.
-
 }
 \section{References}{
 
 \itemize{
-\item \href{https://onlinelibrary.wiley.com/doi/abs/10.1002/sim.4780030207}{[1] Harrell Jr, Frank E., et al. "Regression modelling strategies for improved prognostic prediction." Statistics in medicine 3.2 (1984): 143-152.}
-\item \href{https://square.github.io/pysurvival/metrics/c_index.html}{[2] pysurvival documentation entry}
+\item [1] Harrell, F.E., Jr., et al. \href{https://onlinelibrary.wiley.com/doi/abs/10.1002/sim.4780030207}{"Regression modelling strategies for improved prognostic prediction."} Statistics in Medicine 3.2 (1984): 143-152.
 }
 }
 
@@ -45,6 +43,7 @@ coxph_explainer <- explain(cox_rotterdam_rec)
 risk <- coxph_explainer$predict_function(coxph_explainer$model, coxph_explainer$data)
 c_index(y_true = coxph_explainer$y, risk = risk)
 }
+
 }
 \seealso{
 \code{\link[=loss_one_minus_c_index]{loss_one_minus_c_index()}}

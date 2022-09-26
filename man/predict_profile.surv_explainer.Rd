@@ -69,4 +69,5 @@ plot(cph_predict_profile, facet_ncol = 2)
 rsf_predict_profile <- predict_profile(rsf_src_exp, veteran[5, -c(3, 4)], variables = "karno")
 plot(cph_predict_profile, numerical_plot_type = "contours")
 }
+
 }
