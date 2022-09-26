@@ -19,11 +19,27 @@ model_performance(explainer, ...)
 \item{times}{a numeric vector of times. If \code{type == "metrics"} then the survival function is evaluated at these times, if \code{type == "roc"} then the ROC curves are calculated at these times.}
 }
 \value{
-An object of class \code{"model_performance_survival"}. It's a list of metric values calculated for the model.
+An object of class \code{"model_performance_survival"}. It's a list of metric values calculated for the model. It contains:
+\itemize{
+\item Harrell's concordance index \link{1}
+\item Brier score \link{2}
+\item C/D AUC using estimator proposed by Uno et. al \link{3}
+\item integral of the Brier score
+\item integral of the C/D AUC
+}
 }
 \description{
 This function calculates metrics for survival models. The metrics calculated are C/D AUC, Brier score, and their integrated versions, as well as concordance index. It also can calculate ROC curves for specific selected time points.
 }
+\section{References}{
+
+\itemize{
+\item [\link{1} Harrell Jr, Frank E., et al. "Regression modelling strategies for improved prognostic prediction." Statistics in medicine 3.2 (1984): 143-152.](https://onlinelibrary.wiley.com/doi/abs/10.1002/sim.4780030207)
+\item [\link{2} Brier, Glenn W. "Verification of forecasts expressed in terms of probability." Monthly weather review 78.1 (1950): 1-3.](https://journals.ametsoc.org/view/journals/mwre/78/1/1520-0493_1950_078_0001_vofeit_2_0_co_2.xml)
+\item [\link{3} Uno, Hajime, et al. "Evaluating prediction rules for t-year survivors with censored regression models." Journal of the American Statistical Association 102.478 (2007): 527-537.](https://www.jstor.org/stable/27639883#metadata_info_tab_contents)
+}
+}
+
 \examples{
 library(survival)
 library(survex)

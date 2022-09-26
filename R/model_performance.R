@@ -7,7 +7,17 @@
 #' @param type character, either `"metrics"` or `"roc"`. If `"metrics"` then performance metrics are calculated, if `"roc"` ROC curves for selected time points are calculated.
 #' @param times a numeric vector of times. If `type == "metrics"` then the survival function is evaluated at these times, if `type == "roc"` then the ROC curves are calculated at these times.
 #'
-#' @return An object of class `"model_performance_survival"`. It's a list of metric values calculated for the model.
+#' @return An object of class `"model_performance_survival"`. It's a list of metric values calculated for the model. It contains:
+#' - Harrell's concordance index [1]
+#' - Brier score [2]
+#' - C/D AUC using the estimator proposed by Uno et. al [3]
+#' - integral of the Brier score
+#' - integral of the C/D AUC
+#'
+#' @section References:
+#' - [[1] Harrell Jr, Frank E., et al. "Regression modelling strategies for improved prognostic prediction." Statistics in medicine 3.2 (1984): 143-152.](https://onlinelibrary.wiley.com/doi/abs/10.1002/sim.4780030207)
+#' - [[2] Brier, Glenn W. "Verification of forecasts expressed in terms of probability." Monthly weather review 78.1 (1950): 1-3.](https://journals.ametsoc.org/view/journals/mwre/78/1/1520-0493_1950_078_0001_vofeit_2_0_co_2.xml)
+#' - [[3] Uno, Hajime, et al. "Evaluating prediction rules for t-year survivors with censored regression models." Journal of the American Statistical Association 102.478 (2007): 527-537.](https://www.jstor.org/stable/27639883#metadata_info_tab_contents)
 #'
 #' @examples
 #' library(survival)
