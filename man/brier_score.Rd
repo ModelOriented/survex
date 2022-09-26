@@ -30,8 +30,8 @@ Brier score is used to evaluate the performance of a survival model, based on th
 \section{References}{
 
 \itemize{
-\item [\link{1} Brier, Glenn W. "Verification of forecasts expressed in terms of probability." Monthly weather review 78.1 (1950): 1-3.](https://journals.ametsoc.org/view/journals/mwre/78/1/1520-0493_1950_078_0001_vofeit_2_0_co_2.xml)
-\item [\link{2} scikit-survival documentation entry](https://scikit-survival.readthedocs.io/en/stable/api/generated/sksurv.metrics.brier_score.html)
+\item \href{https://journals.ametsoc.org/view/journals/mwre/78/1/1520-0493_1950_078_0001_vofeit_2_0_co_2.xml}{[1] Brier, Glenn W. "Verification of forecasts expressed in terms of probability." Monthly weather review 78.1 (1950): 1-3.}
+\item \href{https://scikit-survival.readthedocs.io/en/stable/api/generated/sksurv.metrics.brier_score.html}{[2] scikit-survival documentation entry}
 }
 }
 

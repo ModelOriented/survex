@@ -21,9 +21,9 @@ model_performance(explainer, ...)
 \value{
 An object of class \code{"model_performance_survival"}. It's a list of metric values calculated for the model. It contains:
 \itemize{
-\item Harrell's concordance index [\link{1}](https://onlinelibrary.wiley.com/doi/abs/10.1002/sim.4780030207)
-\item Brier score [\link{2}](https://journals.ametsoc.org/view/journals/mwre/78/1/1520-0493_1950_078_0001_vofeit_2_0_co_2.xml)
-\item C/D AUC using the estimator proposed by Uno et. al [\link{3}](https://www.jstor.org/stable/27639883#metadata_info_tab_contents)
+\item Harrell's concordance index \href{https://onlinelibrary.wiley.com/doi/abs/10.1002/sim.4780030207}{[1]}
+\item Brier score \href{https://journals.ametsoc.org/view/journals/mwre/78/1/1520-0493_1950_078_0001_vofeit_2_0_co_2.xml}{[2]}
+\item C/D AUC using the estimator proposed by Uno et. al \href{https://www.jstor.org/stable/27639883#metadata_info_tab_contents}{[3]}
 \item integral of the Brier score
 \item integral of the C/D AUC
 }
@@ -34,9 +34,9 @@ This function calculates metrics for survival models. The metrics calculated are
 \section{References}{
 
 \itemize{
-\item [\link{1} Harrell Jr, Frank E., et al. "Regression modelling strategies for improved prognostic prediction." Statistics in medicine 3.2 (1984): 143-152.](https://onlinelibrary.wiley.com/doi/abs/10.1002/sim.4780030207)
-\item [\link{2} Brier, Glenn W. "Verification of forecasts expressed in terms of probability." Monthly weather review 78.1 (1950): 1-3.](https://journals.ametsoc.org/view/journals/mwre/78/1/1520-0493_1950_078_0001_vofeit_2_0_co_2.xml)
-\item [\link{3} Uno, Hajime, et al. "Evaluating prediction rules for t-year survivors with censored regression models." Journal of the American Statistical Association 102.478 (2007): 527-537.](https://www.jstor.org/stable/27639883#metadata_info_tab_contents)
+\item \href{https://onlinelibrary.wiley.com/doi/abs/10.1002/sim.4780030207}{[1] Harrell Jr, Frank E., et al. "Regression modelling strategies for improved prognostic prediction." Statistics in medicine 3.2 (1984): 143-152.}
+\item \href{https://journals.ametsoc.org/view/journals/mwre/78/1/1520-0493_1950_078_0001_vofeit_2_0_co_2.xml}{[2] Brier, Glenn W. "Verification of forecasts expressed in terms of probability." Monthly weather review 78.1 (1950): 1-3.}
+\item \href{https://www.jstor.org/stable/27639883#metadata_info_tab_contents}{[3] Uno, Hajime, et al. "Evaluating prediction rules for t-year survivors with censored regression models." Journal of the American Statistical Association 102.478 (2007): 527-537.}
 }
 }
 
