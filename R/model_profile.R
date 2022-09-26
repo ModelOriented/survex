@@ -4,7 +4,7 @@
 #' The explanations are calculated as an extension of Partial Dependence Profiles with the inclusion of the time dimension.
 #'
 #'
-#' @param explainer a model to be explained, preprocessed by the `explain()` function
+#' @param explainer an explainer object - model preprocessed by the `explain()` function
 #' @param variables character, a vector of names of variables to be explained
 #' @param N number of observations used for the calculation of aggregated profiles. By default `100`. If `NULL` all observations are used.
 #' @param ... other parameters passed to `DALEX::model_profile` if `output_type == "risk"`, otherwise ignored
@@ -58,6 +58,7 @@ model_profile <- function(explainer,
                           type = "partial",
                           output_type = "survival") UseMethod("model_profile", explainer)
 
+#' @rdname model_profile.surv_explainer
 #' @export
 model_profile.surv_explainer <- function(explainer,
                                          variables = NULL,

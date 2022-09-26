@@ -2,7 +2,7 @@
 #'
 #' This function allows for calculating model prediction in a unified way.
 #'
-#' @param object a model to make the predictions, preprocessed by the `explain()` function.
+#' @param object an explainer object - model preprocessed by the `explain()` function
 #' @param newdata data used for the prediction
 #' @param output_type character, either `"risk"`, `"survival"` or `"chf"` depending on the desired output
 #' @param times a numeric vector of times for the survival and cumulative hazard function predictions to be evaluated at. If `"output_type == "risk"` this argument is ignored, if left `NULL` then it is extracted from `object$times`.

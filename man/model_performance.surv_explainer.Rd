@@ -10,7 +10,7 @@ model_performance(explainer, ...)
 \method{model_performance}{surv_explainer}(explainer, ..., type = "metrics", times = NULL)
 }
 \arguments{
-\item{explainer}{a model to be explained, preprocessed by the \code{explain()} function}
+\item{explainer}{an explainer object - model preprocessed by the \code{explain()} function}
 
 \item{...}{other parameters, currently ignored}
 

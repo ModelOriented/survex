@@ -20,7 +20,7 @@ surv_feature_importance(x, ...)
 )
 }
 \arguments{
-\item{x}{a model to be explained, preprocessed by the \code{explain} function}
+\item{x}{an explainer object - model preprocessed by the \code{explain()} function}
 
 \item{...}{other parameters, currently ignored}
 

@@ -19,7 +19,7 @@ surv_lime(
 )
 }
 \arguments{
-\item{explainer}{a model to be explained, preprocessed by the \code{explain} function}
+\item{explainer}{an explainer object - model preprocessed by the \code{explain()} function}
 
 \item{new_observation}{a new observation for which predictions need to be explained}
 

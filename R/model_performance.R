@@ -2,7 +2,7 @@
 #'
 #' This function calculates metrics for survival models. The metrics calculated are C/D AUC, Brier score, and their integrated versions, as well as concordance index. It also can calculate ROC curves for specific selected time points.
 #'
-#' @param explainer a model to be explained, preprocessed by the `explain()` function
+#' @param explainer an explainer object - model preprocessed by the `explain()` function
 #' @param ... other parameters, currently ignored
 #' @param type character, either `"metrics"` or `"roc"`. If `"metrics"` then performance metrics are calculated, if `"roc"` ROC curves for selected time points are calculated.
 #' @param times a numeric vector of times. If `type == "metrics"` then the survival function is evaluated at these times, if `type == "roc"` then the ROC curves are calculated at these times.

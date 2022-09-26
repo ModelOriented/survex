@@ -1,6 +1,6 @@
 #' Helper functions for `model_parts.R`
 #'
-#' @param x a model to be explained, preprocessed by the `explain` function
+#' @param x an explainer object - model preprocessed by the `explain()` function
 #' @param loss_function a function that will be used to assess variable importance, by default `loss_brier_score` for survival models. The function should take can be supplied manually but has to have these named parameters (`y_true`, `risk`, `surv`, `times`), where `y_true` represents the `survival::Surv` object with observed times and statuses, `risk` is the risk score calculated by the model, and `surv` is the survival function for each observation evaluated at `times`
 #' @param ... other parameters, currently ignored
 #' @param type a character vector, if `"raw"` the results are losses after the permutation, if `"ratio"` the results are in the form `loss/loss_full_model` and if `"difference"` the results are of the form loss - loss_full_model`

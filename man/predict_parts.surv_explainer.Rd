@@ -17,9 +17,9 @@ predict_parts(explainer, ...)
 )
 }
 \arguments{
-\item{explainer}{a model to be explained, preprocessed by the \code{explain()} function}
+\item{explainer}{an explainer object - model preprocessed by the \code{explain()} function}
 
-\item{...}{other parameters which are passed to \code{IBreakDown::break_down} if \code{output_type=="risk"}, or if \code{output_type=="survival"} to \code{surv_shap()} or \code{surv_lime()} functions depending on the selected type}
+\item{...}{other parameters which are passed to \code{iBreakDown::break_down} if \code{output_type=="risk"}, or if \code{output_type=="survival"} to \code{surv_shap()} or \code{surv_lime()} functions depending on the selected type}
 
 \item{new_observation}{a new observation for which prediction need to be explained}
 
@@ -78,4 +78,5 @@ cph_predict_parts_survlime <- predict_parts(cph_exp, new_observation = veteran[1
 head(cph_predict_parts_survlime$result)
 plot(cph_predict_parts_survlime, type = "local_importance")
 }
+
 }

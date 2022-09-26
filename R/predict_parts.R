@@ -2,7 +2,7 @@
 #'
 #' This function decomposes the model prediction into individual parts, which are attributions of particular variables. The explanations can be made via the SurvLIME and SurvSHAP(t) methods.
 #'
-#' @param explainer a model to be explained, preprocessed by the `explain()` function
+#' @param explainer an explainer object - model preprocessed by the `explain()` function
 #' @param new_observation a new observation for which prediction need to be explained
 #' @param ... other parameters which are passed to `iBreakDown::break_down` if `output_type=="risk"`, or if `output_type=="survival"` to `surv_shap()` or `surv_lime()` functions depending on the selected type
 #' @param N the maximum number of observations used for calculation of attributions. If `NULL` (default) all observations will be used.
@@ -54,7 +54,7 @@
 #' @export
 predict_parts <- function(explainer, ...) UseMethod("predict_parts", explainer)
 
-
+#' @rdname predict_parts.surv_explainer
 #' @export
 predict_parts.surv_explainer <- function(explainer, new_observation, ..., N = NULL, type = "survshap", output_type = "survival") {
 

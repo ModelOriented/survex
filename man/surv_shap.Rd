@@ -17,7 +17,7 @@ surv_shap(
 )
 }
 \arguments{
-\item{explainer}{a model to be explained, preprocessed by the \code{explain} function}
+\item{explainer}{an explainer object - model preprocessed by the \code{explain()} function}
 
 \item{new_observation}{a new observation for which predictions need to be explained}
 
@@ -36,7 +36,7 @@ surv_shap(
 \item{exact}{ignored, placeholder the not implemented \code{"sampling"} method}
 }
 \value{
-A list, containing the calculated SurvSHAP results in the \verb{$result} field
+A list, containing the calculated SurvSHAP(t) results in the \code{result} field
 }
 \description{
 Helper functions for \code{predict_parts.R}

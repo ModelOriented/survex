@@ -1,7 +1,7 @@
 #' Helper functions for `predict_parts.R`
 #'
 #'
-#' @param explainer a model to be explained, preprocessed by the `explain` function
+#' @param explainer an explainer object - model preprocessed by the `explain()` function
 #' @param new_observation a new observation for which predictions need to be explained
 #' @param ... additional parameters, passed to internal functions
 #' @param N a positive integer, number of observations generated in the neighbourhood

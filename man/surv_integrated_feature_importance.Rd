@@ -17,7 +17,7 @@ surv_integrated_feature_importance(
 )
 }
 \arguments{
-\item{x}{a model to be explained, preprocessed by the \code{explain} function}
+\item{x}{an explainer object - model preprocessed by the \code{explain()} function}
 
 \item{loss_function}{a function that will be used to assess variable importance, by default \code{loss_brier_score} for survival models. The function should take can be supplied manually but has to have these named parameters (\code{y_true}, \code{risk}, \code{surv}, \code{times}), where \code{y_true} represents the \code{survival::Surv} object with observed times and statuses, \code{risk} is the risk score calculated by the model, and \code{surv} is the survival function for each observation evaluated at \code{times}}
 
