@@ -2,7 +2,6 @@
 % Please edit documentation in R/predict_profile.R
 \name{predict_profile}
 \alias{predict_profile}
-\alias{predict_profile.surv_explainer}
 \title{Instance Level Profile as Ceteris Paribus for Survival Models}
 \usage{
 predict_profile(
@@ -12,17 +11,6 @@ predict_profile(
   categorical_variables = NULL,
   ...,
   type = "ceteris_paribus",
-  variable_splits_type = "uniform"
-)
-
-\method{predict_profile}{surv_explainer}(
-  explainer,
-  new_observation,
-  variables = NULL,
-  categorical_variables = NULL,
-  ...,
-  type = "ceteris_paribus",
-  output_type = "survival",
   variable_splits_type = "uniform"
 )
 }

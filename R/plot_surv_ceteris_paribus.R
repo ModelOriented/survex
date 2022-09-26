@@ -132,14 +132,14 @@ plot.surv_ceteris_paribus <- function(x,
             title,
             just = "left",
             x = 0.05,
-            gp = grid::gpar(fontsize = 16, col = "#371ea3")
+            gp = grid::gpar(fontsize = 16, col = "#371ea3", fontfamily = "Arial")
         )
     subtitleGrob <-
         grid::textGrob(
             subtitle,
             just = "left",
             x = 0.05,
-            gp = grid::gpar(fontsize = 11, col = "#371ea3")
+            gp = grid::gpar(fontsize = 11, col = "#371ea3", fontfamily = "Arial")
         )
     grided <-
         do.call(gridExtra::arrangeGrob, c(pl, list(ncol = facet_ncol)))

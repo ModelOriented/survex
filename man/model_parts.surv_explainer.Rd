@@ -2,19 +2,9 @@
 % Please edit documentation in R/model_parts.R
 \name{model_parts}
 \alias{model_parts}
-\alias{model_parts.surv_explainer}
 \title{Dataset Level Variable Importance for Survival Models}
 \usage{
 model_parts(explainer, ...)
-
-\method{model_parts}{surv_explainer}(
-  explainer,
-  loss_function = survex::loss_brier_score,
-  ...,
-  type = "raw",
-  output_type = "survival",
-  N = 1000
-)
 }
 \arguments{
 \item{explainer}{an explainer object - model preprocessed by the \code{explain()} function}

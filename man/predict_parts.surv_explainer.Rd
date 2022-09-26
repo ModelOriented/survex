@@ -2,19 +2,9 @@
 % Please edit documentation in R/predict_parts.R
 \name{predict_parts}
 \alias{predict_parts}
-\alias{predict_parts.surv_explainer}
 \title{Instance Level Parts of Survival Model Predictions}
 \usage{
 predict_parts(explainer, ...)
-
-\method{predict_parts}{surv_explainer}(
-  explainer,
-  new_observation,
-  ...,
-  N = NULL,
-  type = "survshap",
-  output_type = "survival"
-)
 }
 \arguments{
 \item{explainer}{an explainer object - model preprocessed by the \code{explain()} function}

@@ -19,7 +19,9 @@ c_index(y_true = NULL, risk = NULL, surv = NULL, times = NULL)
 numeric from 0 to 1, higher values indicate better performance
 }
 \description{
+
 A function to compute the Harrell's concordance index of a survival model.
+
 }
 \section{References}{
 

@@ -2,7 +2,6 @@
 % Please edit documentation in R/model_profile.R
 \name{model_profile}
 \alias{model_profile}
-\alias{model_profile.surv_explainer}
 \title{Dataset Level Variable Profile as Partial Dependence Explanations for Survival Models}
 \usage{
 model_profile(
@@ -10,20 +9,6 @@ model_profile(
   variables = NULL,
   N = 100,
   ...,
-  groups = NULL,
-  k = NULL,
-  center = TRUE,
-  type = "partial",
-  output_type = "survival"
-)
-
-\method{model_profile}{surv_explainer}(
-  explainer,
-  variables = NULL,
-  N = 100,
-  ...,
-  categorical_variables = NULL,
-  grid_points = 51,
   groups = NULL,
   k = NULL,
   center = TRUE,
