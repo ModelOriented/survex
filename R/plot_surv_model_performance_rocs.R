@@ -1,6 +1,7 @@
 #' Plot ROC Curves for Survival Models
 #'
-#' This function plots objects of class `"surv_model_performance_rocs"` - ROC curves for specific time points for survival models
+#' This function plots objects of class `"surv_model_performance_rocs"` - ROC curves for
+#' specific time points for survival models created using the `model_performance(..., type="roc")`.
 #'
 #' @param x an object of class `"surv_model_performance_rocs"` to be plotted
 #' @param ... additional objects of class `"surv_model_performance_rocs"` to be plotted together

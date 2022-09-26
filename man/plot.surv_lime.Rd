@@ -33,7 +33,8 @@
 An object of the class \code{ggplot}.
 }
 \description{
-This functions plots objects of class \code{surv_lime} - LIME explanations of survival models.
+This functions plots objects of class \code{surv_lime} - LIME explanations of survival models
+created using \code{predict_parts(..., type="survlime")} function.
 }
 \examples{
 library(survival)

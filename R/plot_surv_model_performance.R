@@ -1,6 +1,7 @@
 #' Plot Model Performance Metrics for Survival Models
 #'
-#' This function plots objects of class `"surv_model_performance"` - visualization of metrics of different models
+#' This function plots objects of class `"surv_model_performance"` - visualization of
+#' metrics of different models created using the `model_performance(..., type="metrics)` function.
 #'
 #' @param x an object of class `"surv_model_performance"` to be plotted
 #' @param ... additional objects of class `"surv_model_performance"` to be plotted together

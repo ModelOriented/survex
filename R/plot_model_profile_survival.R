@@ -1,6 +1,7 @@
 #' Plot Model Profile for Survival Models
 #'
-#' This function plots objects of class `"model_profile_survival"`.
+#' This function plots objects of class `"model_profile_survival"` created
+#' using the `model_profile()` function.
 #'
 #' @param x an object of class `model_profile_survival` to be plotted
 #' @param ... additional parameters, unused, currently ignored

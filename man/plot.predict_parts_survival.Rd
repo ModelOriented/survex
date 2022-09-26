@@ -15,7 +15,8 @@
 An object of the class \code{ggplot}.
 }
 \description{
-This function plots objects of class \code{"predict_parts_survival"} - local explanations for survival models
+This function plots objects of class \code{"predict_parts_survival"} - local explanations
+for survival models created using the \code{predict_parts()} function.
 }
 \section{Plot options}{
 

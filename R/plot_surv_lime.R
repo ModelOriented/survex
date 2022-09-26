@@ -1,6 +1,7 @@
 #' Plot SurvLIME Explanations for Survival Models
 #'
-#' This functions plots objects of class `surv_lime` - LIME explanations of survival models.
+#' This functions plots objects of class `surv_lime` - LIME explanations of survival models
+#' created using `predict_parts(..., type="survlime")` function.
 #'
 #' @param x an object of class `"surv_lime"` to be plotted
 #' @param type character, either "coefficients" or "local_importance" (default), selects the type of plot

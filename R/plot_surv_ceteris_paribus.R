@@ -1,6 +1,7 @@
 #' Plot Predict Profile for Survival Models
 #'
-#' This function plots objects of class `"predict_profile_survival"`.
+#' This function plots objects of class `"predict_profile_survival"` created using
+#' the `predict_profile()` function.
 #'
 #' @param x an object of class `predict_profile_survival` to be plotted
 #' @param ... additional parameters, unused, currently ignored

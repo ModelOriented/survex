@@ -30,7 +30,9 @@
 An object of the class \code{ggplot}.
 }
 \description{
-This function plots feature importance objects created for survival models.
+This function plots feature importance objects created for survival models using the
+\code{model_parts()} function with a time-dependent metric, that is \code{loss_one_minus_cd_auc()} or
+\code{loss_brier_score()}.
 }
 \examples{
 \donttest{
