@@ -1,12 +1,9 @@
 #' Helper functions for `model_parts.R`
-#' @rdname surv_feature_importance
-#' @keywords internal
-surv_feature_importance <- function(x, ...) UseMethod("surv_feature_importance", x)
-
-
-#' Helper functions for `model_parts.R`
 #'
-#' @rdname surv_feature_importance
+#' This function is used to calculate permutational feature imporance using
+#' a time-dependent metric. The result is the change in loss function at each
+#' time point after permuting each selected variable.
+#'
 #'
 #' @param x an explainer object - model preprocessed by the `explain()` function
 #' @param loss_function a function that will be used to assess variable importance, by default `loss_brier_score` for survival models. The function can be supplied manually but has to have these named parameters (`y_true`, `risk`, `surv`, `times`), where `y_true` represents the `survival::Surv` object with observed times and statuses, `risk` is the risk score calculated by the model, and `surv` is the survival function for each observation evaluated at `times`.
@@ -24,6 +21,11 @@ surv_feature_importance <- function(x, ...) UseMethod("surv_feature_importance",
 #' *Note*: This function can be run within `progressr::with_progress()` to display a progress bar, as the execution can take long, especially on large datasets.
 #'
 #' @keywords internal
+#' @rdname surv_feature_importance
+surv_feature_importance <- function(x, ...) UseMethod("surv_feature_importance", x)
+
+
+#' @rdname surv_feature_importance
 surv_feature_importance.surv_explainer <- function(x,
                                          loss_function = NULL,
                                          ...,

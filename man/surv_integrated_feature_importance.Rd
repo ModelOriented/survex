@@ -39,7 +39,9 @@ surv_integrated_feature_importance(
 A data.frame containing results of the calculation.
 }
 \description{
-Helper functions for \code{model_parts.R}
+This function is used to calculate permutational feature importance using
+an aggregate (for now only integral) of a time dependent metric. The result is
+the combined change in loss function across all time points - a single value.
 }
 \details{
 \emph{Note}: This function can be run within \code{progressr::with_progress()} to display a progress bar, as the execution can take long, especially on large datasets.
