@@ -36,7 +36,7 @@ surv_shap(
 \item{exact}{ignored, placeholder the not implemented \code{"sampling"} method}
 }
 \value{
-A list, containing the calculated SurvSHAP(t) results in the \code{result} field
+A list, containing the calculated SurvSHAP results in the \verb{$result} field
 }
 \description{
 Helper functions for \code{predict_parts.R}
