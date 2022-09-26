@@ -74,11 +74,11 @@
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>explainer</dt>
-<dd><p>a model to be explained, preprocessed by the <code><a href="explain_survival.html">explain()</a></code> function</p></dd>
+<dd><p>an explainer object - model preprocessed by the <code><a href="explain_survival.html">explain()</a></code> function</p></dd>
 
 
 <dt>...</dt>
-<dd><p>other parameters which are passed to <code>IBreakDown::break_down</code> if <code>output_type=="risk"</code>, or if <code>output_type=="survival"</code> to <code><a href="surv_shap.html">surv_shap()</a></code> or <code><a href="surv_lime.html">surv_lime()</a></code> functions depending on the selected type</p></dd>
+<dd><p>other parameters which are passed to <code><a href="https://ModelOriented.github.io/iBreakDown/reference/break_down.html" class="external-link">iBreakDown::break_down</a></code> if <code>output_type=="risk"</code>, or if <code>output_type=="survival"</code> to <code><a href="surv_shap.html">surv_shap()</a></code> or <code><a href="surv_lime.html">surv_lime()</a></code> functions depending on the selected type</p></dd>
 
 
 <dt>new_observation</dt>
@@ -122,6 +122,13 @@
 <li><p><code>calculation_method</code> -  a character, only <code>"kernel"</code> is implemented for now.</p></li>
 <li><p><code>aggregation_method</code> -  a character, either <code>"mean_absolute"</code> or <code>"integral"</code>, <code>"max_absolute"</code>, <code>"sum_of_squares"</code></p></li>
 </ul></li>
+</ul></div>
+    <div class="section level2">
+    <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
+    
+
+<ul><li><p>[1] Krzyziński, Mateusz, et al. <a href="https://arxiv.org/abs/2208.11080" class="external-link">"SurvSHAP(t): Time-dependent explanations of machine learning survival models."</a> arXiv preprint arXiv:2208.11080 (2022).</p></li>
+<li><p>[2] Kovalev, Maxim S., et al. <a href="https://www.sciencedirect.com/science/article/pii/S0950705120304044?casa_token=6e9cyk_ji3AAAAAA:tbqo33MsZvNC9nrSGabZdLfPtZTsvsvZTHYQCM2aEhumLI5D46U7ovhr37EaYUhmKZrw45JzDhg" class="external-link">"SurvLIME: A method for explaining machine learning survival models."</a> Knowledge-Based Systems 203 (2020): 106164.</p></li>
 </ul></div>
 
     <div class="section level2">
@@ -167,12 +174,13 @@
 <span class="r-in"><span>                                            type <span class="op">=</span> <span class="st">"survlime"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cph_predict_parts_survlime</span><span class="op">$</span><span class="va">result</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           trt         karno      diagtime           age         prior </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.0189160562 -0.0008891060  0.0011851618  0.0005300347  0.0014230790 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.0440400462 -0.0028563309 -0.0007277983  0.0028241004  0.0020771209 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> celltypelarge </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> -0.0278630195 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> -0.0105918330 </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cph_predict_parts_survlime</span>, type <span class="op">=</span> <span class="st">"local_importance"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="predict_parts.surv_explainer-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
