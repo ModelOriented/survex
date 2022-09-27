@@ -58,6 +58,9 @@ predict(rsf_exp, veteran[1:2,], output_type="chf", times=seq(1, 600, 100))
 
 Another helpful thing is the functionality for calculating different metrics of the models. For this we use the `model_performance()` function. It calculates a set of performance measures we can plot next to each other and easily compare. 
 
+```{r, include=FALSE}
+dev.off()
+```
 ``` {r warning=FALSE}
 mp_cph <- model_performance(cph_exp)
 mp_rsf <- model_performance(rsf_exp)
@@ -65,8 +68,11 @@ mp_rsf <- model_performance(rsf_exp)
 plot(mp_cph, mp_rsf)
 ```
  
-We can also plot the scalar metrics in the form of bar plots. 
+We can also plot the scalar metrics in the form of bar plots.
 
+```{r, include=FALSE}
+dev.off()
+```
 ``` {r}
 plot(mp_cph, mp_rsf, metrics_type="scalar")
 ```
@@ -79,6 +85,9 @@ From this comparison, we see that the Random Survival Forest model is better in 
 
 Next, we check how each variable influences the models' predictions on a global level. For this purpose, we use the `model_parts()` function. It calculates [permutational variable importance](https://ema.drwhy.ai/featureImportance.html) with the difference being that the loss function is time-dependent (by default it is `loss_brier_score()`), so the influence of each variable can be different at each considered time point.
 
+```{r, include=FALSE}
+dev.off()
+```
 ``` {r}
 model_parts_rsf <- model_parts(rsf_exp)
 model_parts_cph <- model_parts(cph_exp)
@@ -90,6 +99,9 @@ For both models, the permutation of the `karno` variable leads to the highest in
 
 We can use another loss function to ensure this observation is consistent. Let's use `loss_one_minus_cd_auc()`, but let's also change the plot type to show the difference between the loss function after a given variable's permutation and the loss of the full model with all variables. This means that the values on the y-axis represent only the change in the loss function after permuting each variable.
 
+```{r, include=FALSE}
+dev.off()
+```
 ``` {r}
 model_parts_rsf_auc <- model_parts(rsf_exp, loss_function=loss_one_minus_cd_auc, type="difference")
 model_parts_cph_auc <- model_parts(cph_exp, loss_function=loss_one_minus_cd_auc, type="difference")
@@ -108,6 +120,9 @@ The next type of global explanation this package provides is partial dependence 
 
 Note that we need to set the `categorical_variables` parameter in order to avoid nonsensical values, such as the treatment value of 0.5. All factors are automatically detected as categories, but if you want to treat a numerical variable as a categorical one, you need to set it here.
 
+```{r, include=FALSE}
+dev.off()
+```
 ``` {r, fig.height=18}
 model_profile_cph <- model_profile(cph_exp, categorical_variables=c("trt", "prior"))
 plot(model_profile_cph, facet_ncol = 1)
@@ -137,10 +152,18 @@ Another kind of functionality provided by this package is local explanations. Th
 
 [SurvSHAP(t)](https://arxiv.org/abs/2208.11080) explanations are an extension of SHAP values for survival models. They show a breakdown of the prediction into individual variables.
 
+```{r, include=FALSE}
+dev.off()
+```
 ``` {r}
 predict_parts_cph_32 <- predict_parts(cph_exp, veteran[32,])
 predict_parts_rsf_32 <- predict_parts(rsf_exp, veteran[32,])
 plot(predict_parts_cph_32, predict_parts_rsf_32)
+```
+```{r, include=FALSE}
+dev.off()
+```
+```{r}
 predict_parts_cph_12 <- predict_parts(cph_exp, veteran[12,])
 predict_parts_rsf_12 <- predict_parts(rsf_exp, veteran[12,])
 plot(predict_parts_cph_12, predict_parts_rsf_12)
