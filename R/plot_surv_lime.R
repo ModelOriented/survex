@@ -78,7 +78,7 @@ plot.surv_lime <- function(x, type = "local_importance", show_survival_function 
             xlab("") +
             ylab("survival function value") +
             scale_color_manual("", values = generate_discrete_color_scale(2, colors))
-        return(gridExtra::grid.arrange(pl, pl2, nrow = 1, widths = c(3, 5)))
+        return(patchwork::wrap_plots(pl, pl2, nrow = 1, widths = c(3, 5)))
     }
 
 

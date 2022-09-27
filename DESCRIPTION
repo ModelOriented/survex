@@ -24,9 +24,9 @@ Imports:
     DALEX (>= 2.2.1),
     ingredients,
     ggplot2,
-    gridExtra,
     pec,
-    survival
+    survival,
+    patchwork
 Suggests:
     censored,
     covr,

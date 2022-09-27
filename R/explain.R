@@ -91,7 +91,7 @@
 #'
 #' @import survival
 #' @import ggplot2
-#' @import gridExtra
+#' @import patchwork
 #' @importFrom DALEX theme_drwhy theme_drwhy_vertical
 #' @importFrom utils tail stack head
 #' @importFrom stats median model.frame predict stepfun reorder na.omit aggregate
