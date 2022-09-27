@@ -65,8 +65,11 @@ mp_rsf <- model_performance(rsf_exp)
 plot(mp_cph, mp_rsf)
 ```
  
-We can also plot the scalar metrics in the form of bar plots. 
+We can also plot the scalar metrics in the form of bar plots.
 
+```{r, include=FALSE}
+dev.off()
+```
 ``` {r}
 plot(mp_cph, mp_rsf, metrics_type="scalar")
 ```
@@ -79,6 +82,9 @@ From this comparison, we see that the Random Survival Forest model is better in 
 
 Next, we check how each variable influences the models' predictions on a global level. For this purpose, we use the `model_parts()` function. It calculates [permutational variable importance](https://ema.drwhy.ai/featureImportance.html) with the difference being that the loss function is time-dependent (by default it is `loss_brier_score()`), so the influence of each variable can be different at each considered time point.
 
+```{r, include=FALSE}
+dev.off()
+```
 ``` {r}
 model_parts_rsf <- model_parts(rsf_exp)
 model_parts_cph <- model_parts(cph_exp)
@@ -90,6 +96,9 @@ For both models, the permutation of the `karno` variable leads to the highest in
 
 We can use another loss function to ensure this observation is consistent. Let's use `loss_one_minus_cd_auc()`, but let's also change the plot type to show the difference between the loss function after a given variable's permutation and the loss of the full model with all variables. This means that the values on the y-axis represent only the change in the loss function after permuting each variable.
 
+```{r, include=FALSE}
+dev.off()
+```
 ``` {r}
 model_parts_rsf_auc <- model_parts(rsf_exp, loss_function=loss_one_minus_cd_auc, type="difference")
 model_parts_cph_auc <- model_parts(cph_exp, loss_function=loss_one_minus_cd_auc, type="difference")
@@ -108,6 +117,9 @@ The next type of global explanation this package provides is partial dependence 
 
 Note that we need to set the `categorical_variables` parameter in order to avoid nonsensical values, such as the treatment value of 0.5. All factors are automatically detected as categories, but if you want to treat a numerical variable as a categorical one, you need to set it here.
 
+```{r, include=FALSE}
+dev.off()
+```
 ``` {r, fig.height=18}
 model_profile_cph <- model_profile(cph_exp, categorical_variables=c("trt", "prior"))
 plot(model_profile_cph, facet_ncol = 1)
@@ -117,7 +129,9 @@ From the plot, we see that for the proportional hazards model, the `prior` and `
 
 We can also plot the same information for the random survival forest. This time let's change the way of plotting numerical variables, instead of the values of the variables being represented by the colors and survival function values on the y-axis, let's swap them.
 
-
+```{r, include=FALSE}
+dev.off()
+```
 ``` {r, fig.height=18}
 model_profile_rsf <- model_profile(rsf_exp, categorical_variables=c("trt", "prior"))
 plot(model_profile_rsf, facet_ncol = 1, numerical_plot_type = "contour")
@@ -135,10 +149,18 @@ Another kind of functionality provided by this package is local explanations. Th
 
 [SurvSHAP(t)](https://arxiv.org/abs/2208.11080) explanations are an extension of SHAP values for survival models. They show a breakdown of the prediction into individual variables.
 
+```{r, include=FALSE}
+dev.off()
+```
 ``` {r}
 predict_parts_cph_32 <- predict_parts(cph_exp, veteran[32,])
 predict_parts_rsf_32 <- predict_parts(rsf_exp, veteran[32,])
 plot(predict_parts_cph_32, predict_parts_rsf_32)
+```
+```{r, include=FALSE}
+dev.off()
+```
+```{r}
 predict_parts_cph_12 <- predict_parts(cph_exp, veteran[12,])
 predict_parts_rsf_12 <- predict_parts(rsf_exp, veteran[12,])
 plot(predict_parts_cph_12, predict_parts_rsf_12)
@@ -152,10 +174,18 @@ On the second plot, it can be seen, that for observation 12, the situation is fl
 
 A different way of attributing variable importance is provided by the [SurvLIME](https://www.sciencedirect.com/science/article/pii/S0950705120304044?casa_token=3ikZP0SAYBQAAAAA:Tnez_adhQq0zubZQVPdg6EMZd9JCIfDTrLqekkfQoMBXgvzrmaSTl9fDFrey7fL4S21V7uxZ) method. It works by finding a surrogate proportional hazards model that approximates the survival model at the local area around an observation of interest. Variable importance is then attributed using the coefficients of the found model.
 
+```{r, include=FALSE}
+dev.off()
+```
 ``` {r}
 predict_parts_cph_12_lime <- predict_parts(cph_exp, veteran[12,], type="survlime")
 predict_parts_rsf_12_lime <- predict_parts(rsf_exp, veteran[12,], type="survlime")
 plot(predict_parts_cph_12_lime, type="local_importance")
+```
+```{r, include=FALSE}
+dev.off()
+```
+```{r}
 plot(predict_parts_rsf_12_lime, type="local_importance")
 ```
 
@@ -165,11 +195,16 @@ The left part of the plot shows which variables are most important and if their 
 
 Another explanation technique provided by this package is [ceteris paribus profiles](https://ema.drwhy.ai/ceterisParibus.html). They show how the prediction changes when we change the value of one variable at a time. We can think of them as the equivalent of partial dependence plots but applied to a single observation. The `predict_profile()` function is used to make these explanations.
 
+```{r, include=FALSE}
+dev.off()
+```
 ``` {r, fig.height=18}
 predict_profile_cph_32 <- predict_profile(cph_exp, veteran[32,], categorical_variables=c("trt", "prior"))
 plot(predict_profile_cph_32, facet_ncol=1)
 ```
-
+```{r, include=FALSE}
+dev.off()
+```
 ```{r, fig.height=18}
 predict_profile_rsf_32 <- predict_profile(rsf_exp, veteran[32,], categorical_variables=c("trt", "prior"))
 plot(predict_profile_rsf_32, facet_ncol=1)

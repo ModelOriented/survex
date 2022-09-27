@@ -90,10 +90,6 @@ plot.surv_ceteris_paribus <- function(x,
 
     all_variables <- intersect(all_variables, unique(x$`_vname_`))
 
-    if (is.null(facet_ncol))
-        facet_ncol <-
-        switch(as.character(length(all_variables)), "1" = 1, "2" = 2, 3)
-
     lsc <- lapply(all_variables, function(sv) {
         tmp <- x[x$`_vname_` == sv,
                  c(sv,
@@ -126,37 +122,10 @@ plot.surv_ceteris_paribus <- function(x,
         subtitle = subtitle
     )
 
+    patchwork::wrap_plots(pl, ncol = facet_ncol) +
+        patchwork::plot_annotation(title = title,
+                                   subtitle = subtitle) & DALEX::theme_drwhy()
 
-    titleGrob <-
-        grid::textGrob(
-            title,
-            just = "left",
-            x = 0.05,
-            gp = grid::gpar(fontsize = 16, col = "#371ea3")
-        )
-    subtitleGrob <-
-        grid::textGrob(
-            subtitle,
-            just = "left",
-            x = 0.05,
-            gp = grid::gpar(fontsize = 11, col = "#371ea3")
-        )
-    grided <-
-        do.call(gridExtra::arrangeGrob, c(pl, list(ncol = facet_ncol)))
-    margin <- grid::unit(0.5, "line")
-    return(
-        gridExtra::grid.arrange(
-            titleGrob,
-            subtitleGrob,
-            grided,
-            ncol = 1,
-            heights = grid::unit.c(
-                grid::grobHeight(titleGrob) + 1.2 * margin,
-                grid::grobHeight(subtitleGrob) + margin,
-                grid::unit(1, "null")
-            )
-        )
-    )
 }
 
 #' @importFrom DALEX theme_drwhy

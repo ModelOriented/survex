@@ -52,9 +52,9 @@ exp <- explain(model)
 
 m_prof <- model_profile(exp, categorical_variables = "trt")
 
-plot(m_prof, facet_ncol = 1)
+plot(m_prof)
 
-plot(m_prof, numerical_plot_type = "contours", facet_ncol = 1)
+plot(m_prof, numerical_plot_type = "contours")
 
 plot(m_prof, variables = c("trt", "age"), facet_ncol = 1)
 }

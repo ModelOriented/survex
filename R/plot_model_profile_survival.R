@@ -25,9 +25,9 @@
 #'
 #' m_prof <- model_profile(exp, categorical_variables = "trt")
 #'
-#' plot(m_prof, facet_ncol = 1)
+#' plot(m_prof)
 #'
-#' plot(m_prof, numerical_plot_type = "contours", facet_ncol = 1)
+#' plot(m_prof, numerical_plot_type = "contours")
 #'
 #' plot(m_prof, variables = c("trt", "age"), facet_ncol = 1)
 #' }
@@ -85,16 +85,8 @@ plot.model_profile_survival <- function(x,
 
     pl <- plot_individual_ceteris_paribus_survival(aggregated_profiles, variables, facet_ncol, colors, numerical_plot_type, title, subtitle)
 
-    titleGrob <- grid::textGrob(title, just = "left", x = 0.05, gp = grid::gpar(fontsize = 16, col = "#371ea3"))
-    subtitleGrob <- grid::textGrob(subtitle, just = "left", x = 0.05, gp = grid::gpar(fontsize = 11, col = "#371ea3"))
-    grided <-  do.call(gridExtra::arrangeGrob, c(pl, list(ncol = facet_ncol)))
-    margin <- grid::unit(0.5, "line")
-    plot_grid <- gridExtra::grid.arrange(titleGrob, subtitleGrob,
-                                         grided,
-                                         ncol = 1,
-                                         heights = grid::unit.c(grid::grobHeight(titleGrob) + 1.2 * margin,
-                                                              grid::grobHeight(subtitleGrob) + margin,
-                                                              grid::unit(1, "null")))
-    return(plot_grid)
+    patchwork::wrap_plots(pl, ncol = facet_ncol) +
+        patchwork::plot_annotation(title = title,
+                                   subtitle = subtitle) & DALEX::theme_drwhy()
 
 }
