@@ -177,10 +177,18 @@ On the second plot, it can be seen, that for observation 12, the situation is fl
 
 A different way of attributing variable importance is provided by the [SurvLIME](https://www.sciencedirect.com/science/article/pii/S0950705120304044?casa_token=3ikZP0SAYBQAAAAA:Tnez_adhQq0zubZQVPdg6EMZd9JCIfDTrLqekkfQoMBXgvzrmaSTl9fDFrey7fL4S21V7uxZ) method. It works by finding a surrogate proportional hazards model that approximates the survival model at the local area around an observation of interest. Variable importance is then attributed using the coefficients of the found model.
 
+```{r, include=FALSE}
+dev.off()
+```
 ``` {r}
 predict_parts_cph_12_lime <- predict_parts(cph_exp, veteran[12,], type="survlime")
 predict_parts_rsf_12_lime <- predict_parts(rsf_exp, veteran[12,], type="survlime")
 plot(predict_parts_cph_12_lime, type="local_importance")
+```
+```{r, include=FALSE}
+dev.off()
+```
+```{r}
 plot(predict_parts_rsf_12_lime, type="local_importance")
 ```
 
