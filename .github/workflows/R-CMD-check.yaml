@@ -47,8 +47,15 @@ jobs:
         with:
           extra-packages: any::rcmdcheck
           needs: check
-
-      - uses: r-lib/actions/check-r-package@v2
+          
+      - if: runner.os == 'macOS'
+        uses: r-lib/actions/check-r-package@v2
+        with:
+          args: 'c("--no-manual", "--as-cran", "--ignore-vignettes")'
+          build_args: 'c("--no-manual", "--no-build-vignettes")'
+          upload-snapshots: true
+          
+      - if: runner.os != 'macOS'
+        uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
-
