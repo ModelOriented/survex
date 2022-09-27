@@ -58,9 +58,6 @@ predict(rsf_exp, veteran[1:2,], output_type="chf", times=seq(1, 600, 100))
 
 Another helpful thing is the functionality for calculating different metrics of the models. For this we use the `model_performance()` function. It calculates a set of performance measures we can plot next to each other and easily compare. 
 
-```{r, include=FALSE}
-dev.off()
-```
 ``` {r warning=FALSE}
 mp_cph <- model_performance(cph_exp)
 mp_rsf <- model_performance(rsf_exp)
