@@ -117,8 +117,10 @@ From the plot, we see that for the proportional hazards model, the `prior` and `
 
 We can also plot the same information for the random survival forest. This time let's change the way of plotting numerical variables, instead of the values of the variables being represented by the colors and survival function values on the y-axis, let's swap them.
 
-
-``` {r, fig.height=22}
+```{r, include=FALSE}
+dev.off()
+```
+``` {r, fig.height=18}
 model_profile_rsf <- model_profile(rsf_exp, categorical_variables=c("trt", "prior"))
 plot(model_profile_rsf, facet_ncol = 1, numerical_plot_type = "contour")
 ```
@@ -165,12 +167,17 @@ The left part of the plot shows which variables are most important and if their 
 
 Another explanation technique provided by this package is [ceteris paribus profiles](https://ema.drwhy.ai/ceterisParibus.html). They show how the prediction changes when we change the value of one variable at a time. We can think of them as the equivalent of partial dependence plots but applied to a single observation. The `predict_profile()` function is used to make these explanations.
 
-``` {r, fig.height=22}
+```{r, include=FALSE}
+dev.off()
+```
+``` {r, fig.height=18}
 predict_profile_cph_32 <- predict_profile(cph_exp, veteran[32,], categorical_variables=c("trt", "prior"))
 plot(predict_profile_cph_32, facet_ncol=1)
 ```
-
-```{r, fig.height=22}
+```{r, include=FALSE}
+dev.off()
+```
+```{r, fig.height=18}
 predict_profile_rsf_32 <- predict_profile(rsf_exp, veteran[32,], categorical_variables=c("trt", "prior"))
 plot(predict_profile_rsf_32, facet_ncol=1)
 ```
