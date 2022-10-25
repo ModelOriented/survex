@@ -25,7 +25,7 @@ for survival models created using the \code{predict_parts()} function.
 \item \code{x} - an object of class \code{"surv_shap"} to be plotted
 \item \code{...} - additional objects of class \code{surv_shap} to be plotted together
 \item \code{title} - character, title of the plot
-\item \code{subtitle} - character, subtitle of the plot, if \code{NULL} automaticaly generated as "created for XXX, YYY models", where XXX and YYY are explainer labels
+\item \code{subtitle} - character, subtitle of the plot, \code{'default'} automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels
 \item \code{colors} - character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")
 }
 }
@@ -37,7 +37,7 @@ for survival models created using the \code{predict_parts()} function.
 \item \code{show_survival_function} -  logical, if the survival function of the explanations should be plotted next to the barplot
 \item \code{...} -  other parameters currently ignored
 \item \code{title} -  character, title of the plot
-\item \code{subtitle} -  character, subtitle of the plot, if \code{NULL} automaticaly generated as "created for XXX, YYY models", where XXX and YYY are explainer labels
+\item \code{subtitle} -  character, subtitle of the plot, \code{'default'} automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels
 \item \code{colors} -  character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")
 }
 }

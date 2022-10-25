@@ -11,7 +11,7 @@
 #' @param variables character, names of the variables to be plotted
 #' @param numerical_plot_type character, either `"lines"`, or `"contours"` selects the type of numerical variable plots
 #' @param title character, title of the plot
-#' @param subtitle character, subtitle of the plot, if `NULL` automaticaly generated as "created for XXX, YYY models", where XXX and YYY are explainer labels
+#' @param subtitle character, subtitle of the plot, `'default'` automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels
 #'
 #' @return A grid of `ggplot` objects arranged with the `gridExtra::grid.arrange` function.
 #'
@@ -47,7 +47,7 @@ plot.surv_ceteris_paribus <- function(x,
                                       variables = NULL,
                                       numerical_plot_type = "lines",
                                       title = "Ceteris paribus survival profile",
-                                      subtitle = NULL) {
+                                      subtitle = "default") {
     if (!is.null(variable_type))
         check_variable_type(variable_type)
 
@@ -62,7 +62,7 @@ plot.surv_ceteris_paribus <- function(x,
     all_profiles$`_ids_` <- factor(all_profiles$`_ids_`)
 
     # extract labels to use in the default subtitle
-    if (is.null(subtitle)) {
+    if (!is.null(subtitle) && subtitle == "default") {
         labels <- paste0(unique(all_profiles$`_label_`), collapse = ", ")
         subtitle <- paste0("created for the ", labels, " model")
     }
@@ -118,8 +118,7 @@ plot.surv_ceteris_paribus <- function(x,
         facet_ncol = facet_ncol,
         colors = colors,
         numerical_plot_type = numerical_plot_type,
-        title = title,
-        subtitle = subtitle
+        title = title
     )
 
     patchwork::wrap_plots(pl, ncol = facet_ncol) +
@@ -135,8 +134,7 @@ plot_individual_ceteris_paribus_survival <- function(all_profiles,
                                                      facet_ncol,
                                                      colors,
                                                      numerical_plot_type,
-                                                     title,
-                                                     subtitle) {
+                                                     title) {
     pl <- lapply(variables, function(var) {
         df <- all_profiles[all_profiles$`_vname_` == var, ]
 
@@ -210,11 +208,11 @@ plot_individual_ceteris_paribus_survival <- function(all_profiles,
                           size = 0.8) +
                 geom_line(data = df[df$`_real_point_`, ],
                           size = 0.8, linetype = "longdash") +
-                scale_color_manual(name = "",
+                scale_color_manual(name = paste0(unique(df$`_vname_`), " value"),
                                    values = generate_discrete_color_scale(n_colors, colors)) +
-                facet_wrap(~`_vname_`, scales = "free_x", ncol = facet_ncol) +
                 theme_drwhy() +
-                xlab("") + ylab("survival function value") + ylim(c(0, 1))
+                xlab("") + ylab("survival function value") + ylim(c(0, 1)) +
+                facet_wrap(~`_vname_`, ncol = facet_ncol)
         }
     })
 }

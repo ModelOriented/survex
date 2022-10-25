@@ -4,7 +4,7 @@
 \alias{plot.surv_shap}
 \title{Plot SurvSHAP(t) Explanations for Survival Models}
 \usage{
-\method{plot}{surv_shap}(x, ..., title = "SurvSHAP(t)", subtitle = NULL, colors = NULL)
+\method{plot}{surv_shap}(x, ..., title = "SurvSHAP(t)", subtitle = "default", colors = NULL)
 }
 \arguments{
 \item{x}{an object of class \code{"surv_shap"} to be plotted}
@@ -13,7 +13,7 @@
 
 \item{title}{character, title of the plot}
 
-\item{subtitle}{character, subtitle of the plot, if \code{NULL} automatically generated as "created for XXX, YYY models", where XXX and YYY are explainer labels}
+\item{subtitle}{character, subtitle of the plot, \code{'default'} automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels}
 
 \item{colors}{character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")}
 }

@@ -15,7 +15,7 @@
 #' * `x` - an object of class `"surv_shap"` to be plotted
 #' * `...` - additional objects of class `surv_shap` to be plotted together
 #' * `title` - character, title of the plot
-#' * `subtitle` - character, subtitle of the plot, if `NULL` automaticaly generated as "created for XXX, YYY models", where XXX and YYY are explainer labels
+#' * `subtitle` - character, subtitle of the plot, `'default'` automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels
 #' * `colors` - character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")
 #'
 #' ## `plot.surv_lime`
@@ -25,7 +25,7 @@
 #' * `show_survival_function` -  logical, if the survival function of the explanations should be plotted next to the barplot
 #' * `...` -  other parameters currently ignored
 #' * `title` -  character, title of the plot
-#' * `subtitle` -  character, subtitle of the plot, if `NULL` automaticaly generated as "created for XXX, YYY models", where XXX and YYY are explainer labels
+#' * `subtitle` -  character, subtitle of the plot, `'default'` automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels
 #' * `colors` -  character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")
 #'
 #' @family functions for plotting 'predict_parts_survival' objects

@@ -10,7 +10,7 @@
   metrics = NULL,
   metrics_type = "time_dependent",
   title = "Model performance",
-  subtitle = NULL,
+  subtitle = "default",
   facet_ncol = NULL,
   colors = NULL
 )
@@ -26,7 +26,7 @@
 
 \item{title}{character, title of the plot}
 
-\item{subtitle}{character, subtitle of the plot, if \code{NULL} automatically generated as "created for XXX, YYY models", where XXX and YYY are explainer labels}
+\item{subtitle}{character, subtitle of the plot, \code{'default'} automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels}
 
 \item{facet_ncol}{number of columns for arranging subplots}
 

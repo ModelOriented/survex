@@ -6,7 +6,7 @@
 #' @param x an object of class `"surv_shap"` to be plotted
 #' @param ... additional objects of class `surv_shap` to be plotted together
 #' @param title character, title of the plot
-#' @param subtitle character, subtitle of the plot, if `NULL` automatically generated as "created for XXX, YYY models", where XXX and YYY are explainer labels
+#' @param subtitle character, subtitle of the plot, `'default'` automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels
 #' @param colors character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")
 #'
 #' @return An object of the class `ggplot`.
@@ -26,7 +26,11 @@
 #' }
 #'
 #' @export
-plot.surv_shap <- function(x, ..., title = "SurvSHAP(t)", subtitle = NULL, colors = NULL) {
+plot.surv_shap <- function(x,
+                           ...,
+                           title = "SurvSHAP(t)",
+                           subtitle = "default",
+                           colors = NULL) {
 
     dfl <- c(list(x), list(...))
 
@@ -46,8 +50,9 @@ plot.surv_shap <- function(x, ..., title = "SurvSHAP(t)", subtitle = NULL, color
     long_df <- do.call(rbind, long_df)
     label <- unique(long_df$label)
 
-    if (is.null(subtitle))
+    if (!is.null(subtitle) && subtitle == "default") {
         subtitle <- paste0("created for the ", paste(label, collapse = ", "), " model")
+    }
 
     n_colors <- length(unique(long_df$ind))
 

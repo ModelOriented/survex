@@ -8,7 +8,7 @@
 #' @param metrics character, names of metrics to be plotted (subset of C/D AUC", "Brier score" for `metrics_type %in% c("time_dependent", "functional")` or subset of "C-index","Integrated Brier score", "Integrated C/D AUC" for `metrics_type == "scalar"`), by default (`NULL`) all metrics of a given type are plotted
 #' @param metrics_type character, either one of `c("time_dependent","functional")` for functional metrics or `"scalar"` for scalar metrics
 #' @param title character, title of the plot
-#' @param subtitle character, subtitle of the plot, if `NULL` automatically generated as "created for XXX, YYY models", where XXX and YYY are explainer labels
+#' @param subtitle character, subtitle of the plot, `'default'` automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels
 #' @param facet_ncol number of columns for arranging subplots
 #' @param colors character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")
 #'
@@ -27,7 +27,14 @@
 #' plot(m_perf)
 #'
 #' @export
-plot.surv_model_performance <- function(x, ..., metrics = NULL, metrics_type = "time_dependent", title = "Model performance", subtitle = NULL, facet_ncol = NULL, colors = NULL) {
+plot.surv_model_performance <- function(x,
+                                        ...,
+                                        metrics = NULL,
+                                        metrics_type = "time_dependent",
+                                        title = "Model performance",
+                                        subtitle = "default",
+                                        facet_ncol = NULL,
+                                        colors = NULL) {
 
 
     if (metrics_type %in% c("time_dependent", "functional")) {
@@ -71,8 +78,9 @@ plot_td_surv_model_performance <- function(x, ..., metrics = NULL, title = NULL,
 plot_scalar_surv_model_performance <- function(x, ..., metrics = NULL, title = NULL, subtitle = NULL, facet_ncol = NULL, colors = NULL) {
     df <- concatenate_dfs(x, ...)
 
-    if (is.null(subtitle))
+    if (!is.null(subtitle) && subtitle == "default") {
         subtitle <- paste0("created for the ", paste(unique(df$label), collapse = ", "), " model")
+    }
 
     if (is.null(metrics)) metrics <- c("C-index", "Integrated Brier score", "Integrated C/D AUC")
 
