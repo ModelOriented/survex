@@ -52,12 +52,13 @@ plot.surv_model_performance <- function(x,
 
 
 #' @importFrom DALEX theme_drwhy
-plot_td_surv_model_performance <- function(x, ..., metrics = NULL, title = NULL, subtitle = NULL, facet_ncol = NULL, colors = NULL) {
+plot_td_surv_model_performance <- function(x, ..., metrics = NULL, title = NULL, subtitle = "default", facet_ncol = NULL, colors = NULL) {
 
     df <- concatenate_td_dfs(x, ...)
 
-    if (is.null(subtitle))
+    if (!is.null(subtitle) && subtitle == "default") {
         subtitle <- paste0("created for the ", paste(unique(df$label), collapse = ", "), " model")
+    }
 
     if (is.null(metrics)) metrics <- c("C/D AUC", "Brier score")
 
