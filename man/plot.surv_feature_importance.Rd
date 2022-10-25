@@ -8,7 +8,7 @@
   x,
   ...,
   title = "Time-dependent feature importance",
-  subtitle = NULL,
+  subtitle = "default",
   max_vars = 6,
   colors = NULL
 )
