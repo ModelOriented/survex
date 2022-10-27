@@ -93,7 +93,7 @@ using the <code><a href="model_performance.surv_explainer.html">model_performanc
 <li><p><code>metrics</code> - character, names of metrics to be plotted (subset of C/D AUC", "Brier score" for <code>metrics_type %in% c("time_dependent", "functional")</code> or subset of "C-index","Integrated Brier score", "Integrated C/D AUC" for <code>metrics_type == "scalar"</code>), by default (<code>NULL</code>) all metrics of a given type are plotted</p></li>
 <li><p><code>metrics_type</code> - character, either one of <code>c("time_dependent","functional")</code> for functional metrics or <code>"scalar"</code> for scalar metrics</p></li>
 <li><p><code>title</code> - character, title of the plot</p></li>
-<li><p><code>subtitle</code> - character, subtitle of the plot, if <code>NULL</code> automaticaly generated as "created for XXX, YYY models", where XXX and YYY are explainer labels</p></li>
+<li><p><code>subtitle</code> - character, subtitle of the plot, <code>'default'</code> automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels</p></li>
 <li><p><code>facet_ncol</code> - number of columns for arranging subplots</p></li>
 <li><p><code>colors</code> - character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")</p></li>
 </ul></div>
@@ -104,7 +104,7 @@ using the <code><a href="model_performance.surv_explainer.html">model_performanc
 <ul><li><p><code>x</code> - an object of class <code>"surv_model_performance_rocs"</code> to be plotted</p></li>
 <li><p><code>...</code> - additional objects of class <code>"surv_model_performance_rocs"</code> to be plotted together</p></li>
 <li><p><code>title</code> - character, title of the plot</p></li>
-<li><p><code>subtitle</code> - character, subtitle of the plot, if <code>NULL</code> automaticaly generated as "created for XXX, YYY models", where XXX and YYY are explainer labels</p></li>
+<li><p><code>subtitle</code> - character, subtitle of the plot, <code>'default'</code> automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels</p></li>
 <li><p><code>colors</code> - character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")</p></li>
 <li><p><code>facet_ncol</code> - number of columns for arranging subplots</p></li>
 </ul></div>

@@ -81,11 +81,20 @@
 
     
     
-<p>The <code>survex</code> package strives to include the functionality for the automatic creation of explainers for as many survival models as possible. However, it is impossible to include them all because of the great variety of available packages and models. We provide the functionality to create an explainer for any survival model manually.</p>
+<p>The <code>survex</code> package strives to include the functionality
+for the automatic creation of explainers for as many survival models as
+possible. However, it is impossible to include them all because of the
+great variety of available packages and models. We provide the
+functionality to create an explainer for any survival model
+manually.</p>
 <div class="section level2">
 <h2 id="automatic-explainer-creation">Automatic explainer creation<a class="anchor" aria-label="anchor" href="#automatic-explainer-creation"></a>
 </h2>
-<p>In the best case, creating an explainer for your desired model is already implemented. This means that everything can be extracted from the model object (sometimes, you need to set additional parameters). For example, this is the case for the proportional hazards model from the <code>survival</code> package:</p>
+<p>In the best case, creating an explainer for your desired model is
+already implemented. This means that everything can be extracted from
+the model object (sometimes, you need to set additional parameters). For
+example, this is the case for the proportional hazards model from the
+<code>survival</code> package:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://modeloriented.github.io/survex/">survex</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/therneau/survival" class="external-link">survival</a></span><span class="op">)</span></span>
@@ -104,12 +113,20 @@
 <span><span class="co">#&gt;   -&gt; predict cumulative hazard function  :  -log(predict_survival_function) will be used ( <span style="color: #BBBB00;"> default </span> ) </span></span>
 <span><span class="co">#&gt;   -&gt; model_info        :  package survival , ver. 3.3.1 , task survival ( <span style="color: #BBBB00;"> default </span> ) </span></span>
 <span><span class="co">#&gt;   A new explainer has been created!</span></span></code></pre></div>
-<p>It can be seen that the only required parameter of the <code><a href="../reference/explain_survival.html">explain()</a></code> function is the proportional hazards model itself. However, we needed to set <code>model = TRUE, x = TRUE</code> while creating it. If you forget to set these arguments, an error will be shown.</p>
+<p>It can be seen that the only required parameter of the
+<code><a href="../reference/explain_survival.html">explain()</a></code> function is the proportional hazards model
+itself. However, we needed to set <code>model = TRUE, x = TRUE</code>
+while creating it. If you forget to set these arguments, an error will
+be shown.</p>
 </div>
 <div class="section level2">
 <h2 id="manual-explainer-creation">Manual explainer creation<a class="anchor" aria-label="anchor" href="#manual-explainer-creation"></a>
 </h2>
-<p>The next base case is when all types of predictions can be made using your desired model. It is then possible to manually create an explainer using the <code><a href="../reference/explain_survival.html">explain_survival()</a></code> function. Let’s look at an example - how to set all parameters of a <code>coxph</code> explainer by hand:</p>
+<p>The next base case is when all types of predictions can be made using
+your desired model. It is then possible to manually create an explainer
+using the <code><a href="../reference/explain_survival.html">explain_survival()</a></code> function. Let’s look at an
+example - how to set all parameters of a <code>coxph</code> explainer by
+hand:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cph</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/survival/man/coxph.html" class="external-link">coxph</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">time</span>, <span class="va">status</span><span class="op">)</span> <span class="op">~</span> <span class="va">.</span>, data<span class="op">=</span><span class="va">veteran</span><span class="op">)</span></span>
 <span></span>
@@ -144,15 +161,33 @@
 <div class="section level2">
 <h2 id="helpful-utility-functions">Helpful utility functions<a class="anchor" aria-label="anchor" href="#helpful-utility-functions"></a>
 </h2>
-<p>Sometimes, the survival model provides only one type of prediction, for example, the survival function. This package provides helpful utilities for converting between types of prediction and standardizing them for explainer creation.</p>
-<p>For example, the random survival forest from the <code>randomForestSRC</code> package only provides the survival function predictions at the unique times from the training data set (<code>predict.rsfrc()$survival</code>). Let’s try to create an explainer for it using the utility function for converting this type of prediction to a step function that can be used for prediction at any time points.</p>
+<p>Sometimes, the survival model provides only one type of prediction,
+for example, the survival function. This package provides helpful
+utilities for converting between types of prediction and standardizing
+them for explainer creation.</p>
+<p>For example, the random survival forest from the
+<code>randomForestSRC</code> package only provides the survival function
+predictions at the unique times from the training data set
+(<code>predict.rsfrc()$survival</code>). Let’s try to create an
+explainer for it using the utility function for converting this type of
+prediction to a step function that can be used for prediction at any
+time points.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">surv_pred_rsf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/transform_to_stepfunction.html">transform_to_stepfunction</a></span><span class="op">(</span><span class="va">predict</span>,</span>
 <span>                                           type<span class="op">=</span><span class="st">"survival"</span>,</span>
 <span>                                           prediction_element <span class="op">=</span> <span class="st">"survival"</span>,</span>
 <span>                                           times_element <span class="op">=</span> <span class="st">"time.interest"</span><span class="op">)</span></span></code></pre></div>
-<p>Because the <code>predict.rsfrc()</code> returns a list with the times at which the survival function was evaluated, we provide the name of the list element which contains the prediction and the evaluation times. If in your case, the prediction function returns only a matrix, you can pass the times at which the predictions were evaluated in the <code>eval_times</code> argument.</p>
-<p>We could use the same utility to get the cumulative hazard predictions (commented code below). Still, to demonstrate another function, we make use of the mathematical relationship between the survival function (<span class="math inline">\(\hat{S}\)</span>) and the cumulative hazard function (<span class="math inline">\(\hat{H}\)</span>), i.e., <span class="math inline">\(\hat{H} = \exp(-\hat{S})\)</span>.</p>
+<p>Because the <code>predict.rsfrc()</code> returns a list with the
+times at which the survival function was evaluated, we provide the name
+of the list element which contains the prediction and the evaluation
+times. If in your case, the prediction function returns only a matrix,
+you can pass the times at which the predictions were evaluated in the
+<code>eval_times</code> argument.</p>
+<p>We could use the same utility to get the cumulative hazard
+predictions (commented code below). Still, to demonstrate another
+function, we make use of the mathematical relationship between the
+survival function (<span class="math inline">\(\hat{S}\)</span>) and the
+cumulative hazard function (<span class="math inline">\(\hat{H}\)</span>), i.e., <span class="math inline">\(\hat{H} = \exp(-\hat{S})\)</span>.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># would also work </span></span>
 <span><span class="co"># chf_pred_rsf &lt;- transform_to_stepfunction(predict,</span></span>
@@ -163,12 +198,16 @@
 <span><span class="va">chf_pred_rsf</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">model</span>, <span class="va">newdata</span>, <span class="va">times</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="../reference/survival_to_cumulative_hazard.html">survival_to_cumulative_hazard</a></span><span class="op">(</span><span class="fu">surv_pred_rsf</span><span class="op">(</span><span class="va">model</span>, <span class="va">newdata</span>, <span class="va">times</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<p>The reverse utility (<code><a href="../reference/cumulative_hazard_to_survival.html">cumulative_hazard_to_survival()</a></code>) also exists.</p>
-<p>If no risk prediction is provided for your model, you can use a utility to sum the cumulative hazard function for each observation to achieve risk scores. This approach is recommended by Ishwaran et al. <a href="#references">(1)</a> and Sonabend et al. <a href="#references">(2)</a>.</p>
+<p>The reverse utility (<code><a href="../reference/cumulative_hazard_to_survival.html">cumulative_hazard_to_survival()</a></code>)
+also exists.</p>
+<p>If no risk prediction is provided for your model, you can use a
+utility to sum the cumulative hazard function for each observation to
+achieve risk scores. This approach is recommended by Ishwaran et al. <a href="#references">(1)</a> and Sonabend et al. <a href="#references">(2)</a>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">times</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">veteran</span><span class="op">$</span><span class="va">times</span><span class="op">)</span></span>
 <span><span class="va">risk_pred_rsf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/risk_from_chf.html">risk_from_chf</a></span><span class="op">(</span><span class="va">chf_pred_rsf</span>, <span class="va">times</span><span class="op">)</span></span></code></pre></div>
-<p>Now that we have all predictions prepared, we can finally create the explainer:</p>
+<p>Now that we have all predictions prepared, we can finally create the
+explainer:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.randomforestsrc.org/" class="external-link">randomForestSRC</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -201,8 +240,13 @@
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
 <ul>
-<li>[1] Ishwaran, Hemant, et al. <a href="https://projecteuclid.org/journalArticle/Download?urlId=10.1214%2F08-AOAS169" class="external-link">“Random survival forests.”</a> The Annals of Applied Statistics 2.3 (2008): 841-860.</li>
-<li>[2] Sonabend, Raphael, et al. <a href="https://academic.oup.com/bioinformatics/advance-article/doi/10.1093/bioinformatics/btac451/6640155" class="external-link">“Avoiding C-hacking when evaluating survival distribution predictions with discrimination measures”</a>, Bioinformatics 38.17 (2022): 4178–4184.</li>
+<li>[1] Ishwaran, Hemant, et al. <a href="https://projecteuclid.org/journalArticle/Download?urlId=10.1214%2F08-AOAS169" class="external-link">“Random
+survival forests.”</a> The Annals of Applied Statistics 2.3 (2008):
+841-860.</li>
+<li>[2] Sonabend, Raphael, et al. <a href="https://academic.oup.com/bioinformatics/advance-article/doi/10.1093/bioinformatics/btac451/6640155" class="external-link">“Avoiding
+C-hacking when evaluating survival distribution predictions with
+discrimination measures”</a>, Bioinformatics 38.17 (2022):
+4178–4184.</li>
 </ul>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

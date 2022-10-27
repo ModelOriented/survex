@@ -68,7 +68,7 @@ metrics of different models created using the <code>model_performance(..., type=
 <span>  metrics <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  metrics_type <span class="op">=</span> <span class="st">"time_dependent"</span>,</span>
 <span>  title <span class="op">=</span> <span class="st">"Model performance"</span>,</span>
-<span>  subtitle <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  subtitle <span class="op">=</span> <span class="st">"default"</span>,</span>
 <span>  facet_ncol <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  colors <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -97,7 +97,7 @@ metrics of different models created using the <code>model_performance(..., type=
 
 
 <dt>subtitle</dt>
-<dd><p>character, subtitle of the plot, if <code>NULL</code> automatically generated as "created for XXX, YYY models", where XXX and YYY are explainer labels</p></dd>
+<dd><p>character, subtitle of the plot, <code>'default'</code> automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels</p></dd>
 
 
 <dt>facet_ncol</dt>
