@@ -13,7 +13,7 @@
   variables = NULL,
   numerical_plot_type = "lines",
   title = "Ceteris paribus survival profile",
-  subtitle = NULL
+  subtitle = "default"
 )
 }
 \arguments{
@@ -33,7 +33,7 @@
 
 \item{title}{character, title of the plot}
 
-\item{subtitle}{character, subtitle of the plot, if \code{NULL} automaticaly generated as "created for XXX, YYY models", where XXX and YYY are explainer labels}
+\item{subtitle}{character, subtitle of the plot, \code{'default'} automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels}
 }
 \value{
 A grid of \code{ggplot} objects arranged with the \code{gridExtra::grid.arrange} function.

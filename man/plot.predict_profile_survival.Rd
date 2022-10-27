@@ -30,7 +30,7 @@ for survival models created using the \code{predict_profile()} function.
 \item \code{variables} - character, names of the variables to be plotted
 \item \code{numerical_plot_type} - character, either \code{"lines"}, or \code{"contours"} selects the type of numerical variable plots
 \item \code{title} - character, title of the plot
-\item \code{subtitle} - character, subtitle of the plot, if \code{NULL} automaticaly generated as "created for XXX, YYY models", where XXX and YYY are explainer labels
+\item \code{subtitle} - character, subtitle of the plot, \code{'default'} automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels
 }
 }
 }

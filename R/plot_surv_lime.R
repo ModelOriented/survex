@@ -8,7 +8,7 @@
 #' @param show_survival_function logical, if the survival function of the explanations should be plotted next to the barplot
 #' @param ... other parameters currently ignored
 #' @param title character, title of the plot
-#' @param subtitle character, subtitle of the plot, if `NULL` automaticaly generated as "created for XXX, YYY models", where XXX and YYY are explainer labels
+#' @param subtitle character, subtitle of the plot, `'default'` automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels
 #' @param colors character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")
 #'
 #' @return An object of the class `ggplot`.
@@ -26,7 +26,13 @@
 #' plot(p_parts_lime)
 #'
 #' @export
-plot.surv_lime <- function(x, type = "local_importance", show_survival_function = TRUE, ..., title = "SurvLIME", subtitle = NULL, colors = NULL) {
+plot.surv_lime <- function(x,
+                           type = "local_importance",
+                           show_survival_function = TRUE,
+                           ...,
+                           title = "SurvLIME",
+                           subtitle = "default",
+                           colors = NULL) {
     if (!type %in% c("coefficients", "local_importance"))
         stop("Type should be one of `coefficients`, `local_importance`")
 
@@ -40,11 +46,11 @@ plot.surv_lime <- function(x, type = "local_importance", show_survival_function 
                      sign_local_importance = as.factor(sign(x$beta * x$variable_values)),
                      local_importance = x$beta * x$variable_values)
 
-    if (is.null(subtitle))
+    if (!is.null(subtitle) && subtitle == "default") {
         subtitle <- paste0("created for the ", attr(x, "label"), " model")
+    }
 
     if (type == "coefficients") {
-
         x_lab <- "SurvLIME coefficients"
         y_lab <- ""
         pl <- with(df, {

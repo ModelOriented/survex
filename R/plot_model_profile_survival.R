@@ -10,7 +10,7 @@
 #' @param facet_ncol number of columns for arranging subplots
 #' @param numerical_plot_type character, either `"lines"`, or `"contours"` selects the type of numerical variable plots
 #' @param title character, title of the plot
-#' @param subtitle character, subtitle of the plot, if `NULL` automaticaly generated as "created for XXX, YYY models", where XXX and YYY are explainer labels
+#' @param subtitle character, subtitle of the plot, `'default'` automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels
 #' @param colors character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")
 #'
 #' @return A grid of `ggplot` objects arranged with the `gridExtra::grid.arrange` function.
@@ -40,7 +40,7 @@ plot.model_profile_survival <- function(x,
                                         facet_ncol = NULL,
                                         numerical_plot_type = "lines",
                                         title = "Partial dependence survival profile",
-                                        subtitle = NULL,
+                                        subtitle = "default",
                                         colors = NULL)
 {
 
@@ -61,7 +61,7 @@ plot.model_profile_survival <- function(x,
         aggregated_profiles[aggregated_profiles$`_vname_` %in% all_variables, ]
 
 
-    if (is.null(subtitle)) {
+    if (!is.null(subtitle) && subtitle == "default") {
         labels <-
             paste0(unique(aggregated_profiles$`_label_`), collapse = ", ")
         subtitle <- paste0("created for the ", labels, " model")
@@ -83,7 +83,7 @@ plot.model_profile_survival <- function(x,
 
     aggregated_profiles$`_real_point_` <- FALSE
 
-    pl <- plot_individual_ceteris_paribus_survival(aggregated_profiles, variables, facet_ncol, colors, numerical_plot_type, title, subtitle)
+    pl <- plot_individual_ceteris_paribus_survival(aggregated_profiles, variables, facet_ncol, colors, numerical_plot_type, title)
 
     patchwork::wrap_plots(pl, ncol = facet_ncol) +
         patchwork::plot_annotation(title = title,

@@ -8,7 +8,7 @@
   x,
   ...,
   title = "ROC curves for selected timepoints",
-  subtitle = NULL,
+  subtitle = "default",
   colors = NULL,
   facet_ncol = NULL
 )
@@ -20,7 +20,7 @@
 
 \item{title}{character, title of the plot}
 
-\item{subtitle}{character, subtitle of the plot, if \code{NULL} automaticaly generated as "created for XXX, YYY models", where XXX and YYY are explainer labels}
+\item{subtitle}{character, subtitle of the plot, \code{'default'} automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels}
 
 \item{colors}{character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")}
 

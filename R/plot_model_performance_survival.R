@@ -17,7 +17,7 @@
 #' * `metrics` - character, names of metrics to be plotted (subset of C/D AUC", "Brier score" for `metrics_type %in% c("time_dependent", "functional")` or subset of "C-index","Integrated Brier score", "Integrated C/D AUC" for `metrics_type == "scalar"`), by default (`NULL`) all metrics of a given type are plotted
 #' * `metrics_type` - character, either one of `c("time_dependent","functional")` for functional metrics or `"scalar"` for scalar metrics
 #' * `title` - character, title of the plot
-#' * `subtitle` - character, subtitle of the plot, if `NULL` automaticaly generated as "created for XXX, YYY models", where XXX and YYY are explainer labels
+#' * `subtitle` - character, subtitle of the plot, `'default'` automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels
 #' * `facet_ncol` - number of columns for arranging subplots
 #' * `colors` - character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")
 #'
@@ -26,7 +26,7 @@
 #' * `x` - an object of class `"surv_model_performance_rocs"` to be plotted
 #' * `...` - additional objects of class `"surv_model_performance_rocs"` to be plotted together
 #' * `title` - character, title of the plot
-#' * `subtitle` - character, subtitle of the plot, if `NULL` automaticaly generated as "created for XXX, YYY models", where XXX and YYY are explainer labels
+#' * `subtitle` - character, subtitle of the plot, `'default'` automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels
 #' * `colors` - character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")
 #' * `facet_ncol` - number of columns for arranging subplots
 #'

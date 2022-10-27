@@ -20,7 +20,7 @@
 #' * `variables` - character, names of the variables to be plotted
 #' * `numerical_plot_type` - character, either `"lines"`, or `"contours"` selects the type of numerical variable plots
 #' * `title` - character, title of the plot
-#' * `subtitle` - character, subtitle of the plot, if `NULL` automaticaly generated as "created for XXX, YYY models", where XXX and YYY are explainer labels
+#' * `subtitle` - character, subtitle of the plot, `'default'` automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels
 #'
 #'
 #' @family functions for plotting 'predict_profile_survival' objects

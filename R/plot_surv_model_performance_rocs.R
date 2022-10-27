@@ -6,7 +6,7 @@
 #' @param x an object of class `"surv_model_performance_rocs"` to be plotted
 #' @param ... additional objects of class `"surv_model_performance_rocs"` to be plotted together
 #' @param title character, title of the plot
-#' @param subtitle character, subtitle of the plot, if `NULL` automaticaly generated as "created for XXX, YYY models", where XXX and YYY are explainer labels
+#' @param subtitle character, subtitle of the plot, `'default'` automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels
 #' @param colors character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")
 #' @param facet_ncol number of columns for arranging subplots
 #'
@@ -25,7 +25,12 @@
 #' plot(m_perf_roc)
 #'
 #' @export
-plot.surv_model_performance_rocs <- function(x, ..., title = "ROC curves for selected timepoints", subtitle = NULL, colors = NULL, facet_ncol = NULL) {
+plot.surv_model_performance_rocs <- function(x,
+                                             ...,
+                                             title = "ROC curves for selected timepoints",
+                                             subtitle = "default",
+                                             colors = NULL,
+                                             facet_ncol = NULL) {
 
     dfl <- c(list(x), list(...))
 
@@ -39,8 +44,9 @@ plot.surv_model_performance_rocs <- function(x, ..., title = "ROC curves for sel
 
     df$time_formatted <- paste0("t=", df$time)
 
-    if (is.null(subtitle))
+    if (!is.null(subtitle) && subtitle == "default") {
         subtitle <- paste0("created for the ", paste(unique(df$label), collapse = ", "), " model")
+    }
 
     num_colors <- length(unique(df$label))
 
