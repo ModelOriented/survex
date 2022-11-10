@@ -9,97 +9,96 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+### mlr3proba and additional packages 
 
+The `mlr3proba` package maintainers state that 
+
+> mlr3proba is not on CRAN and is unlikely to be reuploaded (see [here](https://twitter.com/RaphaelS101/status/1506321623250571265) for reasons). 
+
+For this reason, the installation of this package may be not obvious. The following chunk loads all required packages for this vignette.
+
+```{r setup, message=FALSE, results=FALSE}
 if (!require("mlr3proba")) install.packages("mlr3proba",
                                             repos = "https://mlr-org.r-universe.dev")
 if (!require("mlr3extralearners")) install.packages("mlr3extralearners",
                                                     repos = "https://mlr-org.r-universe.dev")
 if (!require("mlr3pipelines")) install.packages("mlr3pipelines")
 
-if (!require("pammtools"))   install.packages("pammtools")
-
 library(mlr3proba)
 library(mlr3extralearners)
 library(mlr3pipelines)
-library(pammtools)
-library(survival)
-library(ranger)
-library(DALEX)
 library(survex)
-
+library(survival)
 ```
 
+### Creating an explainer for mlr3proba learner
 
-# Creating an explainer for mlr3proba model
-
+`survex` allows for the creation of explainers for `mlr3proba::LearnerSurv()` objects in the following way:
 
 ```{r}
-
-task <- as_task_surv(veteran,
+veteran_task <- as_task_surv(veteran,
                      time = "time",
                      event = "status",
                      type = "right")
-
-learner <- lrn("surv.ranger")	
-learner$train(task)
-
+ranger_learner <- lrn("surv.ranger")	
+ranger_learner$train(veteran_task)
+ranger_learner_explainer <- explain(ranger_learner, 
+                     data = veteran[, -c(3,4)],
+                     y = Surv(veteran$time, veteran$status),
+                     label = "Ranger model")
 ```
 
+#### Example explanation 
 
-
+The created explainer can be easily used for providing explanations.
 
 ```{r}
-
-explainer <- explain(learner, 
-                     data = veteran[, -c(3,4)],
-                     y = Surv(veteran$time, veteran$status))
-
-explainer |> predict_profile(veteran[1,]) |> plot(numerical_plot_type = "contours",
+ranger_learner_explainer |> predict_profile(veteran[1,]) |> plot(numerical_plot_type = "contours",
                                                   variables = c("karno", "celltype"),
-                                                  facet_ncol = 1)
-
+                                                  facet_ncol = 1,
+                                                  subtitle = NULL)
 ```
 
-# Creating explainer for Distrcompositor
+### Creating explainer for learner with composed distribution prediction
 
+Not all models can predict the survival distribution (`distr` predict type), however they can be combined with baseline survival distribution estimator to create composite models. Such models created using the `distrcompositor()` pipeline can also be explained easily. There is one caveat, as the pipeline strips the `LearnerSurv()` class, it has to be added again manually.
 
-``` {r messages=FALSE}
-
-composite_learner <- as_learner(ppl(
+``` {r message=FALSE}
+gbm_composite_learner <- as_learner(ppl(
     "distrcompositor",
     learner = lrn("surv.gbm"),
     estimator = "kaplan",
     form = "ph"
 ))
+gbm_composite_learner$train(veteran_task)
 
-composite_learner$train(task)
-class(composite_learner) <- c(class(composite_learner), "LearnerSurv") 
-
-
-composite_learner_explainer <- explain(composite_learner,
+# important!
+class(gbm_composite_learner) <- c(class(gbm_composite_learner), "LearnerSurv") 
+gbm_composite_learner_explainer <- explain(gbm_composite_learner,
                                        data = veteran[, -c(3,4)],
                                        y = Surv(veteran$time, veteran$status),
                                        label = "Composite GBM model")
 
-composite_learner_explainer |> model_parts(type = "ratio") |> plot()
-
-
+gbm_composite_learner_explainer |> model_parts(type = "ratio") |> plot(subtitle = NULL)
 ```
 
-# Using mlr3proba Measures
+### Using mlr3proba measures
 
+The `mlr3proba` package provides many additional performance measures. They can be adapted for use with `survex` using the `loss_adapt_mlr3proba()` function. These adapted metrics can be used with `model_parts()` and `model_performance()` functions.
+``` {r message=FALSE}
+loss_schmid <- loss_adapt_mlr3proba(msr("surv.schmid"))
+gbm_composite_learner_explainer |> model_parts(loss = loss_schmid) -> model_part
+model_part |> plot(subtitle = NULL)
+```
 
-``` {r messages=FALSE}
+``` {r message=FALSE}
+loss_rcll <- loss_adapt_mlr3proba(msr("surv.rcll"))
+custom_metrics <- c("Integrated Schmid Score" = loss_schmid, 
+                    "Right-Censored Log loss" = loss_rcll)
 
+perf_ranger <- model_performance(ranger_learner_explainer, metrics=custom_metrics)
+perf_comp_gbm <- model_performance(gbm_composite_learner_explainer, metrics=custom_metrics) 
 
-
-loss_schmid <- loss_adapt_mlr3proba(msr("surv.graf"))
-
-explainer |> model_parts(loss = loss_schmid) -> model_part
-
-model_part |> plot()
-
-
+plot(perf_ranger, perf_comp_gbm, metrics_type="scalar", subtitle = NULL)
 ```
 
