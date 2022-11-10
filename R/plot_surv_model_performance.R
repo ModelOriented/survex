@@ -83,11 +83,11 @@ plot_scalar_surv_model_performance <- function(x, ..., metrics = NULL, title = N
         subtitle <- paste0("created for the ", paste(unique(df$label), collapse = ", "), " model")
     }
 
-    if (is.null(metrics)) metrics <- c("C-index", "Integrated Brier score", "Integrated C/D AUC")
+    if (!is.null(metrics)) df <- df[df$ind %in% metrics, ]
 
     num_colors <- length(unique(df$label))
 
-    ggplot(data = df[df$ind %in% metrics, ], aes_string(x = "label", y = "values", fill = "label")) +
+    ggplot(data = df, aes_string(x = "label", y = "values", fill = "label")) +
         geom_col() +
         theme_drwhy() +
         xlab("") +
