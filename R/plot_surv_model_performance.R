@@ -116,7 +116,6 @@ concatenate_td_dfs <- function(x, ...) {
                          check.names = FALSE)
 
         df <- stack(df)
-        print(df)
         times <-  rep(x$eval_times, length(tmp_list))
         label <-  attr(x, "label")
         df <- cbind(times, df, label)

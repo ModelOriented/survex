@@ -33,8 +33,8 @@ test_that("C-index fpi works", {
                                 y = survival::Surv(rotterdam$rtime, rotterdam$recur), verbose = FALSE)
 
 
-    mp_cph_cind <- model_parts(coxph_explainer, loss = loss_one_minus_c_index, type = "variable_importance")
-    mp_rsf_cind <- model_parts(forest_explainer, loss = loss_one_minus_c_index)
+    mp_cph_cind <- model_parts(coxph_explainer, loss = loss_one_minus_c_index, type = "variable_importance", output_type = "risk")
+    mp_rsf_cind <- model_parts(forest_explainer, loss = loss_one_minus_c_index, output_type = "risk")
 
     expect_equal(nrow(mp_rsf_cind[mp_rsf_cind$permutation == 0, ]), ncol(forest_explainer$data) + 2)
     expect_equal(nrow(mp_cph_cind[mp_cph_cind$permutation == 0, ]), ncol(coxph_explainer$data) + 2)
