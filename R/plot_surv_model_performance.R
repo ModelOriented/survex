@@ -39,11 +39,10 @@ plot.surv_model_performance <- function(x,
 
     if (metrics_type %in% c("time_dependent", "functional")) {
         pl <- plot_td_surv_model_performance(x, ..., metrics = metrics, title = title, subtitle = subtitle, facet_ncol = facet_ncol, colors = colors)
-    }
-
-
-    if (metrics_type == "scalar") {
+    } else if (metrics_type == "scalar") {
         pl <- plot_scalar_surv_model_performance(x, ..., metrics = metrics, title = title, subtitle = subtitle, facet_ncol = facet_ncol, colors = colors)
+    } else {
+        stop("`metrics_type` should be one of `time_dependent`, `functional` or `scalar`")
     }
 
     pl
@@ -104,11 +103,21 @@ concatenate_td_dfs <- function(x, ...) {
     all_things <- c(list(x), list(...))
 
     all_dfs <- lapply(all_things, function(x) {
-        df <- data.frame(`Brier score` = x$brier_score,
-                         `C/D AUC` = x$auc, check.names = FALSE)
+
+        tmp_list <- lapply(x, function(metric) {
+            if(!is.null(attr(metric, "loss_type"))){
+                if(attr(metric, "loss_type") == "time-dependent"){
+                    attr(metric, "loss_type") <- NULL
+                    metric}
+            }
+        })
+        tmp_list[sapply(tmp_list, is.null)] <- NULL
+        df <- data.frame(tmp_list,
+                         check.names = FALSE)
 
         df <- stack(df)
-        times <-  rep(x$eval_times, 2)
+        print(df)
+        times <-  rep(x$eval_times, length(tmp_list))
         label <-  attr(x, "label")
         df <- cbind(times, df, label)
     })
