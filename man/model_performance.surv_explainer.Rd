@@ -7,7 +7,15 @@
 \usage{
 model_performance(explainer, ...)
 
-\method{model_performance}{surv_explainer}(explainer, ..., type = "metrics", times = NULL)
+\method{model_performance}{surv_explainer}(
+  explainer,
+  ...,
+  type = "metrics",
+  metrics = c(`C-index` = c_index, `Integrated Brier score` =
+    loss_integrated_brier_score, `Integrated C/D AUC` = integrated_cd_auc, `Brier score`
+    = brier_score, `C/D AUC` = cd_auc),
+  times = NULL
+)
 }
 \arguments{
 \item{explainer}{an explainer object - model preprocessed by the \code{explain()} function}
@@ -15,6 +23,8 @@ model_performance(explainer, ...)
 \item{...}{other parameters, currently ignored}
 
 \item{type}{character, either \code{"metrics"} or \code{"roc"}. If \code{"metrics"} then performance metrics are calculated, if \code{"roc"} ROC curves for selected time points are calculated.}
+
+\item{metrics}{a named vector containing the metrics to be calculated. The values should be standardized loss functions. The functions can be supplied manually but has to have these named parameters (\code{y_true}, \code{risk}, \code{surv}, \code{times}), where \code{y_true} represents the \code{survival::Surv} object with observed times and statuses, \code{risk} is the risk score calculated by the model, and \code{surv} is the survival function for each observation evaluated at \code{times}.}
 
 \item{times}{a numeric vector of times. If \code{type == "metrics"} then the survival function is evaluated at these times, if \code{type == "roc"} then the ROC curves are calculated at these times.}
 }

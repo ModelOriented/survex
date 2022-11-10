@@ -450,12 +450,23 @@ loss_integrated_brier_score <- integrated_brier_score
 attr(loss_integrated_brier_score, "loss_name") <- "integrated Brier score"
 attr(loss_integrated_brier_score, "loss_type") <- "integrated"
 
-
-
-
-
+#' Adapt mlr3proba measures for use with survex
+#'
+#' This function allows for usage of standardized measures from the mlr3proba package with `survex`.
+#'
+#' @param measure - a `MeasureSurv` object from the `mlr3proba` package, the object to adapt
+#' @param reverse - boolean, FALSE by default, whether the metric should be reversed in order to be treated as loss (for permutational variable importance we need functions with lower values indicating better performance). If TRUE, the new metric value will be (1 - metric_value)
+#' @param ... - other parameters, currently ignored
+#'
+#' @return a function with standardized parameters (`y_true`, `risk`, `surv`, `times`) that can be used to calculate loss
+#'
+#' if(FALSE){
+#'   measure <- msr("surv.calib_beta")
+#'   mlr_measure <- loss_adapt_mlr3proba(measure)
+#' }
+#'
 #' @export
-loss_adapt_mlr3proba <- function(measure, explainer = NULL, ...){
+loss_adapt_mlr3proba <- function(measure, reverse = FALSE, ...){
 
     loss_function <- function(y_true = NULL, risk = NULL, surv = NULL, times = NULL){
 
@@ -472,16 +483,14 @@ loss_adapt_mlr3proba <- function(measure, explainer = NULL, ...){
         output <- surv_pred$score(measure)
         names(output) <- NULL
 
-        if (!measure$minimize) output <- 1 - output
+        if (reverse) output <- 1 - output
 
         return(output)
     }
 
-    if (!measure$minimize) attr(loss_function, "loss_name") <- paste("one minus", measure$id)
+    if (reverse) attr(loss_function, "loss_name") <- paste("one minus", measure$id)
     else attr(loss_function, "loss_name") <- measure$id
-
     attr(loss_function, "loss_type") <- "integrated"
-
 
     return(loss_function)
 }

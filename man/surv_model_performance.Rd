@@ -4,7 +4,13 @@
 \alias{surv_model_performance}
 \title{Helper functions for \code{model_performance.R}}
 \usage{
-surv_model_performance(explainer, ..., times = NULL, type = "metrics")
+surv_model_performance(
+  explainer,
+  ...,
+  times = NULL,
+  type = "metrics",
+  metrics = NULL
+)
 }
 \arguments{
 \item{explainer}{an explainer object - model preprocessed by the \code{explain()} function}
@@ -14,6 +20,8 @@ surv_model_performance(explainer, ..., times = NULL, type = "metrics")
 \item{times}{a numeric vector, time points at which ROC curves are calculated if \code{type == "roc"} or at which metrics are calculated if \code{type == "metrics"}. Note: if \code{type=="roc"} this parameter is obligatory}
 
 \item{type}{character, either \code{"metrics"} which calculates performance metrics or \code{"roc"} which calculates ROC curves at specific time points}
+
+\item{metrics}{a named vector containing the metrics to be calculated. The values should be standardized loss functions. The functions can be supplied manually but has to have these named parameters (\code{y_true}, \code{risk}, \code{surv}, \code{times}), where \code{y_true} represents the \code{survival::Surv} object with observed times and statuses, \code{risk} is the risk score calculated by the model, and \code{surv} is the survival function for each observation evaluated at \code{times}.}
 }
 \value{
 Either a list when \code{type == "metrics"} or a data.frame if \code{type == "roc"}
