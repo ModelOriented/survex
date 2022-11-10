@@ -83,7 +83,7 @@ model_parts.surv_explainer <- function(explainer,
                N = N,
                ...
              )
-             class(res) <- c("model_parts", class(res))
+             class(res) <- c("model_parts_survival", class(res))
              return(res)
            } else {
              res <- surv_feature_importance(
