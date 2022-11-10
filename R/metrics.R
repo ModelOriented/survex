@@ -1,3 +1,4 @@
+utils::globalVariables(c("PredictionSurv"))
 #' Compute the Harrell's Concordance index
 #'
 #' A function to compute the Harrell's concordance index of a survival model.
@@ -483,7 +484,7 @@ loss_adapt_mlr3proba <- function(measure, reverse = FALSE, ...){
         output <- surv_pred$score(measure)
         names(output) <- NULL
 
-        if (reverse) output <- 1 - output
+        if (reverse) output <- (1 - output)
 
         return(output)
     }
