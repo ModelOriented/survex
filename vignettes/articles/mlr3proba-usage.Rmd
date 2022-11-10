@@ -1,0 +1,105 @@
+---
+title: "How to use survex with mlr3proba"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+
+if (!require("mlr3proba")) install.packages("mlr3proba",
+                                            repos = "https://mlr-org.r-universe.dev")
+if (!require("mlr3extralearners")) install.packages("mlr3extralearners",
+                                                    repos = "https://mlr-org.r-universe.dev")
+if (!require("mlr3pipelines")) install.packages("mlr3pipelines")
+
+if (!require("pammtools"))   install.packages("pammtools")
+
+library(mlr3proba)
+library(mlr3extralearners)
+library(mlr3pipelines)
+library(pammtools)
+library(survival)
+library(ranger)
+library(DALEX)
+library(survex)
+
+```
+
+
+# Creating an explainer for mlr3proba model
+
+
+```{r}
+
+task <- as_task_surv(veteran,
+                     time = "time",
+                     event = "status",
+                     type = "right")
+
+learner <- lrn("surv.ranger")	
+learner$train(task)
+
+```
+
+
+
+
+```{r}
+
+explainer <- explain(learner, 
+                     data = veteran[, -c(3,4)],
+                     y = Surv(veteran$time, veteran$status))
+
+explainer |> predict_profile(veteran[1,]) |> plot(numerical_plot_type = "contours",
+                                                  variables = c("karno", "celltype"),
+                                                  facet_ncol = 1)
+
+```
+
+# Creating explainer for Distrcompositor
+
+
+``` {r messages=FALSE}
+
+composite_learner <- as_learner(ppl(
+    "distrcompositor",
+    learner = lrn("surv.gbm"),
+    estimator = "kaplan",
+    form = "ph"
+))
+
+composite_learner$train(task)
+class(composite_learner) <- c(class(composite_learner), "LearnerSurv") 
+
+
+composite_learner_explainer <- explain(composite_learner,
+                                       data = veteran[, -c(3,4)],
+                                       y = Surv(veteran$time, veteran$status),
+                                       label = "Composite GBM model")
+
+composite_learner_explainer |> model_parts(type = "ratio") |> plot()
+
+
+```
+
+# Using mlr3proba Measures
+
+
+``` {r messages=FALSE}
+
+
+
+loss_schmid <- loss_adapt_mlr3proba(msr("surv.graf"))
+
+explainer |> model_parts(loss = loss_schmid) -> model_part
+
+model_part |> plot()
+
+
+```
+
