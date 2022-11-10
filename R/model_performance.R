@@ -62,10 +62,14 @@ model_performance <- function(explainer, ...) UseMethod("model_performance", exp
 
 #' @rdname model_performance.surv_explainer
 #' @export
-model_performance.surv_explainer <- function(explainer,  ..., type = "metrics", times = NULL) {
+model_performance.surv_explainer <- function(explainer,  ..., type = "metrics", metrics = c("C-index" = c_index,
+                                                                                            "Integrated Brier score" = loss_integrated_brier_score,
+                                                                                            "Integrated C/D AUC" = integrated_cd_auc,
+                                                                                            "Brier score" = brier_score,
+                                                                                            "C/D AUC" = cd_auc), times = NULL) {
     test_explainer(explainer, "model_performance", has_data = TRUE, has_y = TRUE, has_survival = TRUE, has_predict = TRUE)
 
-    res <- surv_model_performance(explainer, ..., type = type, times = times)
+    res <- surv_model_performance(explainer, ..., type = type, metrics = metrics, times = times)
 
     class(res) <- c("model_performance_survival", class(res))
     res

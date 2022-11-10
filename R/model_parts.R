@@ -65,39 +65,39 @@ model_parts.surv_explainer <- function(explainer,
   if (type == "variable_importance") type <- "raw" # it's an alias
 
   switch(output_type,
-    "risk" = DALEX::model_parts(
-      explainer = explainer,
-      loss_function = loss_function,
-      ... = ...,
-      type = type,
-      N = N
-    ),
-    "survival" = {
-      test_explainer(explainer, has_data = TRUE, has_y = TRUE, has_survival = TRUE, function_name = "model_parts")
+         "risk" = DALEX::model_parts(
+           explainer = explainer,
+           loss_function = loss_function,
+           ... = ...,
+           type = type,
+           N = N
+         ),
+         "survival" = {
+           test_explainer(explainer, has_data = TRUE, has_y = TRUE, has_survival = TRUE, function_name = "model_parts")
 
-      if (attr(loss_function, "loss_name") %in% c("integrated Brier score", "One minus integrated C/D AUC", "One minus C-Index")) {
-        res <- surv_integrated_feature_importance(
-          x = explainer,
-          loss_function = loss_function,
-          type = type,
-          N = N,
-          ...
-        )
-        class(res) <- c("model_parts", class(res))
-        return(res)
-      } else {
-        res <- surv_feature_importance(
-          x = explainer,
-          loss_function = loss_function,
-          type = type,
-          N = N,
-          ...
-        )
-        class(res) <- c("model_parts_survival", class(res))
-        res
-      }
-    },
-    stop("Type should be either `survival` or `risk`")
+           if (attr(loss_function, "loss_type") == "integrated") {
+             res <- surv_integrated_feature_importance(
+               x = explainer,
+               loss_function = loss_function,
+               type = type,
+               N = N,
+               ...
+             )
+             class(res) <- c("model_parts", class(res))
+             return(res)
+           } else {
+             res <- surv_feature_importance(
+               x = explainer,
+               loss_function = loss_function,
+               type = type,
+               N = N,
+               ...
+             )
+             class(res) <- c("model_parts_survival", class(res))
+             res
+           }
+         },
+         stop("Type should be either `survival` or `risk`")
   )
 }
 

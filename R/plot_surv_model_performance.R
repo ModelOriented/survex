@@ -64,7 +64,7 @@ plot_td_surv_model_performance <- function(x, ..., metrics = NULL, title = NULL,
 
     num_colors <- length(unique(df$label))
 
-     ggplot(data = df[df$ind %in% metrics, ], aes_string(x = "times", y = "values", group = "label", color = "label")) +
+    ggplot(data = df[df$ind %in% metrics, ], aes_string(x = "times", y = "values", group = "label", color = "label")) +
         geom_line(size = 0.8) +
         theme_drwhy() +
         xlab("") +
@@ -105,7 +105,7 @@ concatenate_td_dfs <- function(x, ...) {
 
     all_dfs <- lapply(all_things, function(x) {
         df <- data.frame(`Brier score` = x$brier_score,
-                          `C/D AUC` = x$auc, check.names = FALSE)
+                         `C/D AUC` = x$auc, check.names = FALSE)
 
         df <- stack(df)
         times <-  rep(x$eval_times, 2)
@@ -122,10 +122,18 @@ concatenate_dfs <- function(x, ...) {
     all_things <- c(list(x), list(...))
 
     all_dfs <- lapply(all_things, function(x) {
-        df <- data.frame(`Integrated Brier score` = x$integrated_brier_score,
-                          `Integrated C/D AUC` = x$iauc,
-                          `C-index` = x$cindex,
-                          check.names = FALSE)
+
+
+        tmp_list <- lapply(x, function(metric) {
+            if(!is.null(attr(metric, "loss_type"))){
+               if(attr(metric, "loss_type") != "time-dependent"){
+                metric}
+            }
+            })
+        tmp_list[sapply(tmp_list, is.null)] <- NULL
+
+        df <- data.frame(tmp_list,
+                         check.names = FALSE)
 
         df <- stack(df)
         label <-  attr(x, "label")

@@ -8,7 +8,7 @@
 #' @return Either a list when `type == "metrics"` or a data.frame if `type == "roc"`
 #'
 #' @keywords internal
-surv_model_performance <- function(explainer, ..., times = NULL, type = "metrics") {
+surv_model_performance <- function(explainer, ..., times = NULL, type = "metrics", metrics = NULL) {
     newdata <- explainer$data
     if (type == "metrics") {
     if (is.null(times)) times <- explainer$times
@@ -16,21 +16,13 @@ surv_model_performance <- function(explainer, ..., times = NULL, type = "metrics
     risk <- explainer$predict_function(explainer$model, newdata)
     y <- explainer$y
 
+    print(metrics[[1]])
 
-    brier_score <- brier_score(y, risk, sf, times)
-    auc <- cd_auc(y, risk, sf,  times)
-    cindex <- c_index(y, risk)
-    iauc <- integrated_cd_auc(auc = auc, times = times)
-    ibs <- integrated_brier_score(times = times, brier = brier_score)
+    ret_list <- lapply(metrics, function(x) { output <- x(y, risk, sf, times)
+                                                  attr(output, "loss_type") <- attr(x, "loss_type")
+                                                  output})
 
-    ret_list <- list(
-        eval_times = times,
-        brier_score = brier_score,
-        auc = auc,
-        cindex = cindex,
-        iauc = iauc,
-        integrated_brier_score = ibs
-    )
+    ret_list <- c(ret_list, list(eval_times = times))
 
     class(ret_list) <- c("surv_model_performance", class(ret_list))
     attr(ret_list, "label") <- explainer$label

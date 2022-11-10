@@ -52,6 +52,8 @@ c_index <- function(y_true = NULL, risk = NULL, surv = NULL, times = NULL) {
 
 }
 attr(c_index, "loss_name") <- "C-index"
+attr(c_index, "loss_type") <- "risk-based"
+
 
 #' Calculate the Concordance index loss
 #'
@@ -87,7 +89,7 @@ loss_one_minus_c_index <- function(y_true = NULL, risk = NULL, surv = NULL, time
     1 - c_index(y_true = y_true, risk = risk, surv = surv, times = times)
 }
 attr(loss_one_minus_c_index, "loss_name") <- "One minus C-Index"
-
+attr(loss_one_minus_c_index, "loss_type") <- "risk-based"
 
 #' Calculate Brier score
 #'
@@ -156,11 +158,13 @@ brier_score <- function(y_true = NULL, risk = NULL, surv = NULL, times = NULL) {
 
 }
 attr(brier_score, "loss_name") <- "Brier score"
+attr(brier_score, "loss_type") <- "time-dependent"
 
 #' @rdname brier_score
 #' @export
 loss_brier_score <- brier_score
 attr(loss_brier_score, "loss_name") <- "Brier score"
+attr(loss_brier_score, "loss_type") <- "time-dependent"
 
 #' Calculate Cumulative/Dynamic AUC
 #'
@@ -235,6 +239,7 @@ cd_auc <- function(y_true = NULL, risk = NULL, surv = NULL, times = NULL) {
 
 }
 attr(cd_auc, "loss_name") <- "C/D AUC"
+attr(cd_auc, "loss_type") <- "time-dependent"
 
 
 #' Calculate Cumulative/Dynamic AUC loss
@@ -270,6 +275,7 @@ loss_one_minus_cd_auc <- function(y_true = NULL, risk = NULL, surv = NULL, times
     1 - cd_auc(y_true = y_true, risk = risk, surv = surv, times = times)
 }
 attr(loss_one_minus_cd_auc, "loss_name") <- "One minus C/D AUC"
+attr(loss_one_minus_cd_auc, "loss_type") <- "time-dependent"
 
 #' Calculate integrated C/D AUC
 #'
@@ -329,6 +335,8 @@ integrated_cd_auc <- function(y_true = NULL, risk = NULL, surv = NULL, times = N
     cumsum(c(0, iauc))[length(cumsum(c(0, iauc)))] / (max(times) - min(times))
 }
 attr(integrated_cd_auc, "loss_name") <- "integrated C/D AUC"
+attr(integrated_cd_auc, "loss_type") <- "integrated"
+
 
 
 #' Calculate integrated C/D AUC loss
@@ -371,6 +379,8 @@ loss_one_minus_integrated_cd_auc <- function(y_true = NULL, risk = NULL, surv = 
     1 - integrated_cd_auc(y_true = y_true, risk = risk, surv = surv, times = times, auc = auc)
 }
 attr(loss_one_minus_integrated_cd_auc, "loss_name") <- "One minus integrated C/D AUC"
+attr(loss_one_minus_integrated_cd_auc, "loss_type") <- "integrated"
+
 
 
 #' Calculate integrated Brier score
@@ -438,3 +448,44 @@ attr(integrated_brier_score, "loss_name") <- "integrated Brier score"
 #' @export
 loss_integrated_brier_score <- integrated_brier_score
 attr(loss_integrated_brier_score, "loss_name") <- "integrated Brier score"
+attr(loss_integrated_brier_score, "loss_type") <- "integrated"
+
+
+
+
+
+#' @export
+loss_adapt_mlr3proba <- function(measure, explainer = NULL, ...){
+
+    loss_function <- function(y_true = NULL, risk = NULL, surv = NULL, times = NULL){
+
+        colnames(surv) <- times
+
+        surv_pred <- PredictionSurv$new(
+            row_ids = 1:length(y_true),
+            truth = y_true,
+            crank = risk,
+            distr = surv,
+            task = list(truth = y_true)
+        )
+
+        output <- surv_pred$score(measure)
+        names(output) <- NULL
+
+        if (!measure$minimize) output <- 1 - output
+
+        return(output)
+    }
+
+    if (!measure$minimize) attr(loss_function, "loss_name") <- paste("one minus", measure$id)
+    else attr(loss_function, "loss_name") <- measure$id
+
+    attr(loss_function, "loss_type") <- "integrated"
+
+
+    return(loss_function)
+}
+
+
+
+

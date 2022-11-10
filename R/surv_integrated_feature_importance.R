@@ -22,14 +22,14 @@
 #'
 #' @keywords internal
 surv_integrated_feature_importance <- function(x,
-                                          loss_function = DALEX::loss_root_mean_square,
-                                          ...,
-                                          type = c("raw", "ratio", "difference"),
-                                          B = 10,
-                                          variables = NULL,
-                                          variable_groups = NULL,
-                                          N = NULL,
-                                          label = NULL) {
+                                               loss_function = DALEX::loss_root_mean_square,
+                                               ...,
+                                               type = c("raw", "ratio", "difference"),
+                                               B = 10,
+                                               variables = NULL,
+                                               variable_groups = NULL,
+                                               N = NULL,
+                                               label = NULL) {
 
     if (is.null(x$data)) stop("The feature_importance() function requires explainers created with specified 'data' parameter.")
     if (is.null(x$y)) stop("The feature_importance() function requires explainers created with specified 'y' parameter.")
