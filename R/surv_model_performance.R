@@ -15,9 +15,6 @@ surv_model_performance <- function(explainer, ..., times = NULL, type = "metrics
     sf <- explainer$predict_survival_function(explainer$model, newdata, times)
     risk <- explainer$predict_function(explainer$model, newdata)
     y <- explainer$y
-
-    print(metrics[[1]])
-
     ret_list <- lapply(metrics, function(x) { output <- x(y, risk, sf, times)
                                                   attr(output, "loss_type") <- attr(x, "loss_type")
                                                   output})

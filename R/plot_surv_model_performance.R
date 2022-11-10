@@ -122,21 +122,17 @@ concatenate_dfs <- function(x, ...) {
     all_things <- c(list(x), list(...))
 
     all_dfs <- lapply(all_things, function(x) {
-
-
         tmp_list <- lapply(x, function(metric) {
             if(!is.null(attr(metric, "loss_type"))){
                if(attr(metric, "loss_type") != "time-dependent"){
-                metric}
+                metric[1]}
             }
             })
         tmp_list[sapply(tmp_list, is.null)] <- NULL
-
         df <- data.frame(tmp_list,
                          check.names = FALSE)
-
         df <- stack(df)
-        label <-  attr(x, "label")
+        label <- attr(x, "label")
         df <- cbind(df, label)
     })
 
