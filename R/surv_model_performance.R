@@ -41,11 +41,18 @@ surv_model_performance <- function(explainer, ..., times = NULL, type = "metrics
     else {
         if (is.null(times)) stop("Times cannot be NULL for type `roc`")
         rocs <- lapply(times, function(time) {
-            labels <- 1 - explainer$y[, 2]
-            scores <- explainer$predict_survival_function(explainer$model, newdata, time)
-            labels <- labels[order(scores, decreasing = TRUE)]
-            cbind(time = time, data.frame(TPR = cumsum(labels) / sum(labels), FPR = cumsum(!labels) / sum(!labels), labels))
+            censored_earlier_mask <- (explainer$y[, 1] < time & explainer$y[, 2] == 0)
+            event_later_mask <- explainer$y[, 1] > time
+            newdata_t <- newdata[!censored_earlier_mask, ]
+            labels <- explainer$y[,2]
+            labels[event_later_mask] <- 0
+            labels <- labels[!censored_earlier_mask]
+            scores <- explainer$predict_survival_function(explainer$model, newdata_t, time)
+            labels <- labels[order(scores, decreasing = FALSE)]
+            cbind(time = time, data.frame(TPR = cumsum(labels) / sum(labels),
+                                          FPR = cumsum(!labels) / sum(!labels), labels))
         })
+
 
         rocs_df <- do.call(rbind, rocs)
 
