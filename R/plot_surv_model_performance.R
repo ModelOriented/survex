@@ -63,7 +63,8 @@ plot_td_surv_model_performance <- function(x, ..., metrics = NULL, title = NULL,
 
     num_colors <- length(unique(df$label))
 
-    ggplot(data = df[df$ind %in% metrics, ], aes_string(x = "times", y = "values", group = "label", color = "label")) +
+    with(df,{
+    ggplot(data = df[df$ind %in% metrics, ], aes(x = times, y = values, group = label, color = label)) +
         geom_line(linewidth = 0.8, size = 0.8) +
         theme_drwhy() +
         xlab("") +
@@ -71,7 +72,7 @@ plot_td_surv_model_performance <- function(x, ..., metrics = NULL, title = NULL,
         labs(title = title, subtitle = subtitle) +
         scale_color_manual("", values = generate_discrete_color_scale(num_colors, colors)) +
         facet_wrap(~ind, ncol = facet_ncol, scales = "free_y")
-
+    })
 }
 
 #' @importFrom DALEX theme_drwhy
@@ -86,7 +87,8 @@ plot_scalar_surv_model_performance <- function(x, ..., metrics = NULL, title = N
 
     num_colors <- length(unique(df$label))
 
-    ggplot(data = df, aes_string(x = "label", y = "values", fill = "label")) +
+    with(df, {
+    ggplot(data = df, aes(x = label, y = values, fill = label)) +
         geom_col() +
         theme_drwhy() +
         xlab("") +
@@ -94,6 +96,7 @@ plot_scalar_surv_model_performance <- function(x, ..., metrics = NULL, title = N
         labs(title = title, subtitle = subtitle) +
         scale_fill_manual("", values = generate_discrete_color_scale(num_colors, colors)) +
         facet_wrap(~ind, ncol = facet_ncol, scales = "free_y")
+    })
 
 
 }

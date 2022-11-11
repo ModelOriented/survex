@@ -146,13 +146,14 @@ plot_individual_ceteris_paribus_survival <- function(all_profiles,
                                 mid = "#46bac2",
                                 high = "#371ea3")
             if (numerical_plot_type == "lines") {
+                with(df, {
                 ggplot(
                     df,
-                    aes_string(
-                        x = "`_times_`",
-                        y = "`_yhat_`",
-                        group = "`_x_`",
-                        color = "as.numeric(as.character(`_x_`))"
+                    aes(
+                        x = `_times_`,
+                        y = `_yhat_`,
+                        group = `_x_`,
+                        color = as.numeric(as.character(`_x_`))
                     )
                 ) +
                     geom_line() +
@@ -168,13 +169,15 @@ plot_individual_ceteris_paribus_survival <- function(all_profiles,
                     xlab("") + ylab("survival function value") + ylim(c(0, 1)) +
                     theme_drwhy() +
                     facet_wrap(~`_vname_`)
+                })
             } else {
-                plt <- ggplot(
+                plt <- with(df, {
+                        ggplot(
                     df,
-                    aes_string(
-                        x = "`_times_`",
-                        y = "as.numeric(as.character(`_x_`))",
-                        z = "`_yhat_`"
+                    aes(
+                        x = `_times_`,
+                        y = as.numeric(as.character(`_x_`)),
+                        z = `_yhat_`
                     )
                 ) +
                     geom_contour_filled(breaks = seq(1, 0, -0.1)) +
@@ -185,6 +188,7 @@ plot_individual_ceteris_paribus_survival <- function(all_profiles,
                     theme_drwhy() +
                     theme(legend.spacing = grid::unit(0.1, 'line')) +
                     facet_wrap(~`_vname_`)
+                })
                 if (any(df$`_real_point_`)) {
                     range_time <- range(df["_times_"])
                     var_val <- as.numeric(unique(df[df$`_real_point_`, "_x_"]))
@@ -194,14 +198,14 @@ plot_individual_ceteris_paribus_survival <- function(all_profiles,
                 }
         } else {
             n_colors <- length(unique(df$`_x_`))
-            pl <-
+            pl <- with(df, {
                 ggplot(
                     df,
-                    aes_string(
-                        x = "`_times_`",
-                        y = "`_yhat_`",
-                        group = "`_x_`",
-                        color = "`_x_`"
+                    aes(
+                        x = `_times_`,
+                        y = `_yhat_`,
+                        group = `_x_`,
+                        color = `_x_`
                     )
                 ) +
                 geom_line(data = df[!df$`_real_point_`, ],
@@ -213,7 +217,7 @@ plot_individual_ceteris_paribus_survival <- function(all_profiles,
                                    values = generate_discrete_color_scale(n_colors, colors)) +
                 theme_drwhy() +
                 xlab("") + ylab("survival function value") + ylim(c(0, 1)) +
-                facet_wrap(~`_vname_`, ncol = facet_ncol)
+                facet_wrap(~`_vname_`, ncol = facet_ncol) })
         }
     })
 }

@@ -75,8 +75,9 @@ plot.surv_feature_importance <- function(x, ...,
         subtitle <- paste0("created for the ", glm_labels, " model")
     }
 
+    with(plotting_df, {
 
-    ggplot(data = plotting_df, aes_string(x = "times", y = "values", color = "ind", label = "ind")) +
+    ggplot(data = plotting_df, aes(x = times, y = values, color = ind, label = ind)) +
         geom_line(linewidth = 0.8, size = 0.8) +
         theme_drwhy() +
         xlab("") +
@@ -84,5 +85,6 @@ plot.surv_feature_importance <- function(x, ...,
         scale_color_manual(name = "Variable", values = c("#000000", generate_discrete_color_scale(num_variables, colors))) +
         labs(title = title, subtitle = subtitle) +
         facet_wrap(~label)
+    })
 
 }

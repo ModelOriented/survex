@@ -58,12 +58,15 @@ plot.surv_shap <- function(x,
 
     y_lab <- "SurvSHAP(t) value"
 
-    ggplot(data = long_df, aes_string(x = "times", y = "values", color = "ind")) +
+
+    with(long_df, {
+    ggplot(data = long_df, aes(x = times, y = values, color = ind)) +
         geom_line(linewidth = 0.8, size = 0.8) +
         ylab(y_lab) + xlab("") +
         labs(title = title, subtitle = subtitle) +
         scale_color_manual("variable", values = generate_discrete_color_scale(n_colors, colors)) +
         theme_drwhy() +
         facet_wrap(~label, ncol = 1, scales = "free_y")
+    })
 
 }
