@@ -19,8 +19,7 @@ For this reason, the installation of this package may be not obvious. The follow
 
 ```{r setup, message=FALSE, results=FALSE}
 
-if (!require("ooplah")) install.packages("ooplah",
-                                         repos = "https://mlr-org.r-universe.dev")
+if (!require("ooplah")) install.packages("ooplah")
 
 if (!require("param6")) install.packages("param6",
                                          repos = "https://mlr-org.r-universe.dev")
