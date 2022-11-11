@@ -21,7 +21,8 @@ For this reason, the installation of this package may be not obvious. The follow
 
 if (!require("mlr3")) install.packages("mlr3")
 
-if (!require("ooplah")) install.packages("mlr3proba")
+if (!require("ooplah")) install.packages("ooplah",
+                                         repos = "https://mlr-org.r-universe.dev")
 
 if (!require("param6")) install.packages("param6",
                                          repos = "https://mlr-org.r-universe.dev")
