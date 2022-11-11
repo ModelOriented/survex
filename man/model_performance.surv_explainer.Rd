@@ -74,7 +74,7 @@ plot(rsf_ranger_model_performance, cph_model_performance,
 
 plot(rsf_ranger_model_performance, cph_model_performance, rsf_src_model_performance)
 
-cph_model_performance_roc <- model_performance(cph_exp, type = "roc", times = c(100, 500, 1200))
+cph_model_performance_roc <- model_performance(cph_exp, type = "roc", times = c(100, 250, 500))
 plot(cph_model_performance_roc)
 
 }
