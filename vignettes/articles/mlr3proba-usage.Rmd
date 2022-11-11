@@ -19,8 +19,6 @@ For this reason, the installation of this package may be not obvious. The follow
 
 ```{r setup, message=FALSE, results=FALSE}
 
-if (!require("mlr3")) install.packages("mlr3")
-
 if (!require("ooplah")) install.packages("ooplah",
                                          repos = "https://mlr-org.r-universe.dev")
 
@@ -33,6 +31,7 @@ if (!require("set6")) install.packages("set6",
 if (!require("distr6")) install.packages("distr6",
                                          repos = "https://mlr-org.r-universe.dev")
 
+if (!require("mlr3")) install.packages("mlr3")
 
 if (!require("mlr3proba")) install.packages("mlr3proba",
                                             repos = "https://mlr-org.r-universe.dev")
