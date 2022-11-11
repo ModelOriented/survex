@@ -21,10 +21,12 @@ For this reason, the installation of this package may be not obvious. The follow
 
 if (!require("ooplah")) install.packages("ooplah")
 
-if (!require("param6")) install.packages("param6",
-                                         repos = "https://mlr-org.r-universe.dev")
+if (!require("dictionar6")) install.packages("dictionar6")
 
 if (!require("set6")) install.packages("set6",
+                                         repos = "https://mlr-org.r-universe.dev")
+
+if (!require("param6")) install.packages("param6",
                                          repos = "https://mlr-org.r-universe.dev")
 
 if (!require("distr6")) install.packages("distr6",
