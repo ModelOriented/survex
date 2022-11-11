@@ -64,7 +64,7 @@ plot_td_surv_model_performance <- function(x, ..., metrics = NULL, title = NULL,
     num_colors <- length(unique(df$label))
 
     ggplot(data = df[df$ind %in% metrics, ], aes_string(x = "times", y = "values", group = "label", color = "label")) +
-        geom_line(size = 0.8) +
+        geom_line(linewidth = 0.8, size = 0.8) +
         theme_drwhy() +
         xlab("") +
         ylab("metric value") +

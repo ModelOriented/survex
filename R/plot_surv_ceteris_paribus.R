@@ -164,7 +164,7 @@ plot_individual_ceteris_paribus_survival <- function(all_profiles,
                         midpoint = median(as.numeric(as.character(df$`_x_`)))
                     ) +
                     geom_line(data = df[df$`_real_point_`, ], color =
-                                  "red", size = 0.8) +
+                                  "red", linewidth = 0.8, size = 0.8) +
                     xlab("") + ylab("survival function value") + ylim(c(0, 1)) +
                     theme_drwhy() +
                     facet_wrap(~`_vname_`)
@@ -205,9 +205,10 @@ plot_individual_ceteris_paribus_survival <- function(all_profiles,
                     )
                 ) +
                 geom_line(data = df[!df$`_real_point_`, ],
+                          linewidth = 0.8,
                           size = 0.8) +
                 geom_line(data = df[df$`_real_point_`, ],
-                          size = 0.8, linetype = "longdash") +
+                          size = 0.8, linewidth = 0.8, linetype = "longdash") +
                 scale_color_manual(name = paste0(unique(df$`_vname_`), " value"),
                                    values = generate_discrete_color_scale(n_colors, colors)) +
                 theme_drwhy() +

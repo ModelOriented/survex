@@ -79,7 +79,7 @@ plot.surv_lime <- function(x,
                         type = c(rep("black box survival function", length(x$black_box_sf)), rep("SurvLIME explanation survival function", length(x$expl_sf))))
     if (show_survival_function) {
         pl2 <- ggplot(data = sf_df, aes_string(x = "times", y = "sfs", group = "type", color = "type")) +
-            geom_line(size = 0.8) +
+            geom_line(linewidth = 0.8, size = 0.8) +
             theme_drwhy() +
             xlab("") +
             ylab("survival function value") +
