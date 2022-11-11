@@ -18,7 +18,20 @@ The `mlr3proba` package maintainers state that
 For this reason, the installation of this package may be not obvious. The following chunk loads all required packages for this vignette.
 
 ```{r setup, message=FALSE, results=FALSE}
+
 if (!require("mlr3")) install.packages("mlr3")
+
+if (!require("ooplah")) install.packages("mlr3proba")
+
+if (!require("param6")) install.packages("param6",
+                                         repos = "https://mlr-org.r-universe.dev")
+
+if (!require("set6")) install.packages("set6",
+                                         repos = "https://mlr-org.r-universe.dev")
+
+if (!require("distr6")) install.packages("distr6",
+                                         repos = "https://mlr-org.r-universe.dev")
+
 
 if (!require("mlr3proba")) install.packages("mlr3proba",
                                             repos = "https://mlr-org.r-universe.dev")
