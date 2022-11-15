@@ -29,19 +29,17 @@
 #' @references Explanatory Model Analysis. Explore, Explain, and Examine Predictive Models. \url{https://ema.drwhy.ai/}
 #'
 #' @examples
-#' library("DALEX")
-#' library("ingredients")
+#' library(survex)
+#' library(randomForestSRC)
+#' library(survival)
 #'
-#' model_titanic_glm <- glm(survived ~ gender + age + fare,
-#'                          data = titanic_imputed, family = "binomial")
+#' model <- rfsrc(Surv(time, status) ~., data = veteran)
+#' explainer <- explain(model)
 #'
-#' explain_titanic_glm <- explain(model_titanic_glm,
-#'                                data = titanic_imputed[,-8],
-#'                                y = titanic_imputed[,8])
+#' mp <- model_parts(explainer, loss = loss_one_minus_c_index, output_type = "risk")
+#' plot(mp)
 #'
-#' fi_rf <- feature_importance(explain_titanic_glm, B = 1)
-#' plot(fi_rf)
-#'
+#' @export
 plot.feature_importance_explainer <- function(x, ..., max_vars = NULL, show_boxplots = TRUE, bar_width = 10,
                                               desc_sorting = TRUE, title = "Feature Importance", subtitle = NULL) {
 

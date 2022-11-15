@@ -50,18 +50,15 @@ importance is different in different in different models.
 Find more details in the \href{https://ema.drwhy.ai/featureImportance.html}{Feature Importance Chapter}.
 }
 \examples{
-library("DALEX")
-library("ingredients")
+library(survex)
+library(randomForestSRC)
+library(survival)
 
-model_titanic_glm <- glm(survived ~ gender + age + fare,
-                         data = titanic_imputed, family = "binomial")
+model <- rfsrc(Surv(time, status) ~., data = veteran)
+explainer <- explain(model)
 
-explain_titanic_glm <- explain(model_titanic_glm,
-                               data = titanic_imputed[,-8],
-                               y = titanic_imputed[,8])
-
-fi_rf <- feature_importance(explain_titanic_glm, B = 1)
-plot(fi_rf)
+mp <- model_parts(explainer, loss = loss_one_minus_c_index, output_type = "risk")
+plot(mp)
 
 }
 \references{
