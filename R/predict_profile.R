@@ -64,21 +64,21 @@ predict_profile.surv_explainer <- function(explainer,
 
     if (output_type == "risk") {
         return(DALEX::predict_profile(explainer = explainer,
-                               new_observation = new_observation,
-                               variables = variables,
-                               ... = ...,
-                               type = type,
-                               variable_splits_type = variable_splits_type))
+                                      new_observation = new_observation,
+                                      variables = variables,
+                                      ... = ...,
+                                      type = type,
+                                      variable_splits_type = variable_splits_type))
 
     }
-   if (output_type == "survival") {
+    if (output_type == "survival") {
         if (type == "ceteris_paribus") {
             res <- surv_ceteris_paribus(explainer,
-                                     new_observation = new_observation,
-                                     variables = variables,
-                                     categorical_variables = categorical_variables,
-                                     variable_splits_type = variable_splits_type,
-                                     ...)
+                                        new_observation = new_observation,
+                                        variables = variables,
+                                        categorical_variables = categorical_variables,
+                                        variable_splits_type = variable_splits_type,
+                                        ...)
             class(res) <- c("predict_profile_survival", class(res))
             return(res)
         }

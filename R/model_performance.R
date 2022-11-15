@@ -5,6 +5,7 @@
 #' @param explainer an explainer object - model preprocessed by the `explain()` function
 #' @param ... other parameters, currently ignored
 #' @param type character, either `"metrics"` or `"roc"`. If `"metrics"` then performance metrics are calculated, if `"roc"` ROC curves for selected time points are calculated.
+#' @param metrics a named vector containing the metrics to be calculated. The values should be standardized loss functions. The functions can be supplied manually but has to have these named parameters (`y_true`, `risk`, `surv`, `times`), where `y_true` represents the `survival::Surv` object with observed times and statuses, `risk` is the risk score calculated by the model, and `surv` is the survival function for each observation evaluated at `times`.
 #' @param times a numeric vector of times. If `type == "metrics"` then the survival function is evaluated at these times, if `type == "roc"` then the ROC curves are calculated at these times.
 #'
 #' @return An object of class `"model_performance_survival"`. It's a list of metric values calculated for the model. It contains:
@@ -62,10 +63,14 @@ model_performance <- function(explainer, ...) UseMethod("model_performance", exp
 
 #' @rdname model_performance.surv_explainer
 #' @export
-model_performance.surv_explainer <- function(explainer,  ..., type = "metrics", times = NULL) {
+model_performance.surv_explainer <- function(explainer,  ..., type = "metrics", metrics = c("C-index" = c_index,
+                                                                                            "Integrated Brier score" = loss_integrated_brier_score,
+                                                                                            "Integrated C/D AUC" = integrated_cd_auc,
+                                                                                            "Brier score" = brier_score,
+                                                                                            "C/D AUC" = cd_auc), times = NULL) {
     test_explainer(explainer, "model_performance", has_data = TRUE, has_y = TRUE, has_survival = TRUE, has_predict = TRUE)
 
-    res <- surv_model_performance(explainer, ..., type = type, times = times)
+    res <- surv_model_performance(explainer, ..., type = type, metrics = metrics, times = times)
 
     class(res) <- c("model_performance_survival", class(res))
     res

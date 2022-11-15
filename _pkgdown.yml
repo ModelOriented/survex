@@ -28,6 +28,7 @@ reference:
 - contents:
   - plot.model_parts_survival
   - plot.surv_feature_importance
+  - plot.feature_importance_explainer
 - subtitle: Model Profile
 - contents: plot.model_profile_survival
 - subtitle: Predict Parts

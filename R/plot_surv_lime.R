@@ -64,9 +64,13 @@ plot.surv_lime <- function(x,
     if (type == "local_importance") {
         x_lab <- "SurvLIME local importance"
         y_lab <- ""
-        pl <- ggplot(data = df, aes_string(x = "local_importance", y = "reorder(variable_names, local_importance, abs)", fill = "sign_local_importance")) +
+        pl <- with(df,{
+
+            ggplot(data = df, aes(x = local_importance, y = reorder(variable_names, local_importance, abs), fill = sign_local_importance)) +
             geom_col() +
             scale_fill_manual("", values = c("#f05a71", "#ffffff", "#8bdcbe"))
+
+        })
     }
     pl <- pl + theme_drwhy_vertical() +
         labs(title = title, subtitle = subtitle) +
@@ -78,12 +82,15 @@ plot.surv_lime <- function(x,
                         sfs = c(x$black_box_sf, x$expl_sf),
                         type = c(rep("black box survival function", length(x$black_box_sf)), rep("SurvLIME explanation survival function", length(x$expl_sf))))
     if (show_survival_function) {
-        pl2 <- ggplot(data = sf_df, aes_string(x = "times", y = "sfs", group = "type", color = "type")) +
-            geom_line(size = 0.8) +
+        pl2 <- with(sf_df,{
+
+            ggplot(data = sf_df, aes(x = times, y = sfs, group = type, color = type)) +
+            geom_line(linewidth = 0.8, size = 0.8) +
             theme_drwhy() +
             xlab("") +
             ylab("survival function value") +
             scale_color_manual("", values = generate_discrete_color_scale(2, colors))
+        })
         return(patchwork::wrap_plots(pl, pl2, nrow = 1, widths = c(3, 5)))
     }
 

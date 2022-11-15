@@ -33,8 +33,8 @@ test_that("C-index fpi works", {
                                 y = survival::Surv(rotterdam$rtime, rotterdam$recur), verbose = FALSE)
 
 
-    mp_cph_cind <- model_parts(coxph_explainer, loss = loss_one_minus_c_index, type = "variable_importance")
-    mp_rsf_cind <- model_parts(forest_explainer, loss = loss_one_minus_c_index)
+    mp_cph_cind <- model_parts(coxph_explainer, loss = loss_one_minus_c_index, type = "variable_importance", output_type = "risk")
+    mp_rsf_cind <- model_parts(forest_explainer, loss = loss_one_minus_c_index, output_type = "risk")
 
     expect_equal(nrow(mp_rsf_cind[mp_rsf_cind$permutation == 0, ]), ncol(forest_explainer$data) + 2)
     expect_equal(nrow(mp_cph_cind[mp_cph_cind$permutation == 0, ]), ncol(coxph_explainer$data) + 2)
@@ -50,8 +50,6 @@ test_that("C-index fpi works", {
 
     expect_error(model_parts(coxph_explainer, type = "nonexistent"))
     expect_error(model_parts(coxph_explainer, output_type = "nonexistent"))
-
-
 
     plot(cph_model_parts_dalex)
 
@@ -147,12 +145,12 @@ test_that("integrated metrics fpi works", {
     rsf_ranger_model_parts_int_auc <- model_parts(rsf_ranger_exp, loss = loss_one_minus_integrated_cd_auc, B = 1)
 
     expect_equal(nrow(cph_model_parts_int_auc[cph_model_parts_int_auc$permutation == 0, ]), ncol(cph_exp$data) + 2)
-    expect_s3_class(cph_model_parts_int_auc, "model_parts")
+    expect_s3_class(cph_model_parts_int_auc, "model_parts_survival")
     expect_true(all(cph_model_parts_int_auc$dropout_loss <= 1))
     expect_true(all(cph_model_parts_int_auc$dropout_loss >= 0))
 
     expect_equal(nrow(rsf_ranger_model_parts_int_auc[rsf_ranger_model_parts_int_auc$permutation == 0, ]), ncol(rsf_ranger_exp$data) + 2)
-    expect_s3_class(rsf_ranger_model_parts_int_auc, "model_parts")
+    expect_s3_class(rsf_ranger_model_parts_int_auc, "model_parts_survival")
     expect_true(all(rsf_ranger_model_parts_int_auc$dropout_loss <= 1))
     expect_true(all(rsf_ranger_model_parts_int_auc$dropout_loss >= 0))
 
@@ -164,12 +162,12 @@ test_that("integrated metrics fpi works", {
     rsf_ranger_model_parts_int_brier <- model_parts(rsf_ranger_exp, loss = loss_integrated_brier_score, B = 10)
 
     expect_equal(nrow(cph_model_parts_int_brier[cph_model_parts_int_brier$permutation == 0, ]), ncol(cph_exp$data) + 2)
-    expect_s3_class(cph_model_parts_int_brier, "model_parts")
+    expect_s3_class(cph_model_parts_int_brier, "model_parts_survival")
     expect_true(all(cph_model_parts_int_brier$dropout_loss <= 1))
     expect_true(all(cph_model_parts_int_brier$dropout_loss >= 0))
 
     expect_equal(nrow(rsf_ranger_model_parts_int_brier[rsf_ranger_model_parts_int_brier$permutation == 0, ]), ncol(rsf_ranger_exp$data) + 2)
-    expect_s3_class(rsf_ranger_model_parts_int_brier, "model_parts")
+    expect_s3_class(rsf_ranger_model_parts_int_brier, "model_parts_survival")
     expect_true(all(rsf_ranger_model_parts_int_brier$dropout_loss <= 1))
     expect_true(all(rsf_ranger_model_parts_int_brier$dropout_loss >= 0))
 
