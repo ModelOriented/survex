@@ -39,11 +39,10 @@ plot.surv_model_performance <- function(x,
 
     if (metrics_type %in% c("time_dependent", "functional")) {
         pl <- plot_td_surv_model_performance(x, ..., metrics = metrics, title = title, subtitle = subtitle, facet_ncol = facet_ncol, colors = colors)
-    }
-
-
-    if (metrics_type == "scalar") {
+    } else if (metrics_type == "scalar") {
         pl <- plot_scalar_surv_model_performance(x, ..., metrics = metrics, title = title, subtitle = subtitle, facet_ncol = facet_ncol, colors = colors)
+    } else {
+        stop("`metrics_type` should be one of `time_dependent`, `functional` or `scalar`")
     }
 
     pl
@@ -64,15 +63,16 @@ plot_td_surv_model_performance <- function(x, ..., metrics = NULL, title = NULL,
 
     num_colors <- length(unique(df$label))
 
-     ggplot(data = df[df$ind %in% metrics, ], aes_string(x = "times", y = "values", group = "label", color = "label")) +
-        geom_line(size = 0.8) +
+    with(df,{
+    ggplot(data = df[df$ind %in% metrics, ], aes(x = times, y = values, group = label, color = label)) +
+        geom_line(linewidth = 0.8, size = 0.8) +
         theme_drwhy() +
         xlab("") +
         ylab("metric value") +
         labs(title = title, subtitle = subtitle) +
         scale_color_manual("", values = generate_discrete_color_scale(num_colors, colors)) +
         facet_wrap(~ind, ncol = facet_ncol, scales = "free_y")
-
+    })
 }
 
 #' @importFrom DALEX theme_drwhy
@@ -83,11 +83,12 @@ plot_scalar_surv_model_performance <- function(x, ..., metrics = NULL, title = N
         subtitle <- paste0("created for the ", paste(unique(df$label), collapse = ", "), " model")
     }
 
-    if (is.null(metrics)) metrics <- c("C-index", "Integrated Brier score", "Integrated C/D AUC")
+    if (!is.null(metrics)) df <- df[df$ind %in% metrics, ]
 
     num_colors <- length(unique(df$label))
 
-    ggplot(data = df[df$ind %in% metrics, ], aes_string(x = "label", y = "values", fill = "label")) +
+    with(df, {
+    ggplot(data = df, aes(x = label, y = values, fill = label)) +
         geom_col() +
         theme_drwhy() +
         xlab("") +
@@ -95,6 +96,7 @@ plot_scalar_surv_model_performance <- function(x, ..., metrics = NULL, title = N
         labs(title = title, subtitle = subtitle) +
         scale_fill_manual("", values = generate_discrete_color_scale(num_colors, colors)) +
         facet_wrap(~ind, ncol = facet_ncol, scales = "free_y")
+    })
 
 
 }
@@ -104,11 +106,20 @@ concatenate_td_dfs <- function(x, ...) {
     all_things <- c(list(x), list(...))
 
     all_dfs <- lapply(all_things, function(x) {
-        df <- data.frame(`Brier score` = x$brier_score,
-                          `C/D AUC` = x$auc, check.names = FALSE)
+
+        tmp_list <- lapply(x, function(metric) {
+            if(!is.null(attr(metric, "loss_type"))){
+                if(attr(metric, "loss_type") == "time-dependent"){
+                    attr(metric, "loss_type") <- NULL
+                    metric}
+            }
+        })
+        tmp_list[sapply(tmp_list, is.null)] <- NULL
+        df <- data.frame(tmp_list,
+                         check.names = FALSE)
 
         df <- stack(df)
-        times <-  rep(x$eval_times, 2)
+        times <-  rep(x$eval_times, length(tmp_list))
         label <-  attr(x, "label")
         df <- cbind(times, df, label)
     })
@@ -122,13 +133,17 @@ concatenate_dfs <- function(x, ...) {
     all_things <- c(list(x), list(...))
 
     all_dfs <- lapply(all_things, function(x) {
-        df <- data.frame(`Integrated Brier score` = x$integrated_brier_score,
-                          `Integrated C/D AUC` = x$iauc,
-                          `C-index` = x$cindex,
-                          check.names = FALSE)
-
+        tmp_list <- lapply(x, function(metric) {
+            if(!is.null(attr(metric, "loss_type"))){
+               if(attr(metric, "loss_type") != "time-dependent"){
+                metric[1]}
+            }
+            })
+        tmp_list[sapply(tmp_list, is.null)] <- NULL
+        df <- data.frame(tmp_list,
+                         check.names = FALSE)
         df <- stack(df)
-        label <-  attr(x, "label")
+        label <- attr(x, "label")
         df <- cbind(df, label)
     })
 

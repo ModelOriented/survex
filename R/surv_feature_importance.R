@@ -27,19 +27,17 @@ surv_feature_importance <- function(x, ...) UseMethod("surv_feature_importance",
 
 #' @rdname surv_feature_importance
 surv_feature_importance.surv_explainer <- function(x,
-                                         loss_function = NULL,
-                                         ...,
-                                         type = c("raw", "ratio", "difference"),
-                                         B = 10,
-                                         variables = NULL,
-                                         variable_groups = NULL,
-                                         N = NULL,
-                                         label = NULL) {
+                                                   loss_function = NULL,
+                                                   ...,
+                                                   type = c("raw", "ratio", "difference"),
+                                                   B = 10,
+                                                   variables = NULL,
+                                                   variable_groups = NULL,
+                                                   N = NULL,
+                                                   label = NULL) {
     if (is.null(x$data)) stop("The feature_importance() function requires explainers created with specified 'data' parameter.")
     if (is.null(x$y)) stop("The feature_importance() function requires explainers created with specified 'y' parameter.")
     if (is.null(x$predict_survival_function)) stop("The feature_importance() function requires explainers created with specified 'predict_survival_function' parameter.")
-
-
 
     model <- x$model
     data <- x$data
@@ -53,38 +51,38 @@ surv_feature_importance.surv_explainer <- function(x,
 
 
     surv_feature_importance.default(model,
-                               data,
-                               y,
-                               times,
-                               predict_function = predict_function,
-                               predict_survival_function = predict_survival_function,
-                               loss_function = loss_function,
-                               label = label,
-                               type = type,
-                               N = N,
-                               B = B,
-                               variables = variables,
-                               variable_groups = variable_groups,
-                               ...
+                                    data,
+                                    y,
+                                    times,
+                                    predict_function = predict_function,
+                                    predict_survival_function = predict_survival_function,
+                                    loss_function = loss_function,
+                                    label = label,
+                                    type = type,
+                                    N = N,
+                                    B = B,
+                                    variables = variables,
+                                    variable_groups = variable_groups,
+                                    ...
     )
 
 }
 
 
 surv_feature_importance.default <- function(x,
-                                                       data,
-                                                       y,
-                                                       times,
-                                                       predict_function = NULL,
-                                                       predict_survival_function = NULL,
-                                                       loss_function = DALEX::loss_root_mean_square,
-                                                       ...,
-                                                       label = class(x)[1],
-                                                       type = c("raw", "ratio", "difference"),
-                                                       B = 10,
-                                                       variables = NULL,
-                                                       N = NULL,
-                                                       variable_groups = NULL) {
+                                            data,
+                                            y,
+                                            times,
+                                            predict_function = NULL,
+                                            predict_survival_function = NULL,
+                                            loss_function = DALEX::loss_root_mean_square,
+                                            ...,
+                                            label = class(x)[1],
+                                            type = c("raw", "ratio", "difference"),
+                                            B = 10,
+                                            variables = NULL,
+                                            N = NULL,
+                                            variable_groups = NULL) {
 
 
 

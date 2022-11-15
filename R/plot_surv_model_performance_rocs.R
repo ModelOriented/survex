@@ -52,13 +52,13 @@ plot.surv_model_performance_rocs <- function(x,
 
     with(df, {
     ggplot(data = df, aes(x = FPR, y = TPR, group = label, color = label)) +
-        geom_line(size = 0.8) +
+        geom_line(linewidth = 0.8, size = 0.8) +
         theme_drwhy() +
         xlab("1 - specificity (FPR)") +
         ylab("sensitivity (TPR)") +
         coord_fixed() +
-        theme(panel.grid.major.x = element_line(color = "grey90", size = 0.5, linetype = 1),
-        panel.grid.minor.x = element_line(color = "grey90", size = 0.5,  linetype = 1)) +
+        theme(panel.grid.major.x = element_line(color = "grey90", linewidth = 0.5,  size = 0.5, linetype = 1),
+        panel.grid.minor.x = element_line(color = "grey90", linewidth = 0.5, size = 0.5,  linetype = 1)) +
         labs(title = title, subtitle = subtitle) +
         scale_color_manual("", values = generate_discrete_color_scale(num_colors, colors)) +
         facet_wrap(~time, ncol = facet_ncol, labeller = function(x) lapply(x, function(x) paste0("t=", x)))
