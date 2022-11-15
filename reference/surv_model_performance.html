@@ -24,6 +24,7 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/mlr3proba-usage.html">How to use survex with mlr3proba</a>
     <a class="dropdown-item" href="../articles/custom-explainers.html">Creating custom explainers</a>
     <a class="dropdown-item" href="../articles/survex-usage.html">Package usage</a>
   </div>
@@ -58,7 +59,13 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">surv_model_performance</span><span class="op">(</span><span class="va">explainer</span>, <span class="va">...</span>, times <span class="op">=</span> <span class="cn">NULL</span>, type <span class="op">=</span> <span class="st">"metrics"</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">surv_model_performance</span><span class="op">(</span></span>
+<span>  <span class="va">explainer</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  times <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  type <span class="op">=</span> <span class="st">"metrics"</span>,</span>
+<span>  metrics <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -77,6 +84,10 @@
 
 <dt>type</dt>
 <dd><p>character, either <code>"metrics"</code> which calculates performance metrics or <code>"roc"</code> which calculates ROC curves at specific time points</p></dd>
+
+
+<dt>metrics</dt>
+<dd><p>a named vector containing the metrics to be calculated. The values should be standardized loss functions. The functions can be supplied manually but has to have these named parameters (<code>y_true</code>, <code>risk</code>, <code>surv</code>, <code>times</code>), where <code>y_true</code> represents the <code><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">survival::Surv</a></code> object with observed times and statuses, <code>risk</code> is the risk score calculated by the model, and <code>surv</code> is the survival function for each observation evaluated at <code>times</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">

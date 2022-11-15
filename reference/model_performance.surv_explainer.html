@@ -24,6 +24,7 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/mlr3proba-usage.html">How to use survex with mlr3proba</a>
     <a class="dropdown-item" href="../articles/custom-explainers.html">Creating custom explainers</a>
     <a class="dropdown-item" href="../articles/survex-usage.html">Package usage</a>
   </div>
@@ -61,7 +62,15 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">model_performance</span><span class="op">(</span><span class="va">explainer</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for surv_explainer</span></span>
-<span><span class="fu">model_performance</span><span class="op">(</span><span class="va">explainer</span>, <span class="va">...</span>, type <span class="op">=</span> <span class="st">"metrics"</span>, times <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">model_performance</span><span class="op">(</span></span>
+<span>  <span class="va">explainer</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  type <span class="op">=</span> <span class="st">"metrics"</span>,</span>
+<span>  metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>`C-index` <span class="op">=</span> <span class="va">c_index</span>, `Integrated Brier score` <span class="op">=</span></span>
+<span>    <span class="va">loss_integrated_brier_score</span>, `Integrated C/D AUC` <span class="op">=</span> <span class="va">integrated_cd_auc</span>, `Brier score`</span>
+<span>    <span class="op">=</span> <span class="va">brier_score</span>, `C/D AUC` <span class="op">=</span> <span class="va">cd_auc</span><span class="op">)</span>,</span>
+<span>  times <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -76,6 +85,10 @@
 
 <dt>type</dt>
 <dd><p>character, either <code>"metrics"</code> or <code>"roc"</code>. If <code>"metrics"</code> then performance metrics are calculated, if <code>"roc"</code> ROC curves for selected time points are calculated.</p></dd>
+
+
+<dt>metrics</dt>
+<dd><p>a named vector containing the metrics to be calculated. The values should be standardized loss functions. The functions can be supplied manually but has to have these named parameters (<code>y_true</code>, <code>risk</code>, <code>surv</code>, <code>times</code>), where <code>y_true</code> represents the <code><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">survival::Surv</a></code> object with observed times and statuses, <code>risk</code> is the risk score calculated by the model, and <code>surv</code> is the survival function for each observation evaluated at <code>times</code>.</p></dd>
 
 
 <dt>times</dt>
@@ -129,7 +142,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict function  :  predict.coxph with type = 'risk' will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict survival function  :  predictSurvProb.coxph will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict cumulative hazard function  :  -log(predict_survival_function) will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; model_info        :  package survival , ver. 3.3.1 , task survival ( <span style="color: #BBBB00;"> default </span> ) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; model_info        :  package survival , ver. 3.4.0 , task survival ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  <span style="color: #00BB00;"> A new explainer has been created! </span> </span>
 <span class="r-in"><span><span class="va">rsf_ranger_exp</span> <span class="op">&lt;-</span> <span class="fu"><a href="explain_survival.html">explain</a></span><span class="op">(</span><span class="va">rsf_ranger</span>, data <span class="op">=</span> <span class="va">veteran</span><span class="op">[</span>, <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span><span class="op">]</span>,</span></span>
 <span class="r-in"><span>                          y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">veteran</span><span class="op">$</span><span class="va">time</span>, <span class="va">veteran</span><span class="op">$</span><span class="va">status</span><span class="op">)</span><span class="op">)</span></span></span>
@@ -163,19 +176,22 @@
 <span class="r-in"><span><span class="va">rsf_src_model_performance</span> <span class="op">&lt;-</span> <span class="fu">model_performance</span><span class="op">(</span><span class="va">rsf_src_exp</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">cph_model_performance</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $eval_times</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1]   1.00   1.36   2.72   4.24   7.00   8.00  10.00  10.60  11.96  12.32</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [11]  13.00  15.00  15.40  17.52  18.00  18.48  19.00  20.00  20.56  21.00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [21]  22.56  24.00  25.00  27.16  29.44  30.00  31.00  32.04  34.76  37.44</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [31]  42.60  43.96  45.96  48.68  51.00  51.76  52.00  52.48  53.84  54.40</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [41]  57.68  60.84  65.52  72.64  80.00  80.72  82.72  84.24  87.00  89.40</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [51]  92.48  95.00  96.76  99.00  99.60 100.00 103.00 104.36 110.04 111.00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [61] 111.76 117.00 117.48 121.36 123.60 129.36 132.92 139.28 141.92 144.00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [71] 151.72 155.16 162.00 162.88 174.40 182.64 193.28 200.88 218.88 229.80</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [81] 231.00 244.56 256.80 278.20 284.60 307.52 342.04 367.08 383.04 389.60</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [91] 402.64 462.52 562.52 845.56</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $`C-index`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.7360464</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"loss_type")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "risk-based"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $brier_score</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $`Integrated Brier score`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.07182192</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"loss_type")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "integrated"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $`Integrated C/D AUC`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.8216749</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"loss_type")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "integrated"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $`Brier score`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.01450469 0.01450469 0.02131799 0.03395903 0.05085721 0.07237285</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [7] 0.08296505 0.08296505 0.08976566 0.10034947 0.10895859 0.11860639</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [13] 0.11860639 0.12115921 0.12534671 0.12534671 0.12812196 0.12899805</span>
@@ -192,8 +208,10 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> [79] 0.12885560 0.12559400 0.11816123 0.11207367 0.10765794 0.09901280</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [85] 0.09889997 0.09031670 0.07760702 0.07237333 0.06668832 0.05535086</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [91] 0.04565290 0.04001131 0.02744170 0.01789265</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"loss_type")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "time-dependent"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $auc</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $`C/D AUC`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.6592593 0.6592593 0.7388060 0.8045455 0.8352713 0.7846667 0.7845528</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [8] 0.7845528 0.7398907 0.7411765 0.7506690 0.7516420 0.7516420 0.7628458</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [15] 0.7982143 0.7982143 0.8151515 0.8333333 0.8333333 0.8487523 0.8407738</span>
@@ -208,15 +226,20 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> [78] 0.7750737 0.7739130 0.7701149 0.7818912 0.7875817 0.7852941 0.7775956</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [85] 0.7572590 0.7816377 0.7849928 0.7763780 0.7673611 0.7846154 0.8689567</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [92] 0.8545455 0.8233831 0.8740741</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"loss_type")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "time-dependent"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $cindex</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.7360464</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $iauc</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.8216749</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $integrated_brier_score</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.07182192</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $eval_times</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1]   1.00   1.36   2.72   4.24   7.00   8.00  10.00  10.60  11.96  12.32</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [11]  13.00  15.00  15.40  17.52  18.00  18.48  19.00  20.00  20.56  21.00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [21]  22.56  24.00  25.00  27.16  29.44  30.00  31.00  32.04  34.76  37.44</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [31]  42.60  43.96  45.96  48.68  51.00  51.76  52.00  52.48  53.84  54.40</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [41]  57.68  60.84  65.52  72.64  80.00  80.72  82.72  84.24  87.00  89.40</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [51]  92.48  95.00  96.76  99.00  99.60 100.00 103.00 104.36 110.04 111.00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [61] 111.76 117.00 117.48 121.36 123.60 129.36 132.92 139.28 141.92 144.00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [71] 151.72 155.16 162.00 162.88 174.40 182.64 193.28 200.88 218.88 229.80</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [81] 231.00 244.56 256.80 278.20 284.60 307.52 342.04 367.08 383.04 389.60</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [91] 402.64 462.52 562.52 845.56</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "model_performance_survival" "surv_model_performance"    </span>

@@ -13,6 +13,9 @@
     <loc>https://modeloriented.github.io/survex/articles/index.html</loc>
   </url>
   <url>
+    <loc>https://modeloriented.github.io/survex/articles/mlr3proba-usage.html</loc>
+  </url>
+  <url>
     <loc>https://modeloriented.github.io/survex/articles/survex-usage.html</loc>
   </url>
   <url>
@@ -49,6 +52,9 @@
     <loc>https://modeloriented.github.io/survex/reference/integrated_cd_auc.html</loc>
   </url>
   <url>
+    <loc>https://modeloriented.github.io/survex/reference/loss_adapt_mlr3proba.html</loc>
+  </url>
+  <url>
     <loc>https://modeloriented.github.io/survex/reference/loss_one_minus_c_index.html</loc>
   </url>
   <url>
@@ -65,6 +71,9 @@
   </url>
   <url>
     <loc>https://modeloriented.github.io/survex/reference/model_profile.surv_explainer.html</loc>
+  </url>
+  <url>
+    <loc>https://modeloriented.github.io/survex/reference/plot.feature_importance_explainer.html</loc>
   </url>
   <url>
     <loc>https://modeloriented.github.io/survex/reference/plot.model_parts_survival.html</loc>
