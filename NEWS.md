@@ -6,6 +6,7 @@
 * fixed subtitles in plots ([#11](https://github.com/ModelOriented/survex/issues/11))
 * added wrapper function for measures provided by `mlr3proba` ([#10](https://github.com/ModelOriented/survex/issues/10))
 * created vignette showing how to use `mlr3proba` with `survex`
+* fixed incompatibility with new ggplot2 version 3.4 
 
 # survex 0.1.1
 * The `survex` package is now public
