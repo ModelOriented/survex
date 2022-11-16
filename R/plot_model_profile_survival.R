@@ -83,7 +83,7 @@ plot.model_profile_survival <- function(x,
 
     aggregated_profiles$`_real_point_` <- FALSE
 
-    pl <- plot_individual_ceteris_paribus_survival(aggregated_profiles, variables, facet_ncol, colors, numerical_plot_type, title)
+    pl <- plot_individual_ceteris_paribus_survival(aggregated_profiles, variables, colors, numerical_plot_type)
 
     patchwork::wrap_plots(pl, ncol = facet_ncol) +
         patchwork::plot_annotation(title = title,
