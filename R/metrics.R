@@ -1,4 +1,55 @@
 utils::globalVariables(c("PredictionSurv"))
+#' Calculate integrated metrics based on time-depenent metrics.
+#'
+#' This function allows for calculation of integrated metrics based on a time dependent metric. A possibility to cut off the data at certain quantiles is implemented, as well as weighting the integrated metric by max time
+#'
+#' @param loss_function - A time dependent loss function taking arguments (y_true, risk, surv, times)
+#'
+#' @param ... - other parameters, currently ignored
+#' @param normalization - either NULL, or "t_max". Decides what kind of weighting should be applied to the integrated metric. If "t_max" then the integral is calculated using dw(t), where w(t) = t/t_max. If NULL (default) the integral is calculated using dt.
+#' @param max_quantile - a number from the interval (0,1]. only observations up to quantile(max_quantile) of observed time are considered for the integration.
+#'
+#' @export
+loss_integrate <- function(loss_function, ..., normalization = NULL , max_quantile = 1){
+
+    integrated_loss_function <- function(y_true = NULL, risk = NULL, surv = NULL, times = NULL){
+
+        quantile_mask <- (times <= quantile(y_true[,1],max_quantile))
+        times <- times[quantile_mask]
+        surv <- surv[,quantile_mask]
+
+        loss_values <- loss_function(y_true = y_true, risk = risk, surv = surv,times = times)
+
+        na_mask <- (!is.na(loss_values))
+
+        times <- times[na_mask]
+        loss_values <- loss_values[na_mask]
+        surv <- surv[na_mask]
+
+        n <- length(loss_values)
+        # integral using trapezoid method
+
+        if (is.null(normalization)){
+            tmp <- (loss_values[1:(n - 1)] + loss_values[2:n]) * diff(times) / 2
+            integrated_metric <- cumsum(c(0, tmp))[length(cumsum(c(0, tmp)))] / (max(times) - min(times))
+            return(integrated_metric)
+        }
+        else if (normalization == "t_max") {
+            tmp <- (loss_values[1:(n - 1)] + loss_values[2:n]) * diff(times) / 2
+            integrated_metric <- cumsum(c(0, tmp))[length(cumsum(c(0, tmp)))] / (max(times) - min(times))
+            return(integrated_metric/max(times))
+        }
+        else stop("normalization should be either NULL or `t_max`")
+    }
+
+    attr(integrated_loss_function, "loss_type") <- "integrated"
+    attr(integrated_loss_function, "loss_name") <- paste("Integrated", attr(loss_function, "loss_name"))
+    return(integrated_loss_function)
+}
+
+
+
+
 #' Compute the Harrell's Concordance index
 #'
 #' A function to compute the Harrell's concordance index of a survival model.
@@ -288,7 +339,6 @@ attr(loss_one_minus_cd_auc, "loss_type") <- "time-dependent"
 #' @param risk ignored, left for compatibility with other metrics
 #' @param surv a matrix containing the predicted survival functions for the considered observations, each row represents a single observation, whereas each column one time point
 #' @param times a vector of time points at which the survival function was evaluated
-#' @param auc a vector containing already calculated AUC metric at the time points specified in the times parameter. If this is provided all arguments except `times` and `auc` are ignored
 #'
 #' @return numeric from 0 to 1, higher values indicate better performance
 #'
@@ -311,13 +361,7 @@ attr(loss_one_minus_cd_auc, "loss_type") <- "time-dependent"
 #' times <- cph_exp$times
 #' surv <- cph_exp$predict_survival_function(cph, cph_exp$data, times)
 #'
-#'
-#' # calculating directly
 #' integrated_cd_auc(y, surv = surv, times = times)
-#'
-#' # calculating based on given auc vector
-#' auc <- cd_auc(y, surv = surv, times = times)
-#' integrated_cd_auc(times = times, auc = auc)
 #'
 #' @export
 integrated_cd_auc <- loss_integrate(cd_auc)
@@ -353,17 +397,12 @@ attr(integrated_cd_auc, "loss_type") <- "integrated"
 #' times <- cph_exp$times
 #' surv <- cph_exp$predict_survival_function(cph, cph_exp$data, times)
 #'
-#'
 #' # calculating directly
 #' loss_one_minus_integrated_cd_auc(y, surv = surv, times = times)
 #'
-#' # calculating based on given auc vector
-#' auc <- cd_auc(y, surv = surv, times = times)
-#' loss_one_minus_integrated_cd_auc(times = times, auc = auc)
-#'
 #' @export
-loss_one_minus_integrated_cd_auc <- function(y_true = NULL, risk = NULL, surv = NULL, times = NULL, auc = NULL) {
-    1 - integrated_cd_auc(y_true = y_true, risk = risk, surv = surv, times = times, auc = auc)
+loss_one_minus_integrated_cd_auc <- function(y_true = NULL, risk = NULL, surv = NULL, times = NULL) {
+    1 - integrated_cd_auc(y_true = y_true, risk = risk, surv = surv, times = times)
 }
 attr(loss_one_minus_integrated_cd_auc, "loss_name") <- "One minus integrated C/D AUC"
 attr(loss_one_minus_integrated_cd_auc, "loss_type") <- "integrated"
@@ -380,7 +419,6 @@ attr(loss_one_minus_integrated_cd_auc, "loss_type") <- "integrated"
 #' @param risk ignored, left for compatibility with other metrics
 #' @param surv a matrix containing the predicted survival functions for the considered observations, each row represents a single observation, whereas each column one time point
 #' @param times a vector of time points at which the survival function was evaluated
-#' @param brier a vector containing already calculated Brier score metric at the time points specified in the times parameter. If this is provided all arguments except `times` and `brier` are ignored
 #'
 #' @return numeric from 0 to 1, lower values indicate better performance
 #'
@@ -403,13 +441,8 @@ attr(loss_one_minus_integrated_cd_auc, "loss_type") <- "integrated"
 #' times <- cph_exp$times
 #' surv <- cph_exp$predict_survival_function(cph, cph_exp$data, times)
 #'
-#'
 #' # calculating directly
 #' integrated_brier_score(y, surv = surv, times = times)
-#'
-#' # calculating based on given auc vector
-#' brier_score <- brier_score(y, surv = surv, times = times)
-#' integrated_brier_score(times = times, brier = brier_score)
 #'
 #' @export
 integrated_brier_score <- loss_integrate(brier_score)
@@ -464,55 +497,4 @@ loss_adapt_mlr3proba <- function(measure, reverse = FALSE, ...){
     attr(loss_function, "loss_type") <- "integrated"
 
     return(loss_function)
-}
-
-
-#' Calculate integrated metrics based on time-depenent metrics.
-#'
-#' This function allows for calculation of integrated metrics based on a time dependent metric. A possibility to cut off the data at certain quantiles is implemented, as well as weighting the integrated metric by max time
-#'
-#' @param loss_function - A time dependent loss function taking arguments (y_true, risk, surv, times)
-#'
-#' @param ... - other parameters, currently ignored
-#' @param normalization - either NULL, or "t_max". Decides what kind of weighting should be applied to the integrated metric. If "t_max" then the integral is calculated using dw(t), where w(t) = t/t_max. If NULL (default) the integral is calculated using dt.
-#' @param max_quantile - a number from the interval (0,1]. only observations up to quantile(max_quantile) of observed time are considered for the integration.
-#'
-#' @export
-loss_integrate <- function(loss_function, ..., normalization = NULL , max_quantile = 1){
-
-    integrated_loss_function <- function(y_true = NULL, risk = NULL, surv = NULL, times = NULL){
-
-        quantile_mask <- (times <= quantile(y_true[0],max_quantile))
-        times <- times[quantile_mask]
-        surv <- surv[,quantile_mask]
-
-        loss_values <- loss_function(y_true = y_true, risk = risk, surv = surv,times = times)
-
-        na_mask <- (!is.na(loss_values))
-
-        times <- times[na_mask]
-        loss_values <- loss_values[na_mask]
-        surv <- surv[na_mask]
-
-        print(loss_values)
-        print(length(loss_values))
-
-        n <- length(loss_values)
-        # integral using trapezoid method
-
-        if (is.null(normalization)){
-            tmp <- (loss_values[1:(n - 1)] + loss_values[2:n]) * diff(times) / 2
-            integrated_metric <- cumsum(c(0, tmp))[length(cumsum(c(0, tmp)))] / (max(times) - min(times))
-            return(integrated_metric)
-        }
-        else if (normalization == "t_max") {
-            tmp <- (loss_values[1:(n - 1)] + loss_values[2:n]) * diff(times) / 2
-            integrated_metric <- cumsum(c(0, tmp))[length(cumsum(c(0, tmp)))] / (max(times) - min(times))
-            return(integrated_metric/max(times))
-        }
-        else stop("normalization should be either NULL or `t_max`")
-    }
-
-    attr(integrated_loss_function, "loss_type") <- "integrated"
-    attr(integrated_loss_function, "loss_name") <- paste("Integrated", attr(loss_function, "loss_name"))
 }
