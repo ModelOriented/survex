@@ -6,7 +6,7 @@ utils::globalVariables(c("PredictionSurv"))
 #' @param loss_function - A time dependent loss function taking arguments (y_true, risk, surv, times)
 #'
 #' @param ... - other parameters, currently ignored
-#' @param normalization - either NULL, or "t_max". Decides what kind of weighting should be applied to the integrated metric. If "t_max" then the integral is calculated using dw(t), where w(t) = t/t_max. If NULL (default) the integral is calculated using dt.
+#' @param normalization - either NULL or "t_max". Decides what kind of weighting should be applied to the integrated metric. If "t_max" then the integral is calculated using dw(t), where w(t) = t/t_max. If NULL (default) the integral is calculated using dt.
 #' @param max_quantile - a number from the interval (0,1]. only observations up to quantile(max_quantile) of observed time are considered for the integration.
 #'
 #' @export
