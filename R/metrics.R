@@ -497,5 +497,52 @@ loss_adapt_mlr3proba <- function(measure, reverse = FALSE, ...){
 }
 
 
+#' Calculate integrated metrics based on time-depenent metrics.
+#'
+#' This function allows for calculation of integrated metrics based on a time dependent metric. A possibility to cut off the data at certain quantiles is implemented, as well as weighting the integrated metric by max time
+#'
+#' @param loss_function - A time dependent loss function taking arguments (y_true, risk, surv, times)
+#'
+#' @param ... - other parameters, currently ignored
+#' @param normalization - either NULL, or "t_max". Decides what kind of weighting should be applied to the integrated metric. If "t_max" then the integral is calculated using dw(t), where w(t) = t/t_max. If NULL (default) the integral is calculated using dt.
+#' @param max_quantile - a number from the interval (0,1]. only observations up to quantile(max_quantile) of observed time are considered for the integration.
+#'
+#' @export
+loss_integrate <- function(loss_function, ..., normalization = NULL , max_quantile = 1){
 
+    integrated_loss_function <- function(y_true = NULL, risk = NULL, surv = NULL, times = NULL){
 
+        quantile_mask <- (times <= quantile(y_true[0],max_quantile))
+        times <- times[quantile_mask]
+        surv <- surv[,quantile_mask]
+
+        loss_values <- loss_function(y_true = y_true, risk = risk, surv = surv,times = times)
+
+        na_mask <- (!is.na(loss_values))
+
+        times <- times[na_mask]
+        loss_values <- loss_values[na_mask]
+        surv <- surv[na_mask]
+
+        print(loss_values)
+        print(length(loss_values))
+
+        n <- length(loss_values)
+        # integral using trapezoid method
+
+        if (is.null(normalization)){
+            tmp <- (loss_values[1:(n - 1)] + loss_values[2:n]) * diff(times) / 2
+            integrated_metric <- cumsum(c(0, tmp))[length(cumsum(c(0, tmp)))] / (max(times) - min(times))
+            return(integrated_metric)
+        }
+        else if (normalization == "t_max") {
+            tmp <- (loss_values[1:(n - 1)] + loss_values[2:n]) * diff(times) / 2
+            integrated_metric <- cumsum(c(0, tmp))[length(cumsum(c(0, tmp)))] / (max(times) - min(times))
+            return(integrated_metric/max(times))
+        }
+        else stop("normalization should be either NULL or `t_max`")
+    }
+
+    attr(integrated_loss_function, "loss_type") <- "integrated"
+    attr(integrated_loss_function, "loss_name") <- paste("Integrated", attr(loss_function, "loss_name"))
+}
