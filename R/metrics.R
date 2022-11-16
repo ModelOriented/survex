@@ -38,8 +38,18 @@ loss_integrate <- function(loss_function, ..., normalization = NULL , max_quanti
             tmp <- (loss_values[1:(n - 1)] + loss_values[2:n]) * diff(times) / 2
             integrated_metric <- cumsum(c(0, tmp))[length(cumsum(c(0, tmp)))] / (max(times) - min(times))
             return(integrated_metric/max(times))
+        } else if (normalization == "survival"){
+
+            kaplan_meier <- survfit(y_true~1)
+            estimator <- transform_to_stepfunction(kaplan_meier, eval_times = sort(unique(y_true[,1])), type = "survival")
+
+            dwt <- 1 - estimator(times)
+
+            tmp <- (loss_values[1:(n - 1)] + loss_values[2:n]) * diff(dwt) / 2
+            integrated_metric <- cumsum(c(0, tmp))[length(cumsum(c(0, tmp)))] / (max(times) - min(times))
+            return(integrated_metric/1 - estimator(max(times)))
         }
-        else stop("normalization should be either NULL or `t_max`")
+        else stop("normalization should be either NULL, `t_max` or `survival`")
     }
 
     attr(integrated_loss_function, "loss_type") <- "integrated"
