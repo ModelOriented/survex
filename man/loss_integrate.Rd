@@ -16,7 +16,7 @@ loss_integrate(loss_function, ..., normalization = NULL, max_quantile = 1)
 }}
 
 \item{normalization}{\itemize{
-\item either NULL, or "t_max". Decides what kind of weighting should be applied to the integrated metric. If "t_max" then the integral is calculated using dw(t), where w(t) = t/t_max. If NULL (default) the integral is calculated using dt.
+\item either NULL or "t_max". Decides what kind of weighting should be applied to the integrated metric. If "t_max" then the integral is calculated using dw(t), where w(t) = t/t_max. If NULL (default) the integral is calculated using dt.
 }}
 
 \item{max_quantile}{\itemize{

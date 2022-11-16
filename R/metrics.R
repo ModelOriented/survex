@@ -31,12 +31,12 @@ loss_integrate <- function(loss_function, ..., normalization = NULL , max_quanti
 
         if (is.null(normalization)){
             tmp <- (loss_values[1:(n - 1)] + loss_values[2:n]) * diff(times) / 2
-            integrated_metric <- cumsum(c(0, tmp))[length(cumsum(c(0, tmp)))] / (max(times) - min(times))
+            integrated_metric <- cumsum(c(0, tmp))[length(tmp)+1] / (max(times) - min(times))
             return(integrated_metric)
         }
         else if (normalization == "t_max") {
             tmp <- (loss_values[1:(n - 1)] + loss_values[2:n]) * diff(times) / 2
-            integrated_metric <- cumsum(c(0, tmp))[length(cumsum(c(0, tmp)))] / (max(times) - min(times))
+            integrated_metric <- cumsum(c(0, tmp))[length(tmp)+1]
             return(integrated_metric/max(times))
         } else if (normalization == "survival"){
 
@@ -46,8 +46,8 @@ loss_integrate <- function(loss_function, ..., normalization = NULL , max_quanti
             dwt <- 1 - estimator(times)
 
             tmp <- (loss_values[1:(n - 1)] + loss_values[2:n]) * diff(dwt) / 2
-            integrated_metric <- cumsum(c(0, tmp))[length(cumsum(c(0, tmp)))] / (max(times) - min(times))
-            return(integrated_metric/1 - estimator(max(times)))
+            integrated_metric <- cumsum(c(0, tmp))[length(tmp)+1]
+            return(integrated_metric/(1 - estimator(max(times))))
         }
         else stop("normalization should be either NULL, `t_max` or `survival`")
     }
