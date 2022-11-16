@@ -320,21 +320,7 @@ attr(loss_one_minus_cd_auc, "loss_type") <- "time-dependent"
 #' integrated_cd_auc(times = times, auc = auc)
 #'
 #' @export
-integrated_cd_auc <- function(y_true = NULL, risk = NULL, surv = NULL, times = NULL, auc = NULL) {
-    if (is.null(auc)) {
-        auc <- cd_auc(y_true, risk, surv, times)
-    }
-
-    auc <- as.numeric(auc)
-    ind_to_drop <- is.na(auc)
-    times <- times[!ind_to_drop]
-    auc <- auc[!ind_to_drop]
-    n <- length(auc)
-
-    iauc <- (auc[1:(n - 1)] + auc[2:n]) * diff(times) / 2
-
-    cumsum(c(0, iauc))[length(cumsum(c(0, iauc)))] / (max(times) - min(times))
-}
+integrated_cd_auc <- loss_integrate(cd_auc)
 attr(integrated_cd_auc, "loss_name") <- "integrated C/D AUC"
 attr(integrated_cd_auc, "loss_type") <- "integrated"
 
@@ -426,23 +412,7 @@ attr(loss_one_minus_integrated_cd_auc, "loss_type") <- "integrated"
 #' integrated_brier_score(times = times, brier = brier_score)
 #'
 #' @export
-integrated_brier_score <- function(y_true = NULL, risk = NULL, surv = NULL, times = NULL, brier = NULL) {
-
-    if (is.null(brier)) {
-        brier <- brier_score(y_true, risk, surv, times)
-    }
-
-    brier <- as.numeric(brier)
-    ind_to_drop <- is.na(brier)
-    times <- times[!ind_to_drop]
-    brier <- brier[!ind_to_drop]
-    n <- length(brier)
-
-    ibs <- (brier[1:(n - 1)] + brier[2:n]) * diff(times) / 2
-
-    cumsum(c(0, ibs))[length(cumsum(c(0, ibs)))] / (max(times) - min(times))
-
-}
+integrated_brier_score <- loss_integrate(brier_score)
 attr(integrated_brier_score, "loss_name") <- "integrated Brier score"
 
 #' @rdname integrated_brier_score
