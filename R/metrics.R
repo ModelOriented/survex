@@ -1,7 +1,7 @@
 utils::globalVariables(c("PredictionSurv"))
 #' Calculate integrated metrics based on time-dependent metrics.
 #'
-#' This function allows for creating a function for calculation of integrated metrics based on a time dependent metric. A possibility to cut off the data at certain quantiles is implemented, as well as weighting the integrated metric by max time and marginal survival function
+#' This function allows for creating a function for calculation of integrated metrics based on a time dependent metric. A possibility to cut off the data at certain quantiles is implemented, as well as weighting the integrated metric by max time and marginal survival function \[[1](https://onlinelibrary.wiley.com/doi/abs/10.1002/%28SICI%291097-0258%2819990915/30%2918%3A17/18%3C2529%3A%3AAID-SIM274%3E3.0.CO%3B2-5)\]
 #'
 #' @param loss_function - A time dependent loss function taking arguments (y_true, risk, surv, times)
 #'
@@ -10,6 +10,9 @@ utils::globalVariables(c("PredictionSurv"))
 #' @param max_quantile - a number from the interval (0,1]. The integral will be calculated only up to the time value of `quantile(max_quantile)` of the observed event/censoring times in `y_true`.
 #'
 #' @return a function that can be used to calculate metrics (with parameters `y_true`, `risk`, `surv`, and `times`)
+#'
+#'#' @section References:
+#' - \[1\] Graf, Erika, et al. ["Assessment and comparison of prognostic classification schemes for survival data."](https://onlinelibrary.wiley.com/doi/abs/10.1002/%28SICI%291097-0258%2819990915/30%2918%3A17/18%3C2529%3A%3AAID-SIM274%3E3.0.CO%3B2-5) Statistics in Medicine 18.17‐18 (1999): 2529-2545.
 #'
 #' @export
 loss_integrate <- function(loss_function, ..., normalization = NULL , max_quantile = 1){

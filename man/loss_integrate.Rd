@@ -25,7 +25,12 @@ loss_integrate(loss_function, ..., normalization = NULL, max_quantile = 1)
 }
 \value{
 a function that can be used to calculate metrics (with parameters \code{y_true}, \code{risk}, \code{surv}, and \code{times})
+
+#' @section References:
+\itemize{
+\item [1] Graf, Erika, et al. \href{https://onlinelibrary.wiley.com/doi/abs/10.1002/\%28SICI\%291097-0258\%2819990915/30\%2918\%3A17/18\%3C2529\%3A\%3AAID-SIM274\%3E3.0.CO\%3B2-5}{"Assessment and comparison of prognostic classification schemes for survival data."} Statistics in Medicine 18.17‐18 (1999): 2529-2545.
+}
 }
 \description{
-This function allows for creating a function for calculation of integrated metrics based on a time dependent metric. A possibility to cut off the data at certain quantiles is implemented, as well as weighting the integrated metric by max time and marginal survival function
+This function allows for creating a function for calculation of integrated metrics based on a time dependent metric. A possibility to cut off the data at certain quantiles is implemented, as well as weighting the integrated metric by max time and marginal survival function [\href{https://onlinelibrary.wiley.com/doi/abs/10.1002/\%28SICI\%291097-0258\%2819990915/30\%2918\%3A17/18\%3C2529\%3A\%3AAID-SIM274\%3E3.0.CO\%3B2-5}{1}]
 }
