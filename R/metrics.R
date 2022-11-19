@@ -1,13 +1,15 @@
 utils::globalVariables(c("PredictionSurv"))
-#' Calculate integrated metrics based on time-depenent metrics.
+#' Calculate integrated metrics based on time-dependent metrics.
 #'
-#' This function allows for calculation of integrated metrics based on a time dependent metric. A possibility to cut off the data at certain quantiles is implemented, as well as weighting the integrated metric by max time
+#' This function allows for creating a function for calculation of integrated metrics based on a time dependent metric. A possibility to cut off the data at certain quantiles is implemented, as well as weighting the integrated metric by max time and marginal survival function
 #'
 #' @param loss_function - A time dependent loss function taking arguments (y_true, risk, surv, times)
 #'
 #' @param ... - other parameters, currently ignored
-#' @param normalization - either NULL or "t_max". Decides what kind of weighting should be applied to the integrated metric. If "t_max" then the integral is calculated using dw(t), where w(t) = t/t_max. If NULL (default) the integral is calculated using dt.
-#' @param max_quantile - a number from the interval (0,1]. only observations up to quantile(max_quantile) of observed time are considered for the integration.
+#' @param normalization - either NULL, "t_max" or "survival". Decides what kind of weighting should be applied to the integrated metric. If "t_max", then the integral is calculated using dw(t) where w(t) = t/t_max. If "survival", then the integral is calculated using dw(t) where w(t) = (1 - S(t))/(1 - S(t_max)) and S(t) denotes the estimated marginal survival function. If NULL (default), the integral is calculated using dt.
+#' @param max_quantile - a number from the interval (0,1]. The integral will be calculated only up to the time value of `quantile(max_quantile)` of the observed event/censoring times in `y_true`.
+#'
+#' @return a function that can be used to calculate metrics (with parameters `y_true`, `risk`, `surv`, and `times`)
 #'
 #' @export
 loss_integrate <- function(loss_function, ..., normalization = NULL , max_quantile = 1){
@@ -165,7 +167,7 @@ attr(loss_one_minus_c_index, "loss_type") <- "risk-based"
 #' @param surv a matrix containing the predicted survival functions for the considered observations, each row represents a single observation, whereas each column one time point
 #' @param times a vector of time points at which the survival function was evaluated
 #'
-#' @return numeric from 0 to 1, lower scores are better (brier score of 0.25 represents a model which returns always returns 0.5 as the predicted survival function)
+#' @return numeric from 0 to 1, lower scores are better (Brier score of 0.25 represents a model which returns always returns 0.5 as the predicted survival function)
 #'
 #' @section References:
 #' - \[1\] Brier, Glenn W. ["Verification of forecasts expressed in terms of probability."](https://journals.ametsoc.org/view/journals/mwre/78/1/1520-0493_1950_078_0001_vofeit_2_0_co_2.xml) Monthly Weather Review 78.1 (1950): 1-3.

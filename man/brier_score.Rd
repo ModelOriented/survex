@@ -19,7 +19,7 @@ loss_brier_score(y_true = NULL, risk = NULL, surv = NULL, times = NULL)
 \item{times}{a vector of time points at which the survival function was evaluated}
 }
 \value{
-numeric from 0 to 1, lower scores are better (brier score of 0.25 represents a model which returns always returns 0.5 as the predicted survival function)
+numeric from 0 to 1, lower scores are better (Brier score of 0.25 represents a model which returns always returns 0.5 as the predicted survival function)
 }
 \description{
 A function for calculating the Brier score for a survival model.

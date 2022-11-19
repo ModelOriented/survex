@@ -2,7 +2,7 @@
 % Please edit documentation in R/metrics.R
 \name{loss_integrate}
 \alias{loss_integrate}
-\title{Calculate integrated metrics based on time-depenent metrics.}
+\title{Calculate integrated metrics based on time-dependent metrics.}
 \usage{
 loss_integrate(loss_function, ..., normalization = NULL, max_quantile = 1)
 }
@@ -16,13 +16,16 @@ loss_integrate(loss_function, ..., normalization = NULL, max_quantile = 1)
 }}
 
 \item{normalization}{\itemize{
-\item either NULL or "t_max". Decides what kind of weighting should be applied to the integrated metric. If "t_max" then the integral is calculated using dw(t), where w(t) = t/t_max. If NULL (default) the integral is calculated using dt.
+\item either NULL, "t_max" or "survival". Decides what kind of weighting should be applied to the integrated metric. If "t_max", then the integral is calculated using dw(t) where w(t) = t/t_max. If "survival", then the integral is calculated using dw(t) where w(t) = (1 - S(t))/(1 - S(t_max)) and S(t) denotes the estimated marginal survival function. If NULL (default), the integral is calculated using dt.
 }}
 
 \item{max_quantile}{\itemize{
-\item a number from the interval (0,1]. only observations up to quantile(max_quantile) of observed time are considered for the integration.
+\item a number from the interval (0,1]. The integral will be calculated only up to the time value of \code{quantile(max_quantile)} of the observed event/censoring times in \code{y_true}.
 }}
 }
+\value{
+a function that can be used to calculate metrics (with parameters \code{y_true}, \code{risk}, \code{surv}, and \code{times})
+}
 \description{
-This function allows for calculation of integrated metrics based on a time dependent metric. A possibility to cut off the data at certain quantiles is implemented, as well as weighting the integrated metric by max time
+This function allows for creating function for calculation of integrated metrics based on a time dependent metric. A possibility to cut off the data at certain quantiles is implemented, as well as weighting the integrated metric by max time and marginal survival function
 }
