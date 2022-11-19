@@ -27,5 +27,5 @@ loss_integrate(loss_function, ..., normalization = NULL, max_quantile = 1)
 a function that can be used to calculate metrics (with parameters \code{y_true}, \code{risk}, \code{surv}, and \code{times})
 }
 \description{
-This function allows for creating function for calculation of integrated metrics based on a time dependent metric. A possibility to cut off the data at certain quantiles is implemented, as well as weighting the integrated metric by max time and marginal survival function
+This function allows for creating a function for calculation of integrated metrics based on a time dependent metric. A possibility to cut off the data at certain quantiles is implemented, as well as weighting the integrated metric by max time and marginal survival function
 }
