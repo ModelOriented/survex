@@ -66,9 +66,9 @@
 <span>  <span class="va">explainer</span>,</span>
 <span>  <span class="va">...</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"metrics"</span>,</span>
-<span>  metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>`C-index` <span class="op">=</span> <span class="va">c_index</span>, `Integrated Brier score` <span class="op">=</span></span>
-<span>    <span class="va">loss_integrated_brier_score</span>, `Integrated C/D AUC` <span class="op">=</span> <span class="va">integrated_cd_auc</span>, `Brier score`</span>
-<span>    <span class="op">=</span> <span class="va">brier_score</span>, `C/D AUC` <span class="op">=</span> <span class="va">cd_auc</span><span class="op">)</span>,</span>
+<span>  metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>`C-index` <span class="op">=</span> <span class="va">c_index</span>, `Integrated C/D AUC` <span class="op">=</span> <span class="va">integrated_cd_auc</span>,</span>
+<span>    `Brier score` <span class="op">=</span> <span class="va">brier_score</span>, `Integrated Brier score` <span class="op">=</span> <span class="va">integrated_brier_score</span>,</span>
+<span>    `C/D AUC` <span class="op">=</span> <span class="va">cd_auc</span><span class="op">)</span>,</span>
 <span>  times <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -181,11 +181,6 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"loss_type")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "risk-based"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`Integrated Brier score`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.07182192</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"loss_type")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "integrated"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`Integrated C/D AUC`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.8216749</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"loss_type")</span>
@@ -210,6 +205,11 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> [91] 0.04565290 0.04001131 0.02744170 0.01789265</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"loss_type")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "time-dependent"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $`Integrated Brier score`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.07182192</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"loss_type")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "integrated"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`C/D AUC`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.6592593 0.6592593 0.7388060 0.8045455 0.8352713 0.7846667 0.7845528</span>
