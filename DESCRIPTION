@@ -22,7 +22,6 @@ RoxygenNote: 7.2.1
 Depends: R (>= 3.5.0)
 Imports:
     DALEX (>= 2.2.1),
-    ingredients,
     ggplot2,
     pec,
     survival,
@@ -33,6 +32,7 @@ Suggests:
     gbm,
     generics,
     glmnet,
+    ingredients,
     knitr,
     mboost,
     parsnip,

@@ -5,20 +5,13 @@
 \alias{loss_integrated_brier_score}
 \title{Calculate integrated Brier score}
 \usage{
-integrated_brier_score(
-  y_true = NULL,
-  risk = NULL,
-  surv = NULL,
-  times = NULL,
-  brier = NULL
-)
+integrated_brier_score(y_true = NULL, risk = NULL, surv = NULL, times = NULL)
 
 loss_integrated_brier_score(
   y_true = NULL,
   risk = NULL,
   surv = NULL,
-  times = NULL,
-  brier = NULL
+  times = NULL
 )
 }
 \arguments{
@@ -29,8 +22,6 @@ loss_integrated_brier_score(
 \item{surv}{a matrix containing the predicted survival functions for the considered observations, each row represents a single observation, whereas each column one time point}
 
 \item{times}{a vector of time points at which the survival function was evaluated}
-
-\item{brier}{a vector containing already calculated Brier score metric at the time points specified in the times parameter. If this is provided all arguments except \code{times} and \code{brier} are ignored}
 }
 \value{
 numeric from 0 to 1, lower values indicate better performance
@@ -61,13 +52,8 @@ y <- cph_exp$y
 times <- cph_exp$times
 surv <- cph_exp$predict_survival_function(cph, cph_exp$data, times)
 
-
 # calculating directly
 integrated_brier_score(y, surv = surv, times = times)
-
-# calculating based on given auc vector
-brier_score <- brier_score(y, surv = surv, times = times)
-integrated_brier_score(times = times, brier = brier_score)
 
 }
 \seealso{

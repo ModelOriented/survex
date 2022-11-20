@@ -11,9 +11,9 @@ model_performance(explainer, ...)
   explainer,
   ...,
   type = "metrics",
-  metrics = c(`C-index` = c_index, `Integrated Brier score` =
-    loss_integrated_brier_score, `Integrated C/D AUC` = integrated_cd_auc, `Brier score`
-    = brier_score, `C/D AUC` = cd_auc),
+  metrics = c(`C-index` = c_index, `Integrated C/D AUC` = integrated_cd_auc,
+    `Brier score` = brier_score, `Integrated Brier score` = integrated_brier_score,
+    `C/D AUC` = cd_auc),
   times = NULL
 )
 }

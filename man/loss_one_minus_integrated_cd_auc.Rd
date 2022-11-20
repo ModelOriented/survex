@@ -8,8 +8,7 @@ loss_one_minus_integrated_cd_auc(
   y_true = NULL,
   risk = NULL,
   surv = NULL,
-  times = NULL,
-  auc = NULL
+  times = NULL
 )
 }
 \arguments{
@@ -20,8 +19,6 @@ loss_one_minus_integrated_cd_auc(
 \item{surv}{a matrix containing the predicted survival functions for the considered observations, each row represents a single observation, whereas each column one time point}
 
 \item{times}{a vector of time points at which the survival function was evaluated}
-
-\item{auc}{a vector containing already calculated AUC metric at the time points specified in the times parameter. If this is provided all arguments except \code{times} and \code{auc} are ignored}
 }
 \value{
 numeric from 0 to 1, lower values indicate better performance
@@ -47,13 +44,8 @@ y <- cph_exp$y
 times <- cph_exp$times
 surv <- cph_exp$predict_survival_function(cph, cph_exp$data, times)
 
-
 # calculating directly
 loss_one_minus_integrated_cd_auc(y, surv = surv, times = times)
-
-# calculating based on given auc vector
-auc <- cd_auc(y, surv = surv, times = times)
-loss_one_minus_integrated_cd_auc(times = times, auc = auc)
 
 }
 \seealso{

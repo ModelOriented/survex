@@ -1,4 +1,70 @@
 utils::globalVariables(c("PredictionSurv"))
+#' Calculate integrated metrics based on time-dependent metrics.
+#'
+#' This function allows for creating a function for calculation of integrated metrics based on a time dependent metric. A possibility to cut off the data at certain quantiles is implemented, as well as weighting the integrated metric by max time and marginal survival function \[[1](https://onlinelibrary.wiley.com/doi/abs/10.1002/%28SICI%291097-0258%2819990915/30%2918%3A17/18%3C2529%3A%3AAID-SIM274%3E3.0.CO%3B2-5)\]
+#'
+#' @param loss_function - A time dependent loss function taking arguments (y_true, risk, surv, times)
+#'
+#' @param ... - other parameters, currently ignored
+#' @param normalization - either NULL, "t_max" or "survival". Decides what kind of weighting should be applied to the integrated metric. If "t_max", then the integral is calculated using dw(t) where w(t) = t/t_max. If "survival", then the integral is calculated using dw(t) where w(t) = (1 - S(t))/(1 - S(t_max)) and S(t) denotes the estimated marginal survival function. If NULL (default), the integral is calculated using dt.
+#' @param max_quantile - a number from the interval (0,1]. The integral will be calculated only up to the time value of `quantile(max_quantile)` of the observed event/censoring times in `y_true`.
+#'
+#' @return a function that can be used to calculate metrics (with parameters `y_true`, `risk`, `surv`, and `times`)
+#'
+#'#' @section References:
+#' - \[1\] Graf, Erika, et al. ["Assessment and comparison of prognostic classification schemes for survival data."](https://onlinelibrary.wiley.com/doi/abs/10.1002/%28SICI%291097-0258%2819990915/30%2918%3A17/18%3C2529%3A%3AAID-SIM274%3E3.0.CO%3B2-5) Statistics in Medicine 18.17‐18 (1999): 2529-2545.
+#'
+#' @export
+loss_integrate <- function(loss_function, ..., normalization = NULL , max_quantile = 1){
+
+    integrated_loss_function <- function(y_true = NULL, risk = NULL, surv = NULL, times = NULL){
+
+        quantile_mask <- (times <= quantile(y_true[,1],max_quantile))
+        times <- times[quantile_mask]
+        surv <- surv[,quantile_mask]
+
+        loss_values <- loss_function(y_true = y_true, risk = risk, surv = surv,times = times)
+
+        na_mask <- (!is.na(loss_values))
+
+        times <- times[na_mask]
+        loss_values <- loss_values[na_mask]
+        surv <- surv[na_mask]
+
+        n <- length(loss_values)
+        # integral using trapezoid method
+
+        if (is.null(normalization)){
+            tmp <- (loss_values[1:(n - 1)] + loss_values[2:n]) * diff(times) / 2
+            integrated_metric <- cumsum(c(0, tmp))[length(tmp)+1] / (max(times) - min(times))
+            return(integrated_metric)
+        }
+        else if (normalization == "t_max") {
+            tmp <- (loss_values[1:(n - 1)] + loss_values[2:n]) * diff(times) / 2
+            integrated_metric <- cumsum(c(0, tmp))[length(tmp)+1]
+            return(integrated_metric/max(times))
+        } else if (normalization == "survival"){
+
+            kaplan_meier <- survfit(y_true~1)
+            estimator <- transform_to_stepfunction(kaplan_meier, eval_times = sort(unique(y_true[,1])), type = "survival")
+
+            dwt <- 1 - estimator(times)
+
+            tmp <- (loss_values[1:(n - 1)] + loss_values[2:n]) * diff(dwt) / 2
+            integrated_metric <- cumsum(c(0, tmp))[length(tmp)+1]
+            return(integrated_metric/(1 - estimator(max(times))))
+        }
+        else stop("normalization should be either NULL, `t_max` or `survival`")
+    }
+
+    attr(integrated_loss_function, "loss_type") <- "integrated"
+    attr(integrated_loss_function, "loss_name") <- paste("Integrated", attr(loss_function, "loss_name"))
+    return(integrated_loss_function)
+}
+
+
+
+
 #' Compute the Harrell's Concordance index
 #'
 #' A function to compute the Harrell's concordance index of a survival model.
@@ -104,7 +170,7 @@ attr(loss_one_minus_c_index, "loss_type") <- "risk-based"
 #' @param surv a matrix containing the predicted survival functions for the considered observations, each row represents a single observation, whereas each column one time point
 #' @param times a vector of time points at which the survival function was evaluated
 #'
-#' @return numeric from 0 to 1, lower scores are better (brier score of 0.25 represents a model which returns always returns 0.5 as the predicted survival function)
+#' @return numeric from 0 to 1, lower scores are better (Brier score of 0.25 represents a model which returns always returns 0.5 as the predicted survival function)
 #'
 #' @section References:
 #' - \[1\] Brier, Glenn W. ["Verification of forecasts expressed in terms of probability."](https://journals.ametsoc.org/view/journals/mwre/78/1/1520-0493_1950_078_0001_vofeit_2_0_co_2.xml) Monthly Weather Review 78.1 (1950): 1-3.
@@ -288,7 +354,6 @@ attr(loss_one_minus_cd_auc, "loss_type") <- "time-dependent"
 #' @param risk ignored, left for compatibility with other metrics
 #' @param surv a matrix containing the predicted survival functions for the considered observations, each row represents a single observation, whereas each column one time point
 #' @param times a vector of time points at which the survival function was evaluated
-#' @param auc a vector containing already calculated AUC metric at the time points specified in the times parameter. If this is provided all arguments except `times` and `auc` are ignored
 #'
 #' @return numeric from 0 to 1, higher values indicate better performance
 #'
@@ -311,30 +376,10 @@ attr(loss_one_minus_cd_auc, "loss_type") <- "time-dependent"
 #' times <- cph_exp$times
 #' surv <- cph_exp$predict_survival_function(cph, cph_exp$data, times)
 #'
-#'
-#' # calculating directly
 #' integrated_cd_auc(y, surv = surv, times = times)
 #'
-#' # calculating based on given auc vector
-#' auc <- cd_auc(y, surv = surv, times = times)
-#' integrated_cd_auc(times = times, auc = auc)
-#'
 #' @export
-integrated_cd_auc <- function(y_true = NULL, risk = NULL, surv = NULL, times = NULL, auc = NULL) {
-    if (is.null(auc)) {
-        auc <- cd_auc(y_true, risk, surv, times)
-    }
-
-    auc <- as.numeric(auc)
-    ind_to_drop <- is.na(auc)
-    times <- times[!ind_to_drop]
-    auc <- auc[!ind_to_drop]
-    n <- length(auc)
-
-    iauc <- (auc[1:(n - 1)] + auc[2:n]) * diff(times) / 2
-
-    cumsum(c(0, iauc))[length(cumsum(c(0, iauc)))] / (max(times) - min(times))
-}
+integrated_cd_auc <- loss_integrate(cd_auc)
 attr(integrated_cd_auc, "loss_name") <- "integrated C/D AUC"
 attr(integrated_cd_auc, "loss_type") <- "integrated"
 
@@ -367,17 +412,12 @@ attr(integrated_cd_auc, "loss_type") <- "integrated"
 #' times <- cph_exp$times
 #' surv <- cph_exp$predict_survival_function(cph, cph_exp$data, times)
 #'
-#'
 #' # calculating directly
 #' loss_one_minus_integrated_cd_auc(y, surv = surv, times = times)
 #'
-#' # calculating based on given auc vector
-#' auc <- cd_auc(y, surv = surv, times = times)
-#' loss_one_minus_integrated_cd_auc(times = times, auc = auc)
-#'
 #' @export
-loss_one_minus_integrated_cd_auc <- function(y_true = NULL, risk = NULL, surv = NULL, times = NULL, auc = NULL) {
-    1 - integrated_cd_auc(y_true = y_true, risk = risk, surv = surv, times = times, auc = auc)
+loss_one_minus_integrated_cd_auc <- function(y_true = NULL, risk = NULL, surv = NULL, times = NULL) {
+    1 - integrated_cd_auc(y_true = y_true, risk = risk, surv = surv, times = times)
 }
 attr(loss_one_minus_integrated_cd_auc, "loss_name") <- "One minus integrated C/D AUC"
 attr(loss_one_minus_integrated_cd_auc, "loss_type") <- "integrated"
@@ -394,7 +434,6 @@ attr(loss_one_minus_integrated_cd_auc, "loss_type") <- "integrated"
 #' @param risk ignored, left for compatibility with other metrics
 #' @param surv a matrix containing the predicted survival functions for the considered observations, each row represents a single observation, whereas each column one time point
 #' @param times a vector of time points at which the survival function was evaluated
-#' @param brier a vector containing already calculated Brier score metric at the time points specified in the times parameter. If this is provided all arguments except `times` and `brier` are ignored
 #'
 #' @return numeric from 0 to 1, lower values indicate better performance
 #'
@@ -417,32 +456,11 @@ attr(loss_one_minus_integrated_cd_auc, "loss_type") <- "integrated"
 #' times <- cph_exp$times
 #' surv <- cph_exp$predict_survival_function(cph, cph_exp$data, times)
 #'
-#'
 #' # calculating directly
 #' integrated_brier_score(y, surv = surv, times = times)
 #'
-#' # calculating based on given auc vector
-#' brier_score <- brier_score(y, surv = surv, times = times)
-#' integrated_brier_score(times = times, brier = brier_score)
-#'
 #' @export
-integrated_brier_score <- function(y_true = NULL, risk = NULL, surv = NULL, times = NULL, brier = NULL) {
-
-    if (is.null(brier)) {
-        brier <- brier_score(y_true, risk, surv, times)
-    }
-
-    brier <- as.numeric(brier)
-    ind_to_drop <- is.na(brier)
-    times <- times[!ind_to_drop]
-    brier <- brier[!ind_to_drop]
-    n <- length(brier)
-
-    ibs <- (brier[1:(n - 1)] + brier[2:n]) * diff(times) / 2
-
-    cumsum(c(0, ibs))[length(cumsum(c(0, ibs)))] / (max(times) - min(times))
-
-}
+integrated_brier_score <- loss_integrate(brier_score)
 attr(integrated_brier_score, "loss_name") <- "integrated Brier score"
 
 #' @rdname integrated_brier_score
@@ -495,7 +513,3 @@ loss_adapt_mlr3proba <- function(measure, reverse = FALSE, ...){
 
     return(loss_function)
 }
-
-
-
-
