@@ -115,10 +115,8 @@ plot.surv_ceteris_paribus <- function(x,
     pl <- plot_individual_ceteris_paribus_survival(
         all_profiles = ceteris_paribus_with_observation,
         variables = all_variables,
-        facet_ncol = facet_ncol,
         colors = colors,
-        numerical_plot_type = numerical_plot_type,
-        title = title
+        numerical_plot_type = numerical_plot_type
     )
 
     patchwork::wrap_plots(pl, ncol = facet_ncol) +
@@ -131,10 +129,8 @@ plot.surv_ceteris_paribus <- function(x,
 #' @import ggplot2
 plot_individual_ceteris_paribus_survival <- function(all_profiles,
                                                      variables,
-                                                     facet_ncol,
                                                      colors,
-                                                     numerical_plot_type,
-                                                     title) {
+                                                     numerical_plot_type) {
     pl <- lapply(variables, function(var) {
         df <- all_profiles[all_profiles$`_vname_` == var, ]
 
@@ -217,7 +213,7 @@ plot_individual_ceteris_paribus_survival <- function(all_profiles,
                                    values = generate_discrete_color_scale(n_colors, colors)) +
                 theme_drwhy() +
                 xlab("") + ylab("survival function value") + ylim(c(0, 1)) +
-                facet_wrap(~`_vname_`, ncol = facet_ncol) })
+                facet_wrap(~`_vname_`) })
         }
     })
 }
