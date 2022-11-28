@@ -61,7 +61,7 @@ plot(predict_parts(explainer, veteran[1, -c(3, 4)]))
 
 ## Related work
 
-- H. Ishwaran, U. B. Kogalur, E. H. Blackstone, M. S. Lauer. [Random survival forests](http://doi.org/10.1214/08-AOAS169). *Annals of Applied Statistics*, 2008.
+- H. Ishwaran, U. B. Kogalur, E. H. Blackstone, M. S. Lauer. [Random survival forests](https://doi.org/10.1214/08-AOAS169). *Annals of Applied Statistics*, 2008.
 - A. Grudziąż, A. Gosiewska, P. Biecek. [survxai: an R package for structure-agnostic explanations of survival models](https://doi.org/10.21105/joss.00961). *Journal of Open Source Software*, 2018.
 - M. S. Kovalev, L. V. Utkin, E. M. Kasimov. [SurvLIME: A method for explaining machine learning survival models](https://doi.org/10.1016/j.knosys.2020.106164). *Knowledge-Based Systems*, 2020.
 - R. Sonabend, F. J. Király, A. Bender, B. Bischl, M. Lang. [mlr3proba: an R package for machine learning in survival analysis](https://doi.org/10.1093/bioinformatics/btab039). *Bioinformatics*, 2021.
