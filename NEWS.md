@@ -1,4 +1,4 @@
-# survex (development)
+# survex 0.2.0
 
 * improved and unified API documentation ([#2](https://github.com/ModelOriented/survex/issues/2))
 * added references to used methods ([#5](https://github.com/ModelOriented/survex/issues/5))
