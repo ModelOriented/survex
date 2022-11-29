@@ -29,6 +29,7 @@
 #' @references Explanatory Model Analysis. Explore, Explain, and Examine Predictive Models. \url{https://ema.drwhy.ai/}
 #'
 #' @examples
+#' \donttest{
 #' library(survex)
 #' library(randomForestSRC)
 #' library(survival)
@@ -38,7 +39,7 @@
 #'
 #' mp <- model_parts(explainer, loss = loss_one_minus_c_index, output_type = "risk")
 #' plot(mp)
-#'
+#' }
 #' @export
 plot.feature_importance_explainer <- function(x, ..., max_vars = NULL, show_boxplots = TRUE, bar_width = 10,
                                               desc_sorting = TRUE, title = "Feature Importance", subtitle = NULL) {

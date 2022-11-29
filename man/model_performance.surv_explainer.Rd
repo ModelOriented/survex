@@ -52,6 +52,7 @@ This function calculates metrics for survival models. The metrics calculated are
 }
 
 \examples{
+\donttest{
 library(survival)
 library(survex)
 
@@ -86,5 +87,5 @@ plot(rsf_ranger_model_performance, cph_model_performance, rsf_src_model_performa
 
 cph_model_performance_roc <- model_performance(cph_exp, type = "roc", times = c(100, 250, 500))
 plot(cph_model_performance_roc)
-
+}
 }

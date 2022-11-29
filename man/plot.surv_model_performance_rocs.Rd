@@ -34,6 +34,7 @@ This function plots objects of class \code{"surv_model_performance_rocs"} - ROC 
 specific time points for survival models created using the \code{model_performance(..., type="roc")}.
 }
 \examples{
+\donttest{
 library(survival)
 library(survex)
 
@@ -42,7 +43,7 @@ exp <- explain(model)
 
 m_perf_roc <- model_performance(exp, type = "roc", times = c(100, 300))
 plot(m_perf_roc)
-
+}
 }
 \seealso{
 Other functions for plotting 'model_performance_survival' objects: 

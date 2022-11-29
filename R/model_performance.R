@@ -22,6 +22,7 @@
 #' - \[4\] Uno, Hajime, et al. ["Evaluating prediction rules for t-year survivors with censored regression models."](https://www.jstor.org/stable/27639883#metadata_info_tab_contents) Journal of the American Statistical Association 102.478 (2007): 527-537.
 #'
 #' @examples
+#' \donttest{
 #' library(survival)
 #' library(survex)
 #'
@@ -56,7 +57,7 @@
 #'
 #' cph_model_performance_roc <- model_performance(cph_exp, type = "roc", times = c(100, 250, 500))
 #' plot(cph_model_performance_roc)
-#'
+#' }
 #' @rdname model_performance.surv_explainer
 #' @export
 model_performance <- function(explainer, ...) UseMethod("model_performance", explainer)

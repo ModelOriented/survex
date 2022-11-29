@@ -15,6 +15,7 @@
 #' @family functions for plotting 'model_performance_survival' objects
 #'
 #' @examples
+#' \donttest{
 #' library(survival)
 #' library(survex)
 #'
@@ -23,7 +24,7 @@
 #'
 #' m_perf_roc <- model_performance(exp, type = "roc", times = c(100, 300))
 #' plot(m_perf_roc)
-#'
+#' }
 #' @export
 plot.surv_model_performance_rocs <- function(x,
                                              ...,

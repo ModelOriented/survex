@@ -16,6 +16,7 @@
 #' @family functions for plotting 'predict_parts_survival' objects
 #'
 #' @examples
+#' \donttest{
 #' library(survival)
 #' library(survex)
 #'
@@ -24,7 +25,7 @@
 #'
 #' p_parts_lime <- predict_parts(exp, veteran[1, -c(3, 4)], type = "survlime")
 #' plot(p_parts_lime)
-#'
+#' }
 #' @export
 plot.surv_lime <- function(x,
                            type = "local_importance",

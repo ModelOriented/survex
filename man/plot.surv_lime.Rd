@@ -37,6 +37,7 @@ This functions plots objects of class \code{surv_lime} - LIME explanations of su
 created using \code{predict_parts(..., type="survlime")} function.
 }
 \examples{
+\donttest{
 library(survival)
 library(survex)
 
@@ -45,7 +46,7 @@ exp <- explain(model)
 
 p_parts_lime <- predict_parts(exp, veteran[1, -c(3, 4)], type = "survlime")
 plot(p_parts_lime)
-
+}
 }
 \seealso{
 Other functions for plotting 'predict_parts_survival' objects: 

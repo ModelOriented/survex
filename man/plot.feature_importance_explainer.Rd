@@ -50,6 +50,7 @@ importance is different in different in different models.
 Find more details in the \href{https://ema.drwhy.ai/featureImportance.html}{Feature Importance Chapter}.
 }
 \examples{
+\donttest{
 library(survex)
 library(randomForestSRC)
 library(survival)
@@ -59,7 +60,7 @@ explainer <- explain(model)
 
 mp <- model_parts(explainer, loss = loss_one_minus_c_index, output_type = "risk")
 plot(mp)
-
+}
 }
 \references{
 Explanatory Model Analysis. Explore, Explain, and Examine Predictive Models. \url{https://ema.drwhy.ai/}

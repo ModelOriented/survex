@@ -46,6 +46,7 @@ using the \code{model_performance()} function.
 }
 
 \examples{
+\donttest{
 library(survival)
 library(survex)
 
@@ -57,7 +58,7 @@ plot(m_perf, metrics_type = "functional")
 
 m_perf_roc <- model_performance(exp, type = "roc", times = c(100, 300))
 plot(m_perf_roc)
-
+}
 }
 \seealso{
 Other functions for plotting 'model_performance_survival' objects: 
