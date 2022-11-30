@@ -78,7 +78,7 @@ loss_integrate <- function(loss_function, ..., normalization = NULL , max_quanti
 #' @return numeric from 0 to 1, higher values indicate better performance
 #'
 #' @section References:
-#' - \[1\] Harrell, F.E., Jr., et al. ["Regression modelling strategies for improved prognostic prediction."](https://doi.org/10.1002/sim.4780030207) Statistics in Medicine 3.2 (1984): 143-152.
+#' - \[1\] Harrell, F.E., Jr., et al. ["Regression modelling strategies for improved prognostic prediction."](https://onlinelibrary.wiley.com/doi/10.1002/sim.4780030207) Statistics in Medicine 3.2 (1984): 143-152.
 #'
 #' @rdname c_index
 #' @seealso [loss_one_minus_c_index()]
@@ -131,7 +131,7 @@ attr(c_index, "loss_type") <- "risk-based"
 #' @return numeric from 0 to 1, lower values indicate better performance
 #'
 #' @section References:
-#' - \[1\] Harrell, F.E., Jr., et al. ["Regression modelling strategies for improved prognostic prediction."](https://doi.org/10.1002/sim.4780030207) Statistics in Medicine 3.2 (1984): 143-152.
+#' - \[1\] Harrell, F.E., Jr., et al. ["Regression modelling strategies for improved prognostic prediction."](https://onlinelibrary.wiley.com/doi/10.1002/sim.4780030207) Statistics in Medicine 3.2 (1984): 143-152.
 #'
 #' @rdname loss_one_minus_c_index
 #' @seealso [c_index()]
@@ -173,8 +173,8 @@ attr(loss_one_minus_c_index, "loss_type") <- "risk-based"
 #' @return numeric from 0 to 1, lower scores are better (Brier score of 0.25 represents a model which returns always returns 0.5 as the predicted survival function)
 #'
 #' @section References:
-#' - \[1\] Brier, Glenn W. ["Verification of forecasts expressed in terms of probability."](https://doi.org/10.1175/1520-0493(1950)078%3C0001:VOFEIT%3E2.0.CO;2) Monthly Weather Review 78.1 (1950): 1-3.
-#' - \[2\] Graf, Erika, et al. ["Assessment and comparison of prognostic classification schemes for survival data."](https://doi.org/10.1002/(SICI)1097-0258(19990915/30)18:17/18<2529::AID-SIM274>3.0.CO;2-5) Statistics in Medicine 18.17‐18 (1999): 2529-2545.
+#' - \[1\] Brier, Glenn W. ["Verification of forecasts expressed in terms of probability."](https://journals.ametsoc.org/view/journals/mwre/78/1/1520-0493_1950_078_0001_vofeit_2_0_co_2.xml) Monthly Weather Review 78.1 (1950): 1-3.
+#' - \[2\] Graf, Erika, et al. ["Assessment and comparison of prognostic classification schemes for survival data."](https://onlinelibrary.wiley.com/doi/10.1002/(SICI)1097-0258(19990915/30)18:17/18%3C2529::AID-SIM274%3E3.0.CO;2-5) Statistics in Medicine 18.17‐18 (1999): 2529-2545.
 #'
 #' @rdname brier_score
 #' @seealso [cd_auc()]
@@ -438,8 +438,8 @@ attr(loss_one_minus_integrated_cd_auc, "loss_type") <- "integrated"
 #' @return numeric from 0 to 1, lower values indicate better performance
 #'
 #' @section References:
-#' - \[1\] Brier, Glenn W. ["Verification of forecasts expressed in terms of probability."](https://doi.org/10.1175/1520-0493(1950)078%3C0001:VOFEIT%3E2.0.CO;2) Monthly Weather Review 78.1 (1950): 1-3.
-#' - \[2\] Graf, Erika, et al. ["Assessment and comparison of prognostic classification schemes for survival data."](https://doi.org/10.1002/(SICI)1097-0258(19990915/30)18:17/18<2529::AID-SIM274>3.0.CO;2-5) Statistics in Medicine 18.17‐18 (1999): 2529-2545.
+#' - \[1\] Brier, Glenn W. ["Verification of forecasts expressed in terms of probability."](https://journals.ametsoc.org/view/journals/mwre/78/1/1520-0493_1950_078_0001_vofeit_2_0_co_2.xml) Monthly Weather Review 78.1 (1950): 1-3.
+#' - \[2\] Graf, Erika, et al. ["Assessment and comparison of prognostic classification schemes for survival data."](https://onlinelibrary.wiley.com/doi/10.1002/(SICI)1097-0258(19990915/30)18:17/18%3C2529::AID-SIM274%3E3.0.CO;2-5) Statistics in Medicine 18.17‐18 (1999): 2529-2545.
 #'
 #' @rdname integrated_brier_score
 #' @seealso [brier_score()] [integrated_cd_auc()] [loss_one_minus_integrated_cd_auc()]
