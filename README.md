@@ -66,4 +66,4 @@ plot(predict_parts(explainer, veteran[1, -c(3, 4)]))
 - M. S. Kovalev, L. V. Utkin, E. M. Kasimov. [SurvLIME: A method for explaining machine learning survival models](https://doi.org/10.1016/j.knosys.2020.106164). *Knowledge-Based Systems*, 2020.
 - R. Sonabend, F. J. Király, A. Bender, B. Bischl, M. Lang. [mlr3proba: an R package for machine learning in survival analysis](https://doi.org/10.1093/bioinformatics/btab039). *Bioinformatics*, 2021.
 - E. Hvitfeldt, H. Frick. [censored: 'parsnip' Engines for Survival Models](https://github.com/tidymodels/censored). *CRAN v0.1.0*, 2022.
-- M. Krzyziński, M. Spytek, H. Baniecki, P. Biecek. [SurvSHAP(t): Time-dependent explanations of machine learning survival models](https://arxiv.org/abs/2208.11080). *arXiv preprint arXiv:2208.11080*, 2022.
+- M. Krzyziński, M. Spytek, H. Baniecki, P. Biecek. [SurvSHAP(t): Time-dependent explanations of machine learning survival models](https://doi.org/10.1016/j.knosys.2022.110234). *Knowledge-Based Systems*, 2023.
