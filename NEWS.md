@@ -1,3 +1,8 @@
+# survex (development)
+
+* fix invalid color palette order in plot feature importance
+
+
 # survex 0.2.2
 
 * improved and unified API documentation ([#2](https://github.com/ModelOriented/survex/issues/2))

@@ -57,7 +57,7 @@ plot.surv_feature_importance <- function(x, ...,
     subs <- subs[order(subs$x, decreasing = TRUE), ]
     plotting_df <- plotting_df[plotting_df$ind %in% c("_full_model_", as.character(head(subs$var, max_vars))), ]
 
-    num_variables <- length(unique(plotting_df$ind))
+    num_vars <- length(unique(plotting_df$ind)) - 1 # remove full_model; note that num_vars <= max_vars
 
     additional_info <- switch(attr(x, "type"),
                               "raw" = "",
@@ -82,7 +82,7 @@ plot.surv_feature_importance <- function(x, ...,
         theme_drwhy() +
         xlab("") +
         ylab(y_lab) +
-        scale_color_manual(name = "Variable", values = c("#000000", generate_discrete_color_scale(num_variables, colors))) +
+        scale_color_manual(name = "Variable", values = c("#000000", generate_discrete_color_scale(num_vars, colors))) +
         labs(title = title, subtitle = subtitle) +
         facet_wrap(~label)
     })
