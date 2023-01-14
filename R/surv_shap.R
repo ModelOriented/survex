@@ -128,7 +128,7 @@ make_prediction_for_simplified_input <- function(explainer, model, data, simplif
         X_tmp[, row] <- new_observation[, row]
         colnames(X_tmp) <- colnames(data)
 
-        apply(explainer$predict_survival_function(model, X_tmp, timestamps), 2, mean)
+        colMeans(explainer$predict_survival_function(model, X_tmp, timestamps))
 
     })
 
