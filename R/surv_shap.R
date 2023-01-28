@@ -4,6 +4,7 @@
 #' @param new_observation a new observation for which predictions need to be explained
 #' @param ... additional parameters, passed to internal functions
 #' @param y_true a two element numeric vector or matrix of one row and two columns, the first element being the true observed time and the second the status of the observation, used for plotting
+#' @param p_max heuristically speed up the computations
 #' @param calculation_method a character, only `"kernel"` is implemented for now.
 #' @param aggregation_method a character, either `"mean_absolute"` or `"integral"`, `"max_absolute"`, `"sum_of_squares"`
 #' @param path ignored, placeholder the not implemented `"sampling"` method
@@ -20,7 +21,7 @@ surv_shap <- function(explainer,
                       new_observation,
                       ...,
                       y_true = NULL,
-
+                      p_max = NULL,
                       calculation_method = "kernel",
                       aggregation_method = "integral",
                       path = "average",
@@ -45,7 +46,7 @@ surv_shap <- function(explainer,
     }
 
     res <- switch(calculation_method,
-                  "kernel" = shap_kernel(explainer, new_observation, aggregation_method, ...),
+                  "kernel" = shap_kernel(explainer, new_observation, aggregation_method, p_max, ...),
                   stop("Only calculation method = `kernel` is implemented"))
 
     if (!is.null(y_true)) res$y_true <- c(y_true_time = y_true_time, y_true_ind = y_true_ind)
@@ -57,7 +58,7 @@ surv_shap <- function(explainer,
 }
 
 
-shap_kernel <- function(explainer, new_observation, aggregation_method,  ...) {
+shap_kernel <- function(explainer, new_observation, aggregation_method, p_max, ...) {
 
 
     timestamps <- explainer$times
@@ -72,6 +73,15 @@ shap_kernel <- function(explainer, new_observation, aggregation_method,  ...) {
 
     permutations <- expand.grid(rep(list(0:1), p))
     kernel_weights <- generate_shap_kernel_weights(permutations, p)
+
+    if (!is.null(p_max)) {
+        if (p > p_max) {
+            id <- sample(2**p, size = 2**p_max, replace = FALSE)
+            permutations <- permutations[id, ]
+            kernel_weights <- kernel_weights[id]
+            kernel_weights <- kernel_weights / sum(kernel_weights)
+        }
+    }
 
     shap_values <- calculate_shap_values(explainer, explainer$model, baseline_sf, explainer$data, permutations, kernel_weights, new_observation, timestamps)
 
@@ -93,7 +103,7 @@ generate_shap_kernel_weights <- function(permutations, p) {
         row <- as.numeric(row)
         num_available_variables = sum(row != 0)
 
-        if (num_available_variables == 0 || num_available_variables == p) 1e12
+        if (num_available_variables == 0 || num_available_variables == p) 1e9
         else {
             (p - 1) / (choose(p, num_available_variables) * num_available_variables * (p - num_available_variables))
         }
