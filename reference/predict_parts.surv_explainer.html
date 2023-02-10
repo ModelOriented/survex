@@ -155,12 +155,12 @@
 <span class="r-in"><span><span class="va">cph_predict_parts_survshap</span> <span class="op">&lt;-</span> <span class="fu">predict_parts</span><span class="op">(</span><span class="va">cph_exp</span>, new_observation <span class="op">=</span> <span class="va">veteran</span><span class="op">[</span><span class="fl">1</span>, <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cph_predict_parts_survshap</span><span class="op">$</span><span class="va">result</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                trt    celltype       karno     diagtime          age</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t=1    0.001349624 0.005733068 0.002386291 4.519434e-06 0.0007596571</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t=1.36 0.001349624 0.005733068 0.002386291 4.519434e-06 0.0007596571</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t=2.72 0.002014341 0.008570174 0.003548113 6.741872e-06 0.0011364914</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t=4.24 0.003345122 0.014277010 0.005845881 1.118341e-05 0.0018961996</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t=7    0.005332776 0.022867967 0.009202902 1.779486e-05 0.0030438276</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t=8    0.007955812 0.034329602 0.013481251 2.646997e-05 0.0045815194</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t=1    0.001348989 0.005733703 0.002388197 3.249171e-06 0.0007596571</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t=1.36 0.001348989 0.005733703 0.002388197 3.249171e-06 0.0007596571</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t=2.72 0.002013393 0.008571122 0.003550958 4.845624e-06 0.0011364914</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t=4.24 0.003343547 0.014278585 0.005850606 8.033393e-06 0.0018961996</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t=7    0.005330264 0.022870478 0.009210437 1.277142e-05 0.0030438276</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t=8    0.007952064 0.034333350 0.013492494 1.897449e-05 0.0045815194</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               prior</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> t=1    0.0001739549</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> t=1.36 0.0001739549</span>
@@ -175,9 +175,9 @@
 <span class="r-in"><span>                                            type <span class="op">=</span> <span class="st">"survlime"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cph_predict_parts_survlime</span><span class="op">$</span><span class="va">result</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           trt         karno      diagtime           age         prior </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.0034741997 -0.0002855460  0.0006174356  0.0001335200  0.0014058242 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.0397029051 -0.0006943656  0.0001917901  0.0001872505 -0.0024320092 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> celltypelarge </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> -0.0317959500 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.0029609888 </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cph_predict_parts_survlime</span>, type <span class="op">=</span> <span class="st">"local_importance"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="predict_parts.surv_explainer-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
