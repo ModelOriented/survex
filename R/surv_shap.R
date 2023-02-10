@@ -103,11 +103,10 @@ generate_shap_kernel_weights <- function(permutations, p) {
 
 calculate_shap_values <- function(explainer, model, avg_survival_function, data, simplified_inputs, shap_kernel_weights, new_observation, timestamps) {
 
-    W <- diag(shap_kernel_weights)
+    w <- shap_kernel_weights
     X <- as.matrix(simplified_inputs)
 
-
-    R <- solve((t(X) %*% W %*% X)) %*% (t(X) %*% W)
+    R <- solve(t(sqrt(w) * X) %*% (sqrt(w) * X)) %*% t(X * w)
 
     y <- make_prediction_for_simplified_input(explainer, model, data, simplified_inputs, new_observation, timestamps)
 
@@ -129,7 +128,7 @@ make_prediction_for_simplified_input <- function(explainer, model, data, simplif
         X_tmp[, row] <- new_observation[, row]
         colnames(X_tmp) <- colnames(data)
 
-        apply(explainer$predict_survival_function(model, X_tmp, timestamps), 2, mean)
+        colMeans(explainer$predict_survival_function(model, X_tmp, timestamps))
 
     })
 
