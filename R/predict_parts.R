@@ -81,6 +81,8 @@ predict_parts.surv_explainer <- function(explainer, new_observation, ..., N = NU
     }
 
     attr(res, "label") <- label
+    res$event_times <- explainer$y[,1]
+    res$event_statuses <- explainer$y[,2]
     class(res) <- c('predict_parts_survival', class(res))
     res
 
