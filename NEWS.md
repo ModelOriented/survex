@@ -1,5 +1,6 @@
 # survex (development)
 
+* change behaviour of `categorical_variables` argument in `model_parts()` and `predict_parts()`. If it containes variable names not present in the `variables` argument, they will be added at the end. ([#39](https://github.com/ModelOriented/survex/issues/39))
 * fix invalid color palette order in plot feature importance
 * fix predict_parts survshap running out of memory with more than 16 variables ([#25](https://github.com/ModelOriented/survex/issues/25))
 
