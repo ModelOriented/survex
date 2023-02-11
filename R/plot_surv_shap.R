@@ -30,13 +30,15 @@ plot.surv_shap <- function(x,
                            ...,
                            title = "SurvSHAP(t)",
                            subtitle = "default",
+                           max_vars = 7,
                            colors = NULL) {
 
     dfl <- c(list(x), list(...))
 
     long_df <- lapply(dfl, function(x) {
         label <- attr(x, "label")
-        sv <- x$result
+        cols <- head(order(x$aggregate, decreasing = TRUE), max_vars)
+        sv <- x$result[,cols]
         times <- x$eval_times
         transposed <- as.data.frame(cbind(times = times, sv))
         rownames(transposed) <- NULL
