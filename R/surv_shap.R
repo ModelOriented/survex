@@ -149,7 +149,7 @@ aggregate_surv_shap <- function(survshap, method) {
                times <- survshap$eval_times
                n <- length(x)
                i <- (x[1:(n - 1)] + x[2:n]) * diff(times) / 2
-               cumsum(c(0, i))[length(cumsum(c(0, i)))] / (max(times) - min(times))
+               sum(i) / (max(times) - min(times))
            })),
            stop("aggregation_method has to be one of `sum_of_squares`, `mean_absolute`, `max_absolute` or `integral`"))
 
