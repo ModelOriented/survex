@@ -32,7 +32,6 @@ surv_lime <- function(explainer, new_observation,
                       k = 1 + 1e-4) {
 
     test_explainer(explainer, "surv_lime", has_data = TRUE, has_y = TRUE, has_chf = TRUE)
-    new_observation <- new_observation[, !colnames(new_observation) %in% colnames(explainer$y)]
     predicted_sf <- explainer$predict_survival_function(explainer$model, new_observation, explainer$times)
 
     neighbourhood <- generate_neighbourhood(explainer$data,
@@ -82,20 +81,18 @@ surv_lime <- function(explainer, new_observation,
 
     }
 
-    new_observation_ohe <- neighbourhood$inverse_ohe[1, ]
+    var_values <- neighbourhood$inverse_ohe[1, ]
 
     res <- optim(rep(0, times = ncol(neighbourhood$inverse_ohe)), loss)
 
-    var_values <- as.numeric(new_observation_ohe)
-    names(var_values) <- colnames(neighbourhood$inverse_ohe)
-    beta <- res$par
+    beta <- data.frame(t(res$par))
     names(beta) <- colnames(neighbourhood$inverse_ohe)
     ret_list <- list(result = beta,
                      variable_values = var_values,
                      black_box_sf_times = explainer$times,
                      black_box_sf = as.numeric(explainer$predict_survival_function(explainer$model, new_observation, explainer$times)),
                      expl_sf_times = na_est$time,
-                     expl_sf = exp(-na_est$hazard * exp(sum(new_observation_ohe * res$par))))
+                     expl_sf = exp(-na_est$hazard * exp(sum(var_values * res$par))))
 
     class(ret_list) <- c("surv_lime", class(ret_list))
     return(ret_list)

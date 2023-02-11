@@ -28,11 +28,6 @@ surv_shap <- function(explainer,
                       exact = FALSE
 ) {
     test_explainer(explainer, "surv_shap", has_data = TRUE, has_y = TRUE, has_survival = TRUE)
-    new_observation <- new_observation[, !colnames(new_observation) %in% colnames(explainer$y)]
-    if (ncol(explainer$data) != ncol(new_observation)) stop("New observation and data have different number of columns(variables)")
-
-    event_inds <- explainer$y[, 2]
-    event_times <- explainer$y[, 1]
 
     if (!is.null(y_true)) {
         if (is.matrix(y_true)) {
@@ -81,7 +76,7 @@ shap_kernel <- function(explainer, new_observation, aggregation_method,  ...) {
 
     ret <- list()
     ret$eval_times <- timestamps
-    ret$result <- t(shap_values)
+    ret$result <- data.frame(t(shap_values))
     ret$variable_values <- new_observation
 
     return(ret)
