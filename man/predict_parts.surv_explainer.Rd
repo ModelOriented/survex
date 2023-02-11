@@ -64,7 +64,7 @@ There are additional parameters that are passed to internal functions
 \section{References}{
 
 \itemize{
-\item [1] Krzyziński, Mateusz, et al. \href{https://arxiv.org/abs/2208.11080}{"SurvSHAP(t): Time-dependent explanations of machine learning survival models."} arXiv preprint arXiv:2208.11080 (2022).
+\item [1] Krzyziński, Mateusz, et al. \href{https://www.sciencedirect.com/science/article/pii/S0950705122013302}{"SurvSHAP(t): Time-dependent explanations of machine learning survival models."} Knowledge-Based Systems 262 (2023): 110234
 \item [2] Kovalev, Maxim S., et al. \href{https://www.sciencedirect.com/science/article/pii/S0950705120304044?casa_token=6e9cyk_ji3AAAAAA:tbqo33MsZvNC9nrSGabZdLfPtZTsvsvZTHYQCM2aEhumLI5D46U7ovhr37EaYUhmKZrw45JzDhg}{"SurvLIME: A method for explaining machine learning survival models."} Knowledge-Based Systems 203 (2020): 106164.
 }
 }
