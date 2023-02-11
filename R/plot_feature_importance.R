@@ -42,7 +42,7 @@
 #' }
 #' @export
 plot.feature_importance_explainer <- function(x, ..., max_vars = NULL, show_boxplots = TRUE, bar_width = 10,
-                                              desc_sorting = TRUE, title = "Feature Importance", subtitle = NULL) {
+                                              desc_sorting = TRUE, title = "Feature Importance", subtitle = "default") {
 
     if (!is.logical(desc_sorting)) {
         stop("desc_sorting is not logical")
@@ -103,7 +103,7 @@ plot.feature_importance_explainer <- function(x, ..., max_vars = NULL, show_boxp
     nlabels <- length(unique(bestFits$label))
 
     # extract labels for plot's subtitle
-    if (is.null(subtitle)) {
+    if (!is.null(subtitle) && subtitle == "default"){
         glm_labels <- paste0(unique(ext_expl_df$label), collapse = ", ")
         subtitle <- paste0("created for the ", glm_labels, " model")
     }
