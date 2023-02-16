@@ -9,6 +9,7 @@
 #' @param ... other parameters currently ignored
 #' @param title character, title of the plot
 #' @param subtitle character, subtitle of the plot, `'default'` automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels
+#' @param max_vars maximum number of variables to be plotted (least important variables are ignored)
 #' @param colors character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")
 #'
 #' @return An object of the class `ggplot`.
@@ -33,6 +34,7 @@ plot.surv_lime <- function(x,
                            ...,
                            title = "SurvLIME",
                            subtitle = "default",
+                           max_vars = 7,
                            colors = NULL) {
     if (!type %in% c("coefficients", "local_importance"))
         stop("Type should be one of `coefficients`, `local_importance`")
@@ -52,6 +54,7 @@ plot.surv_lime <- function(x,
     if (type == "coefficients") {
         x_lab <- "SurvLIME coefficients"
         y_lab <- ""
+        df <- df[head(order(abs(df$beta), decreasing=TRUE), max_vars),]
         pl <- with(df, {
         ggplot(data = df, aes(x = beta, y = reorder(variable_names, beta, abs), fill = sign_beta)) +
             geom_col() +
@@ -63,6 +66,7 @@ plot.surv_lime <- function(x,
     if (type == "local_importance") {
         x_lab <- "SurvLIME local importance"
         y_lab <- ""
+        df <- df[head(order(abs(df$local_importance), decreasing=TRUE), max_vars),]
         pl <- with(df,{
 
             ggplot(data = df, aes(x = local_importance, y = reorder(variable_names, local_importance, abs), fill = sign_local_importance)) +
