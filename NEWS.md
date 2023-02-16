@@ -1,7 +1,14 @@
 # survex (development)
 
-* fix invalid color palette order in plot feature importance
-* fix predict_parts survshap running out of memory with more than 16 variables ([#25](https://github.com/ModelOriented/survex/issues/25))
+* fixed invalid color palette order in plot feature importance
+* fixed predict_parts survshap running out of memory with more than 16 variables ([#25](https://github.com/ModelOriented/survex/issues/25))
+* added `max_vars` parameter for predict_parts explanations ([#27](https://github.com/ModelOriented/survex/issues/27))
+* set `max_vars` to 7 for every method  
+* refactored survshap code ([#29](https://github.com/ModelOriented/survex/issues/29), [#30](https://github.com/ModelOriented/survex/issues/30), [#43](https://github.com/ModelOriented/survex/issues/43))
+* fixed survshap error when target columns named different than time and status ([#44](https://github.com/ModelOriented/survex/issues/44))
+* fixed survlime error when all variables are categorical ([#46](https://github.com/ModelOriented/survex/issues/46))
+* fixed subtitles in feature importance plots ([#11](https://github.com/ModelOriented/survex/issues/11))
+
 
 # survex 0.2.2
 
