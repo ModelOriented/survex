@@ -12,7 +12,9 @@
   title = "Model performance",
   subtitle = "default",
   facet_ncol = NULL,
-  colors = NULL
+  colors = NULL,
+  rug = "all",
+  rug_colors = c("#dd0000", "#222222")
 )
 }
 \arguments{
@@ -31,6 +33,14 @@
 \item{facet_ncol}{number of columns for arranging subplots}
 
 \item{colors}{character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")}
+
+\item{`rug`}{\itemize{
+\item character vector. One of "all", "events", "censors", "none" or NULL. Which times to mark on the x axis in \code{geom_rug()}.
+}}
+
+\item{`rug_colors`}{\itemize{
+\item character vector containing two colors (containing either hex codes "#FF69B4", or names "blue"). The first color (red by default) will be used to mark event times, whereas the second (grey by default) will be used to mark censor times.
+}}
 }
 \value{
 An object of the class \code{ggplot}.

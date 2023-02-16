@@ -11,6 +11,8 @@
 #' @param subtitle character, subtitle of the plot, `'default'` automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels
 #' @param facet_ncol number of columns for arranging subplots
 #' @param colors character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")
+#' @param `rug` - character vector. One of "all", "events", "censors", "none" or NULL. Which times to mark on the x axis in `geom_rug()`.
+#' @param `rug_colors` - character vector containing two colors (containing either hex codes "#FF69B4", or names "blue"). The first color (red by default) will be used to mark event times, whereas the second (grey by default) will be used to mark censor times.
 #'
 #' @return An object of the class `ggplot`.
 #'
@@ -34,11 +36,16 @@ plot.surv_model_performance <- function(x,
                                         title = "Model performance",
                                         subtitle = "default",
                                         facet_ncol = NULL,
-                                        colors = NULL) {
+                                        colors = NULL,
+                                        rug = "all",
+                                        rug_colors = c("#dd0000", "#222222")) {
 
+
+    # here we assume, that the event times and statuses are the same for all compared explainers
+    rug_df <- data.frame(times = x$event_times, statuses = as.character(x$event_statuses), label = attr(x, "label"))
 
     if (metrics_type %in% c("time_dependent", "functional")) {
-        pl <- plot_td_surv_model_performance(x, ..., metrics = metrics, title = title, subtitle = subtitle, facet_ncol = facet_ncol, colors = colors)
+        pl <- plot_td_surv_model_performance(x, ..., metrics = metrics, title = title, subtitle = subtitle, facet_ncol = facet_ncol, colors = colors, rug_df = rug_df, rug = rug, rug_colors = rug_colors)
     } else if (metrics_type == "scalar") {
         pl <- plot_scalar_surv_model_performance(x, ..., metrics = metrics, title = title, subtitle = subtitle, facet_ncol = facet_ncol, colors = colors)
     } else {
@@ -51,7 +58,7 @@ plot.surv_model_performance <- function(x,
 
 
 #' @importFrom DALEX theme_drwhy
-plot_td_surv_model_performance <- function(x, ..., metrics = NULL, title = NULL, subtitle = "default", facet_ncol = NULL, colors = NULL) {
+plot_td_surv_model_performance <- function(x, ..., metrics = NULL, title = NULL, subtitle = "default", facet_ncol = NULL, colors = NULL, rug_df = rug_df, rug = rug, rug_colors = rug_colors) {
 
     df <- concatenate_td_dfs(x, ...)
 
@@ -63,7 +70,7 @@ plot_td_surv_model_performance <- function(x, ..., metrics = NULL, title = NULL,
 
     num_colors <- length(unique(df$label))
 
-    with(df,{
+    base_plot <- with(df,{
     ggplot(data = df[df$ind %in% metrics, ], aes(x = times, y = values, group = label, color = label)) +
         geom_line(linewidth = 0.8, size = 0.8) +
         theme_drwhy() +
@@ -73,6 +80,21 @@ plot_td_surv_model_performance <- function(x, ..., metrics = NULL, title = NULL,
         scale_color_manual("", values = generate_discrete_color_scale(num_colors, colors)) +
         facet_wrap(~ind, ncol = facet_ncol, scales = "free_y")
     })
+
+    if (rug == "all"){
+        return_plot <- base_plot +
+            geom_rug(data = rug_df[rug_df$statuses == 1,], mapping = aes(x=times, color = statuses), inherit.aes=F, color = rug_colors[1]) +
+            geom_rug(data = rug_df[rug_df$statuses == 0,], mapping = aes(x=times, color = statuses), inherit.aes=F, color = rug_colors[2])
+    } else if (rug == "events") {
+        return_plot <- base_plot +
+            geom_rug(data = rug_df[rug_df$statuses == 1,], mapping = aes(x=times, color = statuses), inherit.aes=F, color = rug_colors[1])
+    } else if (rug == "censors") {
+        return_plot <- base_plot +
+            geom_rug(data = rug_df[rug_df$statuses == 0,], mapping = aes(x=times, color = statuses), inherit.aes=F, color = rug_colors[2])
+    } else {
+        return_plot <- base_plot
+    }
+    return(return_plot)
 }
 
 #' @importFrom DALEX theme_drwhy
