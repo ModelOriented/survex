@@ -12,7 +12,7 @@
 #'
 #' @param x a feature importance explainer produced with the \code{feature_importance()} function
 #' @param ... other explainers that shall be plotted together
-#' @param max_vars maximum number of variables that shall be presented for for each model.
+#' @param max_vars maximum number of variables that shall be presented for for each model
 #' By default \code{NULL} what means all variables
 #' @param show_boxplots logical if \code{TRUE} (default) boxplot will be plotted to show permutation data.
 #' @param bar_width width of bars. By default \code{10}
