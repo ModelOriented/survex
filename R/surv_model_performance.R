@@ -21,6 +21,8 @@ surv_model_performance <- function(explainer, ..., times = NULL, type = "metrics
                                                   output})
 
     ret_list <- list(result = ret_list, eval_times = times)
+    ret_list$event_times <- explainer$y[,1]
+    ret_list$event_statuses <- explainer$y[,2]
 
     class(ret_list) <- c("surv_model_performance", class(ret_list))
     attr(ret_list, "label") <- explainer$label
