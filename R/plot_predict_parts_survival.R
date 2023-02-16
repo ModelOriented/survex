@@ -17,6 +17,8 @@
 #' * `title` - character, title of the plot
 #' * `subtitle` - character, subtitle of the plot, `'default'` automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels
 #' * `colors` - character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")
+#' * `rug` - character vector. One of "all", "events", "censors", "none" or NULL. Which times to mark on the x axis in `geom_rug()`.
+#' * `rug_colors` - character vector containing two colors (containing either hex codes "#FF69B4", or names "blue"). The first color (red by default) will be used to mark event times, whereas the second (grey by default) will be used to mark censor times.
 #'
 #' ## `plot.surv_lime`
 #'
