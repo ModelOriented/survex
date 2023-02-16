@@ -16,7 +16,7 @@
 #'
 #' There are additional parameters that are passed to internal functions
 #'
-#' * for `surv_lime`
+#' * for `survlime`
 #'     * `N` -  a positive integer, number of observations generated in the neighbourhood
 #'     * `distance_metric` -  character, name of the distance metric to be used, only `"euclidean"` is implemented
 #'     * `kernel_width` -  a numeric, parameter used for calculating weights, by default it's `sqrt(ncol(data)*0.75)`
@@ -25,7 +25,7 @@
 #'     * `max_iter` -  a numeric, maximal number of iteration for the optimization problem
 #'     * `categorical_variables` -  character vector, names of variables that should be treated as categories (factors are included by default)
 #'     * `k` -  a small positive number > 1, added to chf before taking log, so that weigths aren't negative
-#' * for `surv_shap`
+#' * for `survshap`
 #'     * `timestamps` -  a numeric vector, time points at which the survival function will be evaluated
 #'     * `y_true` -  a two element numeric vector or matrix of one row and two columns, the first element being the true observed time and the second the status of the observation, used for plotting
 #'     * `calculation_method` -  a character, only `"kernel"` is implemented for now.
