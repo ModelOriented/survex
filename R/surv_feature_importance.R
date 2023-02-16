@@ -157,28 +157,28 @@ surv_feature_importance.default <- function(x,
     }
     # permute B times, collect results into single matrix
     raw <- do.call("rbind", replicate(B, loss_after_permutation(), simplify = FALSE))
-    raw$permutation <- rep(1:B, each = length(times))
+    raw$`_permutation_` <- rep(1:B, each = length(times))
     tmp <- aggregate(. ~ times, raw, mean)
-    tmp$permutation <- rep(0, times = nrow(tmp))
+    tmp$`_permutation_` <- rep(0, times = nrow(tmp))
 
     res <- rbind(tmp, raw)
     res$label <- rep(label, times = nrow(res))
 
     if (type %in% c("ratio", "difference")) {
-        res_full <- res[res$permutation == 0, c("times", "_full_model_")]
-        colnames(res_full) <- c("times", "reference")
+        res_full <- res[res$`_permutation_` == 0, c("times", "_full_model_")]
+        colnames(res_full) <- c("times", "_reference_")
         res <- merge(res, res_full, by = "times")
-
+        res <- res[order(res$`_permutation_`, res$times),]
     }
     if (type == "ratio") {
 
-        res[, 2:(ncol(res) - 3)] <- res[, 2:(ncol(res) - 3)] / res[, (ncol(res))]
-        res$reference <- NULL
+        res[, 2:(ncol(res) - 3)] <- res[, 2:(ncol(res) - 3)] / res[["_reference_"]]
+        res$`_reference_` <- NULL
 
     }
     if (type == "difference") {
-        res[, 2:(ncol(res) - 3)] <- res[, 2:(ncol(res) - 3)] - res[, (ncol(res))]
-        res$reference <- NULL
+        res[, 2:(ncol(res) - 3)] <- res[, 2:(ncol(res) - 3)] - res[["_reference_"]]
+        res$`_reference_` <- NULL
     }
 
     # record details of permutations
