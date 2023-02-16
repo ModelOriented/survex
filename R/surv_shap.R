@@ -29,6 +29,7 @@ surv_shap <- function(explainer,
 ) {
     test_explainer(explainer, "surv_shap", has_data = TRUE, has_y = TRUE, has_survival = TRUE)
     new_observation <- new_observation[, colnames(new_observation) %in% colnames(explainer$data)]
+    if (ncol(explainer$data) != ncol(new_observation)) stop("New observation and data have different number of columns(variables)")
 
     if (!is.null(y_true)) {
         if (is.matrix(y_true)) {
