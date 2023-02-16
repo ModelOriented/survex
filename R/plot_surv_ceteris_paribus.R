@@ -12,6 +12,8 @@
 #' @param numerical_plot_type character, either `"lines"`, or `"contours"` selects the type of numerical variable plots
 #' @param title character, title of the plot
 #' @param subtitle character, subtitle of the plot, `'default'` automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels
+#' @param rug character vector. One of "all", "events", "censors", "none" or NULL. Which times to mark on the x axis in `geom_rug()`.
+#' @param rug_colors character vector containing two colors (containing either hex codes "#FF69B4", or names "blue"). The first color (red by default) will be used to mark event times, whereas the second (grey by default) will be used to mark censor times.
 #'
 #' @return A grid of `ggplot` objects arranged with the `gridExtra::grid.arrange` function.
 #'
@@ -47,7 +49,9 @@ plot.surv_ceteris_paribus <- function(x,
                                       variables = NULL,
                                       numerical_plot_type = "lines",
                                       title = "Ceteris paribus survival profile",
-                                      subtitle = "default") {
+                                      subtitle = "default",
+                                      rug = "all",
+                                      rug_colors = c("#dd0000", "#222222")) {
     if (!is.null(variable_type))
         check_variable_type(variable_type)
 
@@ -65,7 +69,9 @@ plot.surv_ceteris_paribus <- function(x,
                                                 variables,
                                                 numerical_plot_type,
                                                 title,
-                                                subtitle)
+                                                subtitle,
+                                                rug,
+                                                rug_colors)
         return(result)
     }
 
@@ -73,14 +79,16 @@ plot.surv_ceteris_paribus <- function(x,
     labels <- list()
     for (i in 1:num_models){
         this_title <- unique(explanations_list[[i]]$result$`_label_`)
-        return_list[[i]] <- prepare_ceteris_paribus_plots(x,
+        return_list[[i]] <- prepare_ceteris_paribus_plots(explanations_list[[i]],
                                                           colors,
                                                           variable_type,
                                                           1,
                                                           variables,
                                                           numerical_plot_type,
                                                           this_title,
-                                                          NULL)
+                                                          NULL,
+                                                          rug,
+                                                          rug_colors)
         labels[[i]] <- c(this_title, rep("", length(return_list[[i]]$patches)-2))
     }
 
@@ -101,7 +109,11 @@ prepare_ceteris_paribus_plots <- function(x,
                                           variables = NULL,
                                           numerical_plot_type = "lines",
                                           title = "Ceteris paribus survival profile",
-                                          subtitle = "default"){
+                                          subtitle = "default",
+                                          rug = "all",
+                                          rug_colors = c("#dd0000", "#222222")){
+
+    rug_df <- data.frame(times = x$event_times, statuses = as.character(x$event_statuses), label = unique(x$result$`_label_`))
     obs <- x$variable_values
     x <- x$result
 
@@ -165,8 +177,10 @@ prepare_ceteris_paribus_plots <- function(x,
         all_profiles = ceteris_paribus_with_observation,
         variables = all_variables,
         colors = colors,
-        numerical_plot_type = numerical_plot_type
-    )
+        numerical_plot_type = numerical_plot_type,
+        rug_df = rug_df,
+        rug = rug,
+        rug_colors = rug_colors)
 
     patchwork::wrap_plots(pl, ncol = facet_ncol) +
         patchwork::plot_annotation(title = title,
@@ -182,7 +196,10 @@ prepare_ceteris_paribus_plots <- function(x,
 plot_individual_ceteris_paribus_survival <- function(all_profiles,
                                                      variables,
                                                      colors,
-                                                     numerical_plot_type) {
+                                                     numerical_plot_type,
+                                                     rug_df,
+                                                     rug,
+                                                     rug_colors) {
     pl <- lapply(variables, function(var) {
         df <- all_profiles[all_profiles$`_vname_` == var, ]
 
@@ -194,7 +211,7 @@ plot_individual_ceteris_paribus_survival <- function(all_profiles,
                                 mid = "#46bac2",
                                 high = "#371ea3")
             if (numerical_plot_type == "lines") {
-                with(df, {
+                base_plot <- with(df, {
                 ggplot(
                     df,
                     aes(
@@ -219,7 +236,7 @@ plot_individual_ceteris_paribus_survival <- function(all_profiles,
                     facet_wrap(~`_vname_`)
                 })
             } else {
-                plt <- with(df, {
+                base_plot <- with(df, {
                         ggplot(
                     df,
                     aes(
@@ -240,13 +257,13 @@ plot_individual_ceteris_paribus_survival <- function(all_profiles,
                 if (any(df$`_real_point_`)) {
                     range_time <- range(df["_times_"])
                     var_val <- as.numeric(unique(df[df$`_real_point_`, "_x_"]))
-                    plt <- plt + geom_segment(aes(x = range_time[1], y = var_val, xend = range_time[2], yend = var_val), color = "red")
+                    base_plot <- base_plot + geom_segment(aes(x = range_time[1], y = var_val, xend = range_time[2], yend = var_val), color = "red")
                     }
-                plt
+                base_plot
                 }
         } else {
             n_colors <- length(unique(df$`_x_`))
-            pl <- with(df, {
+            base_plot <- with(df, {
                 ggplot(
                     df,
                     aes(
@@ -267,7 +284,24 @@ plot_individual_ceteris_paribus_survival <- function(all_profiles,
                 xlab("") + ylab("survival function value") + ylim(c(0, 1)) +
                 facet_wrap(~`_vname_`) })
         }
+
+        if (rug == "all"){
+            return_plot <- base_plot +
+                geom_rug(data = rug_df[rug_df$statuses == 1,], mapping = aes(x=times, color = statuses), inherit.aes=F, color = rug_colors[1]) +
+                geom_rug(data = rug_df[rug_df$statuses == 0,], mapping = aes(x=times, color = statuses), inherit.aes=F, color = rug_colors[2])
+        } else if (rug == "events") {
+            return_plot <- base_plot +
+                geom_rug(data = rug_df[rug_df$statuses == 1,], mapping = aes(x=times, color = statuses), inherit.aes=F, color = rug_colors[1])
+        } else if (rug == "censors") {
+            return_plot <- base_plot +
+                geom_rug(data = rug_df[rug_df$statuses == 0,], mapping = aes(x=times, color = statuses), inherit.aes=F, color = rug_colors[2])
+        } else {
+            return_plot <- base_plot
+        }
+        return(return_plot)
     })
+
+    pl
 }
 
 
