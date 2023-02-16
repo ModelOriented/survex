@@ -187,39 +187,39 @@
 <span class="r-in"><span><span class="va">cph_model_parts_brier</span> <span class="op">&lt;-</span> <span class="fu">model_parts</span><span class="op">(</span><span class="va">cph_exp</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cph_model_parts_brier</span><span class="op">$</span><span class="va">result</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   times _full_model_        trt   celltype      karno   diagtime        age</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  1.00   0.01450469 0.01456810 0.01396704 0.01478515 0.01450487 0.01453609</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  1.36   0.01450469 0.01456810 0.01396704 0.01478515 0.01450487 0.01453609</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  2.72   0.02131799 0.02151356 0.02064415 0.02189276 0.02131958 0.02145708</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  4.24   0.03395903 0.03396312 0.03330627 0.03554109 0.03396022 0.03455606</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5  7.00   0.05085721 0.05149120 0.05073112 0.05668681 0.05085798 0.05147978</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6  8.00   0.07237285 0.07295230 0.07329072 0.08320532 0.07237812 0.07321903</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  1.00   0.01450469 0.01457800 0.01401357 0.01474164 0.01450493 0.01455438</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  1.36   0.01450469 0.01457800 0.01401357 0.01474164 0.01450493 0.01455438</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  2.72   0.02131799 0.02151490 0.02064129 0.02186431 0.02131990 0.02148953</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  4.24   0.03395903 0.03400804 0.03359066 0.03582640 0.03396049 0.03467011</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  7.00   0.05085721 0.05142933 0.05161032 0.05572641 0.05085876 0.05192290</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  8.00   0.07237285 0.07241942 0.07478091 0.08107134 0.07237961 0.07384769</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        prior _baseline_ permutation label</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.01451784 0.01469678           0 coxph</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 0.01451784 0.01469678           0 coxph</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 0.02138142 0.02205809           0 coxph</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 0.03400536 0.03634891           0 coxph</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 0.05078848 0.05825889           0 coxph</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6 0.07243489 0.08604157           0 coxph</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.01451844 0.01452497           0 coxph</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 0.01451844 0.01452497           0 coxph</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 0.02137241 0.02186346           0 coxph</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 0.03403779 0.03586516           0 coxph</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 0.05089588 0.05739146           0 coxph</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 0.07264980 0.08565028           0 coxph</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cph_model_parts_brier</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="model_parts.surv_explainer-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">rsf_ranger_model_parts</span> <span class="op">&lt;-</span> <span class="fu">model_parts</span><span class="op">(</span><span class="va">rsf_ranger_exp</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">rsf_ranger_model_parts</span><span class="op">$</span><span class="va">result</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   times _full_model_         trt   celltype      karno   diagtime        age</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  1.00  0.009764133 0.009987034 0.01115011 0.01304409 0.01104215 0.01203727</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  1.36  0.009764133 0.009987034 0.01115011 0.01304409 0.01104215 0.01203727</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  2.72  0.014314395 0.014778191 0.01598971 0.01888600 0.01774943 0.01718410</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  4.24  0.021072746 0.021670611 0.02368809 0.03021149 0.02482347 0.03017532</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5  7.00  0.035048929 0.035774334 0.03820960 0.05119024 0.04018640 0.04766436</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6  8.00  0.049333365 0.050473194 0.05381479 0.07523365 0.06129040 0.06187876</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        prior _baseline_ permutation  label</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.01046338 0.01540320           0 ranger</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 0.01046338 0.01540320           0 ranger</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 0.01528932 0.02291396           0 ranger</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 0.02216332 0.03776169           0 ranger</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 0.03597985 0.05888976           0 ranger</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6 0.05164118 0.08787839           0 ranger</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   times _full_model_        trt   celltype      karno   diagtime        age</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  1.00  0.009142572 0.00930504 0.01058835 0.01228808 0.01010264 0.01202711</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  1.36  0.009142572 0.00930504 0.01058835 0.01228808 0.01010264 0.01202711</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  2.72  0.013882679 0.01447287 0.01556964 0.01784307 0.01619179 0.01757586</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  4.24  0.019883479 0.02062380 0.02212638 0.02862646 0.02233531 0.03119575</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  7.00  0.034784503 0.03621442 0.03766775 0.04902215 0.03848182 0.04712854</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  8.00  0.049788983 0.05144481 0.05411182 0.07199893 0.05900735 0.06267688</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         prior _baseline_ permutation  label</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.009924651 0.01545470           0 ranger</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 0.009924651 0.01545470           0 ranger</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 0.014909524 0.02330715           0 ranger</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 0.020990619 0.03939937           0 ranger</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 0.035674296 0.05942173           0 ranger</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 0.051956803 0.08927516           0 ranger</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cph_model_parts_brier</span>, <span class="va">rsf_ranger_model_parts</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="model_parts.surv_explainer-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
