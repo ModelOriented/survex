@@ -107,7 +107,7 @@ concatenate_td_dfs <- function(x, ...) {
 
     all_dfs <- lapply(all_things, function(x) {
 
-        tmp_list <- lapply(x, function(metric) {
+        tmp_list <- lapply(x$result, function(metric) {
             if(!is.null(attr(metric, "loss_type"))){
                 if(attr(metric, "loss_type") == "time-dependent"){
                     attr(metric, "loss_type") <- NULL
@@ -133,7 +133,7 @@ concatenate_dfs <- function(x, ...) {
     all_things <- c(list(x), list(...))
 
     all_dfs <- lapply(all_things, function(x) {
-        tmp_list <- lapply(x, function(metric) {
+        tmp_list <- lapply(x$result, function(metric) {
             if(!is.null(attr(metric, "loss_type"))){
                if(attr(metric, "loss_type") != "time-dependent"){
                 metric[1]}
