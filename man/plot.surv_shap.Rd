@@ -4,7 +4,14 @@
 \alias{plot.surv_shap}
 \title{Plot SurvSHAP(t) Explanations for Survival Models}
 \usage{
-\method{plot}{surv_shap}(x, ..., title = "SurvSHAP(t)", subtitle = "default", colors = NULL)
+\method{plot}{surv_shap}(
+  x,
+  ...,
+  title = "SurvSHAP(t)",
+  subtitle = "default",
+  max_vars = 7,
+  colors = NULL
+)
 }
 \arguments{
 \item{x}{an object of class \code{"surv_shap"} to be plotted}

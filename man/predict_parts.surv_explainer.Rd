@@ -40,7 +40,7 @@ This function decomposes the model prediction into individual parts, which are a
 
 There are additional parameters that are passed to internal functions
 \itemize{
-\item for \code{surv_lime}
+\item for \code{survlime}
 \itemize{
 \item \code{N} -  a positive integer, number of observations generated in the neighbourhood
 \item \code{distance_metric} -  character, name of the distance metric to be used, only \code{"euclidean"} is implemented
@@ -51,7 +51,7 @@ There are additional parameters that are passed to internal functions
 \item \code{categorical_variables} -  character vector, names of variables that should be treated as categories (factors are included by default)
 \item \code{k} -  a small positive number > 1, added to chf before taking log, so that weigths aren't negative
 }
-\item for \code{surv_shap}
+\item for \code{survshap}
 \itemize{
 \item \code{timestamps} -  a numeric vector, time points at which the survival function will be evaluated
 \item \code{y_true} -  a two element numeric vector or matrix of one row and two columns, the first element being the true observed time and the second the status of the observation, used for plotting

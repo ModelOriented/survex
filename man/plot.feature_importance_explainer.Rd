@@ -12,7 +12,7 @@
   bar_width = 10,
   desc_sorting = TRUE,
   title = "Feature Importance",
-  subtitle = NULL
+  subtitle = "default"
 )
 }
 \arguments{
