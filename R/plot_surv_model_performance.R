@@ -82,15 +82,15 @@ plot_td_surv_model_performance <- function(x, ..., metrics = NULL, title = NULL,
     })
 
     if (rug == "all"){
-        return_plot <- base_plot +
+        return_plot <- with(rug_df, { base_plot +
             geom_rug(data = rug_df[rug_df$statuses == 1,], mapping = aes(x=times, color = statuses), inherit.aes=F, color = rug_colors[1]) +
-            geom_rug(data = rug_df[rug_df$statuses == 0,], mapping = aes(x=times, color = statuses), inherit.aes=F, color = rug_colors[2])
+            geom_rug(data = rug_df[rug_df$statuses == 0,], mapping = aes(x=times, color = statuses), inherit.aes=F, color = rug_colors[2]) })
     } else if (rug == "events") {
-        return_plot <- base_plot +
-            geom_rug(data = rug_df[rug_df$statuses == 1,], mapping = aes(x=times, color = statuses), inherit.aes=F, color = rug_colors[1])
+        return_plot <- with(rug_df, { base_plot +
+            geom_rug(data = rug_df[rug_df$statuses == 1,], mapping = aes(x=times, color = statuses), inherit.aes=F, color = rug_colors[1]) })
     } else if (rug == "censors") {
-        return_plot <- base_plot +
-            geom_rug(data = rug_df[rug_df$statuses == 0,], mapping = aes(x=times, color = statuses), inherit.aes=F, color = rug_colors[2])
+        return_plot <- with(rug_df, { base_plot +
+            geom_rug(data = rug_df[rug_df$statuses == 0,], mapping = aes(x=times, color = statuses), inherit.aes=F, color = rug_colors[2]) })
     } else {
         return_plot <- base_plot
     }
