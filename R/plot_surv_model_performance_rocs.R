@@ -57,6 +57,7 @@ plot.surv_model_performance_rocs <- function(x,
         theme_drwhy() +
         xlab("1 - specificity (FPR)") +
         ylab("sensitivity (TPR)") +
+        xlim(c(0,NA))+
         coord_fixed() +
         theme(panel.grid.major.x = element_line(color = "grey90", linewidth = 0.5,  size = 0.5, linetype = 1),
         panel.grid.minor.x = element_line(color = "grey90", linewidth = 0.5, size = 0.5,  linetype = 1)) +

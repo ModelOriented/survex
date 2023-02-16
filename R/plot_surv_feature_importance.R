@@ -90,6 +90,7 @@ plot.surv_feature_importance <- function(x, ...,
         theme_drwhy() +
         xlab("") +
         ylab(y_lab) +
+        xlim(c(0,NA))+
         scale_color_manual(name = "Variable", values = c("#000000", generate_discrete_color_scale(num_vars, colors))) +
         labs(title = title, subtitle = subtitle) +
         facet_wrap(~label)

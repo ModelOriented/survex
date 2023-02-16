@@ -231,7 +231,7 @@ plot_individual_ceteris_paribus_survival <- function(all_profiles,
                     ) +
                     geom_line(data = df[df$`_real_point_`, ], color =
                                   "red", linewidth = 0.8, size = 0.8) +
-                    xlab("") + ylab("survival function value") + ylim(c(0, 1)) +
+                    xlab("") + ylab("survival function value") + ylim(c(0, 1)) + xlim(c(0,NA))+
                     theme_drwhy() +
                     facet_wrap(~`_vname_`)
                 })
@@ -249,7 +249,7 @@ plot_individual_ceteris_paribus_survival <- function(all_profiles,
                     scale_fill_manual(name = "SF value", values = grDevices::colorRampPalette(c("#c7f5bf", "#8bdcbe", "#46bac2", "#4378bf", "#371ea3"))(10),
                                     labels = seq(1, 0, -0.1)) +
                     guides(fill = guide_legend(nrow = 1, label.position = "top")) +
-                    xlab("") + ylab("variable value") +
+                    xlab("") + ylab("variable value") + xlim(c(0,NA))+
                     theme_drwhy() +
                     theme(legend.spacing = grid::unit(0.1, 'line')) +
                     facet_wrap(~`_vname_`)
@@ -281,7 +281,7 @@ plot_individual_ceteris_paribus_survival <- function(all_profiles,
                 scale_color_manual(name = paste0(unique(df$`_vname_`), " value"),
                                    values = generate_discrete_color_scale(n_colors, colors)) +
                 theme_drwhy() +
-                xlab("") + ylab("survival function value") + ylim(c(0, 1)) +
+                xlab("") + ylab("survival function value") + ylim(c(0, 1)) + xlim(c(0,NA))+
                 facet_wrap(~`_vname_`) })
         }
 

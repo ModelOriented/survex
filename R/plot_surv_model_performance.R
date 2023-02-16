@@ -76,6 +76,7 @@ plot_td_surv_model_performance <- function(x, ..., metrics = NULL, title = NULL,
         theme_drwhy() +
         xlab("") +
         ylab("metric value") +
+        xlim(c(0,NA))+
         labs(title = title, subtitle = subtitle) +
         scale_color_manual("", values = generate_discrete_color_scale(num_colors, colors)) +
         facet_wrap(~ind, ncol = facet_ncol, scales = "free_y")

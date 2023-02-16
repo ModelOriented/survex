@@ -89,6 +89,7 @@ plot.surv_lime <- function(x,
             geom_line(linewidth = 0.8, size = 0.8) +
             theme_drwhy() +
             xlab("") +
+            xlim(c(0,NA))+
             ylab("survival function value") +
             scale_color_manual("", values = generate_discrete_color_scale(2, colors))
         })
