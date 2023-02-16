@@ -1,5 +1,6 @@
 # survex (development)
 
+* refactor `surv_feature_importance.R` - change auxiliary columns to include `_` in their name. Necessary changes also done to plotting and printing functions. ([#28](https://github.com/ModelOriented/survex/issues/28))
 * fix invalid color palette order in plot feature importance
 * fix predict_parts survshap running out of memory with more than 16 variables ([#25](https://github.com/ModelOriented/survex/issues/25))
 
