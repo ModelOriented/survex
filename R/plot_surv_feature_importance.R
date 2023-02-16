@@ -43,7 +43,7 @@ plot.surv_feature_importance <- function(x, ...,
     transformed_dfs <- lapply(df_list, function(x) {
         x <- x$result
         label <- unique(x$label)
-        x <- x[x$permutation == 0, !colnames(x) %in% c("permutation", "label", "_baseline_")]
+        x <- x[x$`_permutation_` == 0, !colnames(x) %in% c("_permutation_", "label", "_baseline_")]
         plotting_df <- with(x, cbind(x[1], stack(x, select = -times), label, row.names = NULL))
     })
 
