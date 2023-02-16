@@ -19,7 +19,7 @@
 \arguments{
 \item{x}{an object of class \code{predict_profile_survival} to be plotted}
 
-\item{...}{additional parameters, unused, currently ignored}
+\item{...}{additional objects of class \code{"predict_profile_survival"} to be plotted together}
 
 \item{colors}{character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")}
 

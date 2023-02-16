@@ -4,7 +4,7 @@
 #' the `predict_profile()` function.
 #'
 #' @param x an object of class `predict_profile_survival` to be plotted
-#' @param ... additional parameters, unused, currently ignored
+#' @param ... additional objects of class `"predict_profile_survival"` to be plotted together
 #' @param colors character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")
 #' @param variable_type character, either `"numerical"`, `"categorical"` or `NULL` (default), select only one type of variable for plotting, or leave `NULL` for all
 #' @param facet_ncol number of columns for arranging subplots
@@ -53,6 +53,55 @@ plot.surv_ceteris_paribus <- function(x,
 
     check_numerical_plot_type(numerical_plot_type)
 
+    explanations_list <- c(list(x), list(...))
+    num_models <- length(explanations_list)
+
+
+    if (num_models == 1){
+        result <- prepare_ceteris_paribus_plots(x,
+                                                colors,
+                                                variable_type,
+                                                facet_ncol,
+                                                variables,
+                                                numerical_plot_type,
+                                                title,
+                                                subtitle)
+        return(result)
+    }
+
+    return_list <- list()
+    labels <- list()
+    for (i in 1:num_models){
+        this_title <- unique(explanations_list[[i]]$result$`_label_`)
+        return_list[[i]] <- prepare_ceteris_paribus_plots(x,
+                                                          colors,
+                                                          variable_type,
+                                                          1,
+                                                          variables,
+                                                          numerical_plot_type,
+                                                          this_title,
+                                                          NULL)
+        labels[[i]] <- c(this_title, rep("", length(return_list[[i]]$patches)-2))
+    }
+
+    labels <- unlist(labels)
+    return_plot <- patchwork::wrap_plots(return_list, nrow = 1, tag_level="keep") +
+                   patchwork::plot_annotation(title, tag_levels = list(labels)) & DALEX::theme_drwhy()
+
+    return(return_plot)
+
+
+}
+
+
+prepare_ceteris_paribus_plots <- function(x,
+                                          colors = NULL,
+                                          variable_type = NULL,
+                                          facet_ncol = NULL,
+                                          variables = NULL,
+                                          numerical_plot_type = "lines",
+                                          title = "Ceteris paribus survival profile",
+                                          subtitle = "default"){
     obs <- x$variable_values
     x <- x$result
 
@@ -124,6 +173,9 @@ plot.surv_ceteris_paribus <- function(x,
                                    subtitle = subtitle) & DALEX::theme_drwhy()
 
 }
+
+
+
 
 #' @importFrom DALEX theme_drwhy
 #' @import ggplot2
