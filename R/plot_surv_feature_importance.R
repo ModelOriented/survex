@@ -44,7 +44,7 @@ plot.surv_feature_importance <- function(x, ...,
         x <- x$result
         label <- unique(x$label)
         x <- x[x$`_permutation_` == 0, !colnames(x) %in% c("_permutation_", "label", "_baseline_")]
-        plotting_df <- with(x, cbind(x[1], stack(x, select = -times), label, row.names = NULL))
+        plotting_df <- with(x, cbind(x[1], stack(x, select = -`_times_`), label, row.names = NULL))
     })
 
 
@@ -77,7 +77,7 @@ plot.surv_feature_importance <- function(x, ...,
 
     with(plotting_df, {
 
-    ggplot(data = plotting_df, aes(x = times, y = values, color = ind, label = ind)) +
+    ggplot(data = plotting_df, aes(x = `_times_`, y = values, color = ind, label = ind)) +
         geom_line(linewidth = 0.8, size = 0.8) +
         theme_drwhy() +
         xlab("") +
