@@ -1,6 +1,5 @@
 # survex (development)
 
-* change documentation website theme to DrWhy ([#42](https://github.com/ModelOriented/survex/issues/42))
 * fix invalid color palette order in plot feature importance
 * fix predict_parts survshap running out of memory with more than 16 variables ([#25](https://github.com/ModelOriented/survex/issues/25))
 
