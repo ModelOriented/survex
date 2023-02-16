@@ -10,6 +10,8 @@
 #' @param subtitle character, subtitle of the plot, `'default'` automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels
 #' @param max_vars maximum number of variables to be plotted (least important variables are ignored)
 #' @param colors character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")
+#' @param rug character vector. One of "all", "events", "censors", "none" or NULL. Which times to mark on the x axis in `geom_rug()`.
+#' @param rug_colors character vector containing two colors (containing either hex codes "#FF69B4", or names "blue"). The first color (red by default) will be used to mark event times, whereas the second (grey by default) will be used to mark censor times.
 #'
 #' @return An object of the class `ggplot`.
 #'
@@ -36,7 +38,9 @@ plot.surv_feature_importance <- function(x, ...,
                                          title = "Time-dependent feature importance",
                                          subtitle = "default",
                                          max_vars = 6,
-                                         colors = NULL) {
+                                         colors = NULL,
+                                         rug = "all",
+                                         rug_colors = c("#dd0000", "#222222")) {
 
     df_list <- c(list(x), list(...))
 
@@ -47,8 +51,12 @@ plot.surv_feature_importance <- function(x, ...,
         plotting_df <- with(x, cbind(x[1], stack(x, select = -times), label, row.names = NULL))
     })
 
+    transformed_rug_dfs <- lapply(df_list, function(x){
+        rug_df <- data.frame(times = x$event_times, statuses = as.character(x$event_statuses), label = unique(x$result$label))
+    })
 
     plotting_df <- do.call(rbind, transformed_dfs)
+    rug_df <- do.call(rbind, transformed_rug_dfs)
 
     label <- unique(plotting_df$label)
 
@@ -75,7 +83,7 @@ plot.surv_feature_importance <- function(x, ...,
         subtitle <- paste0("created for the ", glm_labels, " model")
     }
 
-    with(plotting_df, {
+    base_plot <- with(plotting_df, {
 
     ggplot(data = plotting_df, aes(x = times, y = values, color = ind, label = ind)) +
         geom_line(linewidth = 0.8, size = 0.8) +
@@ -87,4 +95,18 @@ plot.surv_feature_importance <- function(x, ...,
         facet_wrap(~label)
     })
 
+    if (rug == "all"){
+        return_plot <- base_plot +
+            geom_rug(data = rug_df[rug_df$statuses == 1,], mapping = aes(x=times, color = statuses), inherit.aes=F, color = rug_colors[1]) +
+            geom_rug(data = rug_df[rug_df$statuses == 0,], mapping = aes(x=times, color = statuses), inherit.aes=F, color = rug_colors[2])
+    } else if (rug == "events") {
+        return_plot <- base_plot +
+            geom_rug(data = rug_df[rug_df$statuses == 1,], mapping = aes(x=times, color = statuses), inherit.aes=F, color = rug_colors[1])
+    } else if (rug == "censors") {
+        return_plot <- base_plot +
+            geom_rug(data = rug_df[rug_df$statuses == 0,], mapping = aes(x=times, color = statuses), inherit.aes=F, color = rug_colors[2])
+    } else {
+        return_plot <- base_plot
+    }
+    return(return_plot)
 }
