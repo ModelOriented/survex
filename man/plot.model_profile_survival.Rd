@@ -19,7 +19,7 @@
 \arguments{
 \item{x}{an object of class \code{model_profile_survival} to be plotted}
 
-\item{...}{additional parameters, unused, currently ignored}
+\item{...}{additional objects of class \code{"model_profile_survival"} to be plotted together}
 
 \item{variables}{character, names of the variables to be plotted}
 

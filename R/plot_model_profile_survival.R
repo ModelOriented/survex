@@ -4,7 +4,7 @@
 #' using the `model_profile()` function.
 #'
 #' @param x an object of class `model_profile_survival` to be plotted
-#' @param ... additional parameters, unused, currently ignored
+#' @param ... additional objects of class `"model_profile_survival"` to be plotted together
 #' @param variables character, names of the variables to be plotted
 #' @param variable_type character, either `"numerical"`, `"categorical"` or `NULL` (default), select only one type of variable for plotting, or leave `NULL` for all
 #' @param facet_ncol number of columns for arranging subplots
@@ -44,6 +44,55 @@ plot.model_profile_survival <- function(x,
                                         colors = NULL)
 {
 
+
+    explanations_list <- c(list(x), list(...))
+    num_models <- length(explanations_list)
+
+
+    if (num_models == 1){
+        result <-   prepare_model_profile_plots(x,
+                                                variables = variables,
+                                                variable_type = variable_type,
+                                                facet_ncol = facet_ncol,
+                                                numerical_plot_type = numerical_plot_type,
+                                                title = title,
+                                                subtitle = subtitle,
+                                                colors = colors)
+        return(result)
+    }
+
+    return_list <- list()
+    labels <- list()
+    for (i in 1:num_models){
+        this_title <- unique(explanations_list[[i]]$result$`_label_`)
+        return_list[[i]] <-   prepare_model_profile_plots(x,
+                                                          variables = variables,
+                                                          variable_type = variable_type,
+                                                          facet_ncol = 1,
+                                                          numerical_plot_type = numerical_plot_type,
+                                                          title = this_title,
+                                                          subtitle = NULL,
+                                                          colors = colors)
+        labels[[i]] <- c(this_title, rep("", length(return_list[[i]]$patches)-2))
+    }
+
+    labels <- unlist(labels)
+    return_plot <- patchwork::wrap_plots(return_list, nrow = 1, tag_level="keep") +
+        patchwork::plot_annotation(title, tag_levels = list(labels)) & DALEX::theme_drwhy()
+
+    return(return_plot)
+
+}
+
+
+prepare_model_profile_plots <- function(x,
+                                        variables = NULL,
+                                        variable_type = NULL,
+                                        facet_ncol = NULL,
+                                        numerical_plot_type = "lines",
+                                        title = "Partial dependence survival profile",
+                                        subtitle = "default",
+                                        colors = NULL) {
 
     aggregated_profiles <- x$result
     class(aggregated_profiles) <- "data.frame"
