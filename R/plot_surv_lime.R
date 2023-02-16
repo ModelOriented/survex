@@ -58,7 +58,7 @@ plot.surv_lime <- function(x,
         pl <- with(df, {
         ggplot(data = df, aes(x = beta, y = reorder(variable_names, beta, abs), fill = sign_beta)) +
             geom_col() +
-            scale_fill_manual("", values = c("#f05a71", "#8bdcbe"))
+            scale_fill_manual("", values = c("-1"="#f05a71", "0"="#ffffff", "1"="#8bdcbe"))
         })
     }
 
@@ -71,7 +71,7 @@ plot.surv_lime <- function(x,
 
             ggplot(data = df, aes(x = local_importance, y = reorder(variable_names, local_importance, abs), fill = sign_local_importance)) +
             geom_col() +
-            scale_fill_manual("", values = c("#f05a71", "#ffffff", "#8bdcbe"))
+            scale_fill_manual("", values = c("-1"="#f05a71", "0"="#ffffff", "1"="#8bdcbe"))
 
         })
     }
