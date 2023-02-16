@@ -85,7 +85,7 @@ plot.model_profile_survival <- function(x,
 
     labels <- unlist(labels)
     return_plot <- patchwork::wrap_plots(return_list, nrow = 1, tag_level="keep") +
-        patchwork::plot_annotation(title, tag_levels = list(labels)) & DALEX::theme_drwhy()
+        patchwork::plot_annotation(title, tag_levels = list(labels)) & theme_default_survex()
 
     return(return_plot)
 
@@ -146,6 +146,6 @@ prepare_model_profile_plots <- function(x,
 
     patchwork::wrap_plots(pl, ncol = facet_ncol) +
         patchwork::plot_annotation(title = title,
-                                   subtitle = subtitle) & DALEX::theme_drwhy()
+                                   subtitle = subtitle) & theme_default_survex()
 
 }

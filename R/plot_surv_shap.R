@@ -77,7 +77,7 @@ plot.surv_shap <- function(x,
         xlim(c(0,NA))+
         labs(title = title, subtitle = subtitle) +
         scale_color_manual("variable", values = generate_discrete_color_scale(n_colors, colors)) +
-        theme_drwhy() +
+        theme_default_survex() +
         facet_wrap(~label, ncol = 1, scales = "free_y")
     })
 

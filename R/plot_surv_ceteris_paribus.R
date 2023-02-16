@@ -94,7 +94,7 @@ plot.surv_ceteris_paribus <- function(x,
 
     labels <- unlist(labels)
     return_plot <- patchwork::wrap_plots(return_list, nrow = 1, tag_level="keep") +
-                   patchwork::plot_annotation(title, tag_levels = list(labels)) & DALEX::theme_drwhy()
+                   patchwork::plot_annotation(title, tag_levels = list(labels)) & theme_default_survex()
 
     return(return_plot)
 
@@ -184,14 +184,10 @@ prepare_ceteris_paribus_plots <- function(x,
 
     patchwork::wrap_plots(pl, ncol = facet_ncol) +
         patchwork::plot_annotation(title = title,
-                                   subtitle = subtitle) & DALEX::theme_drwhy()
+                                   subtitle = subtitle) & theme_default_survex()
 
 }
 
-
-
-
-#' @importFrom DALEX theme_drwhy
 #' @import ggplot2
 plot_individual_ceteris_paribus_survival <- function(all_profiles,
                                                      variables,
@@ -232,7 +228,7 @@ plot_individual_ceteris_paribus_survival <- function(all_profiles,
                     geom_line(data = df[df$`_real_point_`, ], color =
                                   "red", linewidth = 0.8, size = 0.8) +
                     xlab("") + ylab("survival function value") + ylim(c(0, 1)) + xlim(c(0,NA))+
-                    theme_drwhy() +
+                    theme_default_survex() +
                     facet_wrap(~`_vname_`)
                 })
             } else {
@@ -250,7 +246,7 @@ plot_individual_ceteris_paribus_survival <- function(all_profiles,
                                     labels = seq(1, 0, -0.1)) +
                     guides(fill = guide_legend(nrow = 1, label.position = "top")) +
                     xlab("") + ylab("variable value") + xlim(c(0,NA))+
-                    theme_drwhy() +
+                    theme_default_survex() +
                     theme(legend.spacing = grid::unit(0.1, 'line')) +
                     facet_wrap(~`_vname_`)
                 })
@@ -280,7 +276,7 @@ plot_individual_ceteris_paribus_survival <- function(all_profiles,
                           size = 0.8, linewidth = 0.8, linetype = "longdash") +
                 scale_color_manual(name = paste0(unique(df$`_vname_`), " value"),
                                    values = generate_discrete_color_scale(n_colors, colors)) +
-                theme_drwhy() +
+                theme_default_survex() +
                 xlab("") + ylab("survival function value") + ylim(c(0, 1)) + xlim(c(0,NA))+
                 facet_wrap(~`_vname_`) })
         }

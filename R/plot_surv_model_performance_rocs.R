@@ -54,7 +54,7 @@ plot.surv_model_performance_rocs <- function(x,
     with(df, {
     ggplot(data = df, aes(x = FPR, y = TPR, group = label, color = label)) +
         geom_line(linewidth = 0.8, size = 0.8) +
-        theme_drwhy() +
+        theme_default_survex() +
         xlab("1 - specificity (FPR)") +
         ylab("sensitivity (TPR)") +
         xlim(c(0,NA))+

@@ -73,7 +73,7 @@ plot.surv_lime <- function(x,
 
         })
     }
-    pl <- pl + theme_drwhy_vertical() +
+    pl <- pl + theme_vertical_default_survex() +
         labs(title = title, subtitle = subtitle) +
         xlab(x_lab) +
         ylab(y_lab) +
@@ -87,7 +87,7 @@ plot.surv_lime <- function(x,
 
             ggplot(data = sf_df, aes(x = times, y = sfs, group = type, color = type)) +
             geom_line(linewidth = 0.8, size = 0.8) +
-            theme_drwhy() +
+            theme_default_survex() +
             xlab("") +
             xlim(c(0,NA))+
             ylab("survival function value") +

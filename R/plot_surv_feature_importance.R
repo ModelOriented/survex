@@ -87,7 +87,7 @@ plot.surv_feature_importance <- function(x, ...,
 
     ggplot(data = plotting_df, aes(x = times, y = values, color = ind, label = ind)) +
         geom_line(linewidth = 0.8, size = 0.8) +
-        theme_drwhy() +
+        theme_default_survex() +
         xlab("") +
         ylab(y_lab) +
         xlim(c(0,NA))+

@@ -47,4 +47,5 @@ reference:
   - cumulative_hazard_to_survival
   - survival_to_cumulative_hazard
   - surv_model_info
+  - set_theme_survex
 

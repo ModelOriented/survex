@@ -127,7 +127,8 @@ plot.feature_importance_explainer <- function(x, ..., max_vars = NULL, show_boxp
     # facets have fixed space, can be resolved with ggforce https://github.com/tidyverse/ggplot2/issues/2933
     pl + coord_flip() +
         scale_color_manual(values = DALEX::colors_discrete_drwhy(nlabels)) +
-        facet_wrap(~label, ncol = 1, scales = "free_y") + DALEX::theme_drwhy_vertical() +
+        facet_wrap(~label, ncol = 1, scales = "free_y") +
+        theme_vertical_default_survex() +
         ylab(y_lab) + xlab("") +
         labs(title = title, subtitle = subtitle) +
         theme(legend.position = "none")

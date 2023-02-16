@@ -57,7 +57,6 @@ plot.surv_model_performance <- function(x,
 }
 
 
-#' @importFrom DALEX theme_drwhy
 plot_td_surv_model_performance <- function(x, ..., metrics = NULL, title = NULL, subtitle = "default", facet_ncol = NULL, colors = NULL, rug_df = rug_df, rug = rug, rug_colors = rug_colors) {
 
     df <- concatenate_td_dfs(x, ...)
@@ -73,7 +72,7 @@ plot_td_surv_model_performance <- function(x, ..., metrics = NULL, title = NULL,
     base_plot <- with(df,{
     ggplot(data = df[df$ind %in% metrics, ], aes(x = times, y = values, group = label, color = label)) +
         geom_line(linewidth = 0.8, size = 0.8) +
-        theme_drwhy() +
+        theme_default_survex() +
         xlab("") +
         ylab("metric value") +
         xlim(c(0,NA))+
@@ -113,7 +112,7 @@ plot_scalar_surv_model_performance <- function(x, ..., metrics = NULL, title = N
     with(df, {
     ggplot(data = df, aes(x = label, y = values, fill = label)) +
         geom_col() +
-        theme_drwhy() +
+        theme_default_survex() +
         xlab("") +
         ylab("metric value") +
         labs(title = title, subtitle = subtitle) +
