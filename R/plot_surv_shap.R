@@ -37,7 +37,7 @@ plot.surv_shap <- function(x,
 
     long_df <- lapply(dfl, function(x) {
         label <- attr(x, "label")
-        cols <- head(order(x$aggregate, decreasing = TRUE), max_vars)
+        cols <- sort(head(order(x$aggregate, decreasing = TRUE), max_vars))
         sv <- x$result[,cols]
         times <- x$eval_times
         transposed <- as.data.frame(cbind(times = times, sv))
