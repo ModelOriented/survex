@@ -28,6 +28,7 @@ surv_shap <- function(explainer,
                       exact = FALSE
 ) {
     test_explainer(explainer, "surv_shap", has_data = TRUE, has_y = TRUE, has_survival = TRUE)
+    new_observation <- new_observation[, colnames(new_observation) %in% colnames(explainer$data)]
 
     if (!is.null(y_true)) {
         if (is.matrix(y_true)) {
@@ -54,10 +55,7 @@ surv_shap <- function(explainer,
 
 shap_kernel <- function(explainer, new_observation, aggregation_method,  ...) {
 
-
     timestamps <- explainer$times
-
-
     p <- ncol(explainer$data)
 
     target_sf <- explainer$predict_survival_function(explainer$model, new_observation, timestamps)
@@ -72,7 +70,6 @@ shap_kernel <- function(explainer, new_observation, aggregation_method,  ...) {
 
     shap_values <- as.data.frame(shap_values, row.names = colnames(explainer$data))
     colnames(shap_values) <- paste("t=", timestamps, sep = "")
-
 
     ret <- list()
     ret$eval_times <- timestamps
