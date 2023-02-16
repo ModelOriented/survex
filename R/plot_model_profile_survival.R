@@ -52,7 +52,6 @@ plot.model_profile_survival <- function(x,
     explanations_list <- c(list(x), list(...))
     num_models <- length(explanations_list)
 
-
     if (num_models == 1){
         result <-   prepare_model_profile_plots(x,
                                                 variables = variables,
