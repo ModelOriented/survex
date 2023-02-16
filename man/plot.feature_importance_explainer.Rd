@@ -20,7 +20,7 @@
 
 \item{...}{other explainers that shall be plotted together}
 
-\item{max_vars}{maximum number of variables that shall be presented for for each model.
+\item{max_vars}{maximum number of variables that shall be presented for for each model
 By default \code{NULL} what means all variables}
 
 \item{show_boxplots}{logical if \code{TRUE} (default) boxplot will be plotted to show permutation data.}

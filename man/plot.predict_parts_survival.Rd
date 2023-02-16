@@ -26,6 +26,7 @@ for survival models created using the \code{predict_parts()} function.
 \item \code{...} - additional objects of class \code{surv_shap} to be plotted together
 \item \code{title} - character, title of the plot
 \item \code{subtitle} - character, subtitle of the plot, \code{'default'} automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels
+\item \code{max_vars} - maximum number of variables to be plotted (least important variables are ignored)
 \item \code{colors} - character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")
 }
 }
@@ -38,6 +39,7 @@ for survival models created using the \code{predict_parts()} function.
 \item \code{...} -  other parameters currently ignored
 \item \code{title} -  character, title of the plot
 \item \code{subtitle} -  character, subtitle of the plot, \code{'default'} automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels
+\item \code{max_vars} - maximum number of variables to be plotted (least important variables are ignored)
 \item \code{colors} -  character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")
 }
 }

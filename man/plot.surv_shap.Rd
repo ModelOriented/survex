@@ -22,6 +22,8 @@
 
 \item{subtitle}{character, subtitle of the plot, \code{'default'} automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels}
 
+\item{max_vars}{maximum number of variables to be plotted (least important variables are ignored)}
+
 \item{colors}{character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")}
 }
 \value{
