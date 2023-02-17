@@ -16,6 +16,7 @@
 #' * `...` - additional objects of class `surv_shap` to be plotted together
 #' * `title` - character, title of the plot
 #' * `subtitle` - character, subtitle of the plot, `'default'` automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels
+#' * `max_vars` - maximum number of variables to be plotted (least important variables are ignored)
 #' * `colors` - character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")
 #'
 #' ## `plot.surv_lime`
@@ -26,6 +27,7 @@
 #' * `...` -  other parameters currently ignored
 #' * `title` -  character, title of the plot
 #' * `subtitle` -  character, subtitle of the plot, `'default'` automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels
+#' * `max_vars` - maximum number of variables to be plotted (least important variables are ignored)
 #' * `colors` -  character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")
 #'
 #' @family functions for plotting 'predict_parts_survival' objects

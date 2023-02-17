@@ -7,6 +7,7 @@
 #' @param ... additional objects of class `surv_shap` to be plotted together
 #' @param title character, title of the plot
 #' @param subtitle character, subtitle of the plot, `'default'` automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels
+#' @param max_vars maximum number of variables to be plotted (least important variables are ignored)
 #' @param colors character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")
 #'
 #' @return An object of the class `ggplot`.
@@ -30,13 +31,15 @@ plot.surv_shap <- function(x,
                            ...,
                            title = "SurvSHAP(t)",
                            subtitle = "default",
+                           max_vars = 7,
                            colors = NULL) {
 
     dfl <- c(list(x), list(...))
 
     long_df <- lapply(dfl, function(x) {
         label <- attr(x, "label")
-        sv <- x$result
+        cols <- sort(head(order(x$aggregate, decreasing = TRUE), max_vars))
+        sv <- x$result[,cols]
         times <- x$eval_times
         transposed <- as.data.frame(cbind(times = times, sv))
         rownames(transposed) <- NULL
