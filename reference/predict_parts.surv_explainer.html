@@ -127,7 +127,7 @@
     
 
 
-<p>There are additional parameters that are passed to internal functions</p><ul><li><p>for <code>surv_lime</code></p><ul><li><p><code>N</code> -  a positive integer, number of observations generated in the neighbourhood</p></li>
+<p>There are additional parameters that are passed to internal functions</p><ul><li><p>for <code>survlime</code></p><ul><li><p><code>N</code> -  a positive integer, number of observations generated in the neighbourhood</p></li>
 <li><p><code>distance_metric</code> -  character, name of the distance metric to be used, only <code>"euclidean"</code> is implemented</p></li>
 <li><p><code>kernel_width</code> -  a numeric, parameter used for calculating weights, by default it's <code>sqrt(ncol(data)*0.75)</code></p></li>
 <li><p><code>sampling_method</code> -  character, name of the method of generating neighbourhood, only <code>"gaussian"</code> is implemented</p></li>
@@ -136,7 +136,7 @@
 <li><p><code>categorical_variables</code> -  character vector, names of variables that should be treated as categories (factors are included by default)</p></li>
 <li><p><code>k</code> -  a small positive number &gt; 1, added to chf before taking log, so that weigths aren't negative</p></li>
 </ul></li>
-<li><p>for <code>surv_shap</code></p><ul><li><p><code>timestamps</code> -  a numeric vector, time points at which the survival function will be evaluated</p></li>
+<li><p>for <code>survshap</code></p><ul><li><p><code>timestamps</code> -  a numeric vector, time points at which the survival function will be evaluated</p></li>
 <li><p><code>y_true</code> -  a two element numeric vector or matrix of one row and two columns, the first element being the true observed time and the second the status of the observation, used for plotting</p></li>
 <li><p><code>calculation_method</code> -  a character, only <code>"kernel"</code> is implemented for now.</p></li>
 <li><p><code>aggregation_method</code> -  a character, either <code>"mean_absolute"</code> or <code>"integral"</code>, <code>"max_absolute"</code>, <code>"sum_of_squares"</code></p></li>
@@ -146,7 +146,7 @@
     <h2>References</h2>
     
 
-<ul><li><p>[1] Krzyziński, Mateusz, et al. <a href="https://arxiv.org/abs/2208.11080" class="external-link">"SurvSHAP(t): Time-dependent explanations of machine learning survival models."</a> arXiv preprint arXiv:2208.11080 (2022).</p></li>
+<ul><li><p>[1] Krzyziński, Mateusz, et al. <a href="https://www.sciencedirect.com/science/article/pii/S0950705122013302" class="external-link">"SurvSHAP(t): Time-dependent explanations of machine learning survival models."</a> Knowledge-Based Systems 262 (2023): 110234</p></li>
 <li><p>[2] Kovalev, Maxim S., et al. <a href="https://www.sciencedirect.com/science/article/pii/S0950705120304044?casa_token=6e9cyk_ji3AAAAAA:tbqo33MsZvNC9nrSGabZdLfPtZTsvsvZTHYQCM2aEhumLI5D46U7ovhr37EaYUhmKZrw45JzDhg" class="external-link">"SurvLIME: A method for explaining machine learning survival models."</a> Knowledge-Based Systems 203 (2020): 106164.</p></li>
 </ul></div>
 
@@ -192,10 +192,10 @@
 <span class="r-in"><span><span class="va">cph_predict_parts_survlime</span> <span class="op">&lt;-</span> <span class="fu">predict_parts</span><span class="op">(</span><span class="va">cph_exp</span>, new_observation <span class="op">=</span> <span class="va">veteran</span><span class="op">[</span><span class="fl">1</span>, <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span><span class="op">]</span>,</span></span>
 <span class="r-in"><span>                                            type <span class="op">=</span> <span class="st">"survlime"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cph_predict_parts_survlime</span><span class="op">$</span><span class="va">result</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           trt         karno      diagtime           age         prior </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  6.662587e-03 -2.651674e-04 -4.741556e-05  2.433052e-04 -1.273517e-03 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> celltypelarge </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> -3.224157e-02 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          trt         karno    diagtime          age       prior celltypelarge</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.01101176 -0.0008925287 0.000761071 0.0005820522 0.002651187   -0.01740446</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   celltypesmallcell celltypesquamous</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1       0.001158773      -0.03030657</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cph_predict_parts_survlime</span>, type <span class="op">=</span> <span class="st">"local_importance"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="predict_parts.surv_explainer-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>

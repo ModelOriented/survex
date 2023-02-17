@@ -87,6 +87,7 @@ created using <code>predict_parts(..., type="survlime")</code> function.</p>
 <span>  <span class="va">...</span>,</span>
 <span>  title <span class="op">=</span> <span class="st">"SurvLIME"</span>,</span>
 <span>  subtitle <span class="op">=</span> <span class="st">"default"</span>,</span>
+<span>  max_vars <span class="op">=</span> <span class="fl">7</span>,</span>
 <span>  colors <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -115,6 +116,10 @@ created using <code>predict_parts(..., type="survlime")</code> function.</p>
 
 <dt>subtitle</dt>
 <dd><p>character, subtitle of the plot, <code>'default'</code> automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels</p></dd>
+
+
+<dt>max_vars</dt>
+<dd><p>maximum number of variables to be plotted (least important variables are ignored)</p></dd>
 
 
 <dt>colors</dt>
