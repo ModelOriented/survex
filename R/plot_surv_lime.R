@@ -43,7 +43,7 @@ plot.surv_lime <- function(x,
     df <- data.frame(variable_names = names(x$variable_values),
                      variable_values = as.numeric(x$variable_values),
                      beta = as.numeric(x$result),
-                     sign_beta = sign(as.numeric(x$result)),
+                     sign_beta = as.factor(sign(as.numeric(x$result))),
                      sign_local_importance = as.factor(sign(local_importance)),
                      local_importance = local_importance)
 
