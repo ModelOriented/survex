@@ -30,7 +30,7 @@ using the \code{model_performance()} function.
 \item \code{subtitle} - character, subtitle of the plot, \code{'default'} automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels
 \item \code{facet_ncol} - number of columns for arranging subplots
 \item \code{colors} - character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")
-\item \code{rug} - character vector. One of "all", "events", "censors", "none" or NULL. Which times to mark on the x axis in \code{geom_rug()}.
+\item \code{rug} - character, one of \code{"all"}, \code{"events"}, \code{"censors"}, \code{"none"} or \code{NULL}. Which times to mark on the x axis in \code{geom_rug()}.
 \item \code{rug_colors} - character vector containing two colors (containing either hex codes "#FF69B4", or names "blue"). The first color (red by default) will be used to mark event times, whereas the second (grey by default) will be used to mark censor times.
 }
 }

@@ -28,7 +28,7 @@
 
 \item{colors}{character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")}
 
-\item{rug}{character vector. One of "all", "events", "censors", "none" or NULL. Which times to mark on the x axis in \code{geom_rug()}.}
+\item{rug}{character, one of \code{"all"}, \code{"events"}, \code{"censors"}, \code{"none"} or \code{NULL}. Which times to mark on the x axis in \code{geom_rug()}.}
 
 \item{rug_colors}{character vector containing two colors (containing either hex codes "#FF69B4", or names "blue"). The first color (red by default) will be used to mark event times, whereas the second (grey by default) will be used to mark censor times.}
 }
