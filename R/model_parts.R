@@ -6,7 +6,7 @@
 #' @param explainer an explainer object - model preprocessed by the `explain()` function
 #' @param loss_function a function that will be used to assess variable importance, by default `loss_brier_score` for survival models. The function can be supplied manually but has to have these named parameters (`y_true`, `risk`, `surv`, `times`), where `y_true` represents the `survival::Surv` object with observed times and statuses, `risk` is the risk score calculated by the model, and `surv` is the survival function for each observation evaluated at `times`.
 #' @param ... other parameters passed to `DALEX::model_parts` if `output_type == "risk"`, otherwise passed to internal functions.
-#' @param type a character vector, if `"raw"` the results are losses after the permutation, if `"ratio"` the results are in the form `loss/loss_full_model` and if `"difference"` the results are of the form `loss - loss_full_model`
+#' @param type a character vector, if `"raw"` the results are losses after the permutation, if `"ratio"` the results are in the form `loss/loss_full_model` and if `"difference"` the results are of the form `loss - loss_full_model`. Defaults to `"difference"`.
 #' @param output_type either `"survival"` or `"risk"` the type of survival model output that should be used for explanations. If `"survival"` the explanations are based on the survival function. Otherwise the scalar risk predictions are used by the `DALEX::model_profile` function.
 #' @param N number of observations that should be sampled for calculation of variable importance. If `NULL` then variable importance will be calculated on the whole dataset.
 #' @inheritDotParams surv_feature_importance -x
@@ -57,7 +57,7 @@ model_parts <- function(explainer, ...) UseMethod("model_parts", explainer)
 model_parts.surv_explainer <- function(explainer,
                                        loss_function = survex::loss_brier_score,
                                        ...,
-                                       type = "raw",
+                                       type = "difference",
                                        output_type = "survival",
                                        N = 1000) {
   if (!(type %in% c("difference", "ratio", "raw", "variable_importance"))) stop("Type shall be one of 'variable_importance', 'difference', 'ratio', 'raw'")
