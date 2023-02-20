@@ -37,7 +37,7 @@
 plot.surv_feature_importance <- function(x, ...,
                                          title = "Time-dependent feature importance",
                                          subtitle = "default",
-                                         max_vars = 6,
+                                         max_vars = 7,
                                          colors = NULL,
                                          rug = "all",
                                          rug_colors = c("#dd0000", "#222222")) {

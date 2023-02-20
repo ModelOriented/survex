@@ -146,8 +146,7 @@ This type of plot also gives us valuable insight that is easy to overlook in the
 Another kind of functionality provided by this package is local explanations. The `predict_parts()` function can be used to assess the importance of variables while making predictions for a selected observation. This can be done by two methods, SurvSHAP(t) and SurvLIME.
 
 ### SurvSHAP(t)
-
-[SurvSHAP(t)](https://arxiv.org/abs/2208.11080) explanations are an extension of SHAP values for survival models. They show a breakdown of the prediction into individual variables.
+[SurvSHAP(t)](https://www.sciencedirect.com/science/article/pii/S0950705122013302) explanations are an extension of SHAP values for survival models. They show a breakdown of the prediction into individual variables.
 
 ```{r, include=FALSE}
 dev.off()

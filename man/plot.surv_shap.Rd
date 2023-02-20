@@ -9,6 +9,7 @@
   ...,
   title = "SurvSHAP(t)",
   subtitle = "default",
+  max_vars = 7,
   colors = NULL,
   rug = "all",
   rug_colors = c("#dd0000", "#222222")
@@ -22,6 +23,8 @@
 \item{title}{character, title of the plot}
 
 \item{subtitle}{character, subtitle of the plot, \code{'default'} automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels}
+
+\item{max_vars}{maximum number of variables to be plotted (least important variables are ignored)}
 
 \item{colors}{character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")}
 

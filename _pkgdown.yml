@@ -1,7 +1,7 @@
 url: https://modeloriented.github.io/survex/
 template:
-  bootstrap: 5
-  bootswatch: flatly
+  package: DrWhyTemplate
+  default_assets: false
 reference:
 - title: Explainers
   desc: Create a model agnostic explainer for further processing

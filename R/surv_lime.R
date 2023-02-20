@@ -32,7 +32,9 @@ surv_lime <- function(explainer, new_observation,
                       k = 1 + 1e-4) {
 
     test_explainer(explainer, "surv_lime", has_data = TRUE, has_y = TRUE, has_chf = TRUE)
-    new_observation <- new_observation[, !colnames(new_observation) %in% colnames(explainer$y)]
+    new_observation <- new_observation[, colnames(new_observation) %in% colnames(explainer$data)]
+    if (ncol(explainer$data) != ncol(new_observation)) stop("New observation and data have different number of columns (variables)")
+
     predicted_sf <- explainer$predict_survival_function(explainer$model, new_observation, explainer$times)
 
     neighbourhood <- generate_neighbourhood(explainer$data,
@@ -82,20 +84,18 @@ surv_lime <- function(explainer, new_observation,
 
     }
 
-    new_observation_ohe <- neighbourhood$inverse_ohe[1, ]
+    var_values <- neighbourhood$inverse_ohe[1, ]
 
     res <- optim(rep(0, times = ncol(neighbourhood$inverse_ohe)), loss)
 
-    var_values <- as.numeric(new_observation_ohe)
-    names(var_values) <- colnames(neighbourhood$inverse_ohe)
-    beta <- res$par
+    beta <- data.frame(t(res$par))
     names(beta) <- colnames(neighbourhood$inverse_ohe)
     ret_list <- list(result = beta,
                      variable_values = var_values,
                      black_box_sf_times = explainer$times,
                      black_box_sf = as.numeric(explainer$predict_survival_function(explainer$model, new_observation, explainer$times)),
                      expl_sf_times = na_est$time,
-                     expl_sf = exp(-na_est$hazard * exp(sum(new_observation_ohe * res$par))))
+                     expl_sf = exp(-na_est$hazard * exp(sum(var_values * res$par))))
 
     class(ret_list) <- c("surv_lime", class(ret_list))
     return(ret_list)
@@ -118,76 +118,77 @@ generate_neighbourhood <- function(data_org,
     factor_variables <- colnames(data_org)[sapply(data_org, is.factor)]
     categorical_variables <- unique(c(additional_categorical_variables, factor_variables))
     if (is.null(ncol(data_row))) stop("The observation to be explained has to be data.frame")
-    if (ncol(data_row) != ncol(data_org)) stop("The observation to be explained has a different number of columns than data")
     data_row <- data_row[colnames(data_org)]
 
     feature_frequencies <- list(length(categorical_variables))
+    scaled_data <- scale(data_org[, !colnames(data_org) %in% categorical_variables])
 
-    if (!is.null(categorical_variables)) {
-        scaled_data <- scale(data_org[, !colnames(data_org) %in% categorical_variables])
+    for (feature in categorical_variables) {
+        column <- data_org[, feature]
 
-        for (feature in categorical_variables) {
-            column <- data_org[, feature]
+        if (!is.factor(column)) column <- as.factor(column)
+        feature_count <- summary(column)
+        frequencies <- feature_count / sum(feature_count)
+        feature_frequencies[[feature]] <- frequencies
 
-            if (!is.factor(column)) column <- as.factor(column)
-            feature_count <- summary(column)
-            frequencies <- feature_count / sum(feature_count)
-            feature_frequencies[[feature]] <- frequencies
+    }
 
+    n_col <- ncol(data_org[, !colnames(data_org) %in% categorical_variables])
+    sc <- attr(scaled_data, "scaled:scale")
+    me <- attr(scaled_data, "scaled:center")
+
+    data <- switch(sampling_method,
+                   "gaussian" = matrix(rnorm(n_samples * n_col), nrow = n_samples, ncol = n_col),
+                   stop("Only `gaussian` sampling_method is implemented"))
+
+    if (sample_around_instance) {
+        to_add <- data_row[,  !colnames(data_row) %in% categorical_variables]
+        data <- data %*% diag(sc) + to_add[col(data)]
+    }
+    else {
+        data <- data %*% diag(sc) + me[col(data)]
+    }
+
+    data <- as.data.frame(data)
+    colnames(data) <- names(me)
+    inverse <- data
+
+    for (feature in categorical_variables) {
+        values <- names(feature_frequencies[[feature]])
+        freqs <- feature_frequencies[[feature]]
+        inverse_column <- sample(values, n_samples, replace = TRUE, prob = freqs)
+        if (feature %in% additional_categorical_variables) {
+            inverse[, feature] <- as.numeric(inverse_column)
+            data_row[, feature] <- as.numeric(data_row[, feature])
+        } else {
+            inverse[, feature] <- inverse_column
+            data_row[, feature] <- as.character(data_row[, feature])
         }
-
-        n_col <- ncol(data_org[, !colnames(data_org) %in% categorical_variables])
-        sc <- attr(scaled_data, "scaled:scale")
-        me <- attr(scaled_data, "scaled:center")
-
-        data <- switch(sampling_method,
-                       "gaussian" = matrix(rnorm(n_samples * n_col), nrow = n_samples, ncol = n_col),
-                       stop("Only `gaussian` sampling_method is implemented"))
-
-        if (sample_around_instance) {
-            to_add <- data_row[,  !colnames(data_row) %in% categorical_variables]
-            data <- data %*% diag(sc) + to_add[col(data)]
-        }
-        else {
-            data <- data %*% diag(sc) + me[col(data)]
-        }
+        data[, feature] <- as.numeric(inverse_column == rep(data_row[feature], n_samples))
+        data[1, feature] <- 1
+    }
 
 
-        data <- as.data.frame(data)
-        colnames(data) <- names(me)
-        inverse <- data
+    inverse[1, ] <- data_row[1, colnames(inverse)]
+    inverse <- inverse[, colnames(data_row)]
+    attr(inverse, "scaled:scale") <- attr(scaled_data, "scaled:scale")
+    attr(inverse, "scaled:center") <- attr(scaled_data, "scaled:center")
 
-        for (feature in categorical_variables) {
-            values <- names(feature_frequencies[[feature]])
-            freqs <- feature_frequencies[[feature]]
-            inverse_column <- sample(values, n_samples, replace = TRUE, prob = freqs)
-            if (feature %in% additional_categorical_variables) {
-                inverse[, feature] <- as.numeric(inverse_column)
-                data_row[, feature] <- as.numeric(data_row[, feature])
-            } else {
-                inverse[, feature] <- inverse_column
-                data_row[, feature] <- as.character(data_row[, feature])
-            }
-            data[, feature] <- as.numeric(inverse_column == rep(data_row[feature], n_samples))
-            data[1, feature] <- 1
-        }
+    data <- data[, colnames(data_row)]
 
-
-        inverse[1, ] <- data_row[1, colnames(inverse)]
-        inverse <- inverse[, colnames(data_row)]
-        attr(inverse, "scaled:scale") <- attr(scaled_data, "scaled:scale")
-        attr(inverse, "scaled:center") <- attr(scaled_data, "scaled:center")
-
-        data <- data[, colnames(data_row)]
-
-
-        expr <- paste0("~", paste(factor_variables, collapse = "+"))
+    if (length(categorical_variables) > 0){
+        expr <- paste0("~", paste(categorical_variables, collapse = "+"))
         categorical_matrix <- model.matrix(as.formula(expr), data = inverse)[, -1]
         inverse_ohe <- cbind(inverse, categorical_matrix)
         inverse_ohe[, factor_variables] <- NULL
-
-        list(data = data, inverse = inverse, inverse_ohe = inverse_ohe)
+    } else{
+        inverse_ohe <- inverse
     }
+
+
+
+    list(data = data, inverse = inverse, inverse_ohe = inverse_ohe)
+
 
 
 }
