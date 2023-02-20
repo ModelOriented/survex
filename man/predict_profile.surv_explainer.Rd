@@ -33,7 +33,7 @@ predict_profile(
 
 \item{variables}{a character vector containing names of variables to be explained}
 
-\item{categorical_variables}{a character vector of names of additional variables which should be treated as categorical (factors are automatically treated as categorical variables). If it containes variable names not present in the \code{variables} argument, they will be added at the end.}
+\item{categorical_variables}{a character vector of names of additional variables which should be treated as categorical (factors are automatically treated as categorical variables). If it contains variable names not present in the \code{variables} argument, they will be added at the end.}
 
 \item{...}{additional parameters passed to \code{DALEX::predict_profile} if \code{output_type =="risk"}}
 
