@@ -115,6 +115,8 @@ for survival models created using the <code><a href="predict_profile.surv_explai
 <li><p><code>numerical_plot_type</code> - character, either <code>"lines"</code>, or <code>"contours"</code> selects the type of numerical variable plots</p></li>
 <li><p><code>title</code> - character, title of the plot</p></li>
 <li><p><code>subtitle</code> - character, subtitle of the plot, <code>'default'</code> automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels</p></li>
+<li><p><code>rug</code> - character, one of <code>"all"</code>, <code>"events"</code>, <code>"censors"</code>, <code>"none"</code> or <code>NULL</code>. Which times to mark on the x axis in <code>geom_rug()</code>.</p></li>
+<li><p><code>rug_colors</code> - character vector containing two colors (containing either hex codes "#FF69B4", or names "blue"). The first color (red by default) will be used to mark event times, whereas the second (grey by default) will be used to mark censor times.</p></li>
 </ul></div>
 
     </div>

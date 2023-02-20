@@ -89,7 +89,9 @@ the <code><a href="predict_profile.surv_explainer.html">predict_profile()</a></c
 <span>  variables <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  numerical_plot_type <span class="op">=</span> <span class="st">"lines"</span>,</span>
 <span>  title <span class="op">=</span> <span class="st">"Ceteris paribus survival profile"</span>,</span>
-<span>  subtitle <span class="op">=</span> <span class="st">"default"</span></span>
+<span>  subtitle <span class="op">=</span> <span class="st">"default"</span>,</span>
+<span>  rug <span class="op">=</span> <span class="st">"all"</span>,</span>
+<span>  rug_colors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#dd0000"</span>, <span class="st">"#222222"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -100,7 +102,7 @@ the <code><a href="predict_profile.surv_explainer.html">predict_profile()</a></c
 
 
 <dt>...</dt>
-<dd><p>additional parameters, unused, currently ignored</p></dd>
+<dd><p>additional objects of class <code>"predict_profile_survival"</code> to be plotted together</p></dd>
 
 
 <dt>colors</dt>
@@ -129,6 +131,14 @@ the <code><a href="predict_profile.surv_explainer.html">predict_profile()</a></c
 
 <dt>subtitle</dt>
 <dd><p>character, subtitle of the plot, <code>'default'</code> automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels</p></dd>
+
+
+<dt>rug</dt>
+<dd><p>character, one of <code>"all"</code>, <code>"events"</code>, <code>"censors"</code>, <code>"none"</code> or <code>NULL</code>. Which times to mark on the x axis in <code>geom_rug()</code>.</p></dd>
+
+
+<dt>rug_colors</dt>
+<dd><p>character vector containing two colors (containing either hex codes <code>"#FF69B4"</code>, or names <code>"blue"</code>). The first color (red by default) will be used to mark event times, whereas the second (grey by default) will be used to mark censor times.</p></dd>
 
 </dl></div>
     <div id="value">

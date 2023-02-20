@@ -107,6 +107,8 @@ using the <code><a href="model_parts.surv_explainer.html">model_parts()</a></cod
 <li><p><code>subtitle</code> - character, subtitle of the plot, if <code>NULL</code> automaticaly generated as "created for XXX, YYY models", where XXX and YYY are explainer labels</p></li>
 <li><p><code>max_vars</code> - maximum number of variables to be plotted (least important variables are ignored)</p></li>
 <li><p><code>colors</code> - character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")</p></li>
+<li><p><code>rug</code> - character, one of <code>"all"</code>, <code>"events"</code>, <code>"censors"</code>, <code>"none"</code> or <code>NULL</code>. Which times to mark on the x axis in <code>geom_rug()</code>.</p></li>
+<li><p><code>rug_colors</code> - character vector containing two colors (containing either hex codes "#FF69B4", or names "blue"). The first color (red by default) will be used to mark event times, whereas the second (grey by default) will be used to mark censor times.</p></li>
 </ul></div>
     <div id="see-also">
     <h2>See also</h2>
