@@ -12,7 +12,7 @@ test_that("model_profile works", {
 
 
     mp_cph_cat <- model_profile(cph_exp, output_type = "survival", variable_splits_type = "quantiles", variable_type = "categorical", grid_points = 6)
-    plot(mp_cph_cat, variable = "size", variable_type = "categorical")
+    plot(mp_cph_cat, variables = "celltype", variable_type = "categorical")
 
     expect_s3_class(mp_cph_cat, "model_profile_survival")
     expect_true(all(mp_cph_cat$eval_times == cph_exp$times))

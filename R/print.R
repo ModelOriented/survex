@@ -12,8 +12,7 @@ print.model_profile_survival <- function(x, ...) {
 #' @export
 print.surv_ceteris_paribus <- function(x, ...) {
     res <- x$result
-    text <- paste0("Ceteris paribus calculated for observation:\n\n")
-    cat(text)
+    cat("Ceteris paribus for observation:\n\n")
     print.data.frame(x$variable_values, row.names = FALSE)
     cat("\n")
     print(res, ...)
@@ -35,9 +34,9 @@ print.surv_lime <- function(x, ...) {
     res <- x$result
 
     print_result <- rbind(beta = res, `X` = x$variable_values, `local importance (X*beta)` = res * x$variable_values)
-    text <- paste0("SurvLIME explanations:\n\n")
-    cat(text)
-
+    cat("SurvLIME for observation:\n\n")
+    print.data.frame(x$variable_values, row.names = FALSE)
+    cat("\n")
     print(t(print_result))
 }
 
@@ -46,8 +45,7 @@ print.surv_lime <- function(x, ...) {
 print.surv_shap <- function(x, ...) {
 
     res <- x$result
-    text <- paste0("SurvSHAP values calculated for observation:\n\n")
-    cat(text)
+    cat("SurvSHAP(t) for observation:\n\n")
     print.data.frame(x$variable_values, row.names = FALSE)
     cat("\n")
     print(res, ...)
