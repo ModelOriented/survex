@@ -16,6 +16,7 @@
 * refactored `surv_feature_importance.R` - change auxiliary columns to include `_` in their name. Necessary changes also done to plotting and printing functions. ([#28](https://github.com/ModelOriented/survex/issues/28))
 * changed default `type` argument of `model_parts()` to `"difference"` ([#33](https://github.com/ModelOriented/survex/issues/33))
 * refactored integration of metrics ([#31](https://github.com/ModelOriented/survex/issues/31))
+* change behaviour of `categorical_variables` argument in `model_parts()` and `predict_parts()`. If it containes variable names not present in the `variables` argument, they will be added at the end. ([#39](https://github.com/ModelOriented/survex/issues/39))
 
 
 # survex 0.2.2
