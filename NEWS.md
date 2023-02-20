@@ -15,6 +15,7 @@
 * added geom_rug() to all time-dependent plots, marking event and censoring times ([#35](https://github.com/ModelOriented/survex/issues/35))
 * refactored `surv_feature_importance.R` - change auxiliary columns to include `_` in their name. Necessary changes also done to plotting and printing functions. ([#28](https://github.com/ModelOriented/survex/issues/28))
 * changed default `type` argument of `model_parts()` to `"difference"` ([#33](https://github.com/ModelOriented/survex/issues/33))
+* refactored integration of metrics ([#31](https://github.com/ModelOriented/survex/issues/31))
 
 
 # survex 0.2.2
