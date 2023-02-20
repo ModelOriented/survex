@@ -75,7 +75,7 @@ test_that("Brier score fpi works", {
     expect_s3_class(cph_model_parts_brier, "model_parts_survival")
     expect_s3_class(rsf_ranger_model_parts, "model_parts_survival")
     expect_equal(ncol(cph_model_parts_brier$result), ncol(cph_exp$data) + 5) # times, full_model, permutation, baseline, label
-    expect_equal(nrow(cph_model_parts_brier$result[cph_model_parts_brier$result$permutation == 0, ]), length(cph_exp$times))
+    expect_equal(nrow(cph_model_parts_brier$result[cph_model_parts_brier$result$`_permutation_` == 0, ]), length(cph_exp$times))
 
     plot(cph_model_parts_brier)
     plot(cph_model_parts_brier, rsf_ranger_model_parts, max_vars = 3)

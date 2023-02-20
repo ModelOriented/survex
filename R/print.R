@@ -25,7 +25,7 @@ print.surv_feature_importance <- function(x, ...) {
     res <- x$result
     text <- paste0("Permutational feature importance for the ", unique(res$label), " model:\n")
     cat(text)
-    print.data.frame(x$result[res$permutation == 0, !colnames(res) %in% c("_baseline_", "permutation", "label")], ...)
+    print.data.frame(x$result[res$`_permutation_` == 0, !colnames(res) %in% c("_baseline_", "_permutation_", "label")], ...)
 }
 
 

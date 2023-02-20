@@ -13,7 +13,8 @@
 * added the possibility of plotting multiple `predict_parts()` and `model_parts()` explanations in one plot ([#12](https://github.com/ModelOriented/survex/issues/12))
 * fixed the x axis of plots (it now starts from 0) ([#37](https://github.com/ModelOriented/survex/issues/37))
 * added geom_rug() to all time-dependent plots, marking event and censoring times ([#35](https://github.com/ModelOriented/survex/issues/35))
-* change default `type` argument of `model_parts()` to `"difference"` ([#33](https://github.com/ModelOriented/survex/issues/33))
+* refactored `surv_feature_importance.R` - change auxiliary columns to include `_` in their name. Necessary changes also done to plotting and printing functions. ([#28](https://github.com/ModelOriented/survex/issues/28))
+* changed default `type` argument of `model_parts()` to `"difference"` ([#33](https://github.com/ModelOriented/survex/issues/33))
 * refactored integration of metrics ([#31](https://github.com/ModelOriented/survex/issues/31))
 
 
@@ -33,6 +34,7 @@
 
 
 # survex 0.1.1
+
 * The `survex` package is now public
 * `model_parts`, `model_profile`, `predict_parts`, `predict_profile` explanations implemented
 * C/D AUC, Brier score and (Harrell's) concordance index performance measures implemented
