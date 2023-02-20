@@ -39,8 +39,14 @@ surv_model_performance <- function(explainer, ..., times = NULL, type = "metrics
             labels <- labels[!censored_earlier_mask]
             scores <- explainer$predict_survival_function(explainer$model, newdata_t, time)
             labels <- labels[order(scores, decreasing = FALSE)]
-            cbind(time = time, data.frame(TPR = cumsum(labels) / sum(labels),
-                                          FPR = cumsum(!labels) / sum(!labels), labels))
+            TPR <- cumsum(labels) / sum(labels)
+            FPR <- cumsum(!labels) / sum(!labels)
+            vals <- 1 - FPR
+            n <- length(vals)
+            AUC <- sum((vals[1:(n-1)] + vals[2:n]) * diff(TPR) / 2)
+            cbind(time = time, data.frame(TPR = TPR,
+                                          FPR = FPR,
+                                          AUC = AUC))
         })
 
 
