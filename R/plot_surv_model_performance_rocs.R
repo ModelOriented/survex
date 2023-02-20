@@ -7,6 +7,7 @@
 #' @param ... additional objects of class `"surv_model_performance_rocs"` to be plotted together
 #' @param title character, title of the plot
 #' @param subtitle character, subtitle of the plot, `'default'` automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels
+#' @param auc boolean, whether the AUC values should be plotted
 #' @param colors character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")
 #' @param facet_ncol number of columns for arranging subplots
 #'
