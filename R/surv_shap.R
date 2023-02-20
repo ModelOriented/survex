@@ -13,7 +13,7 @@
 #' @return A list, containing the calculated SurvSHAP(t) results in the `result` field
 #'
 #' @section References:
-#' - \[1\] Krzyziński, Mateusz, et al. ["SurvSHAP(t): Time-dependent explanations of machine learning survival models."](https://arxiv.org/abs/2208.11080) arXiv preprint arXiv:2208.11080 (2022).
+#' - \[1\] Krzyziński, Mateusz, et al. ["SurvSHAP(t): Time-dependent explanations of machine learning survival models."](https://www.sciencedirect.com/science/article/pii/S0950705122013302) Knowledge-Based Systems 262 (2023): 110234
 #'
 #' @keywords internal
 surv_shap <- function(explainer,
@@ -28,11 +28,8 @@ surv_shap <- function(explainer,
                       exact = FALSE
 ) {
     test_explainer(explainer, "surv_shap", has_data = TRUE, has_y = TRUE, has_survival = TRUE)
-    new_observation <- new_observation[, !colnames(new_observation) %in% colnames(explainer$y)]
-    if (ncol(explainer$data) != ncol(new_observation)) stop("New observation and data have different number of columns(variables)")
-
-    event_inds <- explainer$y[, 2]
-    event_times <- explainer$y[, 1]
+    new_observation <- new_observation[, colnames(new_observation) %in% colnames(explainer$data)]
+    if (ncol(explainer$data) != ncol(new_observation)) stop("New observation and data have different number of columns (variables)")
 
     if (!is.null(y_true)) {
         if (is.matrix(y_true)) {
@@ -59,10 +56,7 @@ surv_shap <- function(explainer,
 
 shap_kernel <- function(explainer, new_observation, aggregation_method,  ...) {
 
-
     timestamps <- explainer$times
-
-
     p <- ncol(explainer$data)
 
     target_sf <- explainer$predict_survival_function(explainer$model, new_observation, timestamps)
@@ -78,10 +72,9 @@ shap_kernel <- function(explainer, new_observation, aggregation_method,  ...) {
     shap_values <- as.data.frame(shap_values, row.names = colnames(explainer$data))
     colnames(shap_values) <- paste("t=", timestamps, sep = "")
 
-
     ret <- list()
     ret$eval_times <- timestamps
-    ret$result <- t(shap_values)
+    ret$result <- data.frame(t(shap_values))
     ret$variable_values <- new_observation
 
     return(ret)
@@ -149,7 +142,7 @@ aggregate_surv_shap <- function(survshap, method) {
                times <- survshap$eval_times
                n <- length(x)
                i <- (x[1:(n - 1)] + x[2:n]) * diff(times) / 2
-               cumsum(c(0, i))[length(cumsum(c(0, i)))] / (max(times) - min(times))
+               sum(i) / (max(times) - min(times))
            })),
            stop("aggregation_method has to be one of `sum_of_squares`, `mean_absolute`, `max_absolute` or `integral`"))
 
