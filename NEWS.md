@@ -14,6 +14,7 @@
 * fixed the x axis of plots (it now starts from 0) ([#37](https://github.com/ModelOriented/survex/issues/37))
 * added geom_rug() to all time-dependent plots, marking event and censoring times ([#35](https://github.com/ModelOriented/survex/issues/35))
 * change default `type` argument of `model_parts()` to `"difference"` ([#33](https://github.com/ModelOriented/survex/issues/33))
+* refactored integration of metrics ([#31](https://github.com/ModelOriented/survex/issues/31))
 
 
 # survex 0.2.2
