@@ -16,7 +16,7 @@
 #'
 #' There are additional parameters that are passed to internal functions
 #'
-#' * for `surv_lime`
+#' * for `survlime`
 #'     * `N` -  a positive integer, number of observations generated in the neighbourhood
 #'     * `distance_metric` -  character, name of the distance metric to be used, only `"euclidean"` is implemented
 #'     * `kernel_width` -  a numeric, parameter used for calculating weights, by default it's `sqrt(ncol(data)*0.75)`
@@ -25,14 +25,14 @@
 #'     * `max_iter` -  a numeric, maximal number of iteration for the optimization problem
 #'     * `categorical_variables` -  character vector, names of variables that should be treated as categories (factors are included by default)
 #'     * `k` -  a small positive number > 1, added to chf before taking log, so that weigths aren't negative
-#' * for `surv_shap`
+#' * for `survshap`
 #'     * `timestamps` -  a numeric vector, time points at which the survival function will be evaluated
 #'     * `y_true` -  a two element numeric vector or matrix of one row and two columns, the first element being the true observed time and the second the status of the observation, used for plotting
 #'     * `calculation_method` -  a character, only `"kernel"` is implemented for now.
 #'     * `aggregation_method` -  a character, either `"mean_absolute"` or `"integral"`, `"max_absolute"`, `"sum_of_squares"`
 #'
 #' @section References:
-#' - \[1\] Krzyziński, Mateusz, et al. ["SurvSHAP(t): Time-dependent explanations of machine learning survival models."](https://arxiv.org/abs/2208.11080) arXiv preprint arXiv:2208.11080 (2022).
+#' - \[1\] Krzyziński, Mateusz, et al. ["SurvSHAP(t): Time-dependent explanations of machine learning survival models."](https://www.sciencedirect.com/science/article/pii/S0950705122013302) Knowledge-Based Systems 262 (2023): 110234
 #' - \[2\] Kovalev, Maxim S., et al. ["SurvLIME: A method for explaining machine learning survival models."](https://www.sciencedirect.com/science/article/pii/S0950705120304044?casa_token=6e9cyk_ji3AAAAAA:tbqo33MsZvNC9nrSGabZdLfPtZTsvsvZTHYQCM2aEhumLI5D46U7ovhr37EaYUhmKZrw45JzDhg) Knowledge-Based Systems 203 (2020): 106164.
 #'
 #' @examples
@@ -81,6 +81,8 @@ predict_parts.surv_explainer <- function(explainer, new_observation, ..., N = NU
     }
 
     attr(res, "label") <- label
+    res$event_times <- explainer$y[,1]
+    res$event_statuses <- explainer$y[,2]
     class(res) <- c('predict_parts_survival', class(res))
     res
 

@@ -13,13 +13,15 @@
   numerical_plot_type = "lines",
   title = "Partial dependence survival profile",
   subtitle = "default",
-  colors = NULL
+  colors = NULL,
+  rug = "all",
+  rug_colors = c("#dd0000", "#222222")
 )
 }
 \arguments{
 \item{x}{an object of class \code{model_profile_survival} to be plotted}
 
-\item{...}{additional parameters, unused, currently ignored}
+\item{...}{additional objects of class \code{"model_profile_survival"} to be plotted together}
 
 \item{variables}{character, names of the variables to be plotted}
 
@@ -34,6 +36,10 @@
 \item{subtitle}{character, subtitle of the plot, \code{'default'} automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels}
 
 \item{colors}{character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")}
+
+\item{rug}{character, one of \code{"all"}, \code{"events"}, \code{"censors"}, \code{"none"} or \code{NULL}. Which times to mark on the x axis in \code{geom_rug()}.}
+
+\item{rug_colors}{character vector containing two colors (containing either hex codes "#FF69B4", or names "blue"). The first color (red by default) will be used to mark event times, whereas the second (grey by default) will be used to mark censor times.}
 }
 \value{
 A grid of \code{ggplot} objects arranged with the \code{gridExtra::grid.arrange} function.
