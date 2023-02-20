@@ -5,7 +5,7 @@
 #' @param explainer an explainer object - model preprocessed by the `explain()` function
 #' @param new_observation a new observation for which the prediction need to be explained
 #' @param variables a character vector containing names of variables to be explained
-#' @param categorical_variables a character vector of names of additional variables which should be treated as categorical (factors are automatically treated as categorical variables)
+#' @param categorical_variables a character vector of names of additional variables which should be treated as categorical (factors are automatically treated as categorical variables). If it contains variable names not present in the `variables` argument, they will be added at the end.
 #' @param ... additional parameters passed to `DALEX::predict_profile` if `output_type =="risk"`
 #' @param type character, only `"ceteris_paribus"` is implemented
 #' @param output_type either `"survival"` or `"risk"` the type of survival model output that should be considered for explanations. If `"survival"` the explanations are based on the survival function. Otherwise the scalar risk predictions are used by the `DALEX::predict_profile` function.
@@ -58,7 +58,7 @@ predict_profile.surv_explainer <- function(explainer,
                                            variable_splits_type = "uniform")
 {
 
-
+    variables <- unique(variables, categorical_variables)
     if (!type %in% "ceteris_paribus") stop("Type not supported")
     if (!output_type %in% c("risk", "survival")) stop("output_type not supported")
 
@@ -80,6 +80,8 @@ predict_profile.surv_explainer <- function(explainer,
                                         variable_splits_type = variable_splits_type,
                                         ...)
             class(res) <- c("predict_profile_survival", class(res))
+            res$event_times <- explainer$y[,1]
+            res$event_statuses <- explainer$y[,2]
             return(res)
         }
         else stop("For survival output only type=`ceteris_paribus` is implemented")

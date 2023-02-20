@@ -12,7 +12,7 @@
 #'
 #' @param x a feature importance explainer produced with the \code{feature_importance()} function
 #' @param ... other explainers that shall be plotted together
-#' @param max_vars maximum number of variables that shall be presented for for each model.
+#' @param max_vars maximum number of variables that shall be presented for for each model
 #' By default \code{NULL} what means all variables
 #' @param show_boxplots logical if \code{TRUE} (default) boxplot will be plotted to show permutation data.
 #' @param bar_width width of bars. By default \code{10}
@@ -42,7 +42,7 @@
 #' }
 #' @export
 plot.feature_importance_explainer <- function(x, ..., max_vars = NULL, show_boxplots = TRUE, bar_width = 10,
-                                              desc_sorting = TRUE, title = "Feature Importance", subtitle = NULL) {
+                                              desc_sorting = TRUE, title = "Feature Importance", subtitle = "default") {
 
     if (!is.logical(desc_sorting)) {
         stop("desc_sorting is not logical")
@@ -103,7 +103,7 @@ plot.feature_importance_explainer <- function(x, ..., max_vars = NULL, show_boxp
     nlabels <- length(unique(bestFits$label))
 
     # extract labels for plot's subtitle
-    if (is.null(subtitle)) {
+    if (!is.null(subtitle) && subtitle == "default"){
         glm_labels <- paste0(unique(ext_expl_df$label), collapse = ", ")
         subtitle <- paste0("created for the ", glm_labels, " model")
     }
@@ -127,7 +127,8 @@ plot.feature_importance_explainer <- function(x, ..., max_vars = NULL, show_boxp
     # facets have fixed space, can be resolved with ggforce https://github.com/tidyverse/ggplot2/issues/2933
     pl + coord_flip() +
         scale_color_manual(values = DALEX::colors_discrete_drwhy(nlabels)) +
-        facet_wrap(~label, ncol = 1, scales = "free_y") + DALEX::theme_drwhy_vertical() +
+        facet_wrap(~label, ncol = 1, scales = "free_y") +
+        theme_vertical_default_survex() +
         ylab(y_lab) + xlab("") +
         labs(title = title, subtitle = subtitle) +
         theme(legend.position = "none")

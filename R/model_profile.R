@@ -8,7 +8,7 @@
 #' @param variables character, a vector of names of variables to be explained
 #' @param N number of observations used for the calculation of aggregated profiles. By default `100`. If `NULL` all observations are used.
 #' @param ... other parameters passed to `DALEX::model_profile` if `output_type == "risk"`, otherwise ignored
-#' @param categorical_variables character, a vector of names of additional variables which should be treated as categorical (factors are automatically treated as categorical variables)
+#' @param categorical_variables character, a vector of names of additional variables which should be treated as categorical (factors are automatically treated as categorical variables). If it contains variable names not present in the `variables` argument, they will be added at the end.
 #' @param grid_points maximum number of points for profile calculations. Note that the final number of points may be lower than grid_points. Will be passed to internal function. By default `51`.
 #' @param groups if `output_type == "risk"` a variable name that will be used for grouping. By default `NULL`, so no groups are calculated. If `output_type == "survival"` then ignored
 #' @param k passed to `DALEX::model_profile` if `output_type == "risk"`, otherwise ignored
@@ -72,7 +72,7 @@ model_profile.surv_explainer <- function(explainer,
                                          type = "partial",
                                          output_type = "survival") {
 
-
+    variables <- unique(variables, categorical_variables)
     switch(output_type,
             "risk" = DALEX::model_profile(explainer = explainer,
                                                    variables = variables,
@@ -107,7 +107,8 @@ model_profile.surv_explainer <- function(explainer,
 
                 ret <- list(eval_times = unique(agr_profiles$`_times_`), cp_profiles = cp_profiles, result = agr_profiles)
                 class(ret) <- c("model_profile_survival", "list")
-
+                ret$event_times <- explainer$y[,1]
+                ret$event_statuses <- explainer$y[,2]
                 ret
                 },
 

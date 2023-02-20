@@ -9,6 +9,7 @@
 #' @param ... other parameters currently ignored
 #' @param title character, title of the plot
 #' @param subtitle character, subtitle of the plot, `'default'` automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels
+#' @param max_vars maximum number of variables to be plotted (least important variables are ignored)
 #' @param colors character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")
 #'
 #' @return An object of the class `ggplot`.
@@ -33,19 +34,18 @@ plot.surv_lime <- function(x,
                            ...,
                            title = "SurvLIME",
                            subtitle = "default",
+                           max_vars = 7,
                            colors = NULL) {
     if (!type %in% c("coefficients", "local_importance"))
         stop("Type should be one of `coefficients`, `local_importance`")
 
-    x$beta <- x$result
-
-
+    local_importance <- as.numeric(x$result * x$variable_values)
     df <- data.frame(variable_names = names(x$variable_values),
-                     variable_values = x$variable_values,
-                     beta = x$beta,
-                     sign_beta = as.factor(sign(x$result)),
-                     sign_local_importance = as.factor(sign(x$beta * x$variable_values)),
-                     local_importance = x$beta * x$variable_values)
+                     variable_values = as.numeric(x$variable_values),
+                     beta = as.numeric(x$result),
+                     sign_beta = as.factor(sign(as.numeric(x$result))),
+                     sign_local_importance = as.factor(sign(local_importance)),
+                     local_importance = local_importance)
 
     if (!is.null(subtitle) && subtitle == "default") {
         subtitle <- paste0("created for the ", attr(x, "label"), " model")
@@ -54,10 +54,11 @@ plot.surv_lime <- function(x,
     if (type == "coefficients") {
         x_lab <- "SurvLIME coefficients"
         y_lab <- ""
+        df <- df[head(order(abs(df$beta), decreasing=TRUE), max_vars),]
         pl <- with(df, {
         ggplot(data = df, aes(x = beta, y = reorder(variable_names, beta, abs), fill = sign_beta)) +
             geom_col() +
-            scale_fill_manual("", values = c("#f05a71", "#8bdcbe"))
+            scale_fill_manual("", values = c("-1"="#f05a71", "0"="#ffffff", "1"="#8bdcbe"))
         })
     }
 
@@ -65,15 +66,16 @@ plot.surv_lime <- function(x,
     if (type == "local_importance") {
         x_lab <- "SurvLIME local importance"
         y_lab <- ""
+        df <- df[head(order(abs(df$local_importance), decreasing=TRUE), max_vars),]
         pl <- with(df,{
 
             ggplot(data = df, aes(x = local_importance, y = reorder(variable_names, local_importance, abs), fill = sign_local_importance)) +
             geom_col() +
-            scale_fill_manual("", values = c("#f05a71", "#ffffff", "#8bdcbe"))
+            scale_fill_manual("", values = c("-1"="#f05a71", "0"="#ffffff", "1"="#8bdcbe"))
 
         })
     }
-    pl <- pl + theme_drwhy_vertical() +
+    pl <- pl + theme_vertical_default_survex() +
         labs(title = title, subtitle = subtitle) +
         xlab(x_lab) +
         ylab(y_lab) +
@@ -87,8 +89,9 @@ plot.surv_lime <- function(x,
 
             ggplot(data = sf_df, aes(x = times, y = sfs, group = type, color = type)) +
             geom_line(linewidth = 0.8, size = 0.8) +
-            theme_drwhy() +
+            theme_default_survex() +
             xlab("") +
+            xlim(c(0,NA))+
             ylab("survival function value") +
             scale_color_manual("", values = generate_discrete_color_scale(2, colors))
         })

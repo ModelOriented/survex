@@ -3,8 +3,8 @@ Title: Explainable Machine Learning in Survival Analysis
 Version: 0.2.2.9000
 Authors@R: 
     c(
-        person("Mikołaj", "Spytek", email = "mikolajspytek@gmail.com", role = c("aut", "cre")),
-        person("Mateusz", "Krzyziński", role = c("aut")),
+        person("Mikołaj", "Spytek", email = "mikolajspytek@gmail.com", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-7111-2286")),
+        person("Mateusz", "Krzyziński", role = c("aut"), comment = c(ORCID = "0000-0001-6143-488X")),
         person("Hubert", "Baniecki", role = c("aut"), comment = c(ORCID = "0000-0001-6661-5364")),
         person("Przemyslaw", "Biecek", role = c("aut"), comment = c(ORCID = "0000-0001-8423-1823"))
     )

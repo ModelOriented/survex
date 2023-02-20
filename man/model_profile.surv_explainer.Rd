@@ -50,7 +50,7 @@ model_profile(
 
 \item{output_type}{either \code{"survival"} or \code{"risk"} the type of survival model output that should be considered for explanations. If \code{"survival"} the explanations are based on the survival function. Otherwise the scalar risk predictions are used by the \code{DALEX::model_profile} function.}
 
-\item{categorical_variables}{character, a vector of names of additional variables which should be treated as categorical (factors are automatically treated as categorical variables)}
+\item{categorical_variables}{character, a vector of names of additional variables which should be treated as categorical (factors are automatically treated as categorical variables). If it contains variable names not present in the \code{variables} argument, they will be added at the end.}
 
 \item{grid_points}{maximum number of points for profile calculations. Note that the final number of points may be lower than grid_points. Will be passed to internal function. By default \code{51}.}
 }

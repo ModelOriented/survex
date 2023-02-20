@@ -11,7 +11,7 @@ model_parts(explainer, ...)
   explainer,
   loss_function = survex::loss_brier_score,
   ...,
-  type = "raw",
+  type = "difference",
   output_type = "survival",
   N = 1000
 )
@@ -30,7 +30,7 @@ model_parts(explainer, ...)
 
 \item{loss_function}{a function that will be used to assess variable importance, by default \code{loss_brier_score} for survival models. The function can be supplied manually but has to have these named parameters (\code{y_true}, \code{risk}, \code{surv}, \code{times}), where \code{y_true} represents the \code{survival::Surv} object with observed times and statuses, \code{risk} is the risk score calculated by the model, and \code{surv} is the survival function for each observation evaluated at \code{times}.}
 
-\item{type}{a character vector, if \code{"raw"} the results are losses after the permutation, if \code{"ratio"} the results are in the form \code{loss/loss_full_model} and if \code{"difference"} the results are of the form \code{loss - loss_full_model}}
+\item{type}{a character vector, if \code{"raw"} the results are losses after the permutation, if \code{"ratio"} the results are in the form \code{loss/loss_full_model} and if \code{"difference"} the results are of the form \code{loss - loss_full_model}. Defaults to \code{"difference"}.}
 
 \item{output_type}{either \code{"survival"} or \code{"risk"} the type of survival model output that should be used for explanations. If \code{"survival"} the explanations are based on the survival function. Otherwise the scalar risk predictions are used by the \code{DALEX::model_profile} function.}
 
