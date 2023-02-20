@@ -30,6 +30,7 @@ plot.surv_model_performance_rocs <- function(x,
                                              ...,
                                              title = "ROC curves for selected timepoints",
                                              subtitle = "default",
+                                             auc = TRUE,
                                              colors = NULL,
                                              facet_ncol = NULL) {
 
@@ -43,16 +44,13 @@ plot.surv_model_performance_rocs <- function(x,
 
     df <- do.call(rbind, alldfs)
 
-    df$time_formatted <- paste0("t=", df$time)
-
     if (!is.null(subtitle) && subtitle == "default") {
         subtitle <- paste0("created for the ", paste(unique(df$label), collapse = ", "), " model")
     }
 
     num_colors <- length(unique(df$label))
 
-    with(df, {
-    ggplot(data = df, aes(x = FPR, y = TPR, group = label, color = label)) +
+    base_plot <- with(df, {ggplot(data = df, aes(x = FPR, y = TPR, group = label, color = label)) +
         geom_line(linewidth = 0.8, size = 0.8) +
         theme_drwhy() +
         xlab("1 - specificity (FPR)") +
@@ -65,4 +63,18 @@ plot.surv_model_performance_rocs <- function(x,
         facet_wrap(~time, ncol = facet_ncol, labeller = function(x) lapply(x, function(x) paste0("t=", x)))
     })
 
+    if (auc){
+        auc_df <- unique(df[,c("label", "time", "AUC")])
+        auc_df$AUC <- round(auc_df$AUC, 3)
+        auc_df$y <- rep((0:num_colors-1) * 0.1, each=length(unique(auc_df$time)))
+        return_plot <- base_plot +
+                        geom_text(auc_df,
+                        mapping=aes(x=0.75, y=y,
+                                    label=paste("AUC =", AUC),
+                                    color=label),
+                        show.legend = FALSE)
+    } else {
+        return_plot <- base_plot
+    }
+    return_plot
 }
