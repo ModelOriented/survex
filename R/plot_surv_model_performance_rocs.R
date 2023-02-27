@@ -69,12 +69,12 @@ plot.surv_model_performance_rocs <- function(x,
         auc_df$AUC <- round(auc_df$AUC, 3)
         auc_df$y <- rep((0:(num_colors-1)) * 0.1, each=length(unique(auc_df$time)))
         return_plot <- base_plot +
-            geom_text(auc_df,
-                      mapping=aes(x=0.75,
-                                  y=y,
-                                  label=paste("AUC =", AUC),
-                                  color=label),
-                      show.legend=FALSE)
+            with(auc_df, { geom_text(auc_df,
+                                     mapping=aes(x=0.75,
+                                                 y=y,
+                                                 label=paste("AUC =", AUC),
+                                                 color=label),
+                                     show.legend=FALSE)})
     } else {
         return_plot <- base_plot
     }
