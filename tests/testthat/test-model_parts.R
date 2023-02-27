@@ -52,6 +52,9 @@ test_that("C-index fpi works", {
     expect_error(model_parts(coxph_explainer, output_type = "nonexistent"))
 
     plot(cph_model_parts_dalex)
+    expect_error(plot(cph_model_parts_dalex, desc_sorting = "non-logical"))
+    plot(cph_model_parts_dalex, show_boxplots = FALSE, max_vars = 2)
+
 
 })
 
