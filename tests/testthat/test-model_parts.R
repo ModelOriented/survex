@@ -52,6 +52,9 @@ test_that("C-index fpi works", {
     expect_error(model_parts(coxph_explainer, output_type = "nonexistent"))
 
     plot(cph_model_parts_dalex)
+    expect_error(plot(cph_model_parts_dalex, desc_sorting = "non-logical"))
+    plot(cph_model_parts_dalex, show_boxplots = FALSE, max_vars = 2)
+
 
 })
 
@@ -122,6 +125,9 @@ test_that("CD/AUC fpi works", {
     expect_equal(ncol(cph_model_parts_auc$result), ncol(cph_exp$data) + 5) # times, full_model, permutation, baseline, label
 
     plot(cph_model_parts_auc)
+    plot(cph_model_parts_auc, rug = "events")
+    plot(cph_model_parts_auc, rug = "censors")
+    plot(cph_model_parts_auc, rug = "none")
     plot(cph_model_parts_auc, rsf_ranger_model_auc)
 
 })

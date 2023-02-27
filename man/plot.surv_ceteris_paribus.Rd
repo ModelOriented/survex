@@ -42,7 +42,7 @@
 \item{rug_colors}{character vector containing two colors (containing either hex codes \code{"#FF69B4"}, or names \code{"blue"}). The first color (red by default) will be used to mark event times, whereas the second (grey by default) will be used to mark censor times.}
 }
 \value{
-A grid of \code{ggplot} objects arranged with the \code{gridExtra::grid.arrange} function.
+A collection of \code{ggplot} objects arranged with the \code{patchwork} package.
 }
 \description{
 This function plots objects of class \code{"predict_profile_survival"} created using

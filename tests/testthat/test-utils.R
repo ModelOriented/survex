@@ -86,4 +86,23 @@ test_that("explainer checkers work", {
 
 })
 
+test_that("setting theme works",{
+    veteran <- survival::veteran[c(1:3, 16:18, 46:48, 56:58, 71:73, 91:93, 111:113, 126:128), ]
+
+    cph <- survival::coxph(survival::Surv(time, status) ~ ., data = veteran, model = TRUE, x = TRUE, y = TRUE)
+    cph_exp <- explain(cph, verbose = FALSE)
+
+    parts_cph <- predict_parts(cph_exp, veteran[1, !colnames(veteran) %in% c("time", "status")])
+    old <- set_theme_survex("ema")
+    plot(parts_cph)
+    old <- set_theme_survex("drwhy")
+    plot(parts_cph)
+    old <- set_theme_survex(ggplot2::theme_bw(), ggplot2::theme_bw())
+    plot(parts_cph)
+
+    expect_error(set_theme_survex(1,1))
+    expect_error(set_theme_survex("nonexistant"))
+
+})
+
 

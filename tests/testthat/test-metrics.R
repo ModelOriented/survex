@@ -79,3 +79,38 @@ test_that("Brier score works", {
     expect_true(all(bs <= 1, na.rm = TRUE))
 
 })
+
+test_that("integration of metrics works", {
+    rotterdam <- survival::rotterdam
+    rotterdam$year <- NULL
+
+    cox_rotterdam_rec <-
+        survival::coxph(
+            survival::Surv(rtime, recur) ~ .,
+            data = rotterdam[, !colnames(rotterdam) %in% c("year", "dtime", "death")],
+            model = TRUE,
+            x = TRUE,
+            y = TRUE
+        )
+
+    coxph_explainer <- explain(cox_rotterdam_rec, y = survival::Surv(rotterdam$rtime, rotterdam$recur), verbose = FALSE)
+
+
+    times <- coxph_explainer$times
+    surv <- coxph_explainer$predict_survival_function(coxph_explainer$model, coxph_explainer$data, times)
+
+    ibs <- loss_integrate(loss_brier_score, normalization = "t_max")
+    bs <- ibs(y_true = coxph_explainer$y, surv = surv, times = times)
+
+    expect_length(bs, 1)
+    expect_lte(bs, 1)
+    expect_gte(bs, 0)
+
+    # ibs <- loss_integrate(loss_brier_score, normalization = "survival")
+    # bs <- ibs(y_true = coxph_explainer$y, surv = surv, times = times)
+    #
+    # expect_length(bs, 1)
+    # expect_lte(bs, 1)
+    # expect_gte(bs, 0)
+
+})
