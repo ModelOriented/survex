@@ -11,6 +11,9 @@ test_that("survshap explanations work", {
 
     parts_cph <- predict_parts(cph_exp, veteran[1, !colnames(veteran) %in% c("time", "status")], y_true = matrix(c(100, 1), ncol = 2), aggregation_method = "sum_of_squares")
     plot(parts_cph)
+    plot(parts_cph, rug = "events")
+    plot(parts_cph, rug = "censors")
+    plot(parts_cph, rug = "none")
 
     parts_ranger <- predict_parts(rsf_ranger_exp, veteran[2, !colnames(veteran) %in% c("time", "status")], y_true = c(100, 1), aggregation_method = "mean_absolute")
     plot(parts_ranger)

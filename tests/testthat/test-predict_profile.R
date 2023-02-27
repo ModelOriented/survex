@@ -11,9 +11,15 @@ test_that("ceteris_paribus works", {
     rsf_src_exp <- explain(rsf_src, verbose = FALSE)
 
     cph_pp <- predict_profile(cph_exp, veteran[2, -c(3, 4)])
+    ranger_pp <- predict_profile(rsf_ranger_exp, veteran[2, -c(3, 4)])
+
     plot(cph_pp, colors = c("#ff0000", "#00ff00", "#0000ff"))
     plot(cph_pp)
     plot(cph_pp, numerical_plot_type = "contours")
+    plot(cph_pp, ranger_pp, rug = "events")
+    plot(cph_pp, rug = "censors")
+    plot(cph_pp, rug = "none")
+
 
     cph_pp_cat <- predict_profile(cph_exp, veteran[2, -c(3, 4)], variables = c("celltype"))
     plot(cph_pp_cat, variable_type = "categorical", colors = c("#ff0000", "#00ff00", "#0000ff"))

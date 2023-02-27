@@ -40,6 +40,9 @@ test_that("model_performance works", {
     expect_output(print(rsf_rot_perf))
 
     plot(cph_rot_perf, rsf_rot_perf)
+    plot(cph_rot_perf, rsf_rot_perf, rug = "events")
+    plot(cph_rot_perf, rsf_rot_perf, rug = "censors")
+    plot(cph_rot_perf, rsf_rot_perf, rug = "none")
     plot(cph_rot_perf, rsf_rot_perf, metrics_type = "scalar")
 
     cph_rot_perf_roc <- model_performance(cph_exp_rot, type = "roc", times = c(100, 200))
