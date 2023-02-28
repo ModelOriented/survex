@@ -17,6 +17,10 @@ utils::globalVariables(c("PredictionSurv"))
 #' @export
 loss_integrate <- function(loss_function, ..., normalization = NULL , max_quantile = 1){
 
+    if (!is.null(normalization)){
+        if (!normalization %in% c("t_max", "survival")) stop("normalization should be either NULL, `t_max` or `survival`")
+    }
+
     integrated_loss_function <- function(y_true = NULL, risk = NULL, surv = NULL, times = NULL){
 
         quantile_mask <- (times <= quantile(y_true[,1],max_quantile))
@@ -45,8 +49,8 @@ loss_integrate <- function(loss_function, ..., normalization = NULL , max_quanti
             return(integrated_metric/max(times))
         } else if (normalization == "survival"){
 
-            kaplan_meier <- survfit(y_true~1)
-            estimator <- transform_to_stepfunction(kaplan_meier, eval_times = sort(unique(y_true[,1])), type = "survival")
+            km <- survival::survfit(y_true ~ 1)
+            estimator <- stepfun(km$time, c(1, km$surv))
 
             dwt <- 1 - estimator(times)
 
@@ -54,7 +58,7 @@ loss_integrate <- function(loss_function, ..., normalization = NULL , max_quanti
             integrated_metric <- sum(tmp)
             return(integrated_metric/(1 - estimator(max(times))))
         }
-        else stop("normalization should be either NULL, `t_max` or `survival`")
+
     }
 
     attr(integrated_loss_function, "loss_type") <- "integrated"

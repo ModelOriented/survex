@@ -106,11 +106,11 @@ test_that("integration of metrics works", {
     expect_lte(bs, 1)
     expect_gte(bs, 0)
 
-    # ibs <- loss_integrate(loss_brier_score, normalization = "survival")
-    # bs <- ibs(y_true = coxph_explainer$y, surv = surv, times = times)
-    #
-    # expect_length(bs, 1)
-    # expect_lte(bs, 1)
-    # expect_gte(bs, 0)
+    ibs <- loss_integrate(loss_brier_score, normalization = "survival")
+    bs <- ibs(y_true = coxph_explainer$y, surv = surv, times = times)
+
+    expect_length(bs, 1)
+    expect_lte(bs, 1)
+    expect_gte(bs, 0)
 
 })
