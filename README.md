@@ -59,6 +59,23 @@ plot(predict_parts(explainer, veteran[1, -c(3, 4)]))
 [![`survex` usage cheatsheet](man/figures/cheatsheet.png)](https://github.com/ModelOriented/survex/blob/main/misc/cheatsheet.pdf)
 
 
+## Citation
+
+If you use `survex`, please cite it as
+
+> M. Spytek, M. Krzyziński, H. Baniecki, P. Biecek. *survex: Explainable Machine Learning in Survival Analysis*. **R package version 0.2.2**, 2022. https://github.com/ModelOriented/survex
+
+```
+@article{spytek2022survex,
+    title   = {{survex: Explainable Machine Learning in Survival Analysis}},
+    author  = {Mikołaj Spytek and Mateusz Krzyziński and 
+               Hubert Baniecki and Przemysław Biecek},
+    journal = {R package version 0.2.2},
+    year    = {2022},
+    url     = {https://github.com/ModelOriented/survex}
+}
+```
+
 ## Related work
 
 - H. Ishwaran, U. B. Kogalur, E. H. Blackstone, M. S. Lauer. [Random survival forests](https://doi.org/10.1214/08-AOAS169). *Annals of Applied Statistics*, 2008.
