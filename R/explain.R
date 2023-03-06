@@ -202,8 +202,9 @@ explain_survival <-
         } else {
             n_events <- sum(y[, 2])
             n_censored <- length(y) - n_events
+            frac_censored <- round(n_censored/n, 3)
             if (!is.null(attr(y, "verbose_info")) && attr(y, "verbose_info") == "extracted") {
-                verbose_cat("  -> target variable   : ", length(y), " values (", n_events, "events and", n_censored, "censored )", "(", color_codes$yellow_start, "extracted from the model", color_codes$yellow_end, ")", verbose = verbose)
+                verbose_cat("  -> target variable   : ", length(y), " values (", n_events, "events and", n_censored, "censored , censoring rate =", frac_censored, ")", "(", color_codes$yellow_start, "extracted from the model", color_codes$yellow_end, ")", verbose = verbose)
                 attr(y, "verbose_info") <- NULL
             } else {
                 verbose_cat("  -> target variable   : ", length(y), " values (", n_events, "events and", n_censored, "censored )", verbose = verbose)
@@ -223,17 +224,19 @@ explain_survival <-
             if (!is.null(y)) {
                 switch(times_generation,
                        "uniform" = {
-                           times <- seq(min(y[, 1]), max(y[, 1]), length.out = 101)
+                           times <- seq(min(y[, 1]), max(y[, 1]), length.out = 50)
+                           method_description <- "50 uniformly distributed time points from min to max"
                        },
                        "quantiles" = {
-                           times <- quantile(y[, 1], seq(0, 0.99, 0.01))
+                           times <- quantile(y[, 1], seq(0, 0.99, 0.02))
+                           method_description <- "50 time points being consecutive quantiles (0.00, 0.02, ..., 0.98)"
                        },
                        stop("times_generation needs to be 'uniform' or 'quantiles'")
                 )
                 times <- sort(unique(times))
                 times_stats <- get_times_stats(times)
-                verbose_cat("  -> times             : ", times_stats[1], "unique time points", ", min =", times_stats[2], ", mean =", times_stats[3], ", max =", times_stats[4], verbose = verbose)
-                verbose_cat("  -> times             : ", "(", color_codes$yellow_start, paste("generated from y with method", times_generation), color_codes$yellow_end, ")", verbose = verbose)
+                verbose_cat("  -> times             : ", times_stats[1], "unique time points", ", min =", times_stats[2], ", mean =", times_stats[3], ", median =", times_stats[4], ", max =", times_stats[5], verbose = verbose)
+                verbose_cat("  -> times             : ", "(", color_codes$yellow_start, paste("generated from y as", method_description), color_codes$yellow_end, ")", verbose = verbose)
             } else {
                 verbose_cat("  -> times   :  not specified and automatic generation is impossible ('y' is NULL)! (", color_codes$red_start, "WARNING", color_codes$red_end, ")", verbose = verbose)
                 warning("'times' not specified and automatic generation is impossible ('y' is NULL)")
@@ -241,7 +244,7 @@ explain_survival <-
         } else {
             times <- sort(unique(times))
             times_stats <- get_times_stats(times)
-            verbose_cat("  -> times             : ", times_stats[1], "unique time points", ", min =", times_stats[2], ", mean =", times_stats[3], ", max =", times_stats[4], verbose = verbose)
+            verbose_cat("  -> times             : ", times_stats[1], "unique time points", ", min =", times_stats[2], ", mean =", times_stats[3], ", median =", times_stats[4], ", max =", times_stats[5], verbose = verbose)
         }
 
         # verbose predict function
@@ -869,7 +872,7 @@ verbose_cat <- function(..., is.default = NULL, verbose = TRUE) {
 }
 
 get_times_stats <- function(times) {
-    c(length(times), min(times), mean(times), max(times))
+    c(length(times), min(times), mean(times), median(times), max(times))
 }
 
 #
