@@ -24,7 +24,7 @@
 #' @param type type of a model, by default `"survival"`
 #'
 #' @param times numeric, a vector of times at which the survival function and cumulative hazard function should be evaluated for calculations
-#' @param times_generation either `"uniform"` or `"quantiles"`. Sets the way of generating the vector of times based on times provided in the `y` parameter. If `"uniform"` the vector contains 101 equally spaced points between the minimum and maximum observed times; if `"quantiles"` the vector contains 100 points between 0th and 99th percentiles of observed times. Ignored if `times` is not `NULL`.
+#' @param times_generation either `"uniform"` or `"quantiles"`. Sets the way of generating the vector of times based on times provided in the `y` parameter. If `"uniform"` the vector contains 50 equally spaced points between the minimum and maximum observed times; if `"quantiles"` the vector contains 50 points between 0th and 98th percentiles of observed times. Ignored if `times` is not `NULL`.
 #' @param predict_survival_function function taking 3 arguments `model`, `newdata` and `times`, and returning a matrix whose each row is a survival function evaluated at `times` for one observation from `newdata`
 #' @param predict_cumulative_hazard_function function taking 3 arguments `model`, `newdata` and `times`, and returning a matrix whose each row is a cumulative hazard function evaluated at `times` for one observation from `newdata`
 #'
