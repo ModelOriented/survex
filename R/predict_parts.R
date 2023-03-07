@@ -80,8 +80,8 @@ predict_parts.surv_explainer <- function(explainer, new_observation, ..., N = NU
     }
 
     attr(res, "label") <- ifelse(is.null(explanation_label), explainer$label, explanation_label)
-    res$event_times <- explainer$y[explainer$y <= max(explainer$times), 1]
-    res$event_statuses <- explainer$y[explainer$y <= max(explainer$times), 2]
+    res$event_times <- explainer$y[explainer$y[, 1] <= max(explainer$times), 1]
+    res$event_statuses <- explainer$y[explainer$y[, 1] <= max(explainer$times), 2]
     class(res) <- c('predict_parts_survival', class(res))
     res
 
