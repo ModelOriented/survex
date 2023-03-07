@@ -82,7 +82,7 @@
 <span>  <span class="va">new_observation</span>,</span>
 <span>  <span class="va">...</span>,</span>
 <span>  y_true <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  calculation_method <span class="op">=</span> <span class="st">"kernel"</span>,</span>
+<span>  calculation_method <span class="op">=</span> <span class="st">"kernelshap"</span>,</span>
 <span>  aggregation_method <span class="op">=</span> <span class="st">"integral"</span>,</span>
 <span>  path <span class="op">=</span> <span class="st">"average"</span>,</span>
 <span>  B <span class="op">=</span> <span class="fl">25</span>,</span>
@@ -109,23 +109,11 @@
 
 
 <dt>calculation_method</dt>
-<dd><p>a character, only <code>"kernel"</code> is implemented for now.</p></dd>
+<dd><p>a character, either <code>"kernelshap"</code> for use of <code>kernelshap</code> library (providing faster Kernel SHAP with refinements) or <code>"exact_kernel"</code> for exact Kernel SHAP estimation</p></dd>
 
 
 <dt>aggregation_method</dt>
 <dd><p>a character, either <code>"mean_absolute"</code> or <code>"integral"</code>, <code>"max_absolute"</code>, <code>"sum_of_squares"</code></p></dd>
-
-
-<dt>path</dt>
-<dd><p>ignored, placeholder the not implemented <code>"sampling"</code> method</p></dd>
-
-
-<dt>B</dt>
-<dd><p>ignored, placeholder the not implemented <code>"sampling"</code> method</p></dd>
-
-
-<dt>exact</dt>
-<dd><p>ignored, placeholder the not implemented <code>"sampling"</code> method</p></dd>
 
 </dl></div>
     <div id="value">
