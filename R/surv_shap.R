@@ -45,7 +45,7 @@ surv_shap <- function(explainer,
     res$result <- switch(calculation_method,
                          "exact_kernel" = shap_kernel(explainer, new_observation, ...),
                          "kernelshap" = use_kernelshap(explainer, new_observation, ...),
-                         stop("Only calculations method `exact_kernel` and `kernelshap` are implemented"))
+                         stop("Only `exact_kernel` and `kernelshap` calculation methods are implemented"))
 
     if (!is.null(y_true)) res$y_true <- c(y_true_time = y_true_time, y_true_ind = y_true_ind)
 
