@@ -23,6 +23,9 @@ test_that("survshap explanations work", {
 
     plot(parts_cph, parts_ranger, parts_src)
 
+    parts_cph2 <- predict_parts(cph_exp, veteran[4,], explanation_label = "second_explanation")
+    plot(parts_cph, parts_cph2)
+
     expect_s3_class(parts_cph, c("predict_parts_survival", "surv_shap"))
     expect_s3_class(parts_ranger, c("predict_parts_survival", "surv_shap"))
     expect_s3_class(parts_src, c("predict_parts_survival", "surv_shap"))
