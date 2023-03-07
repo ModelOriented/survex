@@ -86,7 +86,8 @@
 <span>  <span class="va">...</span>,</span>
 <span>  N <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"survshap"</span>,</span>
-<span>  output_type <span class="op">=</span> <span class="st">"survival"</span></span>
+<span>  output_type <span class="op">=</span> <span class="st">"survival"</span>,</span>
+<span>  explanation_label <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -114,6 +115,10 @@
 
 <dt>output_type</dt>
 <dd><p>either <code>"survival"</code> or <code>"risk"</code> the type of survival model output that should be considered for explanations. If <code>"survival"</code> the explanations are based on the survival function. Otherwise the scalar risk predictions are used by the <code><a href="https://modeloriented.github.io/DALEX/reference/predict_parts.html" class="external-link">DALEX::predict_parts</a></code> function.</p></dd>
+
+
+<dt>explanation_label</dt>
+<dd><p>a label that can overwrite explainer label (useful for multiple explanations for the same explainer/model)</p></dd>
 
 </dl></div>
     <div id="value">
@@ -192,10 +197,10 @@
 <span class="r-in"><span><span class="va">cph_predict_parts_survlime</span> <span class="op">&lt;-</span> <span class="fu">predict_parts</span><span class="op">(</span><span class="va">cph_exp</span>, new_observation <span class="op">=</span> <span class="va">veteran</span><span class="op">[</span><span class="fl">1</span>, <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span><span class="op">]</span>,</span></span>
 <span class="r-in"><span>                                            type <span class="op">=</span> <span class="st">"survlime"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cph_predict_parts_survlime</span><span class="op">$</span><span class="va">result</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          trt        karno     diagtime         age      prior celltypelarge</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.02537546 -0.001569358 0.0001389099 0.001481359 0.00395866   -0.03355215</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   celltypesmallcell celltypesquamous</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1      -0.003542017      -0.05657145</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          trt         karno      diagtime          age         prior</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.01126631 -0.0004745046 -0.0001076638 0.0006063711 -0.0005994613</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   celltypelarge celltypesmallcell celltypesquamous</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   -0.04886728        -0.0295468      -0.04750294</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cph_predict_parts_survlime</span>, type <span class="op">=</span> <span class="st">"local_importance"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="predict_parts.surv_explainer-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
