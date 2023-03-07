@@ -107,8 +107,8 @@ model_profile.surv_explainer <- function(explainer,
 
                 ret <- list(eval_times = unique(agr_profiles$`_times_`), cp_profiles = cp_profiles, result = agr_profiles)
                 class(ret) <- c("model_profile_survival", "list")
-                ret$event_times <- explainer$y[,1]
-                ret$event_statuses <- explainer$y[,2]
+                ret$event_times <- explainer$y[explainer$y <= max(explainer$times), 1]
+                ret$event_statuses <- explainer$y[explainer$y <= max(explainer$times), 2]
                 ret
                 },
 

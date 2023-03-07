@@ -167,3 +167,21 @@ transform_to_stepfunction <- function(predict_function, eval_times = NULL, ..., 
 risk_from_chf <- function(predict_cumulative_hazard_function, times) {
     function(model, newdata) rowSums(predict_cumulative_hazard_function(model, newdata, times))
 }
+
+#' @keywords internal
+add_rug_to_plot <- function(base_plot, rug_df, rug, rug_colors){
+    if (rug == "all"){
+        return_plot <- with(rug_df, { base_plot +
+                geom_rug(data = rug_df[rug_df$statuses == 1,], mapping = aes(x=times, color = statuses), inherit.aes=F, color = rug_colors[1]) +
+                geom_rug(data = rug_df[rug_df$statuses == 0,], mapping = aes(x=times, color = statuses), inherit.aes=F, color = rug_colors[2]) })
+    } else if (rug == "events") {
+        return_plot <- with(rug_df, { base_plot +
+                geom_rug(data = rug_df[rug_df$statuses == 1,], mapping = aes(x=times, color = statuses), inherit.aes=F, color = rug_colors[1]) })
+    } else if (rug == "censors") {
+        return_plot <- with(rug_df, { base_plot +
+                geom_rug(data = rug_df[rug_df$statuses == 0,], mapping = aes(x=times, color = statuses), inherit.aes=F, color = rug_colors[2]) })
+    } else {
+        return_plot <- base_plot
+    }
+}
+

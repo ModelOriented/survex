@@ -81,19 +81,8 @@ plot_td_surv_model_performance <- function(x, ..., metrics = NULL, title = NULL,
         facet_wrap(~ind, ncol = facet_ncol, scales = "free_y")
     })
 
-    if (rug == "all"){
-        return_plot <- with(rug_df, { base_plot +
-            geom_rug(data = rug_df[rug_df$statuses == 1,], mapping = aes(x=times, color = statuses), inherit.aes=F, color = rug_colors[1]) +
-            geom_rug(data = rug_df[rug_df$statuses == 0,], mapping = aes(x=times, color = statuses), inherit.aes=F, color = rug_colors[2]) })
-    } else if (rug == "events") {
-        return_plot <- with(rug_df, { base_plot +
-            geom_rug(data = rug_df[rug_df$statuses == 1,], mapping = aes(x=times, color = statuses), inherit.aes=F, color = rug_colors[1]) })
-    } else if (rug == "censors") {
-        return_plot <- with(rug_df, { base_plot +
-            geom_rug(data = rug_df[rug_df$statuses == 0,], mapping = aes(x=times, color = statuses), inherit.aes=F, color = rug_colors[2]) })
-    } else {
-        return_plot <- base_plot
-    }
+    return_plot <- add_rug_to_plot(base_plot, rug_df, rug, rug_colors)
+
     return(return_plot)
 }
 

@@ -80,8 +80,8 @@ predict_profile.surv_explainer <- function(explainer,
                                         variable_splits_type = variable_splits_type,
                                         ...)
             class(res) <- c("predict_profile_survival", class(res))
-            res$event_times <- explainer$y[,1]
-            res$event_statuses <- explainer$y[,2]
+            res$event_times <- explainer$y[explainer$y <= max(explainer$times), 1]
+            res$event_statuses <- explainer$y[explainer$y <= max(explainer$times), 2]
             return(res)
         }
         else stop("For survival output only type=`ceteris_paribus` is implemented")

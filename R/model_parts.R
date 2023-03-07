@@ -93,8 +93,8 @@ model_parts.surv_explainer <- function(explainer,
                N = N,
                ...
              )
-             res$event_times <- explainer$y[,1]
-             res$event_statuses <- explainer$y[,2]
+             res$event_times <- explainer$y[explainer$y <= max(explainer$times), 1]
+             res$event_statuses <- explainer$y[explainer$y <= max(explainer$times), 2]
              class(res) <- c("model_parts_survival", class(res))
              res
            }
