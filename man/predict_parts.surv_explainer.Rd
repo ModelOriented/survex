@@ -13,7 +13,8 @@ predict_parts(explainer, ...)
   ...,
   N = NULL,
   type = "survshap",
-  output_type = "survival"
+  output_type = "survival",
+  explanation_label = NULL
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ predict_parts(explainer, ...)
 \item{type}{if \code{output_type == "survival"} must be either \code{"survshap"} or \code{"survlime"}, otherwise refer to the \code{DALEX::predict_parts}}
 
 \item{output_type}{either \code{"survival"} or \code{"risk"} the type of survival model output that should be considered for explanations. If \code{"survival"} the explanations are based on the survival function. Otherwise the scalar risk predictions are used by the \code{DALEX::predict_parts} function.}
+
+\item{explanation_label}{a label that can overwrite explainer label (useful for multiple explanations for the same explainer/model)}
 }
 \value{
 An object of class \code{"predict_parts_survival"} and additional classes depending on the type of explanations. It is a list with the element \code{result} containing the results of the calculation.

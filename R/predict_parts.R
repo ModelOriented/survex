@@ -8,6 +8,7 @@
 #' @param N the maximum number of observations used for calculation of attributions. If `NULL` (default) all observations will be used.
 #' @param type if `output_type == "survival"` must be either `"survshap"` or `"survlime"`, otherwise refer to the `DALEX::predict_parts`
 #' @param output_type either `"survival"` or `"risk"` the type of survival model output that should be considered for explanations. If `"survival"` the explanations are based on the survival function. Otherwise the scalar risk predictions are used by the `DALEX::predict_parts` function.
+#' @param explanation_label a label that can overwrite explainer label (useful for multiple explanations for the same explainer/model)
 #'
 #' @return An object of class `"predict_parts_survival"` and additional classes depending on the type of explanations. It is a list with the element `result` containing the results of the calculation.
 #'
@@ -59,10 +60,8 @@ predict_parts <- function(explainer, ...) UseMethod("predict_parts", explainer)
 
 #' @rdname predict_parts.surv_explainer
 #' @export
-predict_parts.surv_explainer <- function(explainer, new_observation, ..., N = NULL, type = "survshap", output_type = "survival") {
-
-
-    label <- explainer$label
+predict_parts.surv_explainer <- function(explainer, new_observation, ..., N = NULL, type = "survshap", output_type = "survival",
+                                         explanation_label = NULL) {
 
     if (output_type == "risk") {
         return (DALEX::predict_parts(explainer = explainer,
@@ -80,7 +79,7 @@ predict_parts.surv_explainer <- function(explainer, new_observation, ..., N = NU
 
     }
 
-    attr(res, "label") <- label
+    attr(res, "label") <- ifelse(is.null(explanation_label), explainer$label, explanation_label)
     res$event_times <- explainer$y[,1]
     res$event_statuses <- explainer$y[,2]
     class(res) <- c('predict_parts_survival', class(res))
