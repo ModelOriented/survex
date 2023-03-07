@@ -55,7 +55,7 @@ There are additional parameters that are passed to internal functions
 \itemize{
 \item \code{timestamps} -  a numeric vector, time points at which the survival function will be evaluated
 \item \code{y_true} -  a two element numeric vector or matrix of one row and two columns, the first element being the true observed time and the second the status of the observation, used for plotting
-\item \code{calculation_method} -  a character, only \code{"kernel"} is implemented for now.
+\item \code{calculation_method} -  a character, either \code{"kernelshap"} for use of \code{kernelshap} library (providing faster Kernel SHAP with refinements) or \code{"exact_kernel"} for exact Kernel SHAP estimation
 \item \code{aggregation_method} -  a character, either \code{"mean_absolute"} or \code{"integral"}, \code{"max_absolute"}, \code{"sum_of_squares"}
 }
 }
