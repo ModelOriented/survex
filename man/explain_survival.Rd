@@ -87,7 +87,7 @@ explain(
 
 \item{times}{numeric, a vector of times at which the survival function and cumulative hazard function should be evaluated for calculations}
 
-\item{times_generation}{either \code{"uniform"} or \code{"quantiles"}. Sets the way of generating the vector of times based on times provided in the \code{y} parameter. If \code{"uniform"} the vector contains 101 equally spaced points between the minimum and maximum observed times; if \code{"quantiles"} the vector contains 100 points between 0th and 99th percentiles of observed times. Ignored if \code{times} is not \code{NULL}.}
+\item{times_generation}{either \code{"uniform"} or \code{"quantiles"}. Sets the way of generating the vector of times based on times provided in the \code{y} parameter. If \code{"uniform"} the vector contains 50 equally spaced points between the minimum and maximum observed times; if \code{"quantiles"} the vector contains 50 points between 0th and 98th percentiles of observed times. Ignored if \code{times} is not \code{NULL}.}
 
 \item{predict_survival_function}{function taking 3 arguments \code{model}, \code{newdata} and \code{times}, and returning a matrix whose each row is a survival function evaluated at \code{times} for one observation from \code{newdata}}
 
