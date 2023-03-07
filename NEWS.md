@@ -18,6 +18,7 @@
 * refactored integration of metrics ([#31](https://github.com/ModelOriented/survex/issues/31))
 * changed behaviour of `categorical_variables` argument in `model_parts()` and `predict_parts()`. If it contains variable names not present in the `variables` argument, they will be added at the end. ([#39](https://github.com/ModelOriented/survex/issues/39))
 * added ROC AUC calculation and plotting for selected timepoints in `model_performance()` ([#22](https://github.com/ModelOriented/survex/issues/22))
+* added `explanation_label` parameter to `predict_parts()` function that can overwrite explainer label and thus, enable plotting multiple local SurvSHAP(t) explanations. ([#47](https://github.com/ModelOriented/survex/issues/47))
 
 
 
