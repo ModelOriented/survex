@@ -23,6 +23,7 @@ Depends: R (>= 3.5.0)
 Imports:
     DALEX (>= 2.2.1),
     ggplot2,
+    kernelshap,
     pec,
     survival,
     patchwork

@@ -28,7 +28,7 @@
 #' * for `survshap`
 #'     * `timestamps` -  a numeric vector, time points at which the survival function will be evaluated
 #'     * `y_true` -  a two element numeric vector or matrix of one row and two columns, the first element being the true observed time and the second the status of the observation, used for plotting
-#'     * `calculation_method` -  a character, only `"kernel"` is implemented for now.
+#'     * `calculation_method` -  a character, either `"kernelshap"` for use of `kernelshap` library (providing faster Kernel SHAP with refinements) or `"exact_kernel"` for exact Kernel SHAP estimation
 #'     * `aggregation_method` -  a character, either `"mean_absolute"` or `"integral"`, `"max_absolute"`, `"sum_of_squares"`
 #'
 #' @section References:

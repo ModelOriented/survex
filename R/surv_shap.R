@@ -4,11 +4,8 @@
 #' @param new_observation a new observation for which predictions need to be explained
 #' @param ... additional parameters, passed to internal functions
 #' @param y_true a two element numeric vector or matrix of one row and two columns, the first element being the true observed time and the second the status of the observation, used for plotting
-#' @param calculation_method a character, only `"kernel"` is implemented for now.
+#' @param calculation_method a character, either `"kernelshap"` for use of `kernelshap` library (providing faster Kernel SHAP with refinements) or `"exact_kernel"` for exact Kernel SHAP estimation
 #' @param aggregation_method a character, either `"mean_absolute"` or `"integral"`, `"max_absolute"`, `"sum_of_squares"`
-#' @param path ignored, placeholder the not implemented `"sampling"` method
-#' @param B ignored, placeholder the not implemented `"sampling"` method
-#' @param exact ignored, placeholder the not implemented `"sampling"` method
 #'
 #' @return A list, containing the calculated SurvSHAP(t) results in the `result` field
 #'
@@ -21,7 +18,7 @@ surv_shap <- function(explainer,
                       ...,
                       y_true = NULL,
 
-                      calculation_method = "kernel",
+                      calculation_method = "kernelshap",
                       aggregation_method = "integral",
                       path = "average",
                       B = 25,
@@ -41,9 +38,14 @@ surv_shap <- function(explainer,
         }
     }
 
-    res <- switch(calculation_method,
-                  "kernel" = shap_kernel(explainer, new_observation, aggregation_method, ...),
-                  stop("Only calculation method = `kernel` is implemented"))
+    res <- list()
+    res$eval_times <- explainer$times
+    res$variable_values <- new_observation
+
+    res$result <- switch(calculation_method,
+                         "exact_kernel" = shap_kernel(explainer, new_observation, ...),
+                         "kernelshap" = use_kernelshap(explainer, new_observation, ...),
+                         stop("Only `exact_kernel` and `kernelshap` calculation methods are implemented"))
 
     if (!is.null(y_true)) res$y_true <- c(y_true_time = y_true_time, y_true_ind = y_true_ind)
 
@@ -54,7 +56,7 @@ surv_shap <- function(explainer,
 }
 
 
-shap_kernel <- function(explainer, new_observation, aggregation_method,  ...) {
+shap_kernel <- function(explainer, new_observation, ...) {
 
     timestamps <- explainer$times
     p <- ncol(explainer$data)
@@ -71,13 +73,7 @@ shap_kernel <- function(explainer, new_observation, aggregation_method,  ...) {
 
     shap_values <- as.data.frame(shap_values, row.names = colnames(explainer$data))
     colnames(shap_values) <- paste("t=", timestamps, sep = "")
-
-    ret <- list()
-    ret$eval_times <- timestamps
-    ret$result <- data.frame(t(shap_values))
-    ret$variable_values <- new_observation
-
-    return(ret)
+    return (t(shap_values))
 }
 
 generate_shap_kernel_weights <- function(permutations, p) {
@@ -146,4 +142,20 @@ aggregate_surv_shap <- function(survshap, method) {
            })),
            stop("aggregation_method has to be one of `sum_of_squares`, `mean_absolute`, `max_absolute` or `integral`"))
 
+}
+
+
+use_kernelshap <- function(explainer, new_observation, ...){
+
+    predfun <- function(model, newdata){
+        explainer$predict_survival_function(model, newdata, times=explainer$times)
+    }
+
+    tmp_res <- kernelshap::kernelshap(explainer$model, new_observation, bg_X = explainer$data,
+               pred_fun = predfun, verbose=FALSE)
+
+    shap_values <- data.frame(t(sapply(tmp_res$S, cbind)))
+    colnames(shap_values) <- colnames(tmp_res$X)
+    rownames(shap_values) <- paste("t=", explainer$times, sep = "")
+    return(shap_values)
 }
