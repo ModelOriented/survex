@@ -161,9 +161,9 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Preparation of a new explainer is initiated </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; model label       :  coxph ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; data              :  137  rows  6  cols ( <span style="color: #BBBB00;"> extracted from the model </span> ) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; target variable   :  137  values ( 128 events and 9 censored ) ( <span style="color: #BBBB00;"> extracted from the model </span> ) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  94 unique time points , min = 1 , mean = 119.9706 , max = 845.56 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  ( <span style="color: #BBBB00;"> generated from y with method quantiles </span> ) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; target variable   :  137  values ( 128 events and 9 censored , censoring rate = 0.066 ) ( <span style="color: #BBBB00;"> extracted from the model </span> ) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  49 unique time points , min = 1 , mean = 110.6971 , median = 80 , max = 562.52 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  ( <span style="color: #BBBB00;"> generated from y as 50 time points being consecutive quantiles (0.00, 0.02, ..., 0.98) </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict function  :  predict.coxph with type = 'risk' will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict survival function  :  predictSurvProb.coxph will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict cumulative hazard function  :  -log(predict_survival_function) will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
@@ -172,30 +172,30 @@
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">cph_predict_parts_survshap</span> <span class="op">&lt;-</span> <span class="fu">predict_parts</span><span class="op">(</span><span class="va">cph_exp</span>, new_observation <span class="op">=</span> <span class="va">veteran</span><span class="op">[</span><span class="fl">1</span>, <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cph_predict_parts_survshap</span><span class="op">$</span><span class="va">result</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                trt    celltype       karno     diagtime          age</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t=1    0.001349624 0.005733068 0.002386291 4.519434e-06 0.0007596571</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t=1.36 0.001349624 0.005733068 0.002386291 4.519434e-06 0.0007596571</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t=2.72 0.002014341 0.008570174 0.003548113 6.741872e-06 0.0011364914</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t=4.24 0.003345122 0.014277010 0.005845881 1.118341e-05 0.0018961996</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t=7    0.005332776 0.022867967 0.009202902 1.779486e-05 0.0030438276</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t=8    0.007955812 0.034329602 0.013481251 2.646997e-05 0.0045815194</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               prior</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t=1    0.0001739549</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t=1.36 0.0001739549</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t=2.72 0.0002598683</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t=4.24 0.0004323444</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t=7    0.0006911509</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t=8    0.0010349400</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 trt    celltype       karno     diagtime          age</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t=1     0.001349624 0.005733068 0.002386291 4.519434e-06 0.0007596571</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t=2.72  0.002014341 0.008570174 0.003548113 6.741872e-06 0.0011364914</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t=7     0.005332776 0.022867967 0.009202902 1.779486e-05 0.0030438276</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t=8     0.007955812 0.034329602 0.013481251 2.646997e-05 0.0045815194</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t=10.6  0.009243213 0.040007253 0.015511293 3.070325e-05 0.0053456766</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t=12.32 0.011119407 0.048343487 0.018378894 3.683897e-05 0.0064702161</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                prior</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t=1     0.0001739549</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t=2.72  0.0002598683</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t=7     0.0006911509</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t=8     0.0010349400</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t=10.6  0.0012046414</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t=12.32 0.0014531432</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cph_predict_parts_survshap</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="predict_parts.surv_explainer-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">cph_predict_parts_survlime</span> <span class="op">&lt;-</span> <span class="fu">predict_parts</span><span class="op">(</span><span class="va">cph_exp</span>, new_observation <span class="op">=</span> <span class="va">veteran</span><span class="op">[</span><span class="fl">1</span>, <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span><span class="op">]</span>,</span></span>
 <span class="r-in"><span>                                            type <span class="op">=</span> <span class="st">"survlime"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cph_predict_parts_survlime</span><span class="op">$</span><span class="va">result</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           trt         karno      diagtime          age         prior</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.007016023 -0.0003793413 -0.0001289102 0.0001368356 -0.0009073395</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           trt         karno      diagtime         age        prior</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.009180194 -0.0006205627 -2.725721e-05 0.000810901 0.0007012375</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   celltypelarge celltypesmallcell celltypesquamous</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   -0.03515465      -0.002143238      -0.01776153</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    -0.0495437       -0.02663547      -0.04488974</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cph_predict_parts_survlime</span>, type <span class="op">=</span> <span class="st">"local_importance"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="predict_parts.surv_explainer-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>

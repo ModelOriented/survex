@@ -128,9 +128,9 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Preparation of a new explainer is initiated </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; model label       :  coxph ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; data              :  137  rows  6  cols ( <span style="color: #BBBB00;"> extracted from the model </span> ) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; target variable   :  137  values ( 128 events and 9 censored ) ( <span style="color: #BBBB00;"> extracted from the model </span> ) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  94 unique time points , min = 1 , mean = 119.9706 , max = 845.56 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  ( <span style="color: #BBBB00;"> generated from y with method quantiles </span> ) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; target variable   :  137  values ( 128 events and 9 censored , censoring rate = 0.066 ) ( <span style="color: #BBBB00;"> extracted from the model </span> ) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  49 unique time points , min = 1 , mean = 110.6971 , median = 80 , max = 562.52 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  ( <span style="color: #BBBB00;"> generated from y as 50 time points being consecutive quantiles (0.00, 0.02, ..., 0.98) </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict function  :  predict.coxph with type = 'risk' will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict survival function  :  predictSurvProb.coxph will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict cumulative hazard function  :  -log(predict_survival_function) will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
@@ -143,8 +143,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; model label       :  ranger ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; data              :  137  rows  6  cols </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; target variable   :  137  values ( 128 events and 9 censored ) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  94 unique time points , min = 1 , mean = 119.9706 , max = 845.56 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  ( <span style="color: #BBBB00;"> generated from y with method quantiles </span> ) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  49 unique time points , min = 1 , mean = 110.6971 , median = 80 , max = 562.52 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  ( <span style="color: #BBBB00;"> generated from y as 50 time points being consecutive quantiles (0.00, 0.02, ..., 0.98) </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict function  :  sum over the predict_cumulative_hazard_function will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict survival function  :  stepfun based on predict.ranger()$survival will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict cumulative hazard function  :  stepfun based on predict.ranger()$chf will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
@@ -153,16 +153,16 @@
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">cph_exp</span>, <span class="va">veteran</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span>, output_type <span class="op">=</span> <span class="st">"survival"</span><span class="op">)</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.9959425 0.9959425 0.9938949 0.9896930 0.9831475 0.9739694 0.9692183</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [8] 0.9692183 0.9668100 0.9619751</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.9959425 0.9938949 0.9831475 0.9739694 0.9692183 0.9619751 0.9520137</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [8] 0.9494633 0.9414903 0.9300045</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">cph_exp</span>, <span class="va">veteran</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span>, output_type <span class="op">=</span> <span class="st">"risk"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         1 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 0.7354128 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">rsf_ranger_exp</span>, <span class="va">veteran</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span>, output_type <span class="op">=</span> <span class="st">"chf"</span><span class="op">)</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.009993302 0.009993302 0.009993302 0.009993302 0.015965525 0.019161397</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] 0.021558346 0.021558346 0.034398176 0.042721840</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.01024906 0.01024906 0.01256084 0.01543748 0.01670683 0.03533555</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] 0.04427212 0.04427212 0.05112884 0.05369035</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

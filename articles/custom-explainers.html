@@ -126,9 +126,9 @@ example, this is the case for the proportional hazards model from the
 <span><span class="co">#&gt; Preparation of a new explainer is initiated </span></span>
 <span><span class="co">#&gt;   -&gt; model label       :  coxph ( <span style="color: #BBBB00;"> default </span> ) </span></span>
 <span><span class="co">#&gt;   -&gt; data              :  137  rows  6  cols (  extracted from the model  ) </span></span>
-<span><span class="co">#&gt;   -&gt; target variable   :  137  values ( 128 events and 9 censored ) (  extracted from the model  ) </span></span>
-<span><span class="co">#&gt;   -&gt; times             :  94 unique time points , min = 1 , mean = 119.9706 , max = 845.56 </span></span>
-<span><span class="co">#&gt;   -&gt; times             :  (  generated from y with method quantiles  ) </span></span>
+<span><span class="co">#&gt;   -&gt; target variable   :  137  values ( 128 events and 9 censored , censoring rate = 0.066 ) (  extracted from the model  ) </span></span>
+<span><span class="co">#&gt;   -&gt; times             :  49 unique time points , min = 1 , mean = 110.6971 , median = 80 , max = 562.52 </span></span>
+<span><span class="co">#&gt;   -&gt; times             :  (  generated from y as 50 time points being consecutive quantiles (0.00, 0.02, ..., 0.98)  ) </span></span>
 <span><span class="co">#&gt;   -&gt; predict function  :  predict.coxph with type = 'risk' will be used ( <span style="color: #BBBB00;"> default </span> ) </span></span>
 <span><span class="co">#&gt;   -&gt; predict survival function  :  predictSurvProb.coxph will be used ( <span style="color: #BBBB00;"> default </span> ) </span></span>
 <span><span class="co">#&gt;   -&gt; predict cumulative hazard function  :  -log(predict_survival_function) will be used ( <span style="color: #BBBB00;"> default </span> ) </span></span>
@@ -171,8 +171,8 @@ hand:</p>
 <span><span class="co">#&gt;   -&gt; model label       :  manual coxph </span></span>
 <span><span class="co">#&gt;   -&gt; data              :  137  rows  6  cols </span></span>
 <span><span class="co">#&gt;   -&gt; target variable   :  137  values ( 128 events and 9 censored ) </span></span>
-<span><span class="co">#&gt;   -&gt; times             :  94 unique time points , min = 1 , mean = 119.9706 , max = 845.56 </span></span>
-<span><span class="co">#&gt;   -&gt; times             :  (  generated from y with method quantiles  ) </span></span>
+<span><span class="co">#&gt;   -&gt; times             :  49 unique time points , min = 1 , mean = 110.6971 , median = 80 , max = 562.52 </span></span>
+<span><span class="co">#&gt;   -&gt; times             :  (  generated from y as 50 time points being consecutive quantiles (0.00, 0.02, ..., 0.98)  ) </span></span>
 <span><span class="co">#&gt;   -&gt; predict function  :  risk_pred </span></span>
 <span><span class="co">#&gt;   -&gt; predict survival function  :  surv_pred </span></span>
 <span><span class="co">#&gt;   -&gt; predict cumulative hazard function  :  chf_pred </span></span>
@@ -232,7 +232,7 @@ explainer:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.randomforestsrc.org/" class="external-link">randomForestSRC</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  randomForestSRC 3.2.0 </span></span>
+<span><span class="co">#&gt;  randomForestSRC 3.2.1 </span></span>
 <span><span class="co">#&gt;  </span></span>
 <span><span class="co">#&gt;  Type rfsrc.news() to see new features, changes, and bug fixes. </span></span>
 <span><span class="co">#&gt; </span></span>
@@ -249,12 +249,12 @@ explainer:</p>
 <span><span class="co">#&gt;   -&gt; model label       :  manual rsf </span></span>
 <span><span class="co">#&gt;   -&gt; data              :  137  rows  6  cols </span></span>
 <span><span class="co">#&gt;   -&gt; target variable   :  137  values ( 128 events and 9 censored ) </span></span>
-<span><span class="co">#&gt;   -&gt; times             :  94 unique time points , min = 1 , mean = 119.9706 , max = 845.56 </span></span>
-<span><span class="co">#&gt;   -&gt; times             :  (  generated from y with method quantiles  ) </span></span>
+<span><span class="co">#&gt;   -&gt; times             :  49 unique time points , min = 1 , mean = 110.6971 , median = 80 , max = 562.52 </span></span>
+<span><span class="co">#&gt;   -&gt; times             :  (  generated from y as 50 time points being consecutive quantiles (0.00, 0.02, ..., 0.98)  ) </span></span>
 <span><span class="co">#&gt;   -&gt; predict function  :  risk_pred_rsf </span></span>
 <span><span class="co">#&gt;   -&gt; predict survival function  :  surv_pred_rsf </span></span>
 <span><span class="co">#&gt;   -&gt; predict cumulative hazard function  :  chf_pred_rsf </span></span>
-<span><span class="co">#&gt;   -&gt; model_info        :  package randomForestSRC , ver. 3.2.0 , task survival ( <span style="color: #BBBB00;"> default </span> ) </span></span>
+<span><span class="co">#&gt;   -&gt; model_info        :  package randomForestSRC , ver. 3.2.1 , task survival ( <span style="color: #BBBB00;"> default </span> ) </span></span>
 <span><span class="co">#&gt;   A new explainer has been created!</span></span></code></pre></div>
 </div>
 <div class="section level2">

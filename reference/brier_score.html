@@ -132,9 +132,9 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Preparation of a new explainer is initiated </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; model label       :  coxph ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; data              :  137  rows  6  cols ( <span style="color: #BBBB00;"> extracted from the model </span> ) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; target variable   :  137  values ( 128 events and 9 censored ) ( <span style="color: #BBBB00;"> extracted from the model </span> ) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  94 unique time points , min = 1 , mean = 119.9706 , max = 845.56 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  ( <span style="color: #BBBB00;"> generated from y with method quantiles </span> ) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; target variable   :  137  values ( 128 events and 9 censored , censoring rate = 0.066 ) ( <span style="color: #BBBB00;"> extracted from the model </span> ) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  49 unique time points , min = 1 , mean = 110.6971 , median = 80 , max = 562.52 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  ( <span style="color: #BBBB00;"> generated from y as 50 time points being consecutive quantiles (0.00, 0.02, ..., 0.98) </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict function  :  predict.coxph with type = 'risk' will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict survival function  :  predictSurvProb.coxph will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict cumulative hazard function  :  -log(predict_survival_function) will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
@@ -146,39 +146,25 @@
 <span class="r-in"><span><span class="va">surv</span> <span class="op">&lt;-</span> <span class="va">cph_exp</span><span class="op">$</span><span class="fu">predict_survival_function</span><span class="op">(</span><span class="va">cph</span>, <span class="va">cph_exp</span><span class="op">$</span><span class="va">data</span>, <span class="va">times</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">brier_score</span><span class="op">(</span><span class="va">y</span>, surv <span class="op">=</span> <span class="va">surv</span>, times <span class="op">=</span> <span class="va">times</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.01450469 0.01450469 0.02131799 0.03395903 0.05085721 0.07237285</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] 0.08296505 0.08296505 0.08976566 0.10034947 0.10895859 0.11860639</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [13] 0.11860639 0.12115921 0.12534671 0.12534671 0.12812196 0.12899805</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [19] 0.12899805 0.12894844 0.13311293 0.13452743 0.13853090 0.14201661</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [25] 0.14171276 0.15028547 0.15745581 0.15745581 0.15894651 0.15887866</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [31] 0.16421655 0.16678636 0.16752588 0.16054595 0.15386626 0.15386626</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [37] 0.15595910 0.15595910 0.15824493 0.16471718 0.16763382 0.16364167</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [43] 0.16343522 0.16768271 0.15672279 0.15672279 0.15781375 0.15800998</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [49] 0.15707059 0.15707059 0.15188724 0.15110733 0.15110733 0.15151055</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [55] 0.15151055 0.15237535 0.15325489 0.15325489 0.16278271 0.16469163</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [61] 0.16469163 0.16725319 0.16725319 0.17057980 0.16644868 0.16788043</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [67] 0.16572450 0.16628150 0.16073207 0.15935967 0.15352345 0.14851016</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [73] 0.14642744 0.14642744 0.14359704 0.14083776 0.13666323 0.13547324</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [79] 0.12885560 0.12559400 0.11816123 0.11207367 0.10765794 0.09901280</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [85] 0.09889997 0.09031670 0.07760702 0.07237333 0.06668832 0.05535086</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [91] 0.04565290 0.04001131 0.02744170 0.01789265</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.01450469 0.02131799 0.05085721 0.07237285 0.08296505 0.10034947</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] 0.11860639 0.12115921 0.12534671 0.12899805 0.12894844 0.13452743</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] 0.13853090 0.14201661 0.15028547 0.15745581 0.15887866 0.16678636</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [19] 0.16054595 0.15386626 0.15595910 0.15824493 0.16763382 0.16343522</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [25] 0.15672279 0.15781375 0.15707059 0.15188724 0.15110733 0.15151055</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [31] 0.15325489 0.16278271 0.16469163 0.16725319 0.16644868 0.16572450</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [37] 0.16073207 0.15352345 0.14642744 0.14359704 0.13666323 0.12885560</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [43] 0.11816123 0.10765794 0.09889997 0.07760702 0.06668832 0.04565290</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [49] 0.02744170</span>
 <span class="r-in"><span><span class="fu">loss_brier_score</span><span class="op">(</span><span class="va">y</span>, surv <span class="op">=</span> <span class="va">surv</span>, times <span class="op">=</span> <span class="va">times</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.01450469 0.01450469 0.02131799 0.03395903 0.05085721 0.07237285</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] 0.08296505 0.08296505 0.08976566 0.10034947 0.10895859 0.11860639</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [13] 0.11860639 0.12115921 0.12534671 0.12534671 0.12812196 0.12899805</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [19] 0.12899805 0.12894844 0.13311293 0.13452743 0.13853090 0.14201661</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [25] 0.14171276 0.15028547 0.15745581 0.15745581 0.15894651 0.15887866</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [31] 0.16421655 0.16678636 0.16752588 0.16054595 0.15386626 0.15386626</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [37] 0.15595910 0.15595910 0.15824493 0.16471718 0.16763382 0.16364167</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [43] 0.16343522 0.16768271 0.15672279 0.15672279 0.15781375 0.15800998</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [49] 0.15707059 0.15707059 0.15188724 0.15110733 0.15110733 0.15151055</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [55] 0.15151055 0.15237535 0.15325489 0.15325489 0.16278271 0.16469163</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [61] 0.16469163 0.16725319 0.16725319 0.17057980 0.16644868 0.16788043</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [67] 0.16572450 0.16628150 0.16073207 0.15935967 0.15352345 0.14851016</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [73] 0.14642744 0.14642744 0.14359704 0.14083776 0.13666323 0.13547324</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [79] 0.12885560 0.12559400 0.11816123 0.11207367 0.10765794 0.09901280</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [85] 0.09889997 0.09031670 0.07760702 0.07237333 0.06668832 0.05535086</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [91] 0.04565290 0.04001131 0.02744170 0.01789265</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.01450469 0.02131799 0.05085721 0.07237285 0.08296505 0.10034947</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] 0.11860639 0.12115921 0.12534671 0.12899805 0.12894844 0.13452743</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] 0.13853090 0.14201661 0.15028547 0.15745581 0.15887866 0.16678636</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [19] 0.16054595 0.15386626 0.15595910 0.15824493 0.16763382 0.16343522</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [25] 0.15672279 0.15781375 0.15707059 0.15188724 0.15110733 0.15151055</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [31] 0.15325489 0.16278271 0.16469163 0.16725319 0.16644868 0.16572450</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [37] 0.16073207 0.15352345 0.14642744 0.14359704 0.13666323 0.12885560</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [43] 0.11816123 0.10765794 0.09889997 0.07760702 0.06668832 0.04565290</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [49] 0.02744170</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

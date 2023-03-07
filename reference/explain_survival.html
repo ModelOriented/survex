@@ -204,7 +204,7 @@ with <code><a href="https://rdrr.io/pkg/pec/man/predictSurvProb.html" class="ext
 
 
 <dt>times_generation</dt>
-<dd><p>either <code>"uniform"</code> or <code>"quantiles"</code>. Sets the way of generating the vector of times based on times provided in the <code>y</code> parameter. If <code>"uniform"</code> the vector contains 101 equally spaced points between the minimum and maximum observed times; if <code>"quantiles"</code> the vector contains 100 points between 0th and 99th percentiles of observed times. Ignored if <code>times</code> is not <code>NULL</code>.</p></dd>
+<dd><p>either <code>"uniform"</code> or <code>"quantiles"</code>. Sets the way of generating the vector of times based on times provided in the <code>y</code> parameter. If <code>"uniform"</code> the vector contains 50 equally spaced points between the minimum and maximum observed times; if <code>"quantiles"</code> the vector contains 50 points between 0th and 98th percentiles of observed times. Ignored if <code>times</code> is not <code>NULL</code>.</p></dd>
 
 
 <dt>predict_survival_function</dt>
@@ -245,9 +245,9 @@ with <code><a href="https://rdrr.io/pkg/pec/man/predictSurvProb.html" class="ext
 <span class="r-out co"><span class="r-pr">#&gt;</span> Preparation of a new explainer is initiated </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; model label       :  coxph ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; data              :  137  rows  6  cols ( <span style="color: #BBBB00;"> extracted from the model </span> ) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; target variable   :  137  values ( 128 events and 9 censored ) ( <span style="color: #BBBB00;"> extracted from the model </span> ) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  94 unique time points , min = 1 , mean = 119.9706 , max = 845.56 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  ( <span style="color: #BBBB00;"> generated from y with method quantiles </span> ) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; target variable   :  137  values ( 128 events and 9 censored , censoring rate = 0.066 ) ( <span style="color: #BBBB00;"> extracted from the model </span> ) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  49 unique time points , min = 1 , mean = 110.6971 , median = 80 , max = 562.52 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  ( <span style="color: #BBBB00;"> generated from y as 50 time points being consecutive quantiles (0.00, 0.02, ..., 0.98) </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict function  :  predict.coxph with type = 'risk' will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict survival function  :  predictSurvProb.coxph will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict cumulative hazard function  :  -log(predict_survival_function) will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
@@ -262,8 +262,8 @@ with <code><a href="https://rdrr.io/pkg/pec/man/predictSurvProb.html" class="ext
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; model label       :  ranger ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; data              :  137  rows  6  cols </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; target variable   :  137  values ( 128 events and 9 censored ) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  94 unique time points , min = 1 , mean = 119.9706 , max = 845.56 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  ( <span style="color: #BBBB00;"> generated from y with method quantiles </span> ) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  49 unique time points , min = 1 , mean = 110.6971 , median = 80 , max = 562.52 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  ( <span style="color: #BBBB00;"> generated from y as 50 time points being consecutive quantiles (0.00, 0.02, ..., 0.98) </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict function  :  sum over the predict_cumulative_hazard_function will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict survival function  :  stepfun based on predict.ranger()$survival will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict cumulative hazard function  :  stepfun based on predict.ranger()$chf will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
@@ -275,13 +275,13 @@ with <code><a href="https://rdrr.io/pkg/pec/man/predictSurvProb.html" class="ext
 <span class="r-out co"><span class="r-pr">#&gt;</span> Preparation of a new explainer is initiated </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; model label       :  rfsrc ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; data              :  137  rows  6  cols ( <span style="color: #BBBB00;"> extracted from the model </span> ) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; target variable   :  137  values ( 128 events and 9 censored ) ( <span style="color: #BBBB00;"> extracted from the model </span> ) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  94 unique time points , min = 1 , mean = 119.9706 , max = 845.56 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  ( <span style="color: #BBBB00;"> generated from y with method quantiles </span> ) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; target variable   :  137  values ( 128 events and 9 censored , censoring rate = 0.066 ) ( <span style="color: #BBBB00;"> extracted from the model </span> ) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  49 unique time points , min = 1 , mean = 110.6971 , median = 80 , max = 562.52 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  ( <span style="color: #BBBB00;"> generated from y as 50 time points being consecutive quantiles (0.00, 0.02, ..., 0.98) </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict function  :  sum over the predict_cumulative_hazard_function will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict survival function  :  stepfun based on predict.rfsrc()$survival will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict cumulative hazard function  :  stepfun based on predict.rfsrc()$chf will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; model_info        :  package randomForestSRC , ver. 3.2.0 , task survival ( <span style="color: #BBBB00;"> default </span> ) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; model_info        :  package randomForestSRC , ver. 3.2.1 , task survival ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  <span style="color: #00BB00;"> A new explainer has been created! </span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tidymodels/censored" class="external-link">censored</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
@@ -295,8 +295,8 @@ with <code><a href="https://rdrr.io/pkg/pec/man/predictSurvProb.html" class="ext
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; model label       :  model_fit_blackboost ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; data              :  137  rows  6  cols </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; target variable   :  137  values ( 128 events and 9 censored ) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  94 unique time points , min = 1 , mean = 119.9706 , max = 845.56 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  ( <span style="color: #BBBB00;"> generated from y with method quantiles </span> ) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  49 unique time points , min = 1 , mean = 110.6971 , median = 80 , max = 562.52 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  ( <span style="color: #BBBB00;"> generated from y as 50 time points being consecutive quantiles (0.00, 0.02, ..., 0.98) </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict function  :  predict.model_fit with type = 'linear_pred' will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict survival function  :  predict.model_fit with type = 'survival' will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict cumulative hazard function  :  -log(predict_survival_function) will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
@@ -324,8 +324,8 @@ with <code><a href="https://rdrr.io/pkg/pec/man/predictSurvProb.html" class="ext
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; model label       :  manual coxph </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; data              :  137  rows  6  cols </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; target variable   :  137  values ( 128 events and 9 censored ) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  94 unique time points , min = 1 , mean = 119.9706 , max = 845.56 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  ( <span style="color: #BBBB00;"> generated from y with method quantiles </span> ) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  49 unique time points , min = 1 , mean = 110.6971 , median = 80 , max = 562.52 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  ( <span style="color: #BBBB00;"> generated from y as 50 time points being consecutive quantiles (0.00, 0.02, ..., 0.98) </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict function  :  risk_pred </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict survival function  :  surv_pred </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict cumulative hazard function  :  chf_pred </span>

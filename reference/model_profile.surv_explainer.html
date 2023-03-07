@@ -173,9 +173,9 @@ The explanations are calculated as an extension of Partial Dependence Profiles w
 <span class="r-out co"><span class="r-pr">#&gt;</span> Preparation of a new explainer is initiated </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; model label       :  coxph ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; data              :  137  rows  6  cols ( <span style="color: #BBBB00;"> extracted from the model </span> ) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; target variable   :  137  values ( 128 events and 9 censored ) ( <span style="color: #BBBB00;"> extracted from the model </span> ) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  94 unique time points , min = 1 , mean = 119.9706 , max = 845.56 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  ( <span style="color: #BBBB00;"> generated from y with method quantiles </span> ) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; target variable   :  137  values ( 128 events and 9 censored , censoring rate = 0.066 ) ( <span style="color: #BBBB00;"> extracted from the model </span> ) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  49 unique time points , min = 1 , mean = 110.6971 , median = 80 , max = 562.52 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  ( <span style="color: #BBBB00;"> generated from y as 50 time points being consecutive quantiles (0.00, 0.02, ..., 0.98) </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict function  :  predict.coxph with type = 'risk' will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict survival function  :  predictSurvProb.coxph will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict cumulative hazard function  :  -log(predict_survival_function) will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
@@ -185,13 +185,13 @@ The explanations are calculated as an extension of Partial Dependence Profiles w
 <span class="r-out co"><span class="r-pr">#&gt;</span> Preparation of a new explainer is initiated </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; model label       :  rfsrc ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; data              :  137  rows  6  cols ( <span style="color: #BBBB00;"> extracted from the model </span> ) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; target variable   :  137  values ( 128 events and 9 censored ) ( <span style="color: #BBBB00;"> extracted from the model </span> ) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  94 unique time points , min = 1 , mean = 119.9706 , max = 845.56 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  ( <span style="color: #BBBB00;"> generated from y with method quantiles </span> ) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; target variable   :  137  values ( 128 events and 9 censored , censoring rate = 0.066 ) ( <span style="color: #BBBB00;"> extracted from the model </span> ) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  49 unique time points , min = 1 , mean = 110.6971 , median = 80 , max = 562.52 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  ( <span style="color: #BBBB00;"> generated from y as 50 time points being consecutive quantiles (0.00, 0.02, ..., 0.98) </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict function  :  sum over the predict_cumulative_hazard_function will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict survival function  :  stepfun based on predict.rfsrc()$survival will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict cumulative hazard function  :  stepfun based on predict.rfsrc()$chf will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; model_info        :  package randomForestSRC , ver. 3.2.0 , task survival ( <span style="color: #BBBB00;"> default </span> ) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; model_info        :  package randomForestSRC , ver. 3.2.1 , task survival ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  <span style="color: #00BB00;"> A new explainer has been created! </span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">cph_model_profile</span> <span class="op">&lt;-</span> <span class="fu">model_profile</span><span class="op">(</span><span class="va">cph_exp</span>, output_type <span class="op">=</span> <span class="st">"survival"</span>,</span></span>
@@ -199,12 +199,12 @@ The explanations are calculated as an extension of Partial Dependence Profiles w
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cph_model_profile</span><span class="op">$</span><span class="va">result</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   _vname_   _vtype_ _label_   _x_ _times_    _yhat_ _ids_</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     age numerical   coxph 34.00       1 0.9819227     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     age numerical   coxph 34.94       1 0.9820674     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     age numerical   coxph 35.00       1 0.9820766     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4     age numerical   coxph 35.88       1 0.9822110     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5     age numerical   coxph 36.00       1 0.9822292     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6     age numerical   coxph 36.82       1 0.9823534     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     age numerical   coxph 34.00       1 0.9817732     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     age numerical   coxph 34.94       1 0.9819190     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     age numerical   coxph 35.00       1 0.9819283     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4     age numerical   coxph 35.88       1 0.9820637     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5     age numerical   coxph 36.00       1 0.9820821     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6     age numerical   coxph 36.82       1 0.9822073     0</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cph_model_profile</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="model_profile.surv_explainer-1.png" alt="" width="700" height="433"></span>
@@ -214,12 +214,12 @@ The explanations are calculated as an extension of Partial Dependence Profiles w
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">rsf_model_profile</span><span class="op">$</span><span class="va">result</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     _vname_   _vtype_ _label_ _x_ _times_    _yhat_ _ids_</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1       age numerical   rfsrc  34    1.00 0.8782560     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 90      age numerical   rfsrc  34    1.36 0.8782560     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 179     age numerical   rfsrc  34    2.72 0.8712446     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 268     age numerical   rfsrc  34    4.24 0.8013272     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 357     age numerical   rfsrc  34    7.00 0.7848096     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 446     age numerical   rfsrc  34    8.00 0.7616045     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1       age numerical   rfsrc  34    1.00 0.8529989     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 92      age numerical   rfsrc  34    2.72 0.8436638     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 183     age numerical   rfsrc  34    7.00 0.7439283     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 274     age numerical   rfsrc  34    8.00 0.7216417     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 365     age numerical   rfsrc  34   10.60 0.7092616     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 456     age numerical   rfsrc  34   12.32 0.6932116     0</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">rsf_model_profile</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"age"</span>, <span class="st">"celltype"</span><span class="op">)</span>, numerical_plot_type <span class="op">=</span> <span class="st">"contours"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="model_profile.surv_explainer-2.png" alt="" width="700" height="433"></span>
