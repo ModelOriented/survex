@@ -1,9 +1,9 @@
-# survex (development)
+# survex 1.0.0
 
+* *breaking change:* refactored the structure of `model_performance_survival` object - calculated metrics are now in a `$result` list.
 * added new `calculation_method` for `surv_shap()` called `"kernelshap"` that use `kernelshap` package and its implementation of improved Kernel SHAP (set as default) ([#45](https://github.com/ModelOriented/survex/issues/45))
 * rename old method `"kernel"` to `"exact_kernel"`
 * added new import ([`kernelshap`](https://github.com/mayer79/kernelshap) package) 
-* *breaking change:* refactored the structure of `model_performance_survival` object - calculated metrics are now in a `$result` list.
 * fixed invalid color palette order in plot feature importance
 * fixed predict_parts survshap running out of memory with more than 16 variables ([#25](https://github.com/ModelOriented/survex/issues/25))
 * added `max_vars` parameter for predict_parts explanations ([#27](https://github.com/ModelOriented/survex/issues/27))
