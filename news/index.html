@@ -72,6 +72,35 @@
     </div>
 
     <div class="section level2">
+<h2 class="page-header" data-toc-text="1.0.0" id="survex-100">survex 1.0.0<a class="anchor" aria-label="anchor" href="#survex-100"></a></h2>
+<ul><li>
+<em>breaking change:</em> refactored the structure of <code>model_performance_survival</code> object - calculated metrics are now in a <code>$result</code> list.</li>
+<li>added new <code>calculation_method</code> for <code><a href="../reference/surv_shap.html">surv_shap()</a></code> called <code>"kernelshap"</code> that use <code>kernelshap</code> package and its implementation of improved Kernel SHAP (set as default) (<a href="https://github.com/ModelOriented/survex/issues/45" class="external-link">#45</a>)</li>
+<li>rename old method <code>"kernel"</code> to <code>"exact_kernel"</code>
+</li>
+<li>added new import (<a href="https://github.com/mayer79/kernelshap" class="external-link"><code>kernelshap</code></a> package)</li>
+<li>fixed invalid color palette order in plot feature importance</li>
+<li>fixed predict_parts survshap running out of memory with more than 16 variables (<a href="https://github.com/ModelOriented/survex/issues/25" class="external-link">#25</a>)</li>
+<li>added <code>max_vars</code> parameter for predict_parts explanations (<a href="https://github.com/ModelOriented/survex/issues/27" class="external-link">#27</a>)</li>
+<li>set <code>max_vars</code> to 7 for every method<br></li>
+<li>refactored survshap code (<a href="https://github.com/ModelOriented/survex/issues/29" class="external-link">#29</a>, <a href="https://github.com/ModelOriented/survex/issues/30" class="external-link">#30</a>, <a href="https://github.com/ModelOriented/survex/issues/43" class="external-link">#43</a>)</li>
+<li>fixed survshap error when target columns named different than time and status (<a href="https://github.com/ModelOriented/survex/issues/44" class="external-link">#44</a>)</li>
+<li>fixed survlime error when all variables are categorical (<a href="https://github.com/ModelOriented/survex/issues/46" class="external-link">#46</a>)</li>
+<li>fixed subtitles in feature importance plots (<a href="https://github.com/ModelOriented/survex/issues/11" class="external-link">#11</a>)</li>
+<li>added the possibility to set themes with <code><a href="../reference/theme_survex.html">set_theme_survex()</a></code> (<a href="https://github.com/ModelOriented/survex/issues/32" class="external-link">#32</a>)</li>
+<li>added the possibility of plotting multiple <code><a href="../reference/predict_parts.surv_explainer.html">predict_parts()</a></code> and <code><a href="../reference/model_parts.surv_explainer.html">model_parts()</a></code> explanations in one plot (<a href="https://github.com/ModelOriented/survex/issues/12" class="external-link">#12</a>)</li>
+<li>fixed the x axis of plots (it now starts from 0) (<a href="https://github.com/ModelOriented/survex/issues/37" class="external-link">#37</a>)</li>
+<li>added geom_rug() to all time-dependent plots, marking event and censoring times (<a href="https://github.com/ModelOriented/survex/issues/35" class="external-link">#35</a>)</li>
+<li>refactored <code>surv_feature_importance.R</code> - change auxiliary columns to include <code>_</code> in their name. Necessary changes also done to plotting and printing functions. (<a href="https://github.com/ModelOriented/survex/issues/28" class="external-link">#28</a>)</li>
+<li>changed default <code>type</code> argument of <code><a href="../reference/model_parts.surv_explainer.html">model_parts()</a></code> to <code>"difference"</code> (<a href="https://github.com/ModelOriented/survex/issues/33" class="external-link">#33</a>)</li>
+<li>refactored integration of metrics (<a href="https://github.com/ModelOriented/survex/issues/31" class="external-link">#31</a>)</li>
+<li>changed behaviour of <code>categorical_variables</code> argument in <code><a href="../reference/model_parts.surv_explainer.html">model_parts()</a></code> and <code><a href="../reference/predict_parts.surv_explainer.html">predict_parts()</a></code>. If it contains variable names not present in the <code>variables</code> argument, they will be added at the end. (<a href="https://github.com/ModelOriented/survex/issues/39" class="external-link">#39</a>)</li>
+<li>added ROC AUC calculation and plotting for selected timepoints in <code><a href="../reference/model_performance.surv_explainer.html">model_performance()</a></code> (<a href="https://github.com/ModelOriented/survex/issues/22" class="external-link">#22</a>)</li>
+<li>added <code>explanation_label</code> parameter to <code><a href="../reference/predict_parts.surv_explainer.html">predict_parts()</a></code> function that can overwrite explainer label and thus, enable plotting multiple local SurvSHAP(t) explanations. (<a href="https://github.com/ModelOriented/survex/issues/47" class="external-link">#47</a>)</li>
+<li>improved the printing of the explainer (<a href="https://github.com/ModelOriented/survex/issues/36" class="external-link">#36</a>)</li>
+<li>reduced the default number of time points for evaluation when creating the explainer to 50</li>
+</ul></div>
+    <div class="section level2">
 <h2 class="page-header" data-toc-text="0.2.2" id="survex-022">survex 0.2.2<small>2022-11-30</small><a class="anchor" aria-label="anchor" href="#survex-022"></a></h2>
 <ul><li>improved and unified API documentation (<a href="https://github.com/ModelOriented/survex/issues/2" class="external-link">#2</a>)</li>
 <li>added references to used methods (<a href="https://github.com/ModelOriented/survex/issues/5" class="external-link">#5</a>)</li>
