@@ -3,6 +3,9 @@
 [![R-CMD-check](https://github.com/ModelOriented/survex/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ModelOriented/survex/actions/workflows/R-CMD-check.yaml)
 [![Codecov test coverage](https://codecov.io/gh/ModelOriented/survex/branch/main/graph/badge.svg)](https://app.codecov.io/gh/ModelOriented/survex?branch=main)
 [![CRAN status](https://www.r-pkg.org/badges/version/survex)](https://cran.r-project.org/package=survex)
+[![Total downloads](https://cranlogs.r-pkg.org/badges/grand-total/survex?color=orange)](https://cranlogs.r-pkg.org/badges/grand-total/survex)
+[![DrWhy-BackBone](https://img.shields.io/badge/DrWhy-BackBone-373589)](http://drwhy.ai/#BackBone)
+
 
 ## Overview 
 
