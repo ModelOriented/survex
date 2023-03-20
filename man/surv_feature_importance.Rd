@@ -42,7 +42,7 @@ surv_feature_importance(x, ...)
 A data.frame containing results of the calculation.
 }
 \description{
-This function is used to calculate permutational feature imporance using
+This function is used to calculate permutational feature importance using
 a time-dependent metric. The result is the change in loss function at each
 time point after permuting each selected variable.
 }

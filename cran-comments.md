@@ -1,8 +1,4 @@
-## Resubmission 30/11/2022
-
-* wrapped long examples in \donttest{}
-  they no longer exceed 5s
-* fixed NOTE about doi numbers using wrong tags
+## Submission 20/03/2023 v.1.0.0
 
 ## R CMD check results
 

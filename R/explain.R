@@ -38,7 +38,7 @@
 #' * `residual_function` - function that returns residuals, shall return a single numerical value for each observation.
 #' * `class` - class/classes of a model.
 #' * `label` - label of explainer.
-#' * `model_info` - named list contating basic information about model, like package, version of package and type.
+#' * `model_info` - named list containing basic information about model, like package, version of package and type.
 #' * `times` - a vector of times, that are used for evaluation of survival function and cumulative hazard function by default
 #' * `predict_survival_function` - function that is used for model predictions in the form of survival function
 #' * `predict_cumulative_hazard_function` - function that is used for model predictions in the form of cumulative hazard function
