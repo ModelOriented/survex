@@ -11,7 +11,7 @@
 #' @section Plot options:
 #'
 #' * `title` - character, title of the plot
-#' * `subtitle` - character, subtitle of the plot, if `NULL` automaticaly generated as "created for XXX, YYY models", where XXX and YYY are explainer labels
+#' * `subtitle` - character, subtitle of the plot, if `NULL` automatically generated as "created for XXX, YYY models", where XXX and YYY are explainer labels
 #' * `max_vars` - maximum number of variables to be plotted (least important variables are ignored)
 #' * `colors` - character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")
 #' * `rug` - character, one of `"all"`, `"events"`, `"censors"`, `"none"` or `NULL`. Which times to mark on the x axis in `geom_rug()`.

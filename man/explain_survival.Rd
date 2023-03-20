@@ -104,7 +104,7 @@ It is a list containing the following elements:
 \item \code{residual_function} - function that returns residuals, shall return a single numerical value for each observation.
 \item \code{class} - class/classes of a model.
 \item \code{label} - label of explainer.
-\item \code{model_info} - named list contating basic information about model, like package, version of package and type.
+\item \code{model_info} - named list containing basic information about model, like package, version of package and type.
 \item \code{times} - a vector of times, that are used for evaluation of survival function and cumulative hazard function by default
 \item \code{predict_survival_function} - function that is used for model predictions in the form of survival function
 \item \code{predict_cumulative_hazard_function} - function that is used for model predictions in the form of cumulative hazard function

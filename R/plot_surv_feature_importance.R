@@ -1,4 +1,4 @@
-#' Plot Permuatational Feature Importance for Survival Models
+#' Plot Permutational Feature Importance for Survival Models
 #'
 #' This function plots feature importance objects created for survival models using the
 #' `model_parts()` function with a time-dependent metric, that is `loss_one_minus_cd_auc()` or

@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_surv_feature_importance.R
 \name{plot.surv_feature_importance}
 \alias{plot.surv_feature_importance}
-\title{Plot Permuatational Feature Importance for Survival Models}
+\title{Plot Permutational Feature Importance for Survival Models}
 \usage{
 \method{plot}{surv_feature_importance}(
   x,

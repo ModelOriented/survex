@@ -1,6 +1,6 @@
 #' Instance Level Profile as Ceteris Paribus for Survival Models
 #'
-#' This function calculates Ceteris Paribus Proifles for a specific observation with the possibility to take the time dimension into account.
+#' This function calculates Ceteris Paribus Profiles for a specific observation with the possibility to take the time dimension into account.
 #'
 #' @param explainer an explainer object - model preprocessed by the `explain()` function
 #' @param new_observation a new observation for which the prediction need to be explained

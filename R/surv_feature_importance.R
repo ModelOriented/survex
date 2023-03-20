@@ -1,6 +1,6 @@
 #' Helper functions for `model_parts.R`
 #'
-#' This function is used to calculate permutational feature imporance using
+#' This function is used to calculate permutational feature importance using
 #' a time-dependent metric. The result is the change in loss function at each
 #' time point after permuting each selected variable.
 #'

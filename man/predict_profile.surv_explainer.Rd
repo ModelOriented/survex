@@ -47,7 +47,7 @@ predict_profile(
 An object of class \code{c("predict_profile_survival", "surv_ceteris_paribus")}. It is a list with the final result in the \code{result} element.
 }
 \description{
-This function calculates Ceteris Paribus Proifles for a specific observation with the possibility to take the time dimension into account.
+This function calculates Ceteris Paribus Profiles for a specific observation with the possibility to take the time dimension into account.
 }
 \examples{
 \donttest{

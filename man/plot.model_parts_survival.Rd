@@ -22,7 +22,7 @@ using the \code{model_parts()} function.
 
 \itemize{
 \item \code{title} - character, title of the plot
-\item \code{subtitle} - character, subtitle of the plot, if \code{NULL} automaticaly generated as "created for XXX, YYY models", where XXX and YYY are explainer labels
+\item \code{subtitle} - character, subtitle of the plot, if \code{NULL} automatically generated as "created for XXX, YYY models", where XXX and YYY are explainer labels
 \item \code{max_vars} - maximum number of variables to be plotted (least important variables are ignored)
 \item \code{colors} - character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")
 \item \code{rug} - character, one of \code{"all"}, \code{"events"}, \code{"censors"}, \code{"none"} or \code{NULL}. Which times to mark on the x axis in \code{geom_rug()}.
