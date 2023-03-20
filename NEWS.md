@@ -26,7 +26,6 @@
 * reduced the default number of time points for evaluation when creating the explainer to 50
 
 
-
 # survex 0.2.2
 
 * improved and unified API documentation ([#2](https://github.com/ModelOriented/survex/issues/2))
