@@ -1,3 +1,7 @@
+# survex (development)
+
+* Fix not being able to plot or print SurvLIME results for the cph model sometimes. ([#72](https://github.com/ModelOriented/survex/issues/72))
+
 # survex 1.0.0
 
 * *breaking change:* refactored the structure of `model_performance_survival` object - calculated metrics are now in a `$result` list.
