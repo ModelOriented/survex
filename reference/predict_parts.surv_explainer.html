@@ -197,10 +197,10 @@
 <span class="r-in"><span><span class="va">cph_predict_parts_survlime</span> <span class="op">&lt;-</span> <span class="fu">predict_parts</span><span class="op">(</span><span class="va">cph_exp</span>, new_observation <span class="op">=</span> <span class="va">veteran</span><span class="op">[</span><span class="fl">1</span>, <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span><span class="op">]</span>,</span></span>
 <span class="r-in"><span>                                            type <span class="op">=</span> <span class="st">"survlime"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cph_predict_parts_survlime</span><span class="op">$</span><span class="va">result</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           trt         karno     diagtime          age        prior</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.007216452 -0.0004989625 0.0003792398 0.0001726107 -0.001871144</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   celltypelarge celltypesmallcell celltypesquamous</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   -0.02730428       0.002469179      -0.01643825</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          trt         karno     diagtime          age       prior celltypelarge</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.01818605 -0.0006169985 2.710211e-05 0.0006271157 0.001414122   -0.04504155</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   celltypesmallcell celltypesquamous</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1       -0.03251243       -0.0483505</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cph_predict_parts_survlime</span>, type <span class="op">=</span> <span class="st">"local_importance"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="predict_parts.surv_explainer-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
