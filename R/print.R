@@ -33,7 +33,7 @@ print.surv_feature_importance <- function(x, ...) {
 print.surv_lime <- function(x, ...) {
     res <- x$result
 
-    print_result <- rbind(beta = res, `X` = x$variable_values, `local importance (X*beta)` = res * x$variable_values)
+    print_result <- rbind(beta = res, `X` = x$variable_values, `local importance (X*beta)` = res * as.numeric(x$variable_values))
     cat("SurvLIME for observation:\n\n")
     print.data.frame(x$variable_values, row.names = FALSE)
     cat("\n")

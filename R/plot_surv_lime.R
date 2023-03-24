@@ -39,7 +39,7 @@ plot.surv_lime <- function(x,
     if (!type %in% c("coefficients", "local_importance"))
         stop("Type should be one of `coefficients`, `local_importance`")
 
-    local_importance <- as.numeric(x$result * x$variable_values)
+    local_importance <- as.numeric(x$result) * as.numeric(x$variable_values)
     df <- data.frame(variable_names = names(x$variable_values),
                      variable_values = as.numeric(x$variable_values),
                      beta = as.numeric(x$result),
