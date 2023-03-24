@@ -66,15 +66,15 @@ plot(predict_parts(explainer, veteran[1, -c(3, 4)]))
 
 If you use `survex`, please cite it as
 
-> M. Spytek, M. Krzyziński, H. Baniecki, P. Biecek. *survex: Explainable Machine Learning in Survival Analysis*. **R package version 0.2.2**, 2022. https://github.com/ModelOriented/survex
+> M. Spytek, M. Krzyziński, H. Baniecki, P. Biecek. *survex: Explainable Machine Learning in Survival Analysis*. **R package version 1.0.0**, 2023. https://github.com/ModelOriented/survex
 
 ```
-@article{spytek2022survex,
+@article{spytek2023survex,
     title   = {{survex: Explainable Machine Learning in Survival Analysis}},
     author  = {Mikołaj Spytek and Mateusz Krzyziński and 
                Hubert Baniecki and Przemysław Biecek},
-    journal = {R package version 0.2.2},
-    year    = {2022},
+    journal = {R package version 1.0.0},
+    year    = {2023},
     url     = {https://github.com/ModelOriented/survex}
 }
 ```
