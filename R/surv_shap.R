@@ -25,7 +25,14 @@ surv_shap <- function(explainer,
                       exact = FALSE
 ) {
     test_explainer(explainer, "surv_shap", has_data = TRUE, has_y = TRUE, has_survival = TRUE)
-    new_observation <- new_observation[, colnames(new_observation) %in% colnames(explainer$data)]
+    # make that this also works for 1-row matrix
+    col_index <- which(colnames(new_observation) %in% colnames(explainer$data))
+    if (is.matrix(new_observation) && nrow(new_observation) == 1) {
+        new_observation <- as.matrix(t(new_observation[, col_index]))
+    } else {
+        new_observation <- new_observation[, col_index]
+    }
+
     if (ncol(explainer$data) != ncol(new_observation)) stop("New observation and data have different number of columns (variables)")
 
     if (!is.null(y_true)) {
@@ -38,6 +45,17 @@ surv_shap <- function(explainer,
         }
     }
 
+    # hack to use rf-model death times as explainer death times, as
+    # treeshap::ranger_surv_fun.unify extracts survival times directly
+    # from the ranger object for calculating the predictions
+    if (calculation_method == "treeshap") {
+        if (inherits(explainer$model, "ranger")) {
+            explainer$times <- explainer$model$unique.death.times
+        } else {
+            stop("Calculation method `treeshap` is currently only implemented for `ranger`.")
+        }
+    }
+
     res <- list()
     res$eval_times <- explainer$times
     res$variable_values <- new_observation
@@ -45,7 +63,8 @@ surv_shap <- function(explainer,
     res$result <- switch(calculation_method,
                          "exact_kernel" = shap_kernel(explainer, new_observation, ...),
                          "kernelshap" = use_kernelshap(explainer, new_observation, ...),
-                         stop("Only `exact_kernel` and `kernelshap` calculation methods are implemented"))
+                         "treeshap" = use_treeshap(explainer, new_observation, ...),
+                         stop("Only `exact_kernel`, `kernelshap` and `treeshap` calculation methods are implemented"))
 
     if (!is.null(y_true)) res$y_true <- c(y_true_time = y_true_time, y_true_ind = y_true_ind)
 
@@ -148,14 +167,46 @@ aggregate_surv_shap <- function(survshap, method) {
 use_kernelshap <- function(explainer, new_observation, ...){
 
     predfun <- function(model, newdata){
-        explainer$predict_survival_function(model, newdata, times=explainer$times)
+        explainer$predict_survival_function(model, newdata, times = explainer$times)
     }
 
     tmp_res <- kernelshap::kernelshap(explainer$model, new_observation, bg_X = explainer$data,
-               pred_fun = predfun, verbose=FALSE)
+               pred_fun = predfun, verbose = FALSE)
 
     shap_values <- data.frame(t(sapply(tmp_res$S, cbind)))
     colnames(shap_values) <- colnames(tmp_res$X)
+    rownames(shap_values) <- paste("t=", explainer$times, sep = "")
+    return(shap_values)
+}
+
+use_treeshap <- function(explainer, new_observation, ...){
+
+    if (inherits(explainer$model, "ranger")) {
+        UNIFY_FUN <- treeshap::ranger_surv_fun.unify
+    } else {
+        stop("Support for `treeshap` is currently only implemented for `ranger`.")
+    }
+
+    tmp_unified <- UNIFY_FUN(
+        rf_model = explainer$model,
+        data = explainer$data
+    )
+
+    tmp_res <- do.call(
+        rbind,
+        lapply(
+            tmp_unified,
+            function(m) {
+              treeshap::treeshap(
+                unified_model = m,
+                x = new_observation
+              )$shaps
+            }
+        )
+    )
+
+    shap_values <- data.frame(tmp_res)
+    colnames(shap_values) <- colnames(tmp_res)
     rownames(shap_values) <- paste("t=", explainer$times, sep = "")
     return(shap_values)
 }
