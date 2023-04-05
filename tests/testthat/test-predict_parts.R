@@ -27,7 +27,7 @@ test_that("survshap explanations work", {
         new_observation = new_obs,
         y_true = c(100, 1),
         aggregation_method = "mean_absolute",
-        calculation_method = "treeshap"
+        calculation_method = "kernelshap"
     )
     plot(parts_ranger_treeshap)
 

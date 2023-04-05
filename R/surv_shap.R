@@ -24,7 +24,15 @@ surv_shap <- function(explainer,
                       B = 25,
                       exact = FALSE
 ) {
+    # if providing y_true, it must be exactly one single new observation,
+    # otherwise the indexing of y_true doesn't make any sense
+    stopifnot(
+        ifelse(!is.null(y_true), nrow(new_observation) == 1, TRUE),
+        nrow(new_observation) == 1 # produces nonesense, if more than on new observation
+    )
+
     test_explainer(explainer, "surv_shap", has_data = TRUE, has_y = TRUE, has_survival = TRUE)
+
     # make that this also works for 1-row matrix
     col_index <- which(colnames(new_observation) %in% colnames(explainer$data))
     if (is.matrix(new_observation) && nrow(new_observation) == 1) {
@@ -58,7 +66,7 @@ surv_shap <- function(explainer,
 
     res <- list()
     res$eval_times <- explainer$times
-    res$variable_values <- new_observation
+    res$variable_values <- as.data.frame(new_observation)
 
     res$result <- switch(calculation_method,
                          "exact_kernel" = shap_kernel(explainer, new_observation, ...),
