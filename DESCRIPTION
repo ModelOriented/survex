@@ -24,6 +24,7 @@ Imports:
     DALEX (>= 2.2.1),
     ggplot2,
     kernelshap,
+    treeshap,
     pec,
     survival,
     patchwork
@@ -44,6 +45,8 @@ Suggests:
     testthat (>= 3.0.0),
     withr,
     xgboost
+Remotes:
+    github::kapsner/treeshap
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 URL: https://modeloriented.github.io/survex/
