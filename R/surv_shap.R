@@ -24,14 +24,32 @@ surv_shap <- function(explainer,
                       B = 25,
                       exact = FALSE
 ) {
+    # make this code work for multiple observations
+    stopifnot(ifelse(!is.null(y_true),
+                     ifelse(is.matrix(y_true),
+                            nrow(new_observation) == nrow(y_true),
+                            is.null(dim(y_true)) && length(y_true) == 2L),
+                     TRUE))
+
     test_explainer(explainer, "surv_shap", has_data = TRUE, has_y = TRUE, has_survival = TRUE)
-    new_observation <- new_observation[, colnames(new_observation) %in% colnames(explainer$data)]
+
+    # make this code also work for 1-row matrix
+    col_index <- which(colnames(new_observation) %in% colnames(explainer$data))
+    if (is.matrix(new_observation) && nrow(new_observation) == 1) {
+        new_observation <- as.matrix(t(new_observation[, col_index]))
+    } else {
+        new_observation <- new_observation[, col_index]
+    }
+
     if (ncol(explainer$data) != ncol(new_observation)) stop("New observation and data have different number of columns (variables)")
 
     if (!is.null(y_true)) {
         if (is.matrix(y_true)) {
-            y_true_ind <- y_true[1, 2]
-            y_true_time <- y_true[1, 1]
+            # above, we have already checked that nrows of observations are
+            # identical to nrows of y_true; thus we do not need to index
+            # the first row here
+            y_true_ind <- y_true[, 2]
+            y_true_time <- y_true[, 1]
         } else {
             y_true_ind <- y_true[2]
             y_true_time <- y_true[1]
@@ -40,7 +58,8 @@ surv_shap <- function(explainer,
 
     res <- list()
     res$eval_times <- explainer$times
-    res$variable_values <- new_observation
+    # to display final object correctly, when is.matrix(new_observation) == TRUE
+    res$variable_values <- as.data.frame(new_observation)
 
     res$result <- switch(calculation_method,
                          "exact_kernel" = shap_kernel(explainer, new_observation, ...),
@@ -148,14 +167,64 @@ aggregate_surv_shap <- function(survshap, method) {
 use_kernelshap <- function(explainer, new_observation, ...){
 
     predfun <- function(model, newdata){
-        explainer$predict_survival_function(model, newdata, times=explainer$times)
+        explainer$predict_survival_function(
+            model,
+            newdata,
+            times = explainer$times
+        )
     }
 
-    tmp_res <- kernelshap::kernelshap(explainer$model, new_observation, bg_X = explainer$data,
-               pred_fun = predfun, verbose=FALSE)
+    tmp_res_list <- sapply(
+        X = as.character(seq_len(nrow(new_observation))),
+        FUN = function(i) {
+            tmp_res <- kernelshap::kernelshap(
+                object = explainer$model,
+                X = new_observation[as.integer(i), ],
+                bg_X = explainer$data,
+                pred_fun = predfun,
+                verbose = FALSE
+            )
+            tmp_shap_values <- data.frame(t(sapply(tmp_res$S, cbind)))
+            colnames(tmp_shap_values) <- colnames(tmp_res$X)
+            rownames(tmp_shap_values) <- paste("t=", explainer$times, sep = "")
+            data.table::as.data.table(tmp_shap_values, keep.rownames = TRUE)
+        },
+        USE.NAMES = TRUE,
+        simplify = FALSE
+    )
 
-    shap_values <- data.frame(t(sapply(tmp_res$S, cbind)))
-    colnames(shap_values) <- colnames(tmp_res$X)
-    rownames(shap_values) <- paste("t=", explainer$times, sep = "")
+    shap_values <- aggregate_shap_multiple_observations(
+        shap_res_list = tmp_res_list,
+        feature_names = colnames(new_observation)
+    )
+
+    return(shap_values)
+}
+
+
+aggregate_shap_multiple_observations <- function(shap_res_list, feature_names) {
+
+    if (length(shap_res_list) > 1) {
+
+        full_survshap_results <- data.table::rbindlist(
+            l = shap_res_list,
+            use.names = TRUE,
+            idcol = TRUE
+        )
+
+        # compute arithmetic mean for each time-point and feature across
+        # multiple observations
+        tmp_res <- full_survshap_results[
+            , lapply(.SD, mean), by = "rn", .SDcols = feature_names
+        ]
+    } else {
+        # no aggregation required
+        tmp_res <- shap_res_list[[1]]
+    }
+    shap_values <- tmp_res[, .SD, .SDcols = setdiff(colnames(tmp_res), "rn")]
+    # transform to data.frame to make everything compatible with
+    # previous code
+    shap_values <- data.frame(shap_values)
+    rownames(shap_values) <- tmp_res$rn
     return(shap_values)
 }
