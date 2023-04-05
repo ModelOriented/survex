@@ -216,6 +216,8 @@ use_kernelshap <- function(explainer, new_observation, ...){
 use_treeshap <- function(explainer, new_observation, ...){
 
     if (inherits(explainer$model, "ranger")) {
+        # UNIFY_FUN to prepare code for easy Integration of other ml algorithms
+        # that are supported by treeshap
         UNIFY_FUN <- treeshap::ranger_surv_fun.unify
     } else {
         stop("Support for `treeshap` is currently only implemented for `ranger`.")
