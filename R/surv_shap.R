@@ -4,8 +4,9 @@
 #' @param new_observation a new observation for which predictions need to be explained
 #' @param ... additional parameters, passed to internal functions
 #' @param y_true a two element numeric vector or matrix of one row and two columns, the first element being the true observed time and the second the status of the observation, used for plotting
-#' @param calculation_method a character, either `"kernelshap"` for use of `kernelshap` library (providing faster Kernel SHAP with refinements) or `"exact_kernel"` for exact Kernel SHAP estimation
-#' @param aggregation_method a character, either `"mean_absolute"` or `"integral"`, `"max_absolute"`, `"sum_of_squares"`
+#' @param calculation_method a character, either `"kernelshap"` for use of `kernelshap` library (providing faster Kernel SHAP with refinements), `"exact_kernel"` for exact Kernel SHAP estimation,
+#'   or `"treeshap"` for use of `treeshap` library (efficient implementation to compute SHAP values for tree-based models).
+#' @param aggregation_method a character, either `"mean_absolute"` or `"integral"` (default), `"max_absolute"`, `"sum_of_squares"`
 #'
 #' @return A list, containing the calculated SurvSHAP(t) results in the `result` field
 #'
@@ -18,18 +19,44 @@ surv_shap <- function(explainer,
                       ...,
                       y_true = NULL,
 
-                      calculation_method = "kernelshap",
-                      aggregation_method = "integral",
+                      calculation_method = c("kernelshap", "exact_kernel", "treeshap"),
+                      aggregation_method = c("integral", "mean_absolute", "max_absolute", "sum_of_squares"),
                       path = "average",
                       B = 25,
                       exact = FALSE
 ) {
+    calculation_method <- match.arg(calculation_method)
+    aggregation_method <- match.arg(aggregation_method)
+
     # make this code work for multiple observations
     stopifnot(ifelse(!is.null(y_true),
                      ifelse(is.matrix(y_true),
                             nrow(new_observation) == nrow(y_true),
                             is.null(dim(y_true)) && length(y_true) == 2L),
                      TRUE))
+
+    if (calculation_method == "kernelshap") {
+        if (!requireNamespace("kernelshap", quietly = TRUE)) {
+            stop(
+                paste0(
+                    "Package \"kernelshap\" must be installed to use ",
+                    "'calculation_method = \"kernelshap\"'."
+                ),
+                call. = FALSE
+            )
+        }
+    }
+    if (calculation_method == "treeshap") {
+        if (!requireNamespace("treeshap", quietly = TRUE)) {
+            stop(
+                paste0(
+                    "Package \"treeshap\" must be installed to use ",
+                    "'calculation_method = \"treeshap\"'."
+                ),
+                call. = FALSE
+            )
+        }
+    }
 
     test_explainer(explainer, "surv_shap", has_data = TRUE, has_y = TRUE, has_survival = TRUE)
 
@@ -56,8 +83,8 @@ surv_shap <- function(explainer,
         }
     }
 
-    # hack to use rf-model death times as explainer death times, as
-    # treeshap::ranger_surv_fun.unify extracts survival times directly
+    # hack to use rf-model's death times as explainer death times, as
+    # treeshap::ranger_surv_fun.unify extracts survival time-points directly
     # from the ranger object for calculating the predictions
     if (calculation_method == "treeshap") {
         if (inherits(explainer$model, "ranger")) {
@@ -215,18 +242,28 @@ use_kernelshap <- function(explainer, new_observation, ...){
 
 use_treeshap <- function(explainer, new_observation, ...){
 
+    # init unify_append_args
+    unify_append_args <- list()
+
     if (inherits(explainer$model, "ranger")) {
         # UNIFY_FUN to prepare code for easy Integration of other ml algorithms
         # that are supported by treeshap
         UNIFY_FUN <- treeshap::ranger_surv_fun.unify
+        unify_append_args <- list(type = "survival")
     } else {
         stop("Support for `treeshap` is currently only implemented for `ranger`.")
     }
 
-    tmp_unified <- UNIFY_FUN(
+    unify_args <- list(
         rf_model = explainer$model,
         data = explainer$data
     )
+
+    if (length(unify_append_args) > 0) {
+        unify_args <- c(unify_args, unify_append_args)
+    }
+
+    tmp_unified <- do.call(UNIFY_FUN, unify_args)
 
     tmp_res_list <- sapply(
         X = as.character(seq_len(nrow(new_observation))),

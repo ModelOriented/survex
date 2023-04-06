@@ -23,8 +23,6 @@ Depends: R (>= 3.5.0)
 Imports:
     DALEX (>= 2.2.1),
     ggplot2,
-    kernelshap,
-    treeshap,
     pec,
     survival,
     patchwork,
@@ -36,6 +34,7 @@ Suggests:
     generics,
     glmnet,
     ingredients,
+    kernelshap,
     knitr,
     mboost,
     parsnip,
@@ -44,6 +43,7 @@ Suggests:
     ranger,
     rmarkdown,
     testthat (>= 3.0.0),
+    treeshap,
     withr,
     xgboost
 Remotes:
