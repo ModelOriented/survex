@@ -75,6 +75,7 @@ test_that("global survshap explanations with kernelshap work for ranger", {
         aggregation_method = "mean_absolute",
         calculation_method = "kernelshap"
     )
+    plot(parts_ranger)
 
     expect_s3_class(parts_ranger, c("predict_parts_survival", "surv_shap"))
     expect_equal(nrow(parts_ranger$result), length(rsf_ranger_exp$times))
