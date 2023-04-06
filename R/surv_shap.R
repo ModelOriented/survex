@@ -86,11 +86,11 @@ surv_shap <- function(explainer,
         }
     }
 
-    # hack to use rf-model's death times as explainer death times, as
-    # treeshap::ranger_surv_fun.unify extracts survival time-points directly
-    # from the ranger object for calculating the predictions
     if (calculation_method == "treeshap") {
         if (inherits(explainer$model, "ranger")) {
+            # hack to use rf-model's death times as explainer death times, as
+            # treeshap::ranger_surv_fun.unify extracts survival time-points directly
+            # from the ranger object for calculating the predictions
             explainer$times <- explainer$model$unique.death.times
         } else {
             stop("Calculation method `treeshap` is currently only implemented for `ranger`.")
@@ -253,13 +253,15 @@ use_kernelshap <- function(explainer, new_observation, ...){
 
 use_treeshap <- function(explainer, new_observation, ...){
 
+    stopifnot(inherits(new_observation, "data.frame"))
+
     # init unify_append_args
     unify_append_args <- list()
 
     if (inherits(explainer$model, "ranger")) {
         # UNIFY_FUN to prepare code for easy Integration of other ml algorithms
         # that are supported by treeshap
-        UNIFY_FUN <- treeshap::ranger_surv_fun.unify
+        UNIFY_FUN <- treeshap::ranger_surv.unify
         unify_append_args <- list(type = "survival")
     } else {
         stop("Support for `treeshap` is currently only implemented for `ranger`.")
@@ -284,10 +286,14 @@ use_treeshap <- function(explainer, new_observation, ...){
                 lapply(
                     tmp_unified,
                     function(m) {
-                    treeshap::treeshap(
-                        unified_model = m,
-                        x = new_observation
-                    )$shaps
+                        new_obs_mat <- as.matrix(new_observation[as.integer(i), ])
+                        # ensure that matrix has expected dimensions; as.integer is
+                        # necessary for valid comparison with "identical"
+                        stopifnot(identical(dim(new_obs_mat), as.integer(c(1L, ncol(new_observation)))))
+                        treeshap::treeshap(
+                            unified_model = m,
+                            x = new_obs_mat
+                        )$shaps
                     }
                 )
             )
