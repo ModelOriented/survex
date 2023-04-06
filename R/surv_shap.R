@@ -63,9 +63,12 @@ surv_shap <- function(explainer,
     # make this code also work for 1-row matrix
     col_index <- which(colnames(new_observation) %in% colnames(explainer$data))
     if (is.matrix(new_observation) && nrow(new_observation) == 1) {
-        new_observation <- as.matrix(t(new_observation[, col_index]))
+        new_observation <- data.frame(as.matrix(t(new_observation[, col_index])))
     } else {
         new_observation <- new_observation[, col_index]
+        if (!inherits(new_observation, "data.frame")) {
+            new_observation <- data.frame(new_observation)
+        }
     }
 
     if (ncol(explainer$data) != ncol(new_observation)) stop("New observation and data have different number of columns (variables)")
@@ -205,6 +208,14 @@ aggregate_surv_shap <- function(survshap, method) {
 
 use_kernelshap <- function(explainer, new_observation, ...){
 
+    stopifnot(inherits(new_observation, "data.frame"))
+    # get explainer data to be able to make class checks and transformations
+    explainer_data <- explainer$data
+    # ensure that classes of explainer$data and new_observation are equal
+    if (!inherits(explainer_data, "data.frame")) {
+        explainer_data <- data.frame(explainer_data)
+    }
+
     predfun <- function(model, newdata){
         explainer$predict_survival_function(
             model,
@@ -219,7 +230,7 @@ use_kernelshap <- function(explainer, new_observation, ...){
             tmp_res <- kernelshap::kernelshap(
                 object = explainer$model,
                 X = new_observation[as.integer(i), ],
-                bg_X = explainer$data,
+                bg_X = explainer_data,
                 pred_fun = predfun,
                 verbose = FALSE
             )

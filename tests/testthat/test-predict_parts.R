@@ -22,7 +22,7 @@ test_that("survshap explanations work", {
     rsf_ranger_matrix <- ranger::ranger(survival::Surv(time, status) ~ ., data = model.matrix(~ -1 + ., veteran), respect.unordered.factors = TRUE, num.trees = 100, mtry = 3, max.depth = 5)
     rsf_ranger_exp_matrix <- explain(rsf_ranger_matrix, data = model.matrix(~ -1 + ., veteran[, -c(3, 4)]), y = Surv(veteran$time, veteran$status), verbose = FALSE)
     new_obs <- model.matrix(~ -1 + ., veteran[2, !colnames(veteran) %in% c("time", "status")])
-    parts_ranger_treeshap <- predict_parts(
+    parts_ranger_kernelshap <- predict_parts(
         rsf_ranger_exp_matrix,
         new_observation = new_obs,
         y_true = c(100, 1),
