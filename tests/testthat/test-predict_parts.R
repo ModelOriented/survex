@@ -31,7 +31,6 @@ test_that("survshap explanations work", {
     )
     plot(parts_ranger_kernelshap)
 
-
     parts_src <- predict_parts(rsf_src_exp, veteran[3, !colnames(veteran) %in% c("time", "status")])
     plot(parts_src)
 

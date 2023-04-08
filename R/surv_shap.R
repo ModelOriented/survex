@@ -87,12 +87,7 @@ surv_shap <- function(explainer,
     }
 
     if (calculation_method == "treeshap") {
-        if (inherits(explainer$model, "ranger")) {
-            # hack to use rf-model's death times as explainer death times, as
-            # treeshap::ranger_surv_fun.unify extracts survival time-points directly
-            # from the ranger object for calculating the predictions
-            explainer$times <- explainer$model$unique.death.times
-        } else {
+        if (!inherits(explainer$model, "ranger")) {
             stop("Calculation method `treeshap` is currently only implemented for `ranger`.")
         }
     }
@@ -262,7 +257,7 @@ use_treeshap <- function(explainer, new_observation, ...){
         # UNIFY_FUN to prepare code for easy Integration of other ml algorithms
         # that are supported by treeshap
         UNIFY_FUN <- treeshap::ranger_surv.unify
-        unify_append_args <- list(type = "survival")
+        unify_append_args <- list(type = "survival", times = explainer$times)
     } else {
         stop("Support for `treeshap` is currently only implemented for `ranger`.")
     }
