@@ -342,6 +342,6 @@ aggregate_shap_multiple_observations <- function(shap_res_list, feature_names) {
     # transform to data.frame to make everything compatible with
     # previous code
     shap_values <- data.frame(shap_values)
-    rownames(shap_values) <- paste("t=", tmp_res$rn, sep = "")
+    rownames(shap_values) <- paste("t=", round(tmp_res$rn, 2), sep = "")
     return(shap_values)
 }
