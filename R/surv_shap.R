@@ -102,6 +102,8 @@ surv_shap <- function(explainer,
                          "kernelshap" = use_kernelshap(explainer, new_observation, ...),
                          "treeshap" = use_treeshap(explainer, new_observation, ...),
                          stop("Only `exact_kernel`, `kernelshap` and `treeshap` calculation methods are implemented"))
+    # quality-check here
+    stopifnot(nrow(res$result) == length(res$eval_times))
 
     if (!is.null(y_true)) res$y_true <- c(y_true_time = y_true_time, y_true_ind = y_true_ind)
 
@@ -129,7 +131,7 @@ shap_kernel <- function(explainer, new_observation, ...) {
 
     shap_values <- as.data.frame(shap_values, row.names = colnames(explainer$data))
     colnames(shap_values) <- paste("t=", timestamps, sep = "")
-    return (t(shap_values))
+    return(t(shap_values))
 }
 
 generate_shap_kernel_weights <- function(permutations, p) {
@@ -229,10 +231,12 @@ use_kernelshap <- function(explainer, new_observation, ...){
                 pred_fun = predfun,
                 verbose = FALSE
             )
-            tmp_shap_values <- data.frame(t(sapply(tmp_res$S, cbind)))
+            tmp_shap_values <- data.table::as.data.table(
+                t(sapply(tmp_res$S, cbind))
+            )
             colnames(tmp_shap_values) <- colnames(tmp_res$X)
-            rownames(tmp_shap_values) <- paste("t=", explainer$times, sep = "")
-            data.table::as.data.table(tmp_shap_values, keep.rownames = TRUE)
+            tmp_shap_values$rn <- explainer$times
+            return(tmp_shap_values)
         },
         USE.NAMES = TRUE,
         simplify = FALSE
@@ -293,10 +297,10 @@ use_treeshap <- function(explainer, new_observation, ...){
                 )
             )
 
-            tmp_shap_values <- data.frame(tmp_res)
+            tmp_shap_values <- data.table::as.data.table(tmp_res)
             colnames(tmp_shap_values) <- colnames(tmp_res)
-            rownames(tmp_shap_values) <- paste("t=", explainer$times, sep = "")
-            data.table::as.data.table(tmp_shap_values, keep.rownames = TRUE)
+            tmp_shap_values$rn <- explainer$times
+            return(tmp_shap_values)
         },
         USE.NAMES = TRUE,
         simplify = FALSE
@@ -330,10 +334,14 @@ aggregate_shap_multiple_observations <- function(shap_res_list, feature_names) {
         # no aggregation required
         tmp_res <- shap_res_list[[1]]
     }
-    shap_values <- tmp_res[, .SD, .SDcols = setdiff(colnames(tmp_res), "rn")]
+
+    # rn == explainer$times -> now sort everything by these times so that time-points are
+    # then named correctly
+    shap_values <- tmp_res[order(get("rn"))][, .SD, .SDcols = setdiff(colnames(tmp_res), "rn")]
+
     # transform to data.frame to make everything compatible with
     # previous code
     shap_values <- data.frame(shap_values)
-    rownames(shap_values) <- tmp_res$rn
+    rownames(shap_values) <- paste("t=", tmp_res$rn, sep = "")
     return(shap_values)
 }
