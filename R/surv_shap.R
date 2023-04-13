@@ -29,11 +29,12 @@ surv_shap <- function(explainer,
     aggregation_method <- match.arg(aggregation_method)
 
     # make this code work for multiple observations
-    stopifnot(ifelse(!is.null(y_true),
-                     ifelse(is.matrix(y_true),
-                            nrow(new_observation) == nrow(y_true),
-                            is.null(dim(y_true)) && length(y_true) == 2L),
-                     TRUE))
+    stopifnot("y_true must be either a 2-column matrix of same length as new_observation, or a 2-element vector" = ifelse(
+        !is.null(y_true),
+        ifelse(is.matrix(y_true),
+               nrow(new_observation) == nrow(y_true),
+               is.null(dim(y_true)) && length(y_true) == 2L),
+        TRUE))
 
     if (calculation_method == "kernelshap") {
         if (!requireNamespace("kernelshap", quietly = TRUE)) {
@@ -103,7 +104,10 @@ surv_shap <- function(explainer,
                          "treeshap" = use_treeshap(explainer, new_observation, ...),
                          stop("Only `exact_kernel`, `kernelshap` and `treeshap` calculation methods are implemented"))
     # quality-check here
-    stopifnot(nrow(res$result) == length(res$eval_times))
+    stopifnot(
+        "Number of rows of SurvSHAP table are not identical with length(eval_times)" =
+            nrow(res$result) == length(res$eval_times)
+    )
 
     if (!is.null(y_true)) res$y_true <- c(y_true_time = y_true_time, y_true_ind = y_true_ind)
 
@@ -205,7 +209,10 @@ aggregate_surv_shap <- function(survshap, method) {
 
 use_kernelshap <- function(explainer, new_observation, ...){
 
-    stopifnot(inherits(new_observation, "data.frame"))
+    stopifnot(
+        "new_observation must be a data.frame" = inherits(
+            new_observation, "data.frame")
+    )
     # get explainer data to be able to make class checks and transformations
     explainer_data <- explainer$data
     # ensure that classes of explainer$data and new_observation are equal
@@ -252,7 +259,10 @@ use_kernelshap <- function(explainer, new_observation, ...){
 
 use_treeshap <- function(explainer, new_observation, ...){
 
-    stopifnot(inherits(new_observation, "data.frame"))
+    stopifnot(
+        "new_observation must be a data.frame" = inherits(
+            new_observation, "data.frame")
+    )
 
     # init unify_append_args
     unify_append_args <- list()
