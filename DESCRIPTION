@@ -27,7 +27,6 @@ Imports:
     pec,
     survival,
     patchwork,
-    data.table
 Suggests:
     censored,
     covr,

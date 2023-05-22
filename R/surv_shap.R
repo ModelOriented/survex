@@ -45,7 +45,6 @@ surv_shap <- function(explainer,
     }
 
     if (ncol(explainer$data) != ncol(new_observation)) stop("New observation and data have different number of columns (variables)")
-
     if (!is.null(y_true)) {
         if (is.matrix(y_true)) {
             # above, we have already checked that nrows of observations are
@@ -63,9 +62,8 @@ surv_shap <- function(explainer,
     res$eval_times <- explainer$times
     # to display final object correctly, when is.matrix(new_observation) == TRUE
     res$variable_values <- as.data.frame(new_observation)
-
     res$result <- switch(calculation_method,
-                         "exact_kernel" = shap_kernel(explainer, new_observation, observation_aggregation_method, ...),
+                         "exact_kernel" = use_exact_shap(explainer, new_observation, observation_aggregation_method, ...),
                          "kernelshap" = use_kernelshap(explainer, new_observation, observation_aggregation_method, ...),
                          stop("Only `exact_kernel` and `kernelshap` calculation methods are implemented"))
 
@@ -77,8 +75,32 @@ surv_shap <- function(explainer,
     res
 }
 
+use_exact_shap <- function(explainer, new_observation, observation_aggregation_method, ...){
 
-shap_kernel <- function(explainer, new_observation, observation_aggregation_method, ...) {
+    tmp_res_list <- sapply(
+        X = as.character(seq_len(nrow(new_observation))),
+        FUN = function(i) {
+            as.data.frame(shap_kernel(explainer, new_observation[as.integer(i),], ...))
+        },
+        USE.NAMES = TRUE,
+        simplify = FALSE
+    )
+
+    print(tmp_res_list)
+    shap_values <- aggregate_shap_multiple_observations(
+        shap_res_list = tmp_res_list,
+        feature_names = colnames(new_observation),
+        aggregation_function = observation_aggregation_method
+    )
+
+
+    return(shap_values)
+
+}
+
+
+shap_kernel <- function(explainer, new_observation, ...) {
+
 
     timestamps <- explainer$times
     p <- ncol(explainer$data)
@@ -91,10 +113,13 @@ shap_kernel <- function(explainer, new_observation, observation_aggregation_meth
     permutations <- expand.grid(rep(list(0:1), p))
     kernel_weights <- generate_shap_kernel_weights(permutations, p)
 
-    shap_values <- calculate_shap_values(explainer, explainer$model, baseline_sf, explainer$data, permutations, kernel_weights, new_observation, timestamps)
+    shap_values <- calculate_shap_values(explainer, explainer$model, baseline_sf, as.data.frame(explainer$data), permutations, kernel_weights, as.data.frame(new_observation), timestamps)
+
+
 
     shap_values <- as.data.frame(shap_values, row.names = colnames(explainer$data))
     colnames(shap_values) <- paste("t=", timestamps, sep = "")
+
     return (t(shap_values))
 }
 
@@ -130,7 +155,6 @@ calculate_shap_values <- function(explainer, model, avg_survival_function, data,
 }
 
 make_prediction_for_simplified_input <- function(explainer, model, data, simplified_inputs, new_observation, timestamps) {
-
 
     preds <- apply(simplified_inputs, 1, function(row) {
         row <- as.logical(row)
@@ -190,7 +214,7 @@ use_kernelshap <- function(explainer, new_observation, observation_aggregation_m
             tmp_shap_values <- data.frame(t(sapply(tmp_res$S, cbind)))
             colnames(tmp_shap_values) <- colnames(tmp_res$X)
             rownames(tmp_shap_values) <- paste("t=", explainer$times, sep = "")
-            data.table::as.data.table(tmp_shap_values, keep.rownames = TRUE)
+            tmp_shap_values
         },
         USE.NAMES = TRUE,
         simplify = FALSE
@@ -210,26 +234,30 @@ use_kernelshap <- function(explainer, new_observation, observation_aggregation_m
 aggregate_shap_multiple_observations <- function(shap_res_list, feature_names, aggregation_function) {
 
     if (length(shap_res_list) > 1) {
+        shap_res_list <- lapply(shap_res_list, function(x){
+            x$rn <- rownames(x)
+            x
+        })
 
-        full_survshap_results <- data.table::rbindlist(
-            l = shap_res_list,
-            use.names = TRUE,
-            idcol = TRUE
-        )
+        full_survshap_results <- do.call("rbind", shap_res_list)
+        rownames(full_survshap_results) <- NULL
 
         # compute arithmetic mean for each time-point and feature across
         # multiple observations
-        tmp_res <- full_survshap_results[
-            , lapply(.SD, aggregation_function), by = "rn", .SDcols = feature_names
-        ]
+
+        tmp_res <- aggregate(full_survshap_results[, !colnames(full_survshap_results) %in% c("rn")],
+                             by = list(full_survshap_results$rn),
+                             FUN = aggregation_function)
+        rownames(tmp_res) <- tmp_res$Group.1
+        ordering <- order(as.numeric(substring(rownames(tmp_res),3)))
+
+        tmp_res <- tmp_res[ordering, !colnames(tmp_res) %in% c("rn","Group.1")]
     } else {
         # no aggregation required
         tmp_res <- shap_res_list[[1]]
     }
-    shap_values <- tmp_res[, .SD, .SDcols = setdiff(colnames(tmp_res), "rn")]
+    shap_values <- tmp_res
     # transform to data.frame to make everything compatible with
     # previous code
-    shap_values <- data.frame(shap_values)
-    rownames(shap_values) <- tmp_res$rn
     return(shap_values)
 }
