@@ -89,3 +89,69 @@ plot.surv_shap <- function(x,
     return(return_plot)
 
 }
+
+
+
+#'@export
+plot.aggregated_surv_shap <- function(x,
+                                      ...,
+                                      title = "Aggregated SurvSHAP(t)",
+                                      subtitle = "default",
+                                      xlab_left = "Importance",
+                                      ylab_right = "Aggregated SurvSHAP(t) value",
+                                      max_vars = 7,
+                                      colors = NULL,
+                                      rug = "all",
+                                      rug_colors = c("#dd0000", "#222222")){
+
+    right_plot <- plot.surv_shap(x = x,
+                                 ... = ...,
+                                 title = NULL,
+                                 subtitle = NULL,
+                                 max_vars = max_vars,
+                                 colors = colors,
+                                 rug = rug,
+                                 rug_colors = rug_colors) +
+                  labs(y = ylab_right)
+
+
+    dfl <- c(list(x), list(...))
+
+    df_list <- lapply(dfl, function(x) {
+        label <- attr(x, "label")
+        values <- x$aggregate
+        vars <- names(x$aggregate)
+        df <- data.frame(label, values, vars)
+        rownames(df) <- NULL
+        df
+    })
+
+    long_df <- do.call("rbind", df_list)
+    long_df <- long_df[order(long_df$values, decreasing = TRUE),]
+
+    label <- unique(long_df$label)
+    if (!is.null(subtitle) && subtitle == "default") {
+        subtitle <- paste0("created for the ", paste(label, collapse = ", "), " model")
+    }
+
+    left_plot <- with(long_df, {
+        ggplot(long_df, aes(x = values, y = reorder(vars, values))) +
+            geom_col(fill = "#46bac2") +
+            theme_default_survex() +
+            facet_wrap(~label, ncol = 1, scales = "free_y") +
+            labs(x = xlab_left) +
+            theme(axis.title.y = element_blank())
+
+    })
+
+
+    pl <- left_plot +
+          right_plot +
+          patchwork::plot_layout(widths = c(3,5), guides = "collect") +
+          patchwork::plot_annotation(title = title, subtitle = subtitle) &
+          theme(legend.position = "top",
+                plot.title = element_text(color = "#371ea3", size = 16, hjust = 0),
+                plot.subtitle = element_text(color = "#371ea3", hjust = 0),)
+
+    pl
+}
