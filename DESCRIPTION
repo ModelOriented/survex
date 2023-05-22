@@ -1,6 +1,6 @@
 Package: survex
 Title: Explainable Machine Learning in Survival Analysis
-Version: 1.0.0.9000
+Version: 1.0.0.9001
 Authors@R: 
     c(
         person("Mikołaj", "Spytek", email = "mikolajspytek@gmail.com", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-7111-2286")),
@@ -18,7 +18,7 @@ Description: Survival analysis models are commonly used in medicine and other ar
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 Depends: R (>= 3.5.0)
 Imports:
     DALEX (>= 2.2.1),
@@ -26,7 +26,8 @@ Imports:
     kernelshap,
     pec,
     survival,
-    patchwork
+    patchwork,
+    data.table
 Suggests:
     censored,
     covr,
