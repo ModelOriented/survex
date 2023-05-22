@@ -71,8 +71,16 @@ surv_shap <- function(explainer,
 
     res$aggregate <- aggregate_surv_shap(res, aggregation_method)
 
-    class(res) <- "surv_shap"
-    res
+    if(nrow(new_observation) > 1){
+        class(res) <- c("aggregated_surv_shap", "surv_shap")
+        res$observation_aggregation_function <- observation_aggregation_method
+        res$aggregation_method <- aggregation_method
+        res$n_observations <- nrow(new_observation)
+    } else {
+        class(res) <- "surv_shap"
+    }
+
+    return(res)
 }
 
 use_exact_shap <- function(explainer, new_observation, observation_aggregation_method, ...){
