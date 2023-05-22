@@ -1,11 +1,12 @@
 #' Helper functions for `predict_parts.R`
 #'
 #' @param explainer an explainer object - model preprocessed by the `explain()` function
-#' @param new_observation a new observation for which predictions need to be explained
+#' @param new_observation new observations for which predictions need to be explained
 #' @param ... additional parameters, passed to internal functions
 #' @param y_true a two element numeric vector or matrix of one row and two columns, the first element being the true observed time and the second the status of the observation, used for plotting
 #' @param calculation_method a character, either `"kernelshap"` for use of `kernelshap` library (providing faster Kernel SHAP with refinements) or `"exact_kernel"` for exact Kernel SHAP estimation
 #' @param aggregation_method a character, either `"mean_absolute"` or `"integral"`, `"max_absolute"`, `"sum_of_squares"`
+#' @param observation_aggregation_method a function, if `new_observation` contains multiple observation this function is applied to the same time point of generated shap profiles for each observation. Defaults to `mean`.
 #'
 #' @return A list, containing the calculated SurvSHAP(t) results in the `result` field
 #'
@@ -20,6 +21,7 @@ surv_shap <- function(explainer,
 
                       calculation_method = "kernelshap",
                       aggregation_method = "integral",
+                      observation_aggregation_method = mean,
                       path = "average",
                       B = 25,
                       exact = FALSE
@@ -29,7 +31,8 @@ surv_shap <- function(explainer,
                      ifelse(is.matrix(y_true),
                             nrow(new_observation) == nrow(y_true),
                             is.null(dim(y_true)) && length(y_true) == 2L),
-                     TRUE))
+                     TRUE),
+              is.function(observation_aggregation_method))
 
     test_explainer(explainer, "surv_shap", has_data = TRUE, has_y = TRUE, has_survival = TRUE)
 
@@ -62,8 +65,8 @@ surv_shap <- function(explainer,
     res$variable_values <- as.data.frame(new_observation)
 
     res$result <- switch(calculation_method,
-                         "exact_kernel" = shap_kernel(explainer, new_observation, ...),
-                         "kernelshap" = use_kernelshap(explainer, new_observation, ...),
+                         "exact_kernel" = shap_kernel(explainer, new_observation, observation_aggregation_method, ...),
+                         "kernelshap" = use_kernelshap(explainer, new_observation, observation_aggregation_method, ...),
                          stop("Only `exact_kernel` and `kernelshap` calculation methods are implemented"))
 
     if (!is.null(y_true)) res$y_true <- c(y_true_time = y_true_time, y_true_ind = y_true_ind)
@@ -75,7 +78,7 @@ surv_shap <- function(explainer,
 }
 
 
-shap_kernel <- function(explainer, new_observation, ...) {
+shap_kernel <- function(explainer, new_observation, observation_aggregation_method, ...) {
 
     timestamps <- explainer$times
     p <- ncol(explainer$data)
@@ -164,7 +167,7 @@ aggregate_surv_shap <- function(survshap, method) {
 }
 
 
-use_kernelshap <- function(explainer, new_observation, ...){
+use_kernelshap <- function(explainer, new_observation, observation_aggregation_method, ...){
 
     predfun <- function(model, newdata){
         explainer$predict_survival_function(
@@ -195,14 +198,16 @@ use_kernelshap <- function(explainer, new_observation, ...){
 
     shap_values <- aggregate_shap_multiple_observations(
         shap_res_list = tmp_res_list,
-        feature_names = colnames(new_observation)
+        feature_names = colnames(new_observation),
+        aggregation_function = observation_aggregation_method
     )
+
 
     return(shap_values)
 }
 
 
-aggregate_shap_multiple_observations <- function(shap_res_list, feature_names) {
+aggregate_shap_multiple_observations <- function(shap_res_list, feature_names, aggregation_function) {
 
     if (length(shap_res_list) > 1) {
 
@@ -215,7 +220,7 @@ aggregate_shap_multiple_observations <- function(shap_res_list, feature_names) {
         # compute arithmetic mean for each time-point and feature across
         # multiple observations
         tmp_res <- full_survshap_results[
-            , lapply(.SD, mean), by = "rn", .SDcols = feature_names
+            , lapply(.SD, aggregation_function), by = "rn", .SDcols = feature_names
         ]
     } else {
         # no aggregation required
