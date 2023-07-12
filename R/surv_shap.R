@@ -20,19 +20,14 @@ surv_shap <- function(explainer,
                       y_true = NULL,
 
                       calculation_method = "kernelshap",
-                      aggregation_method = "integral",
-                      observation_aggregation_method = mean,
-                      path = "average",
-                      B = 25,
-                      exact = FALSE
-) {
+                      aggregation_method = "integral")
+{
     # make this code work for multiple observations
     stopifnot(ifelse(!is.null(y_true),
                      ifelse(is.matrix(y_true),
                             nrow(new_observation) == nrow(y_true),
                             is.null(dim(y_true)) && length(y_true) == 2L),
-                     TRUE),
-              is.function(observation_aggregation_method))
+                     TRUE))
 
     test_explainer(explainer, "surv_shap", has_data = TRUE, has_y = TRUE, has_survival = TRUE)
 
@@ -63,21 +58,22 @@ surv_shap <- function(explainer,
     # to display final object correctly, when is.matrix(new_observation) == TRUE
     res$variable_values <- as.data.frame(new_observation)
     res$result <- switch(calculation_method,
-                         "exact_kernel" = use_exact_shap(explainer, new_observation, observation_aggregation_method, ...),
-                         "kernelshap" = use_kernelshap(explainer, new_observation, observation_aggregation_method, ...),
+                         "exact_kernel" = use_exact_shap(explainer, new_observation, ...),
+                         "kernelshap" = use_kernelshap(explainer, new_observation, ...),
                          stop("Only `exact_kernel` and `kernelshap` calculation methods are implemented"))
 
     if (!is.null(y_true)) res$y_true <- c(y_true_time = y_true_time, y_true_ind = y_true_ind)
 
-    res$aggregate <- aggregate_surv_shap(res, aggregation_method)
+    res$aggregate <- lapply(res$result, aggregate_surv_shap, method = aggregation_method, times = res$eval_times)
 
     if(nrow(new_observation) > 1){
-        class(res) <- c("aggregated_surv_shap", "surv_shap")
-        res$observation_aggregation_function <- observation_aggregation_method
-        res$aggregation_method <- aggregation_method
+        class(res) <- "aggregated_surv_shap"
+        # res$aggregation_method <- aggregation_method
         res$n_observations <- nrow(new_observation)
     } else {
         class(res) <- "surv_shap"
+        res$result <- res$result[[1]]
+        res$aggregate <- res$aggregate[[1]]
     }
 
     return(res)
@@ -85,7 +81,7 @@ surv_shap <- function(explainer,
 
 use_exact_shap <- function(explainer, new_observation, observation_aggregation_method, ...){
 
-    tmp_res_list <- sapply(
+    shap_values <- sapply(
         X = as.character(seq_len(nrow(new_observation))),
         FUN = function(i) {
             as.data.frame(shap_kernel(explainer, new_observation[as.integer(i),], ...))
@@ -93,14 +89,6 @@ use_exact_shap <- function(explainer, new_observation, observation_aggregation_m
         USE.NAMES = TRUE,
         simplify = FALSE
     )
-
-    print(tmp_res_list)
-    shap_values <- aggregate_shap_multiple_observations(
-        shap_res_list = tmp_res_list,
-        feature_names = colnames(new_observation),
-        aggregation_function = observation_aggregation_method
-    )
-
 
     return(shap_values)
 
@@ -180,16 +168,14 @@ make_prediction_for_simplified_input <- function(explainer, model, data, simplif
 
 }
 
-aggregate_surv_shap <- function(survshap, method) {
-
+aggregate_surv_shap <- function(survshap, times, method) {
     switch(method,
-           "sum_of_squares" = return(apply(survshap$result, 2, function(x) sum(x^2))),
-           "mean_absolute" = return(apply(survshap$result, 2, function(x) mean(abs(x)))),
-           "max_absolute" = return(apply(survshap$result, 2, function(x) max(abs(x)))),
-           "integral" = return(apply(survshap$result, 2, function(x) {
+           "sum_of_squares" = return(apply(survshap, 2, function(x) sum(x^2))),
+           "mean_absolute" = return(apply(survshap, 2, function(x) mean(abs(x)))),
+           "max_absolute" = return(apply(survshap, 2, function(x) max(abs(x)))),
+           "integral" = return(apply(survshap, 2, function(x) {
                x <- abs(x)
                names(x) <- NULL
-               times <- survshap$eval_times
                n <- length(x)
                i <- (x[1:(n - 1)] + x[2:n]) * diff(times) / 2
                sum(i) / (max(times) - min(times))
@@ -209,7 +195,7 @@ use_kernelshap <- function(explainer, new_observation, observation_aggregation_m
         )
     }
 
-    tmp_res_list <- sapply(
+    shap_values <- sapply(
         X = as.character(seq_len(nrow(new_observation))),
         FUN = function(i) {
             tmp_res <- kernelshap::kernelshap(
@@ -228,17 +214,11 @@ use_kernelshap <- function(explainer, new_observation, observation_aggregation_m
         simplify = FALSE
     )
 
-    shap_values <- aggregate_shap_multiple_observations(
-        shap_res_list = tmp_res_list,
-        feature_names = colnames(new_observation),
-        aggregation_function = observation_aggregation_method
-    )
-
-
     return(shap_values)
+
 }
 
-
+#'@internal
 aggregate_shap_multiple_observations <- function(shap_res_list, feature_names, aggregation_function) {
 
     if (length(shap_res_list) > 1) {

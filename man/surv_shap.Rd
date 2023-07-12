@@ -10,11 +10,7 @@ surv_shap(
   ...,
   y_true = NULL,
   calculation_method = "kernelshap",
-  aggregation_method = "integral",
-  observation_aggregation_method = mean,
-  path = "average",
-  B = 25,
-  exact = FALSE
+  aggregation_method = "integral"
 )
 }
 \arguments{
