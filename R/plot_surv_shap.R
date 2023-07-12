@@ -95,7 +95,7 @@ plot.surv_shap <- function(x,
 #'@export
 plot.aggregated_surv_shap <- function(x,
                                       ...,
-                                      title = "Aggregated SurvSHAP(t)",
+                                      title = "Feature importance according to aggregated |SurvSHAP(t)|",
                                       subtitle = "default",
                                       xlab_left = "Importance",
                                       ylab_right = "Aggregated SurvSHAP(t) value",
@@ -103,6 +103,11 @@ plot.aggregated_surv_shap <- function(x,
                                       colors = NULL,
                                       rug = "all",
                                       rug_colors = c("#dd0000", "#222222")){
+
+
+    old_x <- x
+    x$result <- aggregate_shap_multiple_observations(x$result, colnames(x$result[[1]]), function(x) mean(abs(x)))
+    x$aggregate <- apply(do.call(rbind, x$aggregate), 2, function(x) mean(abs(x)))
 
     right_plot <- plot.surv_shap(x = x,
                                  ... = ...,
