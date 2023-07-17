@@ -27,6 +27,7 @@ Imports:
     pec,
     survival,
     patchwork,
+    ggbeeswarm
 Suggests:
     censored,
     covr,

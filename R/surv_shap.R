@@ -218,7 +218,7 @@ use_kernelshap <- function(explainer, new_observation, observation_aggregation_m
 
 }
 
-#'@internal
+#'@keywords internal
 aggregate_shap_multiple_observations <- function(shap_res_list, feature_names, aggregation_function) {
 
     if (length(shap_res_list) > 1) {

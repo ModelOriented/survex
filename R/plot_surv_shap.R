@@ -94,6 +94,7 @@ plot.surv_shap <- function(x,
 
 #'@export
 plot.aggregated_surv_shap <- function(x,
+                                      kind = c("importance", "swarm"),
                                       ...,
                                       title = "Feature importance according to aggregated |SurvSHAP(t)|",
                                       subtitle = "default",
@@ -105,7 +106,88 @@ plot.aggregated_surv_shap <- function(x,
                                       rug_colors = c("#dd0000", "#222222")){
 
 
-    old_x <- x
+    if (kind == "importance"){
+
+        pl <- plot_shap_global_importance(x = x,
+                                          ... = ...,
+                                          title = title,
+                                          subtitle = subtitle,
+                                          xlab_left = xlab_left,
+                                          ylab_right = ylab_right,
+                                          max_vars = max_vars,
+                                          colors = colors,
+                                          rug = rug,
+                                          rug_colors = rug_colors)
+
+
+    } else if (kind == "swarm") {
+
+        pl <- plot_shap_global_swarm(x = x,
+                                     ... = ...,
+                                     title = title,
+                                     subtitle = subtitle,
+                                     max_vars = max_vars,
+                                     colors = colors,
+                                     rug = rug,
+                                     rug_colors = rug_colors)
+
+    } else {
+        stop("Unknown `kind` argument. Please use one of 'importance'")
+    }
+
+
+    return(pl)
+
+
+}
+
+#'@importFrom ggbeeswarm geom_beeswarm
+plot_shap_global_swarm <- function(x,
+                                   ...,
+                                   title = "Aaaaa",
+                                   subtitle = "default",
+                                   max_vars = 7,
+                                   colors = NULL,
+                                   rug = "all",
+                                   rug_colors = c("#dd0000", "#222222")){
+
+    # print(x$variable_values)
+
+    df <- as.data.frame(do.call(rbind, x$aggregate))
+    df <- stack(df)
+    original_values <- as.data.frame(x$variable_values)
+    # print(nrow(df))
+    # print(nrow(original_values))
+    print(apply(original_values, 2, function(x) any(is.na((as.numeric(x))))))
+    colnames(df) <- c("shap_value", "variable")
+    cbind(df, label = "TODO label")
+
+
+
+
+    # print(df)
+
+    ggplot(data = df, aes(y = `shap_value`, x = variable)) +
+        coord_flip()+
+        ggbeeswarm::geom_beeswarm()
+
+
+
+
+}
+
+
+plot_shap_global_importance <- function(x,
+                                        ...,
+                                        title = "Feature importance according to aggregated |SurvSHAP(t)|",
+                                        subtitle = "default",
+                                        xlab_left = "Importance",
+                                        ylab_right = "Aggregated SurvSHAP(t) value",
+                                        max_vars = 7,
+                                        colors = NULL,
+                                        rug = "all",
+                                        rug_colors = c("#dd0000", "#222222")){
+
     x$result <- aggregate_shap_multiple_observations(x$result, colnames(x$result[[1]]), function(x) mean(abs(x)))
     x$aggregate <- apply(do.call(rbind, x$aggregate), 2, function(x) mean(abs(x)))
 
@@ -117,7 +199,7 @@ plot.aggregated_surv_shap <- function(x,
                                  colors = colors,
                                  rug = rug,
                                  rug_colors = rug_colors) +
-                  labs(y = ylab_right)
+        labs(y = ylab_right)
 
 
     dfl <- c(list(x), list(...))
@@ -151,12 +233,16 @@ plot.aggregated_surv_shap <- function(x,
 
 
     pl <- left_plot +
-          right_plot +
-          patchwork::plot_layout(widths = c(3,5), guides = "collect") +
-          patchwork::plot_annotation(title = title, subtitle = subtitle) &
-          theme(legend.position = "top",
-                plot.title = element_text(color = "#371ea3", size = 16, hjust = 0),
-                plot.subtitle = element_text(color = "#371ea3", hjust = 0),)
+        right_plot +
+        patchwork::plot_layout(widths = c(3,5), guides = "collect") +
+        patchwork::plot_annotation(title = title, subtitle = subtitle) &
+        theme(legend.position = "top",
+              plot.title = element_text(color = "#371ea3", size = 16, hjust = 0),
+              plot.subtitle = element_text(color = "#371ea3", hjust = 0),)
 
-    pl
+    return(pl)
 }
+
+
+
+
