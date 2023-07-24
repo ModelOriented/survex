@@ -18,16 +18,20 @@ surv_shap <- function(explainer,
                       new_observation,
                       ...,
                       y_true = NULL,
-
                       calculation_method = "kernelshap",
                       aggregation_method = "integral")
 {
     # make this code work for multiple observations
-    stopifnot(ifelse(!is.null(y_true),
-                     ifelse(is.matrix(y_true),
-                            nrow(new_observation) == nrow(y_true),
-                            is.null(dim(y_true)) && length(y_true) == 2L),
-                     TRUE))
+    stopifnot(
+        "`y_true` must be either a matrix with one per observation in `new_observation` or a vector of length == 2" = ifelse(
+            !is.null(y_true),
+            ifelse(
+                is.matrix(y_true),
+                nrow(new_observation) == nrow(y_true),
+                is.null(dim(y_true)) && length(y_true) == 2L
+            ),
+            TRUE
+        ))
 
     test_explainer(explainer, "surv_shap", has_data = TRUE, has_y = TRUE, has_survival = TRUE)
 
@@ -169,19 +173,20 @@ make_prediction_for_simplified_input <- function(explainer, model, data, simplif
 }
 
 aggregate_surv_shap <- function(survshap, times, method) {
-    switch(method,
-           "sum_of_squares" = return(apply(survshap, 2, function(x) sum(x^2))),
-           "mean_absolute" = return(apply(survshap, 2, function(x) mean(abs(x)))),
-           "max_absolute" = return(apply(survshap, 2, function(x) max(abs(x)))),
-           "integral" = return(apply(survshap, 2, function(x) {
-               x <- abs(x)
-               names(x) <- NULL
-               n <- length(x)
-               i <- (x[1:(n - 1)] + x[2:n]) * diff(times) / 2
-               sum(i) / (max(times) - min(times))
-           })),
-           stop("aggregation_method has to be one of `sum_of_squares`, `mean_absolute`, `max_absolute` or `integral`"))
-
+    switch(
+        method,
+        "sum_of_squares" = return(apply(survshap, 2, function(x) sum(x^2))),
+        "mean_absolute" = return(apply(survshap, 2, function(x) mean(abs(x)))),
+        "max_absolute" = return(apply(survshap, 2, function(x) max(abs(x)))),
+        "integral" = return(apply(survshap, 2, function(x) {
+            x <- abs(x)
+            names(x) <- NULL
+            n <- length(x)
+            i <- (x[1:(n - 1)] + x[2:n]) * diff(times) / 2
+            sum(i) / (max(times) - min(times))
+            })),
+        stop("aggregation_method has to be one of `sum_of_squares`, `mean_absolute`, `max_absolute` or `integral`")
+        )
 }
 
 
@@ -222,7 +227,7 @@ use_kernelshap <- function(explainer, new_observation, observation_aggregation_m
 aggregate_shap_multiple_observations <- function(shap_res_list, feature_names, aggregation_function) {
 
     if (length(shap_res_list) > 1) {
-        shap_res_list <- lapply(shap_res_list, function(x){
+        shap_res_list <- lapply(shap_res_list, function(x) {
             x$rn <- rownames(x)
             x
         })
