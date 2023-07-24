@@ -19,7 +19,7 @@ surv_shap(
 \arguments{
 \item{explainer}{an explainer object - model preprocessed by the \code{explain()} function}
 
-\item{new_observation}{a new observation for which predictions need to be explained}
+\item{new_observation}{new observations for which predictions need to be explained}
 
 \item{...}{additional parameters, passed to internal functions}
 
@@ -28,7 +28,9 @@ surv_shap(
 \item{calculation_method}{a character, either \code{"kernelshap"} for use of \code{kernelshap} library (providing faster Kernel SHAP with refinements), \code{"exact_kernel"} for exact Kernel SHAP estimation,
 or \code{"treeshap"} for use of \code{treeshap} library (efficient implementation to compute SHAP values for tree-based models).}
 
-\item{aggregation_method}{a character, either \code{"mean_absolute"} or \code{"integral"} (default), \code{"max_absolute"}, \code{"sum_of_squares"}}
+\item{aggregation_method}{a character, either \code{"mean_absolute"} or \code{"integral"}, \code{"max_absolute"}, \code{"sum_of_squares"}}
+
+\item{observation_aggregation_method}{a function, if \code{new_observation} contains multiple observation this function is applied to the same time point of generated shap profiles for each observation. Defaults to \code{mean}.}
 }
 \value{
 A list, containing the calculated SurvSHAP(t) results in the \code{result} field

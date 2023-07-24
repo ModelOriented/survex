@@ -1,2 +1,1 @@
-#' @import data.table
 NULL

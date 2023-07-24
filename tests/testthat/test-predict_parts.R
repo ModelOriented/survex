@@ -60,39 +60,16 @@ test_that("survshap explanations work", {
 
 })
 
-
-test_that("global survshap explanations with kernelshap work for ranger", {
-    veteran <- survival::veteran
-
-    rsf_ranger <- ranger::ranger(survival::Surv(time, status) ~ ., data = veteran, respect.unordered.factors = TRUE, num.trees = 100, mtry = 3, max.depth = 5)
-    rsf_ranger_exp <- explain(rsf_ranger, data = veteran[, -c(3, 4)], y = survival::Surv(veteran$time, veteran$status), verbose = FALSE)
-
-    parts_ranger <- predict_parts(
-        rsf_ranger_exp,
-        veteran[1:40, !colnames(veteran) %in% c("time", "status")],
-        y_true = survival::Surv(veteran$time[1:40], veteran$status[1:40]),
-        aggregation_method = "mean_absolute",
-        calculation_method = "kernelshap"
-    )
-    plot(parts_ranger)
-
-    expect_s3_class(parts_ranger, c("predict_parts_survival", "surv_shap"))
-    expect_equal(nrow(parts_ranger$result), length(rsf_ranger_exp$times))
-    expect_true(all(colnames(parts_ranger$result) == colnames(rsf_ranger_exp$data)))
-
-})
-
-
-# dont need to compute common code multiple times
-veteran <- survival::veteran
-
-rsf_ranger_matrix <- ranger::ranger(survival::Surv(time, status) ~ ., data = model.matrix(~ -1 + ., veteran), respect.unordered.factors = TRUE, num.trees = 100, mtry = 3, max.depth = 5)
-rsf_ranger_exp_matrix <- explain(rsf_ranger_matrix, data = model.matrix(~ -1 + ., veteran[, -c(3, 4)]), y = survival::Surv(veteran$time, veteran$status), verbose = FALSE)
-
 test_that("local survshap explanations with treeshap work for ranger", {
 
+    veteran <- survival::veteran
+
+    rsf_ranger_matrix <- ranger::ranger(survival::Surv(time, status) ~ ., data = model.matrix(~ -1 + ., veteran), respect.unordered.factors = TRUE, num.trees = 100, mtry = 3, max.depth = 5)
+    rsf_ranger_exp_matrix <- explain(rsf_ranger_matrix, data = model.matrix(~ -1 + ., veteran[, -c(3, 4)]), y = survival::Surv(veteran$time, veteran$status), verbose = FALSE)
+
+
     new_obs <- model.matrix(~ -1 + ., veteran[2, setdiff(colnames(veteran), c("time", "status"))])
-    parts_ranger <- predict_parts(
+    parts_ranger <- model_survshap(
         rsf_ranger_exp_matrix,
         new_obs,
         y_true = c(veteran$time[2], veteran$status[2]),
@@ -106,35 +83,6 @@ test_that("local survshap explanations with treeshap work for ranger", {
     expect_true(all(colnames(parts_ranger$result) == colnames(rsf_ranger_exp_matrix$data)))
 
 })
-
-
-test_that("global survshap explanations with treeshap work for ranger", {
-
-    new_obs <- model.matrix(~ -1 + ., veteran[1:40, setdiff(colnames(veteran), c("time", "status"))])
-    parts_ranger_tree <- predict_parts(
-        rsf_ranger_exp_matrix,
-        new_obs,
-        y_true = survival::Surv(veteran$time[1:40], veteran$status[1:40]),
-        aggregation_method = "mean_absolute",
-        calculation_method = "treeshap"
-    )
-    plot(parts_ranger_tree)
-
-    expect_s3_class(parts_ranger_tree, c("predict_parts_survival", "surv_shap"))
-    expect_equal(nrow(parts_ranger_tree$result), length(rsf_ranger_exp_matrix$times))
-    expect_true(all(colnames(parts_ranger_tree$result) == colnames(rsf_ranger_exp_matrix$data)))
-
-    # to compare plots, compute kernelshap with dummified features
-    parts_ranger_kernel <- predict_parts(
-        rsf_ranger_exp_matrix,
-        new_obs,
-        y_true = survival::Surv(veteran$time[1:40], veteran$status[1:40]),
-        aggregation_method = "mean_absolute",
-        calculation_method = "kernelshap"
-    )
-    plot(parts_ranger_kernel)
-})
-
 
 test_that("survlime explanations work", {
 

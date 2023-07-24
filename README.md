@@ -82,6 +82,7 @@ If you use `survex`, please cite it as
 ## Applications of `survex`
 
 - H. Baniecki, B. Sobieski, P. Bombiński, P. Szatkowski, P. Biecek. [Hospital Length of Stay Prediction Based on Multi-modal Data towards Trustworthy Human-AI Collaboration in Radiomics](https://arxiv.org/abs/2303.09817). *International Conference on Artificial Intelligence in Medicine*, 2023.
+- W. Chen, B. Zhou, C. Y. Jeon, F. Xie, Y-C. Lin, R. K. Butler, Y. Zhou, T. Q. Luong, E. Lustigova, J. R. Pisegna, B. U. Wu. [Machine learning versus regression for prediction of sporadic pancreatic cancer](https://doi.org/10.1016/j.pan.2023.04.009). *Pancreatology*, 2023.
 - Share it with us!
 
 ## Related work
