@@ -13,6 +13,35 @@
 #'
 #' @return An object of class `aggregated_surv_shap` containing the computed global SHAP values.
 #'
+#' @examples
+#' \donttest{
+#' veteran <- survival::veteran
+#' rsf_ranger <- ranger::ranger(
+#'   survival::Surv(time, status) ~ .,
+#'   data = veteran,
+#'   respect.unordered.factors = TRUE,
+#'   num.trees = 100,
+#'   mtry = 3,
+#'   max.depth = 5
+#' )
+#' rsf_ranger_exp <- explain(
+#'   rsf_ranger,
+#'   data = veteran[, -c(3, 4)],
+#'   y = Surv(veteran$time, veteran$status),
+#'   verbose = FALSE
+#' )
+#'
+#' ranger_global_survshap <- model_survshap(
+#'   explainer = rsf_ranger_exp,
+#'   new_observation = veteran[1:40, !colnames(veteran) %in% c("time", "status")],
+#'   y_true = Surv(veteran$time[1:40], veteran$status[1:40]),
+#'   aggregation_method = "mean_absolute",
+#'   calculation_method = "kernelshap",
+#'   N = 5L
+#' )
+#' plot(ranger_global_survshap)
+#' }
+#'
 #' @rdname model_survshap.surv_explainer
 #' @export
 model_survshap <-
@@ -32,7 +61,7 @@ model_survshap.surv_explainer <- function(explainer,
     stopifnot(
         "`N` must be a positive integer" = ifelse(
             !is.null(N),
-            is.integer(N) && N > 0L,
+            is.integer(as.integer(N)) && N > 0L,
             TRUE
         ),
         "`y_true` must be either a matrix with one per observation in `new_observation` or a vector of length == 2" = ifelse(
@@ -44,6 +73,8 @@ model_survshap.surv_explainer <- function(explainer,
             ),
             TRUE
         ))
+
+    N <- as.integer(N)
 
     test_explainer(
         explainer,
@@ -67,6 +98,9 @@ model_survshap.surv_explainer <- function(explainer,
     if (!is.null(N)) {
         selected_observations <- sample(1:nrow(observations), N)
         observations <- observations[selected_observations, ]
+        if (!is.null(y_true)) {
+            y_true <- y_true[selected_observations, ]
+        }
     }
 
     shap_values <- surv_shap(

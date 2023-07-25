@@ -18,6 +18,16 @@ test_that("global survshap explanations with kernelshap work for ranger, using n
     expect_equal(length(ranger_global_survshap$eval_times), length(rsf_ranger_exp$times))
     expect_true(all(names(ranger_global_survshap$variable_values) == colnames(rsf_ranger_exp$data)))
 
+    # test functioning of special case, when providing new observation and specify N
+    ranger_global_survshap <- model_survshap(
+        explainer = rsf_ranger_exp,
+        new_observation = veteran[1:40, !colnames(veteran) %in% c("time", "status")],
+        y_true = Surv(veteran$time[1:40], veteran$status[1:40]),
+        aggregation_method = "mean_absolute",
+        calculation_method = "kernelshap",
+        N = 6
+    )
+
 })
 
 test_that("global survshap explanations with kernelshap work for ranger, using explainer data", {

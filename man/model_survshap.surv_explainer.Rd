@@ -43,3 +43,33 @@ If specifying \code{y_true}, also \code{new_observation} must be specified.
 Using the argument \code{new_observation}, global SHAP values are computed for the provided data. Otherwise,
 global SHAP values are computed for the data, the \code{explainer} was trained with.
 }
+\examples{
+\donttest{
+veteran <- survival::veteran
+rsf_ranger <- ranger::ranger(
+  survival::Surv(time, status) ~ .,
+  data = veteran,
+  respect.unordered.factors = TRUE,
+  num.trees = 100,
+  mtry = 3,
+  max.depth = 5
+)
+rsf_ranger_exp <- explain(
+  rsf_ranger,
+  data = veteran[, -c(3, 4)],
+  y = Surv(veteran$time, veteran$status),
+  verbose = FALSE
+)
+
+ranger_global_survshap <- model_survshap(
+  explainer = rsf_ranger_exp,
+  new_observation = veteran[1:40, !colnames(veteran) \%in\% c("time", "status")],
+  y_true = Surv(veteran$time[1:40], veteran$status[1:40]),
+  aggregation_method = "mean_absolute",
+  calculation_method = "kernelshap",
+  N = 5L
+)
+plot(ranger_global_survshap)
+}
+
+}
