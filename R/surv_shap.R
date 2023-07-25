@@ -160,8 +160,6 @@ shap_kernel <- function(explainer, new_observation, ...) {
 
     shap_values <- calculate_shap_values(explainer, explainer$model, baseline_sf, as.data.frame(explainer$data), permutations, kernel_weights, as.data.frame(new_observation), timestamps)
 
-
-
     shap_values <- as.data.frame(shap_values, row.names = colnames(explainer$data))
     colnames(shap_values) <- paste("t=", timestamps, sep = "")
     return(t(shap_values))
@@ -259,13 +257,11 @@ use_kernelshap <- function(explainer, new_observation, observation_aggregation_m
             tmp_res <- kernelshap::kernelshap(
                 object = explainer$model,
                 X = new_observation[as.integer(i), ],
-                bg_X = explainer_data,
+                bg_X = explainer$data,
                 pred_fun = predfun,
                 verbose = FALSE
             )
-            tmp_shap_values <- data.table::as.data.table(
-                t(sapply(tmp_res$S, cbind))
-            )
+            tmp_shap_values <- data.frame(t(sapply(tmp_res$S, cbind)))
             colnames(tmp_shap_values) <- colnames(tmp_res$X)
             rownames(tmp_shap_values) <- paste("t=", explainer$times, sep = "")
             tmp_shap_values
@@ -307,7 +303,7 @@ use_treeshap <- function(explainer, new_observation, ...){
 
     tmp_unified <- do.call(UNIFY_FUN, unify_args)
 
-    tmp_res_list <- sapply(
+    shap_values <- sapply(
         X = as.character(seq_len(nrow(new_observation))),
         FUN = function(i) {
             tmp_res <- do.call(
@@ -327,10 +323,10 @@ use_treeshap <- function(explainer, new_observation, ...){
                 )
             )
 
-            tmp_shap_values <- data.table::as.data.table(tmp_res)
+            tmp_shap_values <- data.frame(tmp_res)
             colnames(tmp_shap_values) <- colnames(tmp_res)
-            tmp_shap_values$rn <- explainer$times
-            return(tmp_shap_values)
+            rownames(tmp_shap_values) <- paste("t=", explainer$times, sep = "")
+            tmp_shap_values
         },
         USE.NAMES = TRUE,
         simplify = FALSE
@@ -340,7 +336,7 @@ use_treeshap <- function(explainer, new_observation, ...){
 
 }
 
-#'@internal
+# @internal
 aggregate_shap_multiple_observations <- function(shap_res_list, feature_names, aggregation_function) {
 
     if (length(shap_res_list) > 1) {
