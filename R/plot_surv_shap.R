@@ -135,9 +135,10 @@ plot.aggregated_surv_shap <- function(x,
     long_df <- long_df[order(long_df$values, decreasing = TRUE),]
 
     label <- unique(long_df$label)
-    if (!is.null(subtitle) && subtitle == "default") {
-        subtitle <- paste0("created for the ", paste(label, collapse = ", "), " model")
-    }
+    subtitle <- paste0(
+        "created for the ", paste(label, collapse = ", "), " model ",
+        "(n=", x$n_observations, ")"
+    )
 
     left_plot <- with(long_df, {
         ggplot(long_df, aes(x = values, y = reorder(vars, values))) +
