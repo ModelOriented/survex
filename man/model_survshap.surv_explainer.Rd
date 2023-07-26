@@ -9,12 +9,11 @@ model_survshap(explainer, ...)
 
 \method{model_survshap}{surv_explainer}(
   explainer,
-  calculation_method = "kernelshap",
-  aggregation_method = "integral",
   new_observation = NULL,
   y_true = NULL,
-  ...,
-  N = NULL
+  calculation_method = "kernelshap",
+  aggregation_method = "integral",
+  ...
 )
 }
 \arguments{
@@ -22,15 +21,13 @@ model_survshap(explainer, ...)
 
 \item{...}{additional parameters, passed to internal functions}
 
-\item{calculation_method}{a character, either \code{"kernelshap"} for use of \code{kernelshap} library (providing faster Kernel SHAP with refinements) or \code{"exact_kernel"} for exact Kernel SHAP estimation}
-
-\item{aggregation_method}{a character, either \code{"mean_absolute"} or \code{"integral"}, \code{"max_absolute"}, \code{"sum_of_squares"}}
-
 \item{new_observation}{new observations for which predictions need to be explained}
 
 \item{y_true}{a two element numeric vector or matrix of one row and two columns, the first element being the true observed time and the second the status of the observation, used for plotting}
 
-\item{N}{A positive integer indicating the number of observations that should be used to compute global SHAP values.}
+\item{calculation_method}{a character, either \code{"kernelshap"} for use of \code{kernelshap} library (providing faster Kernel SHAP with refinements) or \code{"exact_kernel"} for exact Kernel SHAP estimation}
+
+\item{aggregation_method}{a character, either \code{"integral"}, \code{"integral_absolute"}, \code{"mean_absolute"}, \code{"max_absolute"}, or \code{"sum_of_squares"}}
 }
 \value{
 An object of class \code{aggregated_surv_shap} containing the computed global SHAP values.
