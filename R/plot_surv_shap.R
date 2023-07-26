@@ -218,7 +218,10 @@ plot_shap_global_importance <- function(x,
 
     label <- unique(long_df$label)
     if (!is.null(subtitle) && subtitle == "default") {
-        subtitle <- paste0("created for the ", paste(label, collapse = ", "), " model")
+        subtitle <- paste0(
+            "created for the ", paste(label, collapse = ", "), " model ",
+            "(n=", x$n_observations, ")"
+        )
     }
 
     left_plot <- with(long_df, {
