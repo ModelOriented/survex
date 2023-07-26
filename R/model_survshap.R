@@ -26,17 +26,16 @@
 #' rsf_ranger_exp <- explain(
 #'   rsf_ranger,
 #'   data = veteran[, -c(3, 4)],
-#'   y = Surv(veteran$time, veteran$status),
+#'   y = survival::Surv(veteran$time, veteran$status),
 #'   verbose = FALSE
 #' )
 #'
 #' ranger_global_survshap <- model_survshap(
 #'   explainer = rsf_ranger_exp,
 #'   new_observation = veteran[1:40, !colnames(veteran) %in% c("time", "status")],
-#'   y_true = Surv(veteran$time[1:40], veteran$status[1:40]),
+#'   y_true = survival::Surv(veteran$time[1:40], veteran$status[1:40]),
 #'   aggregation_method = "mean_absolute",
 #'   calculation_method = "kernelshap",
-#'   N = 5L
 #' )
 #' plot(ranger_global_survshap)
 #' }
