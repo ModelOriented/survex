@@ -35,7 +35,7 @@ loss_integrate <- function(loss_function, ..., normalization = NULL , max_quanti
         loss_values <- loss_values[na_mask]
         surv <- surv[na_mask]
 
-        calculate_integral(loss_values, times, normalization, y_true)
+        calculate_integral(loss_values, times, normalization, y_true=y_true)
     }
 
     attr(integrated_loss_function, "loss_type") <- "integrated"
