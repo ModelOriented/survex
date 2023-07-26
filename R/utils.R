@@ -185,3 +185,30 @@ add_rug_to_plot <- function(base_plot, rug_df, rug, rug_colors){
     }
 }
 
+
+#' @keywords internal
+calculate_integral <- function(values, times, normalization = "t_max", ...){
+    n <- length(values)
+
+    if (is.null(normalization)){
+        tmp <- (values[1:(n - 1)] + values[2:n]) * diff(times) / 2
+        integrated_metric <- sum(tmp) / (max(times) - min(times))
+        return(integrated_metric)
+    }
+    else if (normalization == "t_max") {
+        tmp <- (values[1:(n - 1)] + values[2:n]) * diff(times) / 2
+        integrated_metric <- sum(tmp)
+        return(integrated_metric/max(times))
+    } else if (normalization == "survival"){
+        y_true <- list(...)$y_true
+        km <- survival::survfit(y_true ~ 1)
+        estimator <- stepfun(km$time, c(1, km$surv))
+
+        dwt <- 1 - estimator(times)
+
+        tmp <- (values[1:(n - 1)] + values[2:n]) * diff(dwt) / 2
+        integrated_metric <- sum(tmp)
+        return(integrated_metric/(1 - estimator(max(times))))
+    }
+}
+
