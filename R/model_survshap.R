@@ -2,7 +2,6 @@
 #'
 #' This function computes global SHAP values.
 #'
-#' @param N A positive integer indicating the number of observations that should be used to compute global SHAP values.
 #' @inheritParams surv_shap
 #'
 #' @details
@@ -51,19 +50,13 @@ model_survshap <-
 #' @rdname model_survshap.surv_explainer
 #' @export
 model_survshap.surv_explainer <- function(explainer,
-                                          calculation_method = "kernelshap",
-                                          aggregation_method = "integral",
                                           new_observation = NULL,
                                           y_true = NULL,
-                                          ...,
-                                          N = NULL) {
+                                          calculation_method = "kernelshap",
+                                          aggregation_method = "integral",
+                                          ...) {
 
     stopifnot(
-        "`N` must be a positive integer" = ifelse(
-            !is.null(N),
-            is.integer(as.integer(N)) && N > 0L,
-            TRUE
-        ),
         "`y_true` must be either a matrix with one per observation in `new_observation` or a vector of length == 2" = ifelse(
             !is.null(y_true),
             ifelse(
@@ -73,8 +66,6 @@ model_survshap.surv_explainer <- function(explainer,
             ),
             TRUE
         ))
-
-    N <- as.integer(N)
 
     test_explainer(
         explainer,
@@ -92,15 +83,7 @@ model_survshap.surv_explainer <- function(explainer,
         }
     } else {
         observations <- explainer$data
-        y_true <- NULL
-    }
-
-    if (!is.null(N)) {
-        selected_observations <- sample(1:nrow(observations), N)
-        observations <- observations[selected_observations, ]
-        if (!is.null(y_true)) {
-            y_true <- y_true[selected_observations, ]
-        }
+        y_true <- explainer$y
     }
 
     shap_values <- surv_shap(
