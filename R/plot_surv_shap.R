@@ -192,7 +192,7 @@ plot_shap_global_swarm <- function(x,
         )
     }
 
-
+    with(df, {
     ggplot(data = df, aes(x = shap_value, y = variable, color = var_value)) +
         geom_vline(xintercept = 0, color = "#ceced9", linetype="solid") +
         geom_jitter(width=0) +
@@ -211,9 +211,9 @@ plot_shap_global_swarm <- function(x,
         theme_default_survex() +
         theme(legend.position = "bottom") +
         guides(color = guide_colorbar(title.position = "top", title.hjust = 0.5))
+    }
+  )
 }
-
-
 
 plot_shap_global_profile <- function(x,
                                      ...,
@@ -249,7 +249,8 @@ plot_shap_global_profile <- function(x,
         )
     }
 
-    p <- ggplot(df, aes(x = variable_val, y = shap_val, color = color_variable_val)) +
+    p <- with(df, {
+      ggplot(df, aes(x = variable_val, y = shap_val, color = color_variable_val)) +
         geom_hline(yintercept = 0, color = "#ceced9", linetype="solid") +
         geom_point() +
         geom_rug(aes(x = df$variable_val), inherit.aes=F, color = "#ceced9") +
@@ -259,6 +260,7 @@ plot_shap_global_profile <- function(x,
              subtitle = subtitle) +
         theme_default_survex() +
         theme(legend.position = "bottom")
+    })
 
     if (!is.factor(df$color_variable_val)) {
         p + scale_color_gradient2(
