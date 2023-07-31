@@ -13,7 +13,7 @@
 #' @param groups if `output_type == "risk"` a variable name that will be used for grouping. By default `NULL`, so no groups are calculated. If `output_type == "survival"` then ignored
 #' @param k passed to `DALEX::model_profile` if `output_type == "risk"`, otherwise ignored
 #' @param center logical, should profiles be centered before clustering
-#' @param type the type of variable profile. If `output_type == "survival"` then only `"partial"` is implemented, otherwise passed to `DALEX::model_profile`.
+#' @param type the type of variable profile, `"partial"` for Partial Dependence, `"accumulated"` for Accumulated Local Effects, or `"conditional"` (available only for `output_type == "risk"`)
 #' @param output_type either `"survival"` or `"risk"` the type of survival model output that should be considered for explanations. If `"survival"` the explanations are based on the survival function. Otherwise the scalar risk predictions are used by the `DALEX::model_profile` function.
 #'
 #' @return An object of class `model_profile_survival`. It is a list with the element `result` containing the results of the calculation.
@@ -54,7 +54,7 @@ model_profile <- function(explainer,
                           ...,
                           groups = NULL,
                           k = NULL,
-                          center = TRUE,
+                          center = FALSE,
                           type = "partial",
                           output_type = "survival") UseMethod("model_profile", explainer)
 
