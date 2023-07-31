@@ -169,18 +169,15 @@ calculate_variable_survival_profile <- function(data, variable_splits, model, pr
 calculate_variable_survival_profile.default <- function(data, variable_splits, model, predict_survival_function = NULL, times = NULL, ...) {
     variables <- names(variable_splits)
     prog <- progressr::progressor(along = 1:(length(variables)))
+
+    if (is.null(rownames(data))) {
+        ids <- 1:nrow(data) # it never goes here, because null rownames are automatically setted to 1:n
+    } else {
+        ids <- rownames(data)
+    }
+
     profiles <- lapply(variables, function(variable) {
         split_points <- variable_splits[[variable]]
-
-
-        if (is.null(rownames(data))) {
-            ids <- rep(1:nrow(data), each = length(times)) # it never goes here, because null rownames are automatically setted to 1:n
-        } else {
-            ids <- rep(rownames(data), each = length(times))
-        }
-
-        print(head(data))
-
 
         new_data <- data[rep(1:nrow(data), each = length(split_points)), , drop = FALSE]
         new_data[, variable] <- rep(split_points, nrow(data))
@@ -191,7 +188,7 @@ calculate_variable_survival_profile.default <- function(data, variable_splits, m
             `_times_` = rep(times, times = nrow(new_data)),
             `_yhat_` = yhat,
             `_vname_` = variable,
-            `_ids_` = ids,
+            `_ids_` = rep(ids, each = length(times) * length(split_points)),
             check.names = FALSE
         )
         # print(table(ids))
