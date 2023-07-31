@@ -92,20 +92,34 @@ model_profile.surv_explainer <- function(explainer,
                     ndata <- data
                 }
 
-                cp_profiles <- surv_ceteris_paribus(explainer,
+                if (type == "partial"){
+                    cp_profiles <- surv_ceteris_paribus(explainer,
                                                         new_observation = ndata,
                                                         variables = variables,
                                                         categorical_variables = categorical_variables,
                                                         grid_points = grid_points,
                                                         ...)
 
-                agr_profiles <- surv_aggregate_profiles(cp_profiles, ...,
-                                                             groups = groups,
-                                                             type = type,
-                                                             variables = variables,
-                                                             center = center)
+                    result <- surv_aggregate_profiles(cp_profiles, ...,
+                                                            variables = variables,
+                                                            center = center)
+                } else if (type == "accumulated"){
+                    cp_profiles <- NULL
 
-                ret <- list(eval_times = unique(agr_profiles$`_times_`), cp_profiles = cp_profiles, result = agr_profiles)
+                    result <- surv_ale(explainer,
+                                       data = ndata,
+                                       variables = variables,
+                                       categorical_variables = categorical_variables,
+                                       grid_points = grid_points,
+                                       ...)
+                } else {
+                    stop("Currently only `partial` and `accumulated` types are implemented")
+                }
+
+                ret <- list(eval_times = unique(result$`_times_`),
+                            cp_profiles = cp_profiles,
+                            result = result,
+                            type = type)
                 class(ret) <- c("model_profile_survival", "list")
                 ret$event_times <- explainer$y[explainer$y[, 1] <= max(explainer$times), 1]
                 ret$event_statuses <- explainer$y[explainer$y[, 1] <= max(explainer$times), 2]
