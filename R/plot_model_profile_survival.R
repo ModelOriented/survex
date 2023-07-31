@@ -93,6 +93,40 @@ plot.model_profile_survival <- function(x,
 #' @export
 plot2 <- function(x, ...) UseMethod("plot2")
 
+#' Plot Model Profile for Survival Models (without continuous time aspect)
+#'
+#' This function plots objects of class `"model_profile_survival"` created
+#' using the `model_profile()` function.
+#'
+#' @param x an object of class `model_profile_survival` to be plotted
+#' @param variable character, name of a single variable to be plotted
+#' @param times numeric vector, times for which the profile should be plotted, the times must be present in the 'times' field of the explainer. If `NULL` (default) then the median time from the explainer object is used.
+#' @param marginalize_over_time logical, if `TRUE` then the profile is calculated for all times and then averaged over time, if `FALSE` (default) then the profile is calculated for each time separately
+#' @param plot_type character, one of `"pdp"`, `"ice"`, `"pdp+ice"` selects the type of plot to be drawn
+#' @param ... other parameters. Currently ignored.
+#' @param title character, title of the plot
+#' @param subtitle character, subtitle of the plot, `'default'` automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels
+#' @param colors character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")
+#'
+#' @return A `ggplot` object.
+#'
+#' @examples
+#' \donttest{
+#' library(survival)
+#' library(survex)
+#'
+#' model <- randomForestSRC::rfsrc(Surv(time, status) ~ ., data = veteran)
+#' exp <- explain(model)
+#'
+#' m_prof <- model_profile(exp, categorical_variables = "trt")
+#'
+#' plot2(m_prof_cph, variable = "karno", plot_type = "pdp+ice")
+#'
+#' plot2(m_prof_cph, times = c(1, 2.72), variable = "karno", plot_type = "pdp+ice")
+#'
+#' plot2(m_prof_cph, times = c(1, 2.72), variable = "celltype", plot_type = "pdp+ice")
+#' }
+#'
 #' @export
 plot2.model_profile_survival <- function(x,
                                          variable,
@@ -128,7 +162,7 @@ plot2.model_profile_survival <- function(x,
     }
 
     if (!is.null(subtitle) && subtitle == "default") {
-        subtitle <- paste0("created for the ", unique(x$result$`_label_`), " model")
+        subtitle <- paste0("created for the ", unique(variable), " variable")
     }
 
     single_timepoint <- ((length(times) == 1) || marginalize_over_time)
@@ -170,12 +204,18 @@ plot2.model_profile_survival <- function(x,
     feature_name_sym <- sym(variable)
 
     data_df <- x$cp_profiles$variable_values
-    # print(ice_df)
 
     y_floor_pd <- floor(min(pdp_df[, "pd"]) * 10) / 10
     y_ceiling_pd <- ceiling(max(pdp_df[, "pd"]) * 10) / 10
     y_floor_ice <- floor(min(ice_df[, "predictions"]) * 10) / 10
     y_ceiling_ice <- ceiling(max(ice_df[, "predictions"]) * 10) / 10
+
+    if (marginalize_over_time) {
+        color_scale <- generate_discrete_color_scale(1, colors)
+    } else {
+        color_scale <- generate_discrete_color_scale(length(times), colors)
+    }
+
 
 
     if (is_categorical) {
@@ -189,7 +229,8 @@ plot2.model_profile_survival <- function(x,
             y_floor_pd = y_floor_pd,
             y_ceiling_pd = y_ceiling_pd,
             plot_type = plot_type,
-            single_timepoint = single_timepoint
+            single_timepoint = single_timepoint,
+            colors = color_scale
         )
     } else {
         pdp_df[, 1] <- as.numeric(as.character(pdp_df[, 1]))
@@ -203,10 +244,17 @@ plot2.model_profile_survival <- function(x,
             y_floor_pd = y_floor_pd,
             y_ceiling_pd = y_ceiling_pd,
             plot_type = plot_type,
-            single_timepoint = single_timepoint
+            single_timepoint = single_timepoint,
+            colors = color_scale
         )
     }
-    pl
+
+    pl +
+        labs(
+            title = title,
+            subtitle = subtitle
+        ) +
+        theme_default_survex()
 }
 
 plot_pdp_num <- function(pdp_dt,
@@ -218,7 +266,8 @@ plot_pdp_num <- function(pdp_dt,
                          y_floor_pd,
                          y_ceiling_pd,
                          plot_type,
-                         single_timepoint) {
+                         single_timepoint,
+                         colors) {
     if (single_timepoint == TRUE) { ## single timepoint
         if (plot_type == "ice") {
             ggplot(data = ice_dt, aes(x = !!feature_name_sym, y = predictions)) +
@@ -246,6 +295,7 @@ plot_pdp_num <- function(pdp_dt,
             ggplot(data = ice_dt, aes(x = !!feature_name_sym, y = predictions)) +
                 geom_line(alpha = 0.2, mapping = aes(group = interaction(id, time), color = time)) +
                 geom_rug(data = data_dt, aes(x = !!feature_name_sym, y = y_ceiling_ice), sides = "b", alpha = 0.8, position = "jitter") +
+                scale_color_manual(name = "time", values = colors) +
                 ylim(y_floor_ice, y_ceiling_ice)
         }
         # PDP + ICE
@@ -255,6 +305,7 @@ plot_pdp_num <- function(pdp_dt,
                 geom_path(data = pdp_dt, aes(x = !!feature_name_sym, y = pd, color = time), linewidth = 1.5, lineend = "round", linejoin = "round") +
                 geom_path(data = pdp_dt, aes(x = !!feature_name_sym, y = pd, group = time), color = "black", linewidth = 0.5, linetype = "dashed", lineend = "round", linejoin = "round") +
                 geom_rug(data = data_dt, aes(x = !!feature_name_sym, y = y_ceiling_ice), sides = "b", alpha = 0.8, position = "jitter") +
+                scale_color_manual(name = "time", values = colors) +
                 ylim(y_floor_ice, y_ceiling_ice)
         }
         # PDP
@@ -262,6 +313,7 @@ plot_pdp_num <- function(pdp_dt,
             ggplot(data = pdp_dt, aes(x = !!feature_name_sym, y = pd)) +
                 geom_line(aes(color = time)) +
                 geom_rug(data = data_dt, aes(x = !!feature_name_sym, y = y_ceiling_pd), sides = "b", alpha = 0.8, position = "jitter") +
+                scale_color_manual(name = "time", values = colors) +
                 ylim(y_floor_pd, y_ceiling_pd)
         }
     }
@@ -276,30 +328,37 @@ plot_pdp_cat <- function(pdp_dt,
                          y_floor_pd,
                          y_ceiling_pd,
                          plot_type,
-                         single_timepoint) {
+                         single_timepoint,
+                         colors) {
     if (single_timepoint == TRUE) { ## single timepoint
         if (plot_type == "ice") {
             ggplot(data = ice_dt, aes(x = !!feature_name_count_sym, y = predictions)) +
-                geom_boxplot(alpha = 0.2)
+                geom_boxplot(alpha = 0.2) +
+                scale_color_manual(name = "time", values = colors)
         } else if (plot_type == "pdp+ice") {
             ggplot() +
                 geom_boxplot(data = ice_dt, aes(x = !!feature_name_count_sym, y = predictions), alpha = 0.2) +
-                geom_line(data = pdp_dt, aes(x = !!feature_name_count_sym, y = pd, group = 1), linewidth = 2, color = "gold")
+                geom_line(data = pdp_dt, aes(x = !!feature_name_count_sym, y = pd, group = 1), linewidth = 2, color = "gold") +
+                scale_color_manual(name = "time", values = colors)
         } else if (plot_type == "pdp") {
             ggplot(data = pdp_dt, aes(x = !!feature_name_count_sym, y = pd), ) +
-                geom_bar(stat = "identity", width = 0.5)
+                geom_bar(stat = "identity", width = 0.5) +
+                scale_fill_manual(name = "time", values = colors)
         }
     } else {
         if (plot_type == "ice") {
             ggplot(data = ice_dt, aes(x = !!feature_name_count_sym, y = predictions)) +
-                geom_boxplot(alpha = 0.2, mapping = aes(color = time))
+                geom_boxplot(alpha = 0.2, mapping = aes(color = time)) +
+                scale_color_manual(name = "time", values = colors)
         } else if (plot_type == "pdp+ice") {
             ggplot(mapping = aes(color = time)) +
                 geom_boxplot(data = ice_dt, aes(x = !!feature_name_count_sym, y = predictions), alpha = 0.2) +
-                geom_line(data = pdp_dt, aes(x = !!feature_name_count_sym, y = pd, group = time), linewidth = 0.6)
+                geom_line(data = pdp_dt, aes(x = !!feature_name_count_sym, y = pd, group = time), linewidth = 0.6) +
+                scale_color_manual(name = "time", values = colors)
         } else if (plot_type == "pdp") {
             ggplot(data = pdp_dt, aes(x = !!feature_name_count_sym, y = pd, fill = time)) +
-                geom_bar(stat = "identity", width = 0.5, position = "dodge")
+                geom_bar(stat = "identity", width = 0.5, position = "dodge") +
+                scale_fill_manual(name = "time", values = colors)
         }
     }
 }
