@@ -116,14 +116,24 @@ surv_aggregate_profiles_partial <- function(all_profiles) {
 }
 
 
-
+#' @param x an explainer object - model preprocessed by the `explain()` function
+#' @param ... other parameters, ignored
+#' @param data data used to create explanations
+#' @param variables a character vector containing names of variables to be explained
+#' @param categorical_variables character, a vector of names of additional variables which should be treated as categorical (factors are automatically treated as categorical variables). If it contains variable names not present in the `variables` argument, they will be added at the end.
+#' @param grid_points maximum number of points for profile calculations. Note that the final number of points may be lower than grid_points. Will be passed to internal function. By default `51`.
+#' @param center logical, if the profiles should be centered before aggregations
+#'
+#' @return A data.frame with calculated results.
+#'
 #' @keywords internal
 surv_ale <- function(x,
                      ...,
                      data,
                      variables,
                      categorical_variables,
-                     grid_points) {
+                     grid_points,
+                     center = FALSE) {
     test_explainer(
         x,
         has_data = TRUE,
@@ -152,7 +162,6 @@ surv_ale <- function(x,
                                                       newdata = data,
                                                       times = times)
     mean_pred <- colMeans(predictions_original)
-
 
     profiles <- lapply(variables, function(variable) {
         X_lower <- X_upper <- data
@@ -251,8 +260,9 @@ surv_ale <- function(x,
 
             ale_values <-
                 ale_values[order(ale_values$interval, ale_values$time),]
-            ale_values$ale <- ale_values$ale + mean_pred
-
+            if (!center){
+                ale_values$ale <- ale_values$ale + mean_pred
+            }
             return(
                 data.frame(
                     `_vname_` = variable,
@@ -357,7 +367,9 @@ surv_ale <- function(x,
             ale_values <-
                 ale_values[order(ale_values$interval, ale_values$time),]
             ale_values$ale <- ale_values$ale + mean_pred
-
+            if (!center){
+                ale_values$ale <- ale_values$ale + mean_pred
+            }
 
             return(
                 data.frame(
