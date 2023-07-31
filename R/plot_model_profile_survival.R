@@ -137,6 +137,10 @@ plot2.model_profile_survival <- function(x,
                                          title = "Partial dependence profile",
                                          subtitle = "default",
                                          colors = NULL) {
+    if (!plot_type %in% c("pdp", "ice", "pdp+ice")) {
+        stop("plot_type must be one of 'pdp', 'ice', 'pdp+ice'")
+    }
+
     if (is.null(variable) || !is.character(variable)) {
         stop("A variable must be specified by name")
     }
