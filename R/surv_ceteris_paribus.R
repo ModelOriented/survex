@@ -124,6 +124,7 @@ calculate_variable_split <- function(data, variables = colnames(data), categoric
 }
 
 #' @importFrom stats na.omit quantile
+#' @keywords internal
 calculate_variable_split.default <- function(data, variables = colnames(data), categorical_variables = NULL, grid_points = 101, variable_splits_type = "quantiles", new_observation = NA) {
     variable_splits <- lapply(variables, function(var) {
         selected_column <- na.omit(data[, var])
