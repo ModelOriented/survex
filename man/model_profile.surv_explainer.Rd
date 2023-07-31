@@ -12,7 +12,7 @@ model_profile(
   ...,
   groups = NULL,
   k = NULL,
-  center = TRUE,
+  center = FALSE,
   type = "partial",
   output_type = "survival"
 )
@@ -46,7 +46,7 @@ model_profile(
 
 \item{center}{logical, should profiles be centered before clustering}
 
-\item{type}{the type of variable profile. If \code{output_type == "survival"} then only \code{"partial"} is implemented, otherwise passed to \code{DALEX::model_profile}.}
+\item{type}{the type of variable profile, \code{"partial"} for Partial Dependence, \code{"accumulated"} for Accumulated Local Effects, or \code{"conditional"} (available only for \code{output_type == "risk"})}
 
 \item{output_type}{either \code{"survival"} or \code{"risk"} the type of survival model output that should be considered for explanations. If \code{"survival"} the explanations are based on the survival function. Otherwise the scalar risk predictions are used by the \code{DALEX::model_profile} function.}
 
