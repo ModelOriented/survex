@@ -131,19 +131,35 @@ plot2.model_profile_survival <- function(x,
         subtitle <- paste0("created for the ", unique(x$result$`_label_`), " model")
     }
 
-    # Select relevant information from the pdp result
-    pdp_df <- x$result[(x$result$`_vname_` == variable) & (x$result$`_times_` %in% times), c("_x_", "_yhat_")]
-    colnames(pdp_df) <- c(variable, "pd")
+    single_timepoint <- ((length(times) == 1) || marginalize_over_time)
+    is_categorical <- (unique(x$result[x$result$`_vname_` == variable, "_vtype_"]) == "categorical")
 
-    # Select relevant information from the ceteris paribus profiles
-    # TODO: REMOVE THIS WHEN ID IS FIXED
-    # for (i in 1:length(x$cp_profiles)) {
-    #     return(unique(x$cp_profiles$result$`_vname_`))
-    # }
+    if (single_timepoint) {
+        pdp_df <- x$result[(x$result$`_vname_` == variable) & (x$result$`_times_` %in% times), c("_x_", "_yhat_")]
+        colnames(pdp_df) <- c(variable, "pd")
+    } else {
+        pdp_df <- x$result[(x$result$`_vname_` == variable) & (x$result$`_times_` %in% times), c("_x_", "_times_", "_yhat_")]
+        colnames(pdp_df) <- c(variable, "time", "pd")
+        pdp_df$time <- as.factor(pdp_df$time)
+    }
 
     ice_df <- x$cp_profiles$result[(x$cp_profiles$result$`_vname_` == variable) &
         (x$cp_profiles$result$`_times_` %in% times), ]
-    ice_df$`_times_` <- NULL
+
+    if (single_timepoint) {
+        ice_df$`_times_` <- NULL
+    } else {
+        colnames(ice_df)[colnames(ice_df) == "_times_"] <- "time"
+        ice_df$time <- as.factor(ice_df$time)
+    }
+
+
+    if (is_categorical) {
+        pdp_df[, variable] <- as.factor(pdp_df[, variable])
+        ice_df[, variable] <- as.factor(ice_df[, variable])
+    }
+
+
     ice_df$`_vname_` <- NULL
     ice_df$`_vtype_` <- NULL
     ice_df$`_label_` <- NULL
@@ -151,23 +167,25 @@ plot2.model_profile_survival <- function(x,
     colnames(ice_df)[colnames(ice_df) == "_ids_"] <- "id"
     colnames(ice_df)[colnames(ice_df) == "_yhat_"] <- "predictions"
 
-
     feature_name_sym <- sym(variable)
+
+    data_df <- x$cp_profiles$variable_values
+    # print(ice_df)
+
     y_floor_pd <- floor(min(pdp_df[, "pd"]) * 10) / 10
     y_ceiling_pd <- ceiling(max(pdp_df[, "pd"]) * 10) / 10
+    y_floor_ice <- floor(min(ice_df[, "predictions"]) * 10) / 10
+    y_ceiling_ice <- ceiling(max(ice_df[, "predictions"]) * 10) / 10
 
-    single_timepoint <- ((length(times) == 1) || marginalize_over_time)
 
-    return(ice_df)
-
-    if (unique(x$result[x$result$`_vname_` == variable, "_vtype_"]) == "categorical") {
+    if (is_categorical) {
         pl <- plot_pdp_cat(
             pdp_dt = pdp_df,
             ice_dt = ice_df,
-            data_dt = NULL,
-            feature_name_sym,
-            y_floor_ice = NULL,
-            y_ceiling_ice = NULL,
+            data_dt = data_df,
+            feature_name_count_sym = feature_name_sym,
+            y_floor_ice = y_floor_ice,
+            y_ceiling_ice = y_ceiling_ice,
             y_floor_pd = y_floor_pd,
             y_ceiling_pd = y_ceiling_pd,
             plot_type = plot_type,
@@ -178,10 +196,10 @@ plot2.model_profile_survival <- function(x,
         pl <- plot_pdp_num(
             pdp_dt = pdp_df,
             ice_dt = ice_df,
-            data_dt = NULL,
-            feature_name_sym,
-            y_floor_ice = NULL,
-            y_ceiling_ice = NULL,
+            data_dt = data_df,
+            feature_name_sym = feature_name_sym,
+            y_floor_ice = y_floor_ice,
+            y_ceiling_ice = y_ceiling_ice,
             y_floor_pd = y_floor_pd,
             y_ceiling_pd = y_ceiling_pd,
             plot_type = plot_type,
@@ -205,14 +223,16 @@ plot_pdp_num <- function(pdp_dt,
         if (plot_type == "ice") {
             ggplot(data = ice_dt, aes(x = !!feature_name_sym, y = predictions)) +
                 geom_line(alpha = 0.2, mapping = aes(group = id)) +
-                geom_rug(data = data_dt, aes(x = !!feature_name_sym, y = y_ceiling_pd), sides = "b", alpha = 0.8, position = "jitter")
+                geom_rug(data = data_dt, aes(x = !!feature_name_sym, y = y_ceiling_pd), sides = "b", alpha = 0.8, position = "jitter") +
+                ylim(y_floor_ice, y_ceiling_ice)
         }
         # PDP + ICE
         else if (plot_type == "pdp+ice") {
             ggplot(data = ice_dt, aes(x = !!feature_name_sym, y = predictions)) +
                 geom_line(mapping = aes(group = id), alpha = 0.2) +
-                geom_line(data = pdp_dt, aes(x = !!feature_name_sym, y = pd), linewidth = 2, color = "gold") #+
-            # geom_rug(data = data_dt, aes(x = !!feature_name_sym, y = y_ceiling_pd), sides = "b", alpha = 0.8, position = "jitter")
+                geom_line(data = pdp_dt, aes(x = !!feature_name_sym, y = pd), linewidth = 2, color = "gold") +
+                geom_rug(data = data_dt, aes(x = !!feature_name_sym, y = y_ceiling_pd), sides = "b", alpha = 0.8, position = "jitter") +
+                ylim(y_floor_ice, y_ceiling_ice)
         }
         # PDP
         else if (plot_type == "pdp") {
@@ -247,8 +267,41 @@ plot_pdp_num <- function(pdp_dt,
     }
 }
 
-plot_pdp_cat <- function() {
-
+plot_pdp_cat <- function(pdp_dt,
+                         ice_dt,
+                         data_dt,
+                         feature_name_count_sym,
+                         y_floor_ice,
+                         y_ceiling_ice,
+                         y_floor_pd,
+                         y_ceiling_pd,
+                         plot_type,
+                         single_timepoint) {
+    if (single_timepoint == TRUE) { ## single timepoint
+        if (plot_type == "ice") {
+            ggplot(data = ice_dt, aes(x = !!feature_name_count_sym, y = predictions)) +
+                geom_boxplot(alpha = 0.2)
+        } else if (plot_type == "pdp+ice") {
+            ggplot() +
+                geom_boxplot(data = ice_dt, aes(x = !!feature_name_count_sym, y = predictions), alpha = 0.2) +
+                geom_line(data = pdp_dt, aes(x = !!feature_name_count_sym, y = pd, group = 1), linewidth = 2, color = "gold")
+        } else if (plot_type == "pdp") {
+            ggplot(data = pdp_dt, aes(x = !!feature_name_count_sym, y = pd), ) +
+                geom_bar(stat = "identity", width = 0.5)
+        }
+    } else {
+        if (plot_type == "ice") {
+            ggplot(data = ice_dt, aes(x = !!feature_name_count_sym, y = predictions)) +
+                geom_boxplot(alpha = 0.2, mapping = aes(color = time))
+        } else if (plot_type == "pdp+ice") {
+            ggplot(mapping = aes(color = time)) +
+                geom_boxplot(data = ice_dt, aes(x = !!feature_name_count_sym, y = predictions), alpha = 0.2) +
+                geom_line(data = pdp_dt, aes(x = !!feature_name_count_sym, y = pd, group = time), linewidth = 0.6)
+        } else if (plot_type == "pdp") {
+            ggplot(data = pdp_dt, aes(x = !!feature_name_count_sym, y = pd, fill = time)) +
+                geom_bar(stat = "identity", width = 0.5, position = "dodge")
+        }
+    }
 }
 
 
