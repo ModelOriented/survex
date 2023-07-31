@@ -185,3 +185,83 @@ add_rug_to_plot <- function(base_plot, rug_df, rug, rug_colors){
     }
 }
 
+
+#' Order levels of a categorical features
+#'
+#' @description
+#' Orders the levels by their similarity in other features. Computes per feature
+#' the distance, sums up all distances and does multi-dimensional scaling
+#'
+#' @details
+#' Goal: Compute the distances between two categories.
+#' Input: Instances from category 1 and 2
+#'
+#' 1. For all features, do (excluding the categorical feature for which we are computing the order):
+#'  - If the feature is numerical: Take instances from category 1, calculate the
+#'  empirical cumulative probability distribution function (ecdf) of the
+#'  feature. The ecdf is a function that tells us for a given feature value, how
+#'  many values are smaller. Do the same for category 2. The distance is the
+#'  absolute maximum point-wise distance of the two ecdf. Practically, this
+#'  value is high when the distribution from one category is strongly shifted
+#'  far away from the other. This measure is also known as the
+#'  Kolmogorov-Smirnov distance
+#'  (\url{https://en.wikipedia.org/wiki/Kolmogorov%E2%80%93Smirnov_test}).
+#'  - If the feature is categorical: Take instances from category 1 and
+#'  calculate a table with the relative frequency of each category of the other
+#'  feature. Do the same for instances from category 2. The distance is the sum
+#'  of the absolute difference of both relative frequency tables.
+#' 2. Sum up the distances over all features
+#'
+#' This algorithm we run for all pairs of categories.
+#' Then we have a k times k matrix, when k is the number of categories, where
+#' each entry is the distance between two categories. Still not enough to have a
+#' single order, because, a (dis)similarity tells you the pair-wise distances,
+#' but does not give you a one-dimensional ordering of the classes. To kind of
+#' force this thing into a single dimension, we have to use a dimension
+#' reduction trick called multi-dimensional scaling. This can be solved using
+#' multi-dimensional scaling, which takes in a distance matrix and returns a
+#' distance matrix with reduced dimension. In our case, we only want 1 dimension
+#' left, so that we have a single ordering of the categories and can compute the
+#' accumulated local effects. After reducing it to a single ordering, we are
+#' done and can use this ordering to compute ALE. This is not the Holy Grail how
+#' to order the factors, but one possibility.
+#'
+#' @param data_dt data.frame with the training data
+#' @param feature_name the name of the categorical feature
+#' @return the order of the levels (not levels itself)
+#' @keywords internal
+order_levels <- function(data, variable) {
+    data[, variable] <- droplevels(data[, variable])
+    feature <- data[, variable]
+    x.count <- as.numeric(table(data[, variable]))
+    x.prob <- x.count / sum(x.count)
+    K <- nlevels(data[, variable])
+
+    dists <- lapply(setdiff(colnames(data), variable), function(x) {
+        feature.x <- data[, x]
+        dists <- expand.grid(levels(feature), levels(feature))
+        colnames(dists) <- c("from.level", "to.level")
+        if (inherits(feature.x, "factor")) {
+            A <- table(feature, feature.x) / x.count
+            dists$dist <- rowSums(abs(A[dists[, "from.level"], ] - A[dists[, "to.level"], ])) / 2
+        } else {
+            quants <- quantile(feature.x, probs = seq(0, 1, length.out = 100), na.rm = TRUE, names = FALSE)
+            ecdfs <- data.frame(lapply(levels(feature), function(lev) {
+                x.ecdf <- ecdf(feature.x[feature == lev])(quants)
+            }))
+            colnames(ecdfs) <- levels(feature)
+            ecdf.dists.all <- abs(ecdfs[, dists$from.level] - ecdfs[, dists$to.level])
+            dists$dist <- apply(ecdf.dists.all, 2, max)
+        }
+        dists
+    })
+
+    dists.cumulated.long <- Reduce(function(d1, d2) {
+        d1$dist <- d1$dist + d2$dist
+        d1
+    }, dists)
+    dists.cumulated <- xtabs(dist ~ from.level + to.level, dists.cumulated.long)
+    scaled <- cmdscale(dists.cumulated, k = 1)
+    order(scaled)
+}
+
