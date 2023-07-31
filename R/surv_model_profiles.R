@@ -368,7 +368,7 @@ surv_ale <- function(x,
                                 by.y = "id")
             ale_values <-
                 ale_values[order(ale_values$interval, ale_values$time),]
-            ale_values$ale <- ale_values$ale + mean_pred
+
             if (!center){
                 ale_values$ale <- ale_values$ale + mean_pred
             }
