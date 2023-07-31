@@ -187,6 +187,7 @@ add_rug_to_plot <- function(base_plot, rug_df, rug, rug_colors){
 
 
 # based on iml::order_levels
+#' @importFrom stats ecdf xtabs cmdscale
 #' @keywords internal
 order_levels <- function(data, variable) {
     data[, variable] <- droplevels(data[, variable])

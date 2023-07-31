@@ -124,6 +124,8 @@ surv_aggregate_profiles_partial <- function(all_profiles) {
 #' @param grid_points maximum number of points for profile calculations. Note that the final number of points may be lower than grid_points. Will be passed to internal function. By default `51`.
 #' @param center logical, if the profiles should be centered before aggregations
 #'
+#' @importFrom stats ave
+#'
 #' @return A data.frame with calculated results.
 #'
 #' @keywords internal
