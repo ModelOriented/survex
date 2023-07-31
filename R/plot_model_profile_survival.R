@@ -41,7 +41,7 @@ plot.model_profile_survival <- function(x,
                                         variable_type = NULL,
                                         facet_ncol = NULL,
                                         numerical_plot_type = "lines",
-                                        title = "Partial dependence survival profile",
+                                        title = "default",
                                         subtitle = "default",
                                         colors = NULL,
                                         rug = "all",
@@ -51,6 +51,12 @@ plot.model_profile_survival <- function(x,
 
     explanations_list <- c(list(x), list(...))
     num_models <- length(explanations_list)
+    if (title == "default"){
+        if (x$type == "partial")
+            title <- "Partial dependence survival profiles"
+        if (x$type == "accumulated")
+            title <- "Accumulated local effects survival profiles"
+    }
 
     if (num_models == 1){
         result <-   prepare_model_profile_plots(x,
@@ -97,7 +103,7 @@ prepare_model_profile_plots <- function(x,
                                         variable_type = NULL,
                                         facet_ncol = NULL,
                                         numerical_plot_type = "lines",
-                                        title = "Partial dependence survival profile",
+                                        title = "default",
                                         subtitle = "default",
                                         colors = NULL,
                                         rug = rug,
