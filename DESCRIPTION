@@ -23,7 +23,7 @@ RoxygenNote: 7.2.3
 Depends: R (>= 3.5.0)
 Imports:
     DALEX (>= 2.2.1),
-    ggplot2,
+    ggplot2 (>= 3.4.0),
     kernelshap,
     pec,
     survival,
