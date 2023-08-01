@@ -89,7 +89,7 @@ plot.model_profile_survival <- function(x,
     return(return_plot)
 }
 
-
+#' @rdname plot2.model_profile_survival
 #' @export
 plot2 <- function(x, ...) UseMethod("plot2")
 
@@ -110,6 +110,7 @@ plot2 <- function(x, ...) UseMethod("plot2")
 #'
 #' @return A `ggplot` object.
 #'
+#' @rdname plot2.model_profile_survival
 #' @examples
 #' \donttest{
 #' library(survival)
@@ -120,11 +121,11 @@ plot2 <- function(x, ...) UseMethod("plot2")
 #'
 #' m_prof <- model_profile(exp, categorical_variables = "trt")
 #'
-#' plot2(m_prof_cph, variable = "karno", plot_type = "pdp+ice")
+#' plot2(m_prof, variable = "karno", plot_type = "pdp+ice")
 #'
-#' plot2(m_prof_cph, times = c(1, 2.72), variable = "karno", plot_type = "pdp+ice")
+#' plot2(m_prof, times = c(1, 2.72), variable = "karno", plot_type = "pdp+ice")
 #'
-#' plot2(m_prof_cph, times = c(1, 2.72), variable = "celltype", plot_type = "pdp+ice")
+#' plot2(m_prof, times = c(1, 2.72), variable = "celltype", plot_type = "pdp+ice")
 #' }
 #'
 #' @export
@@ -272,55 +273,57 @@ plot_pdp_num <- function(pdp_dt,
                          plot_type,
                          single_timepoint,
                          colors) {
-    if (single_timepoint == TRUE) { ## single timepoint
-        if (plot_type == "ice") {
-            ggplot(data = ice_dt, aes(x = !!feature_name_sym, y = predictions)) +
-                geom_line(alpha = 0.2, mapping = aes(group = id)) +
-                geom_rug(data = data_dt, aes(x = !!feature_name_sym, y = y_ceiling_pd), sides = "b", alpha = 0.8, position = "jitter") +
-                ylim(y_floor_ice, y_ceiling_ice)
+    with(pdp_dt, { # to get rid of Note: no visible binding for global variable ...
+        if (single_timepoint == TRUE) { ## single timepoint
+            if (plot_type == "ice") {
+                ggplot(data = ice_dt, aes(x = !!feature_name_sym, y = predictions)) +
+                    geom_line(alpha = 0.2, mapping = aes(group = id)) +
+                    geom_rug(data = data_dt, aes(x = !!feature_name_sym, y = y_ceiling_pd), sides = "b", alpha = 0.8, position = "jitter") +
+                    ylim(y_floor_ice, y_ceiling_ice)
+            }
+            # PDP + ICE
+            else if (plot_type == "pdp+ice") {
+                ggplot(data = ice_dt, aes(x = !!feature_name_sym, y = predictions)) +
+                    geom_line(mapping = aes(group = id), alpha = 0.2) +
+                    geom_line(data = pdp_dt, aes(x = !!feature_name_sym, y = pd), linewidth = 2, color = "gold") +
+                    geom_rug(data = data_dt, aes(x = !!feature_name_sym, y = y_ceiling_pd), sides = "b", alpha = 0.8, position = "jitter") +
+                    ylim(y_floor_ice, y_ceiling_ice)
+            }
+            # PDP
+            else if (plot_type == "pdp") {
+                ggplot(data = pdp_dt, aes(x = !!feature_name_sym, y = pd)) +
+                    geom_line() +
+                    geom_rug(data = data_dt, aes(x = !!feature_name_sym, y = y_ceiling_pd), sides = "b", alpha = 0.8, position = "jitter") +
+                    ylim(y_floor_pd, y_ceiling_pd)
+            }
+        } else { ## multiple timepoints
+            if (plot_type == "ice") {
+                ggplot(data = ice_dt, aes(x = !!feature_name_sym, y = predictions)) +
+                    geom_line(alpha = 0.2, mapping = aes(group = interaction(id, time), color = time)) +
+                    geom_rug(data = data_dt, aes(x = !!feature_name_sym, y = y_ceiling_ice), sides = "b", alpha = 0.8, position = "jitter") +
+                    scale_color_manual(name = "time", values = colors) +
+                    ylim(y_floor_ice, y_ceiling_ice)
+            }
+            # PDP + ICE
+            else if (plot_type == "pdp+ice") {
+                ggplot() +
+                    geom_line(data = ice_dt, aes(x = !!feature_name_sym, y = predictions, group = interaction(id, time), color = time), alpha = 0.1) +
+                    geom_path(data = pdp_dt, aes(x = !!feature_name_sym, y = pd, color = time), linewidth = 1.5, lineend = "round", linejoin = "round") +
+                    geom_path(data = pdp_dt, aes(x = !!feature_name_sym, y = pd, group = time), color = "black", linewidth = 0.5, linetype = "dashed", lineend = "round", linejoin = "round") +
+                    geom_rug(data = data_dt, aes(x = !!feature_name_sym, y = y_ceiling_ice), sides = "b", alpha = 0.8, position = "jitter") +
+                    scale_color_manual(name = "time", values = colors) +
+                    ylim(y_floor_ice, y_ceiling_ice)
+            }
+            # PDP
+            else if (plot_type == "pdp") {
+                ggplot(data = pdp_dt, aes(x = !!feature_name_sym, y = pd)) +
+                    geom_line(aes(color = time)) +
+                    geom_rug(data = data_dt, aes(x = !!feature_name_sym, y = y_ceiling_pd), sides = "b", alpha = 0.8, position = "jitter") +
+                    scale_color_manual(name = "time", values = colors) +
+                    ylim(y_floor_pd, y_ceiling_pd)
+            }
         }
-        # PDP + ICE
-        else if (plot_type == "pdp+ice") {
-            ggplot(data = ice_dt, aes(x = !!feature_name_sym, y = predictions)) +
-                geom_line(mapping = aes(group = id), alpha = 0.2) +
-                geom_line(data = pdp_dt, aes(x = !!feature_name_sym, y = pd), linewidth = 2, color = "gold") +
-                geom_rug(data = data_dt, aes(x = !!feature_name_sym, y = y_ceiling_pd), sides = "b", alpha = 0.8, position = "jitter") +
-                ylim(y_floor_ice, y_ceiling_ice)
-        }
-        # PDP
-        else if (plot_type == "pdp") {
-            ggplot(data = pdp_dt, aes(x = !!feature_name_sym, y = pd)) +
-                geom_line() +
-                geom_rug(data = data_dt, aes(x = !!feature_name_sym, y = y_ceiling_pd), sides = "b", alpha = 0.8, position = "jitter") +
-                ylim(y_floor_pd, y_ceiling_pd)
-        }
-    } else { ## multiple timepoints
-        if (plot_type == "ice") {
-            ggplot(data = ice_dt, aes(x = !!feature_name_sym, y = predictions)) +
-                geom_line(alpha = 0.2, mapping = aes(group = interaction(id, time), color = time)) +
-                geom_rug(data = data_dt, aes(x = !!feature_name_sym, y = y_ceiling_ice), sides = "b", alpha = 0.8, position = "jitter") +
-                scale_color_manual(name = "time", values = colors) +
-                ylim(y_floor_ice, y_ceiling_ice)
-        }
-        # PDP + ICE
-        else if (plot_type == "pdp+ice") {
-            ggplot() +
-                geom_line(data = ice_dt, aes(x = !!feature_name_sym, y = predictions, group = interaction(id, time), color = time), alpha = 0.1) +
-                geom_path(data = pdp_dt, aes(x = !!feature_name_sym, y = pd, color = time), linewidth = 1.5, lineend = "round", linejoin = "round") +
-                geom_path(data = pdp_dt, aes(x = !!feature_name_sym, y = pd, group = time), color = "black", linewidth = 0.5, linetype = "dashed", lineend = "round", linejoin = "round") +
-                geom_rug(data = data_dt, aes(x = !!feature_name_sym, y = y_ceiling_ice), sides = "b", alpha = 0.8, position = "jitter") +
-                scale_color_manual(name = "time", values = colors) +
-                ylim(y_floor_ice, y_ceiling_ice)
-        }
-        # PDP
-        else if (plot_type == "pdp") {
-            ggplot(data = pdp_dt, aes(x = !!feature_name_sym, y = pd)) +
-                geom_line(aes(color = time)) +
-                geom_rug(data = data_dt, aes(x = !!feature_name_sym, y = y_ceiling_pd), sides = "b", alpha = 0.8, position = "jitter") +
-                scale_color_manual(name = "time", values = colors) +
-                ylim(y_floor_pd, y_ceiling_pd)
-        }
-    }
+    })
 }
 
 plot_pdp_cat <- function(pdp_dt,
@@ -334,37 +337,39 @@ plot_pdp_cat <- function(pdp_dt,
                          plot_type,
                          single_timepoint,
                          colors) {
-    if (single_timepoint == TRUE) { ## single timepoint
-        if (plot_type == "ice") {
-            ggplot(data = ice_dt, aes(x = !!feature_name_count_sym, y = predictions)) +
-                geom_boxplot(alpha = 0.2) +
-                scale_color_manual(name = "time", values = colors)
-        } else if (plot_type == "pdp+ice") {
-            ggplot() +
-                geom_boxplot(data = ice_dt, aes(x = !!feature_name_count_sym, y = predictions), alpha = 0.2) +
-                geom_line(data = pdp_dt, aes(x = !!feature_name_count_sym, y = pd, group = 1), linewidth = 2, color = "gold") +
-                scale_color_manual(name = "time", values = colors)
-        } else if (plot_type == "pdp") {
-            ggplot(data = pdp_dt, aes(x = !!feature_name_count_sym, y = pd), ) +
-                geom_bar(stat = "identity", width = 0.5) +
-                scale_fill_manual(name = "time", values = colors)
+    with(pdp_dt, { # to get rid of Note: no visible binding for global variable ...
+        if (single_timepoint == TRUE) { ## single timepoint
+            if (plot_type == "ice") {
+                ggplot(data = ice_dt, aes(x = !!feature_name_count_sym, y = predictions)) +
+                    geom_boxplot(alpha = 0.2) +
+                    scale_color_manual(name = "time", values = colors)
+            } else if (plot_type == "pdp+ice") {
+                ggplot() +
+                    geom_boxplot(data = ice_dt, aes(x = !!feature_name_count_sym, y = predictions), alpha = 0.2) +
+                    geom_line(data = pdp_dt, aes(x = !!feature_name_count_sym, y = pd, group = 1), linewidth = 2, color = "gold") +
+                    scale_color_manual(name = "time", values = colors)
+            } else if (plot_type == "pdp") {
+                ggplot(data = pdp_dt, aes(x = !!feature_name_count_sym, y = pd), ) +
+                    geom_bar(stat = "identity", width = 0.5) +
+                    scale_fill_manual(name = "time", values = colors)
+            }
+        } else {
+            if (plot_type == "ice") {
+                ggplot(data = ice_dt, aes(x = !!feature_name_count_sym, y = predictions)) +
+                    geom_boxplot(alpha = 0.2, mapping = aes(color = time)) +
+                    scale_color_manual(name = "time", values = colors)
+            } else if (plot_type == "pdp+ice") {
+                ggplot(mapping = aes(color = time)) +
+                    geom_boxplot(data = ice_dt, aes(x = !!feature_name_count_sym, y = predictions), alpha = 0.2) +
+                    geom_line(data = pdp_dt, aes(x = !!feature_name_count_sym, y = pd, group = time), linewidth = 0.6) +
+                    scale_color_manual(name = "time", values = colors)
+            } else if (plot_type == "pdp") {
+                ggplot(data = pdp_dt, aes(x = !!feature_name_count_sym, y = pd, fill = time)) +
+                    geom_bar(stat = "identity", width = 0.5, position = "dodge") +
+                    scale_fill_manual(name = "time", values = colors)
+            }
         }
-    } else {
-        if (plot_type == "ice") {
-            ggplot(data = ice_dt, aes(x = !!feature_name_count_sym, y = predictions)) +
-                geom_boxplot(alpha = 0.2, mapping = aes(color = time)) +
-                scale_color_manual(name = "time", values = colors)
-        } else if (plot_type == "pdp+ice") {
-            ggplot(mapping = aes(color = time)) +
-                geom_boxplot(data = ice_dt, aes(x = !!feature_name_count_sym, y = predictions), alpha = 0.2) +
-                geom_line(data = pdp_dt, aes(x = !!feature_name_count_sym, y = pd, group = time), linewidth = 0.6) +
-                scale_color_manual(name = "time", values = colors)
-        } else if (plot_type == "pdp") {
-            ggplot(data = pdp_dt, aes(x = !!feature_name_count_sym, y = pd, fill = time)) +
-                geom_bar(stat = "identity", width = 0.5, position = "dodge") +
-                scale_fill_manual(name = "time", values = colors)
-        }
-    }
+    })
 }
 
 
