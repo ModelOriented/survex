@@ -69,10 +69,6 @@ model_profile_2d.surv_explainer <- function(explainer,
         type = type
     )
     class(ret) <- c("model_profile_2d_survival", "list")
-    ret$event_times <-
-        explainer$y[explainer$y[, 1] <= max(explainer$times), 1]
-    ret$event_statuses <-
-        explainer$y[explainer$y[, 1] <= max(explainer$times), 2]
     return(ret)
 }
 
