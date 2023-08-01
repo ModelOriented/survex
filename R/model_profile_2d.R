@@ -12,7 +12,6 @@ model_profile_2d <- function(explainer,
                              output_type = "survival")
     UseMethod("model_profile_2d", explainer)
 
-#' @rdname model_profile.surv_explainer
 #' @export
 model_profile_2d.surv_explainer <- function(explainer,
                                          variables = NULL,
@@ -64,8 +63,9 @@ model_profile_2d.surv_explainer <- function(explainer,
     }
 
     ret <- list(
-        eval_times = unique(result$`_times_`),
         result = result,
+        eval_times = unique(result$`_times_`),
+        variables = variables,
         type = type
     )
     class(ret) <- c("model_profile_2d_survival", "list")
@@ -73,12 +73,11 @@ model_profile_2d.surv_explainer <- function(explainer,
         explainer$y[explainer$y[, 1] <= max(explainer$times), 1]
     ret$event_statuses <-
         explainer$y[explainer$y[, 1] <= max(explainer$times), 2]
-    ret
-
+    return(ret)
 }
 
-
-surv_pdp_2d <- function(explainer,
+#' @keywords internal
+surv_pdp_2d <- function(x,
                         data,
                         variables,
                         categorical_variables,
@@ -104,21 +103,37 @@ surv_pdp_2d <- function(explainer,
     variable_splits <- calculate_variable_split(data,
                                                 variables = unique_variables,
                                                 categorical_variables = categorical_variables,
-                                                    grid_points = grid_points,
-                                                    variable_splits_type = variable_splits_type)
+                                                grid_points = grid_points,
+                                                variable_splits_type = variable_splits_type)
 
-    lapply(variables, FUN = function(variables_pair){
+    profiles <- lapply(variables, FUN = function(variables_pair){
         var1 <- variables_pair[1]
         var2 <- variables_pair[2]
         expanded_data <- merge(variable_splits[[var1]], data[,!colnames(data) %in% variables_pair])
         names(expanded_data)[colnames(expanded_data) == "x"] <- var1
         expanded_data <- merge(variable_splits[[var2]], expanded_data)
         names(expanded_data)[colnames(expanded_data) == "x"] <- var2
+        expanded_data <- expanded_data[,colnames(data)]
 
-        predictions <- predict_function(model = model,
+        predictions <- predict_survival_function(model = model,
                                        newdata = expanded_data,
                                        times = times)
-    })
+        res <- data.frame(
+            "_v1name_" = var1,
+            "_v2name_" = var2,
+            "_v1type_" = ifelse(var1 %in% categorical_variables, "categorical", "numerical"),
+            "_v2type_" = ifelse(var2 %in% categorical_variables, "categorical", "numerical"),
+            "_v1value_" = rep(expanded_data[,var1], each=length(times)),
+            "_v2value_" = rep(expanded_data[,var2], each=length(times)),
+            "_times_" = rep(times, nrow(expanded_data)),
+            "_yhat_" = c(t(predictions)),
+            "_label_" = label,
+            check.names = FALSE
+        )
+        return(aggregate(`_yhat_`~., data = res, FUN=mean))
+        })
 
+    profiles <- do.call(rbind, profiles)
+    profiles
 }
 
