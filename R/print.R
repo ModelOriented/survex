@@ -1,9 +1,9 @@
 #' @export
 print.model_profile_survival <- function(x, ...) {
     res <- x$result
-
+    method_name <- ifelse(x$type == "partial", "Partial dependence", "Accumulated local effects")
     res <- res[order(res$`_vname_`), ]
-    text <- paste0("Partial dependence for the ", unique(res$`_label_`), " model:\n")
+    text <- paste0(method_name, " survival profiles for the ", unique(res$`_label_`), " model:\n")
     cat(text)
     print.data.frame(res[, !colnames(res) %in% c("_label_", "_ids_")], ...)
 }

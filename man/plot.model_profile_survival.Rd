@@ -11,7 +11,7 @@
   variable_type = NULL,
   facet_ncol = NULL,
   numerical_plot_type = "lines",
-  title = "Partial dependence survival profile",
+  title = "default",
   subtitle = "default",
   colors = NULL,
   rug = "all",
