@@ -132,12 +132,13 @@ prepare_ceteris_paribus_plots <- function(x,
     all_variables <-
         na.omit(as.character(unique(all_profiles$`_vname_`)))
     if (!is.null(variables)) {
-        all_variables <- intersect(all_variables, variables)
-        if (length(all_variables) == 0)
+        variables <- intersect(all_variables, variables)
+        if (length(variables) == 0)
             stop(paste0(
                 "variables do not overlap with ",
                 paste(all_variables, collapse = ", ")
             ))
+        all_variables <- variables
     }
 
 
