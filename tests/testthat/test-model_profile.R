@@ -73,16 +73,14 @@ test_that("model_profile with type = 'partial' works", {
     expect_output(print(mp_cph_num))
     expect_error(plot(mp_rsf_num, variables = "nonexistent", grid_points = 6))
 
-
-    model_profile(rsf_ranger_exp, varaibles = "trt", grid_points = 6)
     expect_error(model_profile(rsf_ranger_exp, type = "conditional"))
-
+    expect_error(plot2(mp_rsf_num, variable = "nonexistent"))
+    expect_error(plot2(mp_rsf_num, variable = "age", times = -1))
     })
 
 test_that("model_profile with type = 'accumulated' works", {
 
     veteran <- survival::veteran[c(1:3, 16:18, 46:48, 56:58, 71:73, 91:93, 111:113, 126:128), ]
-    type <- 'accumulated'
 
     cph <- survival::coxph(survival::Surv(time, status) ~ ., data = veteran, model = TRUE, x = TRUE, y = TRUE)
     rsf_ranger <- ranger::ranger(survival::Surv(time, status) ~ ., data = veteran, respect.unordered.factors = TRUE, num.trees = 100, mtry = 3, max.depth = 5)
@@ -97,7 +95,7 @@ test_that("model_profile with type = 'accumulated' works", {
                                 output_type = "survival",
                                 variable_type = "categorical",
                                 grid_points = 6,
-                                type = type)
+                                type = 'accumulated')
     plot(mp_cph_cat, variables = "celltype", variable_type = "categorical")
 
     ### Add tests for plot2 for categorical ALE
@@ -116,7 +114,7 @@ test_that("model_profile with type = 'accumulated' works", {
                                 output_type = "survival",
                                 variable_type = "numerical",
                                 grid_points = 6,
-                                type = type)
+                                type = 'accumulated')
     plot(mp_cph_num, variable_type = "numerical")
     plot(mp_cph_num, numerical_plot_type = "contours")
 
