@@ -84,7 +84,7 @@ prepare_model_profile_2d_plots <- function(x,
 
     if (!all(times %in% x$eval_times)) {
         stop(paste0(
-            "For one of the provided times the explanations has not been calculated not found.
+            "For one of the provided times the explanations has not been calculated or found.
          Please modify the times argument in your explainer or use only values from the following:  ",
             paste(x$eval_times, collapse = ", ")
         ))
@@ -106,17 +106,31 @@ prepare_model_profile_2d_plots <- function(x,
         xlabel <- unique(df$`_v1name_`)
         ylabel <- unique(df$`_v2name_`)
 
-        p <- with(df, {
-            ggplot(df,
-                   aes(x = `_v1value_`, y = `_v2value_`, fill = `_yhat_`)) +
-                geom_tile() +
-                scale_fill_gradientn(name = "SF value",
-                                     colors = rev(grDevices::colorRampPalette(colors)(10)),
-                                     limits = sf_range) +
-                labs(x = xlabel, y = ylabel) +
-                theme(legend.position = "top") +
-                facet_wrap(~paste(`_v1name_`, `_v2name_`, sep = " : "))
-        })
+        if (x$type == "partial"){
+            p <- with(df, {
+                ggplot(df,
+                       aes(x = `_v1value_`, y = `_v2value_`, fill = `_yhat_`)) +
+                    geom_tile() +
+                    scale_fill_gradientn(name = "PDP value",
+                                         colors = rev(grDevices::colorRampPalette(colors)(10)),
+                                         limits = sf_range) +
+                    labs(x = xlabel, y = ylabel) +
+                    theme(legend.position = "top") +
+                    facet_wrap(~paste(`_v1name_`, `_v2name_`, sep = " : "))
+            })
+        } else {
+            p <-  with(df, {
+                ggplot(df, aes(x = `_v1value_`, y = `_v2value_`, fill = `_yhat_`)) +
+                    geom_rect(aes(ymin = `_bottom_`, ymax = `_top_`,
+                                  xmin = `_left_`, xmax = `_right_`)) +
+                    scale_fill_gradientn(name = "ALE value",
+                                         colors = rev(grDevices::colorRampPalette(colors)(10)),
+                                         limits = sf_range) +
+                    labs(x = xlabel, y = ylabel) +
+                    theme(legend.position = "top") +
+                    facet_wrap(~paste(`_v1name_`, `_v2name_`, sep = " : "))
+                })
+        }
 
         if (i != length(x$variables))
             p <- p + guides(fill = "none")
