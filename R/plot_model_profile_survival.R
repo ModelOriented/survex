@@ -48,11 +48,13 @@ plot.model_profile_survival <- function(x,
                                         rug_colors = c("#dd0000", "#222222")) {
     explanations_list <- c(list(x), list(...))
     num_models <- length(explanations_list)
-    if (title == "default"){
-        if (x$type == "partial")
+    if (title == "default") {
+        if (x$type == "partial") {
             title <- "Partial dependence survival profiles"
-        if (x$type == "accumulated")
+        }
+        if (x$type == "accumulated") {
             title <- "Accumulated local effects survival profiles"
+        }
     }
 
     if (num_models == 1) {
@@ -144,11 +146,10 @@ plot2.model_profile_survival <- function(x,
                                          title = "default",
                                          subtitle = "default",
                                          colors = NULL) {
-
-
     if (is.null(plot_type)) {
-        if (x$type == "accumulated") plot_type = "ale"
-        else if (x$type == "partial") plot_type = "pdp+ice"
+        if (x$type == "accumulated") {
+            plot_type <- "ale"
+        } else if (x$type == "partial") plot_type <- "pdp+ice"
     }
 
     if (x$type == "accumulated" && plot_type != "ale") {
@@ -184,10 +185,12 @@ plot2.model_profile_survival <- function(x,
     }
 
     if (title == "default") {
-        if (x$type == "partial")
+        if (x$type == "partial") {
             title <- "Partial dependence survival profiles"
-        if (x$type == "accumulated")
+        }
+        if (x$type == "accumulated") {
             title <- "Accumulated local effects survival profiles"
+        }
     }
 
     if (!is.null(subtitle) && subtitle == "default") {
@@ -196,7 +199,7 @@ plot2.model_profile_survival <- function(x,
 
     single_timepoint <- ((length(times) == 1) || marginalize_over_time)
     is_categorical <- (unique(x$result[x$result$`_vname_` == variable, "_vtype_"]) == "categorical")
-    ice_needed <- plot_type  %in% c("pdp+ice", "ice")
+    ice_needed <- plot_type %in% c("pdp+ice", "ice")
 
     if (single_timepoint) {
         pdp_df <- x$result[(x$result$`_vname_` == variable) & (x$result$`_times_` %in% times), c("_x_", "_yhat_")]
@@ -207,7 +210,7 @@ plot2.model_profile_survival <- function(x,
         pdp_df$time <- as.factor(pdp_df$time)
     }
 
-    if (ice_needed){
+    if (ice_needed) {
         ice_df <- x$cp_profiles$result[(x$cp_profiles$result$`_vname_` == variable) &
             (x$cp_profiles$result$`_times_` %in% times), ]
 
@@ -216,7 +219,6 @@ plot2.model_profile_survival <- function(x,
         } else {
             colnames(ice_df)[colnames(ice_df) == "_times_"] <- "time"
             ice_df$time <- as.factor(ice_df$time)
-
         }
 
         if (is_categorical) {
@@ -249,7 +251,7 @@ plot2.model_profile_survival <- function(x,
     y_ceiling_pd <- ceiling(max(pdp_df[, "pd"]) * 10) / 10
 
     if (marginalize_over_time) {
-        pdp_df <- aggregate(pd ~., data = pdp_df, mean)
+        pdp_df <- aggregate(pd ~ ., data = pdp_df, mean)
         ice_df <- aggregate(predictions ~ ., data = ice_df, mean)
 
         color_scale <- generate_discrete_color_scale(1, colors)
@@ -384,7 +386,7 @@ plot_pdp_cat <- function(pdp_dt,
                     geom_boxplot(data = ice_dt, aes(x = !!feature_name_count_sym, y = predictions), alpha = 0.2) +
                     geom_line(data = pdp_dt, aes(x = !!feature_name_count_sym, y = pd, group = 1), linewidth = 2, color = "gold") +
                     scale_color_manual(name = "time", values = colors)
-            } else if (plot_type == "pdp") {
+            } else if (plot_type == "pdp" || plot_type == "ale") {
                 ggplot(data = pdp_dt, aes(x = !!feature_name_count_sym, y = pd), ) +
                     geom_bar(stat = "identity", width = 0.5) +
                     scale_fill_manual(name = "time", values = colors)
@@ -399,7 +401,7 @@ plot_pdp_cat <- function(pdp_dt,
                     geom_boxplot(data = ice_dt, aes(x = !!feature_name_count_sym, y = predictions), alpha = 0.2) +
                     geom_line(data = pdp_dt, aes(x = !!feature_name_count_sym, y = pd, group = time), linewidth = 0.6) +
                     scale_color_manual(name = "time", values = colors)
-            } else if (plot_type == "pdp") {
+            } else if (plot_type == "pdp" || plot_type == "ale") {
                 ggplot(data = pdp_dt, aes(x = !!feature_name_count_sym, y = pd, fill = time)) +
                     geom_bar(stat = "identity", width = 0.5, position = "dodge") +
                     scale_fill_manual(name = "time", values = colors)

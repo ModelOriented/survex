@@ -12,9 +12,9 @@ plot2(x, ...)
   variable,
   times = NULL,
   marginalize_over_time = FALSE,
-  plot_type = "pdp+ice",
+  plot_type = NULL,
   ...,
-  title = "Partial dependence profile",
+  title = "default",
   subtitle = "default",
   colors = NULL
 )
@@ -30,9 +30,9 @@ plot2(x, ...)
 
 \item{marginalize_over_time}{logical, if \code{TRUE} then the profile is calculated for all times and then averaged over time, if \code{FALSE} (default) then the profile is calculated for each time separately}
 
-\item{plot_type}{character, one of \code{"pdp"}, \code{"ice"}, \code{"pdp+ice"} selects the type of plot to be drawn}
+\item{plot_type}{character, one of \code{"pdp"}, \code{"ice"}, \code{"pdp+ice"}, or \code{"ale"} selects the type of plot to be drawn}
 
-\item{title}{character, title of the plot}
+\item{title}{character, title of the plot. \code{'default'} automatically generates either "Partial dependence survival profiles" or "Accumulated local effects survival profiles" depending on the explanation type.}
 
 \item{subtitle}{character, subtitle of the plot, \code{'default'} automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels}
 

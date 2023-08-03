@@ -1,5 +1,4 @@
 test_that("model_profile with type = 'partial' works", {
-
     veteran <- survival::veteran[c(1:3, 16:18, 46:48, 56:58, 71:73, 91:93, 111:113, 126:128), ]
 
     cph <- survival::coxph(survival::Surv(time, status) ~ ., data = veteran, model = TRUE, x = TRUE, y = TRUE)
@@ -76,13 +75,11 @@ test_that("model_profile with type = 'partial' works", {
 
     model_profile(rsf_ranger_exp, varaibles = "trt", grid_points = 6)
     expect_error(model_profile(rsf_ranger_exp, type = "conditional"))
-
-    })
+})
 
 test_that("model_profile with type = 'accumulated' works", {
-
     veteran <- survival::veteran[c(1:3, 16:18, 46:48, 56:58, 71:73, 91:93, 111:113, 126:128), ]
-    type <- 'accumulated'
+    type <- "accumulated"
 
     cph <- survival::coxph(survival::Surv(time, status) ~ ., data = veteran, model = TRUE, x = TRUE, y = TRUE)
     rsf_ranger <- ranger::ranger(survival::Surv(time, status) ~ ., data = veteran, respect.unordered.factors = TRUE, num.trees = 100, mtry = 3, max.depth = 5)
@@ -94,17 +91,18 @@ test_that("model_profile with type = 'accumulated' works", {
 
 
     mp_cph_cat <- model_profile(cph_exp,
-                                output_type = "survival",
-                                variable_type = "categorical",
-                                grid_points = 6,
-                                type = type)
+        output_type = "survival",
+        variable_type = "categorical",
+        grid_points = 6,
+        type = type
+    )
     plot(mp_cph_cat, variables = "celltype", variable_type = "categorical")
 
     ### Add tests for plot2 for categorical ALE
     # single timepoint
-    # plot2(mp_cph_cat, variable = "celltype", plot_type = "ale")
+    plot2(mp_cph_cat, variable = "celltype", plot_type = "ale")
     # multiple timepoints
-    # plot2(mp_cph_cat, times = c(4, 5.84), variable = "celltype", plot_type = "ale")
+    plot2(mp_cph_cat, times = c(4, 5.84), variable = "celltype", plot_type = "ale")
 
     expect_s3_class(mp_cph_cat, "model_profile_survival")
     expect_true(all(mp_cph_cat$eval_times == cph_exp$times))
@@ -113,18 +111,19 @@ test_that("model_profile with type = 'accumulated' works", {
 
 
     mp_cph_num <- model_profile(cph_exp,
-                                output_type = "survival",
-                                variable_type = "numerical",
-                                grid_points = 6,
-                                type = type)
+        output_type = "survival",
+        variable_type = "numerical",
+        grid_points = 6,
+        type = type
+    )
     plot(mp_cph_num, variable_type = "numerical")
     plot(mp_cph_num, numerical_plot_type = "contours")
 
     ### Add tests for plot2 for numerical ALE
     # single timepoint
-    # plot2(mp_cph_num, variable = "karno", plot_type = "pdp")
+    plot2(mp_cph_num, variable = "karno", plot_type = "ale")
     # multiple timepoints
-    # plot2(mp_cph_num, times = c(4, 5.84), variable = "karno", plot_type = "pdp")
+    plot2(mp_cph_num, times = c(4, 5.84), variable = "karno", plot_type = "ale")
 
     expect_s3_class(mp_cph_num, "model_profile_survival")
     expect_true(all(unique(mp_cph_num$eval_times) == cph_exp$times))
@@ -136,7 +135,6 @@ test_that("model_profile with type = 'accumulated' works", {
 })
 
 test_that("default DALEX::model_profile is ok", {
-
     veteran <- survival::veteran[c(1:3, 16:18, 46:48, 56:58, 71:73, 91:93, 111:113, 126:128), ]
 
     cph <- survival::coxph(survival::Surv(time, status) ~ ., data = veteran, model = TRUE, x = TRUE, y = TRUE)
