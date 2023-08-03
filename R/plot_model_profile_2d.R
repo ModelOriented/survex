@@ -18,14 +18,15 @@ plot.model_profile_2d_survival <- function(x,
             title <- "2D accumulated local effects survival profiles"
     }
 
-    all_variables <- x$variables
     if (!is.null(variables)) {
-        all_variables <- intersect(all_variables, variables)
-        if (length(all_variables) == 0)
+        variables <- intersect(x$variables, variables)
+        if (length(variables) == 0)
             stop(paste0(
                 "variables do not overlap with ",
-                paste(all_variables, collapse = ", ")
+                paste(x$variables, collapse = ", ")
             ))
+    } else {
+        variables <- x$variables
     }
 
     if (is.null(colors))
@@ -56,7 +57,7 @@ plot.model_profile_2d_survival <- function(x,
                                                           title = this_title,
                                                           subtitle = subtitle,
                                                           colors = colors)
-        labels[[i]] <- c(this_title, rep("", length(return_list[[i]]$patches)-2))
+        labels[[i]] <- c(this_title, rep("", length(variables)-1))
     }
 
     labels <- unlist(labels)
@@ -95,14 +96,18 @@ prepare_model_profile_2d_plots <- function(x,
 
     sf_range <- range(df_time$`_yhat_`)
 
-    pl <- lapply(seq_along(x$variables), function(i){
-        variable_pair <- x$variables[[i]]
+    pl <- lapply(seq_along(variables), function(i){
+        variable_pair <- variables[[i]]
         df <- df_time[df_time$`_v1name_` == variable_pair[1] &
                           df_time$`_v2name_` == variable_pair[2],]
         if (any(df$`_v1type_` == "numerical"))
             df$`_v1value_` <- as.numeric(as.character(df$`_v1value_`))
+        else if (any(df$`_v1type_` == "categorical"))
+            df$`_v1value_` <- as.character(df$`_v1value_`)
         if (any(df$`_v2type_` == "numerical"))
             df$`_v2value_` <- as.numeric(as.character(df$`_v2value_`))
+        else if (any(df$`_v2type_` == "categorical"))
+            df$`_v2value_` <- as.character(df$`_v2value_`)
         xlabel <- unique(df$`_v1name_`)
         ylabel <- unique(df$`_v2name_`)
 
