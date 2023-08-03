@@ -99,6 +99,12 @@ test_that("model_profile with type = 'accumulated' works", {
                                 type = type)
     plot(mp_cph_cat, variables = "celltype", variable_type = "categorical")
 
+    ### Add tests for plot2 for categorical ALE
+    # single timepoint
+    # plot2(mp_cph_cat, variable = "celltype", plot_type = "pdp")
+    # multiple timepoints
+    # plot2(mp_cph_cat, times = c(4, 5.84), variable = "celltype", plot_type = "pdp")
+
     expect_s3_class(mp_cph_cat, "model_profile_survival")
     expect_true(all(mp_cph_cat$eval_times == cph_exp$times))
     expect_equal(ncol(mp_cph_cat$result), 7)
@@ -112,6 +118,12 @@ test_that("model_profile with type = 'accumulated' works", {
                                 type = type)
     plot(mp_cph_num, variable_type = "numerical")
     plot(mp_cph_num, numerical_plot_type = "contours")
+
+    ### Add tests for plot2 for numerical ALE
+    # single timepoint
+    # plot2(mp_cph_num, variable = "karno", plot_type = "pdp")
+    # multiple timepoints
+    # plot2(mp_cph_num, times = c(4, 5.84), variable = "karno", plot_type = "pdp")
 
     expect_s3_class(mp_cph_num, "model_profile_survival")
     expect_true(all(unique(mp_cph_num$eval_times) == cph_exp$times))
