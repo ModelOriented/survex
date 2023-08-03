@@ -1,25 +1,68 @@
+#' Dataset Level 2-Dimensional Variable Profile for Survival Models
+#'
+#' This function calculates explanations on a dataset level that help explore model response as a function of selected pairs of variables.
+#' The explanations are calculated as an extension of Partial Dependence Profiles or Accumulated Local Effects with the inclusion of the time dimension.
+#'
+#'
+#' @param explainer an explainer object - model preprocessed by the `explain()` function
+#' @param variables list of character vectors of length 2, names of pairs of variables to be explained
+#' @param N number of observations used for the calculation of aggregated profiles. By default `100`. If `NULL` all observations are used.
+#' @param categorical_variables character, a vector of names of additional variables which should be treated as categorical (factors are automatically treated as categorical variables). If it contains variable names not present in the `variables` argument, they will be added at the end.
+#' @param grid_points maximum number of points for profile calculations. Note that the final number of points may be lower than grid_points. Will be passed to internal function. By default `25`.
+#' @param center logical, should profiles be centered at 0
+#' @param variable_splits_type character, decides how variable grids should be calculated. Use `"quantiles"` for quantiles or `"uniform"` (default) to get uniform grid of points. Used only if `type = "partial"`.
+#' @param type the type of variable profile, `"partial"` for Partial Dependence or `"accumulated"` for Accumulated Local Effects
+#' @param output_type either `"survival"` or `"risk"` the type of survival model output that should be considered for explanations. Currently only `"survival"` is available.
+#'
 #' @return An object of class `model_profile_2d_survival`. It is a list with the element `result` containing the results of the calculation.
 #'
+#'
+#' @examples
+#' \donttest{
+#' library(survival)
+#' library(survex)
+#'
+#' cph <- coxph(Surv(time, status) ~ ., data = veteran, model = TRUE, x = TRUE, y = TRUE)
+#' rsf_src <- randomForestSRC::rfsrc(Surv(time, status) ~ ., data = veteran)
+#'
+#' cph_exp <- explain(cph)
+#' rsf_src_exp <- explain(rsf_src)
+#'
+#' cph_model_profile_2d <- model_profile_2d(cph_exp,
+#'                                         variables = list(c("age", "celltype")))
+#' head(cph_model_profile_2d$result)
+#' plot(cph_model_profile_2d)
+#'
+#' rsf_model_profile_2d <- model_profile_2d(rsf_src_exp,
+#'                                         variables = list(c("age", "karno")),
+#'                                         type = "accumulated")
+#' head(rsf_model_profile_2d$result)
+#' plot(rsf_model_profile_2d)
+#' }
+#'
+#' @rdname model_profile_2d.surv_explainer
 #' @export
 model_profile_2d <- function(explainer,
                              variables = NULL,
                              N = 100,
                              ...,
                              categorical_variables = NULL,
-                             grid_points = 51,
+                             grid_points = 25,
                              center = TRUE,
                              variable_splits_type = "uniform",
                              type = "partial",
                              output_type = "survival")
     UseMethod("model_profile_2d", explainer)
 
+
+#' @rdname model_profile_2d.surv_explainer
 #' @export
 model_profile_2d.surv_explainer <- function(explainer,
                                          variables = NULL,
                                          N = 100,
                                          ...,
                                          categorical_variables = NULL,
-                                         grid_points = 51,
+                                         grid_points = 25,
                                          center = TRUE,
                                          variable_splits_type = "uniform",
                                          type = "partial",
@@ -160,6 +203,7 @@ surv_ale_2d <- function(x,
             surv_ale_2d_num_num(
                 model,
                 data,
+                label,
                 predict_survival_function,
                 times,
                 grid_points,
@@ -181,6 +225,7 @@ surv_ale_2d <- function(x,
 
 surv_ale_2d_num_num <- function(model,
                                 data,
+                                label,
                                 predict_survival_function,
                                 times,
                                 grid_points,
