@@ -10,6 +10,7 @@ test_that("survshap explanations work", {
     rsf_src_exp <- explain(rsf_src, verbose = FALSE)
 
     parts_cph <- predict_parts(cph_exp, veteran[1, !colnames(veteran) %in% c("time", "status")], y_true = matrix(c(100, 1), ncol = 2), aggregation_method = "sum_of_squares")
+    parts_cph <- predict_parts(cph_exp, veteran[1, !colnames(veteran) %in% c("time", "status")], y_true = matrix(c(100, 1), ncol = 2), calculation_method = "exact_kernel")
     plot(parts_cph)
     plot(parts_cph, rug = "events")
     plot(parts_cph, rug = "censors")
