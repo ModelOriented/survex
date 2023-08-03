@@ -71,7 +71,7 @@ plot_td_surv_model_performance <- function(x, ..., metrics = NULL, title = NULL,
 
     base_plot <- with(df,{
     ggplot(data = df[df$ind %in% metrics, ], aes(x = times, y = values, group = label, color = label)) +
-        geom_line(linewidth = 0.8, size = 0.8) +
+        geom_line(linewidth = 0.8) +
         theme_default_survex() +
         xlab("") +
         ylab("metric value") +

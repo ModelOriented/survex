@@ -111,7 +111,7 @@ plot.feature_importance_explainer <- function(x, ..., max_vars = NULL, show_boxp
     # plot it
     pl <- ggplot(ext_expl_df, aes(variable, ymin = dropout_loss.y, ymax = dropout_loss.x, color = label)) +
         geom_hline(data = bestFits, aes(yintercept = dropout_loss, color = label), lty= 3) +
-        geom_linerange(size = bar_width)
+        geom_linerange(linewidth = bar_width)
 
     if (show_boxplots) {
         pl <- pl +

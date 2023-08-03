@@ -86,6 +86,7 @@ test_that("Brier score fpi works", {
     # specifying loss function brier
     rsf_src_model_parts_brier <- model_parts(rsf_src_exp, loss_function = loss_brier_score, output_type = "survival")
     plot(rsf_src_model_parts_brier)
+    expect_error(plot(rsf_src_model_parts_brier, desc_sorting = "non-logical"))
 
     expect_s3_class(rsf_src_model_parts_brier, "model_parts_survival")
     expect_equal(ncol(rsf_src_model_parts_brier$result), ncol(cph_exp$data) + 5) # times, full_model, permutation, baseline, label

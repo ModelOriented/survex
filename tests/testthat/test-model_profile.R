@@ -24,6 +24,16 @@ test_that("model_profile with type = 'partial' works", {
     plot(mp_cph_num, variable_type = "numerical")
     plot(mp_cph_num, numerical_plot_type = "contours")
 
+    ### Add tests for plot2 for numerical PDP
+    # single timepoint
+    plot2(mp_cph_num, variable = "karno", plot_type = "pdp+ice")
+    plot2(mp_cph_num, variable = "karno", plot_type = "pdp")
+    plot2(mp_cph_num, variable = "karno", plot_type = "ice")
+    # multiple timepoints
+    plot2(mp_cph_num, times = c(4, 5.84), variable = "karno", plot_type = "pdp+ice")
+    plot2(mp_cph_num, times = c(4, 5.84), variable = "karno", plot_type = "pdp")
+    plot2(mp_cph_num, times = c(4, 5.84), variable = "karno", plot_type = "ice")
+
     expect_s3_class(mp_cph_num, "model_profile_survival")
     expect_true(all(unique(mp_cph_num$eval_times) == cph_exp$times))
     expect_equal(ncol(mp_cph_num$result), 7)
@@ -32,6 +42,18 @@ test_that("model_profile with type = 'partial' works", {
 
     mp_rsf_cat <- model_profile(rsf_ranger_exp, output_type = "survival", variable_splits_type = "uniform", variable_type = "categorical", grid_points = 6)
     plot(mp_rsf_cat, variable_type = "categorical")
+
+    ### Add tests for plot2 for categorical PDP
+    # single timepoint
+    plot2(mp_rsf_cat, variable = "celltype", plot_type = "pdp+ice")
+    plot2(mp_rsf_cat, variable = "celltype", plot_type = "pdp")
+    plot2(mp_rsf_cat, variable = "celltype", plot_type = "ice")
+    # multiple timepoints
+    plot2(mp_rsf_cat, times = c(4, 5.84), variable = "celltype", plot_type = "pdp+ice")
+    plot2(mp_rsf_cat, times = c(4, 5.84), marginalilze_over_time = T, variable = "celltype", plot_type = "pdp+ice")
+    plot2(mp_rsf_cat, times = c(4, 5.84), variable = "celltype", plot_type = "pdp")
+    plot2(mp_rsf_cat, times = c(4, 5.84), variable = "celltype", plot_type = "ice")
+
 
     expect_s3_class(mp_rsf_cat, "model_profile_survival")
     expect_true(all(mp_rsf_cat$eval_times == cph_exp$times))
@@ -78,6 +100,12 @@ test_that("model_profile with type = 'accumulated' works", {
                                 type = type)
     plot(mp_cph_cat, variables = "celltype", variable_type = "categorical")
 
+    ### Add tests for plot2 for categorical ALE
+    # single timepoint
+    # plot2(mp_cph_cat, variable = "celltype", plot_type = "ale")
+    # multiple timepoints
+    # plot2(mp_cph_cat, times = c(4, 5.84), variable = "celltype", plot_type = "ale")
+
     expect_s3_class(mp_cph_cat, "model_profile_survival")
     expect_true(all(mp_cph_cat$eval_times == cph_exp$times))
     expect_equal(ncol(mp_cph_cat$result), 7)
@@ -91,6 +119,12 @@ test_that("model_profile with type = 'accumulated' works", {
                                 type = type)
     plot(mp_cph_num, variable_type = "numerical")
     plot(mp_cph_num, numerical_plot_type = "contours")
+
+    ### Add tests for plot2 for numerical ALE
+    # single timepoint
+    # plot2(mp_cph_num, variable = "karno", plot_type = "pdp")
+    # multiple timepoints
+    # plot2(mp_cph_num, times = c(4, 5.84), variable = "karno", plot_type = "pdp")
 
     expect_s3_class(mp_cph_num, "model_profile_survival")
     expect_true(all(unique(mp_cph_num$eval_times) == cph_exp$times))
