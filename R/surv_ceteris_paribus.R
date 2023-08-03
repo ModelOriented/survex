@@ -84,7 +84,6 @@ surv_ceteris_paribus.default <- function(x,
     if (is.null(variable_splits)) {
         if (is.null(variables))
             variables <- colnames(data)
-        }
         variable_splits <- calculate_variable_split(data,
             variables = variables,
             categorical_variables = categorical_variables,
