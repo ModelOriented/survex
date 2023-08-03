@@ -50,6 +50,7 @@ test_that("model_profile with type = 'partial' works", {
     plot2(mp_rsf_cat, variable = "celltype", plot_type = "ice")
     # multiple timepoints
     plot2(mp_rsf_cat, times = c(4, 5.84), variable = "celltype", plot_type = "pdp+ice")
+    plot2(mp_rsf_cat, times = c(4, 5.84), marginalilze_over_time = T, variable = "celltype", plot_type = "pdp+ice")
     plot2(mp_rsf_cat, times = c(4, 5.84), variable = "celltype", plot_type = "pdp")
     plot2(mp_rsf_cat, times = c(4, 5.84), variable = "celltype", plot_type = "ice")
 
@@ -101,9 +102,9 @@ test_that("model_profile with type = 'accumulated' works", {
 
     ### Add tests for plot2 for categorical ALE
     # single timepoint
-    # plot2(mp_cph_cat, variable = "celltype", plot_type = "pdp")
+    # plot2(mp_cph_cat, variable = "celltype", plot_type = "ale")
     # multiple timepoints
-    # plot2(mp_cph_cat, times = c(4, 5.84), variable = "celltype", plot_type = "pdp")
+    # plot2(mp_cph_cat, times = c(4, 5.84), variable = "celltype", plot_type = "ale")
 
     expect_s3_class(mp_cph_cat, "model_profile_survival")
     expect_true(all(mp_cph_cat$eval_times == cph_exp$times))
