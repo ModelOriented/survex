@@ -1,13 +1,3 @@
-#' Helper functions for `model_profile.R`
-#'
-#' @param x an object containing calculated ceteris_paribus profiles
-#' @param ... other parameters, ignored
-#' @param variable_type character, either `"numerical"` or `"categorical"`, the type of variable to be calculated, if left `NULL` (default), both are calculated
-#' @param variables a character vector containing names of variables to be explained
-#' @param center logical, if the profiles should be centered before aggregations
-#'
-#' @return A data.frame with calculated results.
-#'
 #' @keywords internal
 surv_aggregate_profiles <- function(x,
                                     ...,
@@ -115,19 +105,7 @@ surv_aggregate_profiles_partial <- function(all_profiles) {
     aggregated_profiles
 }
 
-
-#' @param x an explainer object - model preprocessed by the `explain()` function
-#' @param ... other parameters, ignored
-#' @param data data used to create explanations
-#' @param variables a character vector containing names of variables to be explained
-#' @param categorical_variables character, a vector of names of additional variables which should be treated as categorical (factors are automatically treated as categorical variables). If it contains variable names not present in the `variables` argument, they will be added at the end.
-#' @param grid_points maximum number of points for profile calculations. Note that the final number of points may be lower than grid_points. Will be passed to internal function. By default `51`.
-#' @param center logical, if the profiles should be centered before aggregations
-#'
 #' @importFrom stats ave
-#'
-#' @return A data.frame with calculated results.
-#'
 #' @keywords internal
 surv_ale <- function(x,
                      ...,
