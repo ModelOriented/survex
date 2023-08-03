@@ -7,6 +7,7 @@ model_profile_2d <- function(explainer,
                              ...,
                              categorical_variables = NULL,
                              grid_points = 51,
+                             center = TRUE,
                              variable_splits_type = "uniform",
                              type = "partial",
                              output_type = "survival")
@@ -19,6 +20,7 @@ model_profile_2d.surv_explainer <- function(explainer,
                                          ...,
                                          categorical_variables = NULL,
                                          grid_points = 51,
+                                         center = TRUE,
                                          variable_splits_type = "uniform",
                                          type = "partial",
                                          output_type = "survival"
@@ -65,6 +67,7 @@ model_profile_2d.surv_explainer <- function(explainer,
             variables = variables,
             categorical_variables = categorical_variables,
             grid_points = grid_points,
+            center = center,
             ...
         )
     } else {
@@ -136,6 +139,7 @@ surv_ale_2d <- function(x,
                         variables,
                         categorical_variables,
                         grid_points,
+                        center,
                         ...){
     model <- x$model
     label <- x$label
@@ -161,12 +165,17 @@ surv_ale_2d <- function(x,
                 grid_points,
                 var1,
                 var2,
+                mean_pred,
+                center
             )
+        } else {
+            stop("Currently 2D ALE are implemented only for pairs of numerical variables")
         }
 
     })
 
-
+    profiles <- do.call(rbind, profiles)
+    profiles
 }
 
 
@@ -176,7 +185,9 @@ surv_ale_2d_num_num <- function(model,
                                 times,
                                 grid_points,
                                 var1,
-                                var2){
+                                var2,
+                                mean_pred,
+                                center){
 
     # Number of quantile points for determined by grid length
     quantile_vals1 <- as.numeric(quantile(data[, var1],
@@ -228,8 +239,8 @@ surv_ale_2d_num_num <- function(model,
 
     deltas <- aggregate(`yhat`~., data = deltas, FUN=mean)
     interval_grid <- expand.grid(
-        interval1 = unique(deltas$interval1),
-        interval2 = unique(deltas$interval2),
+        interval1 = c(0, sort(unique(deltas$interval1))),
+        interval2 = c(0, sort(unique(deltas$interval2))),
         time = times
     )
     deltas <- merge(deltas,
@@ -240,34 +251,117 @@ surv_ale_2d_num_num <- function(model,
     deltas$yhat_cumsum <- ave(deltas$yhat, deltas$time, deltas$interval1, FUN = function(x) cumsum(ifelse(is.na(x), 0, x)))
     deltas$yhat_cumsum <- ave(deltas$yhat_cumsum, deltas$time, deltas$interval2, FUN = function(x) cumsum(ifelse(is.na(x), 0, x)))
 
+    interval_index1 <- factor(interval_index1, sort(unique(interval_index1)))
+    interval_index2 <- factor(interval_index2, sort(unique(interval_index2)))
     cell_counts <- as.matrix(table(interval_index1, interval_index2))
     cell_counts_df <- as.data.frame(as.table(cell_counts))
     colnames(cell_counts_df) <- c("interval1", "interval2", "count")
     cell_counts_df$interval1 <- as.numeric(as.character(cell_counts_df$interval1))
     cell_counts_df$interval2 <- as.numeric(as.character(cell_counts_df$interval2))
     ale <- merge(deltas, cell_counts_df, on = c("interval1", "interval2"), all.x = TRUE)
-
+    ale <- ale[order(ale$interval1, ale$interval2), ]
 
     # Computing the first-order effect of feature 1
-    ale1 <- data.frame()  # Initialize an empty data frame
-
-    res <- copy(ale)
+    res <- ale
     res$yhat_diff <- ave(ale$yhat_cumsum,
             list(ale$interval2, ale$time),
-                  FUN = function(x) c(x[1], x[-1] - x[-length(x)]))
+                  FUN = function(x) c(x[1], diff(x)))
 
-    res$ale1
+    ale1 <- do.call("rbind", lapply(sort(unique(res$interval1)), function(x){
+        counts <- res[res$interval1 == x & res$time == times[1], "count"]
+        aggregate(yhat_diff~time, data=res[res$interval1==x,],
+                  FUN = function(vals){
+                      sum(counts[-1] * (vals[-length(vals)] + vals[-1]) /2 / sum(counts[-1]))
+                  })
+    }))
 
-    res$ale1 <- ave(res$yhat_diff,
-        list(res$interval1, res$time),
-        FUN = function(x) c((x[-length(x)] + x[-1]) / 2, 0))
-
-    # sub_res <- res[, c("time", "interval1", "count", "yhat_diff")]
-    #
-    # # Step 2: Calculate the numerator and denominator for each group using ave
-    # sub_res$numerator <- with(sub_res, ave(count[-1] * (yhat_diff[-nrow(sub_res)] + yhat_diff[-1]) / 2,
-    #                                        time, interval1, FUN = sum))
-    # sub_res$denominator <- with(sub_res, ave(count[-1], time, interval1, FUN = sum))
+    ale1$interval1 <- rep(sort(unique(res$interval1)), each=length(times))
+    ale1$yhat_diff[is.na(ale1$yhat_diff)] <- 0
+    ale1$ale1 <- ave(ale1$yhat_diff, ale1$time, FUN = cumsum)
 
 
+    # Computing the first-order effect of feature 2
+    res <- ale
+    res$yhat_diff <- ave(ale$yhat_cumsum,
+                         list(ale$interval1, ale$time),
+                         FUN = function(x) c(x[1], diff(x)))
+
+    ale2 <- do.call("rbind", lapply(sort(unique(res$interval2)), function(x){
+        counts <- res[res$interval2 == x & res$time == times[1], "count"]
+        aggregate(yhat_diff~time, data=res[res$interval2==x,],
+                  FUN = function(vals){
+                      sum(counts[-1] * (vals[-length(vals)] + vals[-1]) /2 / sum(counts[-1]))
+                  })
+    }))
+
+    ale2$interval2 <- rep(sort(unique(res$interval2)), each=length(times))
+    ale2$yhat_diff[is.na(ale2$yhat_diff)] <- 0
+    ale2$ale2 <- ave(ale2$yhat_diff, ale2$time, FUN = cumsum)
+
+
+    fJ0 <- unlist(lapply(times, function(time) {
+        ale_time <- ale[ale$time == time,]
+        ale1_time <- ale1[ale1$time == time,]
+        ale2_time <- ale2[ale2$time == time,]
+
+        ale_time <- ale_time[c("interval1", "interval2", "yhat_cumsum")]
+        dd <- reshape(ale_time,
+                             idvar = "interval1",
+                             timevar = "interval2",
+                             direction = "wide")[,-1]
+        rownames(dd) <- unique(ale_time$interval1)
+        colnames(dd) <- unique(ale_time$interval2)
+
+        dd <- dd - outer(ale1_time$ale1, rep(1, nrow(ale2_time))) -
+            outer(rep(1, nrow(ale1_time)), ale2_time$ale2)
+        sum(cell_counts * (dd[1:(nrow(dd) - 1), 1:(ncol(dd) - 1)] +
+                               dd[1:(nrow(dd) - 1), 2:ncol(dd)] +
+                               dd[2:nrow(dd), 1:(ncol(dd) - 1)] +
+                               dd[2:nrow(dd), 2:ncol(dd)]) / 4, na.rm = TRUE) / sum(cell_counts)
+    }))
+
+    fJ0 <- data.frame("fJ0" = fJ0, time = times)
+    ale <- merge(ale, fJ0, by = c("time"))
+    ale <- merge(ale, ale1, by = c("time", "interval1"))
+    ale <- merge(ale, ale2, by = c("time", "interval2"))
+    ale$ale <- ale$yhat_cumsum - ale$ale1 - ale$ale2 - ale$fJ0
+    ale <- ale[order(ale$time, ale$interval1, ale$interval2),]
+
+    if (!center){
+        ale$ale <- ale$ale + mean_pred
+    }
+
+    interval_dists <- diff(quantile_vec1[c(1, 1:length(quantile_vec1), length(quantile_vec1))])
+    interval_dists <- 0.5 * interval_dists
+
+    ale$right <- quantile_vec1[ale$interval1 + 1] + interval_dists[ale$interval1 + 2]
+    ale$left <- quantile_vec1[ale$interval1 + 1] - interval_dists[ale$interval1 + 1]
+
+    interval_dists2 <- diff(quantile_vec2[c(1, 1:length(quantile_vec2), length(quantile_vec2))])
+    interval_dists2 <- 0.5 * interval_dists2
+
+    ale$bottom <- quantile_vec2[ale$interval2 + 1] + interval_dists2[ale$interval2 + 2]
+    ale$top <- quantile_vec2[ale$interval2 + 1] - interval_dists2[ale$interval2 + 1]
+
+    ale[, "_v1value_"] <- quantile_vec1[ale$interval1 + 1]
+    ale[, "_v2value_"] <- quantile_vec2[ale$interval2 + 1]
+
+    data.frame(
+        "_v1name_" = var1,
+        "_v2name_" = var2,
+        "_v1type_" = "numerical",
+        "_v2type_" = "numerical",
+        "_v1value_" = ale$`_v1value_`,
+        "_v2value_" = ale$`_v2value_`,
+        "_times_" = ale$time,
+        "_yhat_" = ale$ale,
+        "_right_" = ale$right,
+        "_left_" = ale$left,
+        "_top_" = ale$top,
+        "_bottom_" = ale$bottom,
+        "_count_" = ifelse(is.na(ale$count), 0, ale$count),
+        "_label_" = label,
+        check.names = FALSE)
 }
+
+
