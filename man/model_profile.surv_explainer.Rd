@@ -24,6 +24,7 @@ model_profile(
   ...,
   categorical_variables = NULL,
   grid_points = 51,
+  variable_splits_type = "uniform",
   groups = NULL,
   k = NULL,
   center = TRUE,
@@ -53,6 +54,8 @@ model_profile(
 \item{categorical_variables}{character, a vector of names of additional variables which should be treated as categorical (factors are automatically treated as categorical variables). If it contains variable names not present in the \code{variables} argument, they will be added at the end.}
 
 \item{grid_points}{maximum number of points for profile calculations. Note that the final number of points may be lower than grid_points. Will be passed to internal function. By default \code{51}.}
+
+\item{variable_splits_type}{character, decides how variable grids should be calculated. Use \code{"quantiles"} for percentiles or \code{"uniform"} (default) to get uniform grid of points.}
 }
 \value{
 An object of class \code{model_profile_survival}. It is a list with the element \code{result} containing the results of the calculation.

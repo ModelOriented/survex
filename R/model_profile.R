@@ -10,6 +10,7 @@
 #' @param ... other parameters passed to `DALEX::model_profile` if `output_type == "risk"`, otherwise ignored
 #' @param categorical_variables character, a vector of names of additional variables which should be treated as categorical (factors are automatically treated as categorical variables). If it contains variable names not present in the `variables` argument, they will be added at the end.
 #' @param grid_points maximum number of points for profile calculations. Note that the final number of points may be lower than grid_points. Will be passed to internal function. By default `51`.
+#' @param variable_splits_type character, decides how variable grids should be calculated. Use `"quantiles"` for percentiles or `"uniform"` (default) to get uniform grid of points.
 #' @param groups if `output_type == "risk"` a variable name that will be used for grouping. By default `NULL`, so no groups are calculated. If `output_type == "survival"` then ignored
 #' @param k passed to `DALEX::model_profile` if `output_type == "risk"`, otherwise ignored
 #' @param center logical, should profiles be centered before clustering
@@ -66,6 +67,7 @@ model_profile.surv_explainer <- function(explainer,
                                          ...,
                                          categorical_variables = NULL,
                                          grid_points = 51,
+                                         variable_splits_type = "uniform",
                                          groups = NULL,
                                          k = NULL,
                                          center = TRUE,
@@ -98,6 +100,7 @@ model_profile.surv_explainer <- function(explainer,
                                                         variables = variables,
                                                         categorical_variables = categorical_variables,
                                                         grid_points = grid_points,
+                                                        variable_splits_type = variable_splits_type,
                                                         ...)
 
                     result <- surv_aggregate_profiles(cp_profiles, ...,
