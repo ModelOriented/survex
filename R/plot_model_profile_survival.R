@@ -108,9 +108,9 @@ plot2 <- function(x, ...) UseMethod("plot2")
 #' @param variable character, name of a single variable to be plotted
 #' @param times numeric vector, times for which the profile should be plotted, the times must be present in the 'times' field of the explainer. If `NULL` (default) then the median time from the explainer object is used.
 #' @param marginalize_over_time logical, if `TRUE` then the profile is calculated for all times and then averaged over time, if `FALSE` (default) then the profile is calculated for each time separately
-#' @param plot_type character, one of `"pdp"`, `"ice"`, `"pdp+ice"` selects the type of plot to be drawn
+#' @param plot_type character, one of `"pdp"`, `"ice"`, `"pdp+ice"`, or `"ale"` selects the type of plot to be drawn
 #' @param ... other parameters. Currently ignored.
-#' @param title character, title of the plot
+#' @param title character, title of the plot. `'default'` automatically generates either "Partial dependence survival profiles" or "Accumulated local effects survival profiles" depending on the explanation type.
 #' @param subtitle character, subtitle of the plot, `'default'` automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels
 #' @param colors character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")
 #'
@@ -139,12 +139,23 @@ plot2.model_profile_survival <- function(x,
                                          variable,
                                          times = NULL,
                                          marginalize_over_time = FALSE,
-                                         plot_type = "pdp+ice",
+                                         plot_type = NULL,
                                          ...,
-                                         title = "Partial dependence profile",
+                                         title = "default",
                                          subtitle = "default",
                                          colors = NULL) {
-    if (!plot_type %in% c("pdp", "ice", "pdp+ice")) {
+
+
+    if (is.null(plot_type)) {
+        if (x$type == "accumulated") plot_type = "ale"
+        else if (x$type == "partial") plot_type = "pdp+ice"
+    }
+
+    if (x$type == "accumulated" && plot_type != "ale") {
+        stop("For accumulated local effects explanations only plot_type = 'ale' is available")
+    }
+
+    if (!plot_type %in% c("pdp", "ice", "pdp+ice", "ale")) {
         stop("plot_type must be one of 'pdp', 'ice', 'pdp+ice'")
     }
 
@@ -172,12 +183,20 @@ plot2.model_profile_survival <- function(x,
         ))
     }
 
+    if (title == "default") {
+        if (x$type == "partial")
+            title <- "Partial dependence survival profiles"
+        if (x$type == "accumulated")
+            title <- "Accumulated local effects survival profiles"
+    }
+
     if (!is.null(subtitle) && subtitle == "default") {
         subtitle <- paste0("created for the ", unique(variable), " variable")
     }
 
     single_timepoint <- ((length(times) == 1) || marginalize_over_time)
     is_categorical <- (unique(x$result[x$result$`_vname_` == variable, "_vtype_"]) == "categorical")
+    ice_needed <- plot_type  %in% c("pdp+ice", "ice")
 
     if (single_timepoint) {
         pdp_df <- x$result[(x$result$`_vname_` == variable) & (x$result$`_times_` %in% times), c("_x_", "_yhat_")]
@@ -188,29 +207,39 @@ plot2.model_profile_survival <- function(x,
         pdp_df$time <- as.factor(pdp_df$time)
     }
 
-    ice_df <- x$cp_profiles$result[(x$cp_profiles$result$`_vname_` == variable) &
-        (x$cp_profiles$result$`_times_` %in% times), ]
+    if (ice_needed){
+        ice_df <- x$cp_profiles$result[(x$cp_profiles$result$`_vname_` == variable) &
+            (x$cp_profiles$result$`_times_` %in% times), ]
 
-    if (single_timepoint) {
-        ice_df$`_times_` <- NULL
-    } else {
-        colnames(ice_df)[colnames(ice_df) == "_times_"] <- "time"
-        ice_df$time <- as.factor(ice_df$time)
+        if (single_timepoint) {
+            ice_df$`_times_` <- NULL
+        } else {
+            colnames(ice_df)[colnames(ice_df) == "_times_"] <- "time"
+            ice_df$time <- as.factor(ice_df$time)
+
+        }
+
+        if (is_categorical) {
+            ice_df[, variable] <- as.factor(ice_df[, variable])
+        }
+
+        ice_df$`_vname_` <- NULL
+        ice_df$`_vtype_` <- NULL
+        ice_df$`_label_` <- NULL
+
+        colnames(ice_df)[colnames(ice_df) == "_ids_"] <- "id"
+        colnames(ice_df)[colnames(ice_df) == "_yhat_"] <- "predictions"
+
+        y_floor_ice <- floor(min(ice_df[, "predictions"]) * 10) / 10
+        y_ceiling_ice <- ceiling(max(ice_df[, "predictions"]) * 10) / 10
     }
 
 
     if (is_categorical) {
         pdp_df[, variable] <- as.factor(pdp_df[, variable])
-        ice_df[, variable] <- as.factor(ice_df[, variable])
     }
 
 
-    ice_df$`_vname_` <- NULL
-    ice_df$`_vtype_` <- NULL
-    ice_df$`_label_` <- NULL
-
-    colnames(ice_df)[colnames(ice_df) == "_ids_"] <- "id"
-    colnames(ice_df)[colnames(ice_df) == "_yhat_"] <- "predictions"
 
     feature_name_sym <- sym(variable)
 
@@ -218,10 +247,11 @@ plot2.model_profile_survival <- function(x,
 
     y_floor_pd <- floor(min(pdp_df[, "pd"]) * 10) / 10
     y_ceiling_pd <- ceiling(max(pdp_df[, "pd"]) * 10) / 10
-    y_floor_ice <- floor(min(ice_df[, "predictions"]) * 10) / 10
-    y_ceiling_ice <- ceiling(max(ice_df[, "predictions"]) * 10) / 10
 
     if (marginalize_over_time) {
+        pdp_df <- aggregate(pd ~., data = pdp_df, mean)
+        ice_df <- aggregate(predictions ~ ., data = ice_df, mean)
+
         color_scale <- generate_discrete_color_scale(1, colors)
     } else {
         color_scale <- generate_discrete_color_scale(length(times), colors)
@@ -296,7 +326,7 @@ plot_pdp_num <- function(pdp_dt,
                     ylim(y_floor_ice, y_ceiling_ice)
             }
             # PDP
-            else if (plot_type == "pdp") {
+            else if (plot_type == "pdp" || plot_type == "ale") {
                 ggplot(data = pdp_dt, aes(x = !!feature_name_sym, y = pd)) +
                     geom_line() +
                     geom_rug(data = data_dt, aes(x = !!feature_name_sym, y = y_ceiling_pd), sides = "b", alpha = 0.8, position = "jitter") +
@@ -321,7 +351,7 @@ plot_pdp_num <- function(pdp_dt,
                     ylim(y_floor_ice, y_ceiling_ice)
             }
             # PDP
-            else if (plot_type == "pdp") {
+            else if (plot_type == "pdp" || plot_type == "ale") {
                 ggplot(data = pdp_dt, aes(x = !!feature_name_sym, y = pd)) +
                     geom_line(aes(color = time)) +
                     geom_rug(data = data_dt, aes(x = !!feature_name_sym, y = y_ceiling_pd), sides = "b", alpha = 0.8, position = "jitter") +
