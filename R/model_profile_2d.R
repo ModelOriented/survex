@@ -45,7 +45,6 @@
 model_profile_2d <- function(explainer,
                              variables = NULL,
                              N = 100,
-                             ...,
                              categorical_variables = NULL,
                              grid_points = 25,
                              center = TRUE,
@@ -60,7 +59,6 @@ model_profile_2d <- function(explainer,
 model_profile_2d.surv_explainer <- function(explainer,
                                          variables = NULL,
                                          N = 100,
-                                         ...,
                                          categorical_variables = NULL,
                                          grid_points = 25,
                                          center = TRUE,
@@ -100,8 +98,7 @@ model_profile_2d.surv_explainer <- function(explainer,
             variables = variables,
             categorical_variables = categorical_variables,
             grid_points = grid_points,
-            variable_splits_type = variable_splits_type,
-            ...
+            variable_splits_type = variable_splits_type
         )
     } else if (type == "accumulated") {
         result <- surv_ale_2d(
@@ -110,8 +107,7 @@ model_profile_2d.surv_explainer <- function(explainer,
             variables = variables,
             categorical_variables = categorical_variables,
             grid_points = grid_points,
-            center = center,
-            ...
+            center = center
         )
     } else {
         stop("Currently only `partial` and `accumulated` types are implemented")
@@ -132,8 +128,8 @@ surv_pdp_2d <- function(x,
                         variables,
                         categorical_variables,
                         grid_points,
-                        variable_splits_type,
-                        ...) {
+                        variable_splits_type
+                        ) {
     model <- x$model
     label <- x$label
     predict_survival_function <- x$predict_survival_function
@@ -182,8 +178,8 @@ surv_ale_2d <- function(x,
                         variables,
                         categorical_variables,
                         grid_points,
-                        center,
-                        ...){
+                        center
+                        ){
     model <- x$model
     label <- x$label
     predict_survival_function <- x$predict_survival_function
@@ -222,7 +218,7 @@ surv_ale_2d <- function(x,
     profiles
 }
 
-
+#' @importFrom stats reshape
 surv_ale_2d_num_num <- function(model,
                                 data,
                                 label,
