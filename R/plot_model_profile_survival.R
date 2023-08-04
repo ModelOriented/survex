@@ -194,14 +194,14 @@ plot2.model_profile_survival <- function(x,
         }
     }
 
+    single_timepoint <- ((length(times) == 1) || marginalize_over_time)
     if (!is.null(subtitle) && subtitle == "default") {
         subtitle <- paste0("created for the ", unique(variable), " variable")
-        if (single_timepoint){
+        if (single_timepoint & !marginalize_over_time){
             subtitle <- paste0(subtitle, " and time=", times)
         }
     }
 
-    single_timepoint <- ((length(times) == 1) || marginalize_over_time)
     is_categorical <- (unique(x$result[x$result$`_vname_` == variable, "_vtype_"]) == "categorical")
     ice_needed <- plot_type %in% c("pdp+ice", "ice")
 
