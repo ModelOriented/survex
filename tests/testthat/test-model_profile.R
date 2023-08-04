@@ -10,7 +10,7 @@ test_that("model_profile with type = 'partial' works", {
     rsf_src_exp <- explain(rsf_src, verbose = FALSE)
 
 
-    mp_cph_cat <- model_profile(cph_exp, output_type = "survival", variable_splits_type = "quantiles", grid_points = 6)
+    mp_cph_cat <- model_profile(cph_exp, output_type = "survival", variable_splits_type = "quantiles", grid_points = 6, N = 4)
     plot(mp_cph_cat, variables = "celltype", variable_type = "categorical")
 
     expect_s3_class(mp_cph_cat, "model_profile_survival")

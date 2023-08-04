@@ -9,7 +9,23 @@ test_that("coxph prediction functions work correctly", {
             x = TRUE,
             y = TRUE
         )
+    
+    cox_wrong <- survival::coxph(
+        survival::Surv(rtime, recur) ~ .,
+        data = rotterdam[, !colnames(rotterdam) %in% c("year", "dtime", "death")]
+    )
 
+    expect_error(explain(cox_wrong, verbose = FALSE))
+
+    cox_wrong_2 <- survival::coxph(
+        survival::Surv(rtime, recur) ~ .,
+        data = rotterdam[, !colnames(rotterdam) %in% c("year", "dtime", "death")],
+        model = TRUE,
+        x = TRUE,
+        y = FALSE
+    )
+
+    expect_error(explain(cox_wrong_2, verbose = FALSE))
 
     coxph_explainer <-
         explain(cox_rotterdam_rec,
@@ -45,6 +61,20 @@ test_that("coxph prediction functions work correctly", {
         coxph_explainer$predict_function(cox_rotterdam_rec, rotterdam[4, ]),
         predict(cox_rotterdam_rec, rotterdam[4, ], type = "risk")
     )
+
+    # test manually setting predict survival function / chf / predict function
+    explain(cox_rotterdam_rec,
+            predict_survival_function = pec::predictSurvProb,
+            verbose = FALSE)
+    
+    explain(cox_rotterdam_rec,
+            predict_cumulative_hazard_function = pec::predictSurvProb,
+            verbose = FALSE)
+    
+    explain(cox_rotterdam_rec,
+            predict_function = predict,
+            verbose = FALSE)
+
 })
 
 test_that("ranger prediction functions work correctly", {
@@ -146,6 +176,27 @@ test_that("ranger prediction functions work correctly", {
                      rowSums(return_matrix)
                  })
 
+    # test manually setting predict survival function / chf / predict function
+    # the functions DO NOT WORK this is just a test if everything is set properly
+    explain(rsf_rotterdam_rec,
+            data = rotterdam[, !colnames(rotterdam) %in% c("year", "dtime", "death", "rtime", "recur")],
+            y = survival::Surv(rotterdam$rtime, rotterdam$recur),
+            predict_survival_function = pec::predictSurvProb,
+            verbose = FALSE)
+
+
+    explain(rsf_rotterdam_rec,
+            data = rotterdam[, !colnames(rotterdam) %in% c("year", "dtime", "death", "rtime", "recur")],
+            y = survival::Surv(rotterdam$rtime, rotterdam$recur),
+            predict_cumulative_hazard_function = pec::predictSurvProb,
+            verbose = FALSE)
+
+    explain(rsf_rotterdam_rec,
+            data = rotterdam[, !colnames(rotterdam) %in% c("year", "dtime", "death", "rtime", "recur")],
+            y = survival::Surv(rotterdam$rtime, rotterdam$recur),
+            predict_function = predict,
+            verbose = FALSE)
+    
 
 })
 
@@ -239,6 +290,25 @@ test_that("rsfrc prediction functions work correctly", {
 
                      rowSums(return_matrix)
                  })
+
+    # test manually setting predict survival function / chf / predict function
+    # the functions DO NOT WORK this is just a test if everything is set properly
+    explain(rsf_colon_rec,
+            y = survival::Surv(colon$time, colon$status),
+            predict_survival_function = pec::predictSurvProb,
+            verbose = FALSE)
+
+    explain(rsf_colon_rec,
+            y = survival::Surv(colon$time, colon$status),
+            predict_cumulative_hazard_function = pec::predictSurvProb,
+            verbose = FALSE)
+
+    explain(rsf_colon_rec,
+            y = survival::Surv(colon$time, colon$status),
+            predict_function = predict,
+            verbose = FALSE)
+    
+
 })
 
 
@@ -328,7 +398,7 @@ test_that("default methods for creating explainers work correctly", {
 
     ### rms::cph ###
 
-    library(rms, quietly = TRUE)
+    # library(rms, quietly = TRUE)
     surv <- survival::Surv(veteran$time, veteran$status)
     cph <- rms::cph(surv ~ trt + celltype + karno + diagtime + age + prior,
                     data = veteran, surv=TRUE, model=TRUE, x=TRUE, y=TRUE)
@@ -348,6 +418,29 @@ test_that("default methods for creating explainers work correctly", {
     bt_exp <- explain(bt, data = veteran[, -c(3, 4)], y = Surv(veteran$time, veteran$status), verbose = FALSE)
     expect_s3_class(bt_exp, c("surv_explainer", "explainer"))
     expect_equal(bt_exp$label, "model_fit_blackboost", ignore_attr = TRUE)
+    predict(bt_exp)
+    predict(bt_exp, output_type = "chf")
+    predict(bt_exp, output_type = "risk")
+
+
+    rf_spec <- parsnip::rand_forest(trees = 200) %>%
+               parsnip::set_engine("partykit") %>% 
+               parsnip::set_mode("censored regression") %>%
+               generics::fit(survival::Surv(time, status) ~ ., data = veteran)
+
+    exp <- explain(rf_spec, data = veteran[, -c(3, 4)], y = Surv(veteran$time, veteran$status), verbose = FALSE)
+    
+    predict(exp)
+    predict(exp, output_type = "chf")
+    predict(exp, output_type = "risk")
+
+    # test manually setting predict survival function / chf / predict function
+    # the functions DO NOT WORK this is just a test if everything is set properly
+    explain(bt, data = veteran[, -c(3, 4)], y = Surv(veteran$time, veteran$status), predict_survival_function = pec::predictSurvProb, verbose = FALSE)
+    explain(bt, data = veteran[, -c(3, 4)], y = Surv(veteran$time, veteran$status), predict_cumulative_hazard_function = pec::predictSurvProb, verbose = FALSE)
+    explain(bt, data = veteran[, -c(3, 4)], y = Surv(veteran$time, veteran$status), predict_function = predict, verbose = FALSE)
+
+
     detach("package:censored", unload = TRUE)
 
     ### explain.default ###
@@ -369,6 +462,10 @@ test_that("warnings in explain_survival work correctly", {
     veteran <- survival::veteran
     cph <- survival::coxph(survival::Surv(time, status) ~ ., data = veteran, model = TRUE, x = TRUE, y = TRUE)
     cph_exp <- explain(cph, verbose = FALSE, colorize = FALSE)
+
+    tmp_data <- veteran[, -c(3, 4)]
+    class(tmp_data) <- c("tbl", class(tmp_data))
+
 
     expect_warning(explain_survival(cph,
                                     data = veteran,
@@ -410,6 +507,44 @@ test_that("warnings in explain_survival work correctly", {
                                     data = veteran,
                                     survival::Surv(veteran$time, veteran$status),
                                     times = c(1,2,3),
+                                    predict_survival_function = pec::predictSurvProb,
+                                    predict_cumulative_hazard_function = "",
+                                    verbose = FALSE))
+
+    expect_warning(explain_survival(cph,
+                                    data = tmp_data,
+                                    survival::Surv(veteran$time, veteran$status),
+                                    times = c(1,2,3),
+                                    predict_survival_function = pec::predictSurvProb,
+                                    predict_cumulative_hazard_function = "",
+                                    verbose = FALSE))
+
+    expect_warning(explain_survival(cph,
+                                    data = veteran,
+                                    survival::Surv(veteran$time, veteran$status),
+                                    times_generation = "uniform",
+                                    predict_survival_function = pec::predictSurvProb,
+                                    predict_cumulative_hazard_function = "",
+                                    verbose = FALSE))
+
+    custom_info <- list(ver = "1.0",
+                        package = "custom",
+                        type = "typee")
+
+    expect_warning(explain_survival(cph,
+                                    data = veteran,
+                                    survival::Surv(veteran$time, veteran$status),
+                                    times_generation = "uniform",
+                                    predict_survival_function = pec::predictSurvProb,
+                                    predict_cumulative_hazard_function = "",
+                                    verbose = FALSE,
+                                    type = "weird type",
+                                    model_info = custom_info))
+    
+    expect_error(explain_survival(cph,
+                                    data = veteran,
+                                    survival::Surv(veteran$time, veteran$status),
+                                    times_generation = "nonexistent",
                                     predict_survival_function = pec::predictSurvProb,
                                     predict_cumulative_hazard_function = "",
                                     verbose = FALSE))

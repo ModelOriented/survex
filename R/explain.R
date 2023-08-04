@@ -126,9 +126,7 @@ explain_survival <-
 
         if (is.null(predict_survival_function) &&
             !is.null(predict_cumulative_hazard_function)) {
-            predict_survival_function <- function(model, newdata, times) {
-                cumulative_hazard_to_survival(predict_cumulative_hazard_function(model, newdata, times))
-            }
+            predict_survival_function <- function(model, newdata, times) cumulative_hazard_to_survival(predict_cumulative_hazard_function(model, newdata, times))
             attr(predict_survival_function, "verbose_info") <- "exp(-predict_cumulative_hazard_function) will be used"
             attr(predict_survival_function, "is.default") <- TRUE
         }
@@ -136,9 +134,7 @@ explain_survival <-
         if (is.null(predict_cumulative_hazard_function) &&
             !is.null(predict_survival_function)) {
             predict_cumulative_hazard_function <-
-                function(model, newdata, times) {
-                    survival_to_cumulative_hazard(predict_survival_function(model, newdata, times))
-                }
+                function(model, newdata, times) survival_to_cumulative_hazard(predict_survival_function(model, newdata, times))
             attr(predict_cumulative_hazard_function, "verbose_info") <- "-log(predict_survival_function) will be used"
             attr(predict_cumulative_hazard_function, "is.default") <- TRUE
         }
@@ -250,9 +246,7 @@ explain_survival <-
         # verbose predict function
         if (is.null(predict_function)) {
             if (!is.null(predict_cumulative_hazard_function)) {
-                predict_function <- function(model, newdata) {
-                    risk_from_chf(predict_cumulative_hazard_function(model, newdata, times = times))
-                }
+                predict_function <- function(model, newdata) risk_from_chf(predict_cumulative_hazard_function(model, newdata, times = times))
                 verbose_cat("  -> predict function  : ", "sum over the predict_cumulative_hazard_function will be used",  is.default = TRUE, verbose = verbose)
             } else {
                 verbose_cat("  -> predict function   :  not specified! (", color_codes$red_start, "WARNING", color_codes$red_end, ")", verbose = verbose)
@@ -726,9 +720,7 @@ explain.model_fit <-
 
         if (is.null(predict_cumulative_hazard_function)) {
             predict_cumulative_hazard_function <-
-                function(object, newdata, times) {
-                    survival_to_cumulative_hazard(predict_survival_function(object, newdata, times))
-                }
+                function(object, newdata, times) survival_to_cumulative_hazard(predict_survival_function(object, newdata, times))
             attr(predict_cumulative_hazard_function, "verbose_info") <- "-log(predict_survival_function) will be used"
             attr(predict_cumulative_hazard_function, "is.default") <- TRUE
         } else {
@@ -737,14 +729,10 @@ explain.model_fit <-
 
         if (is.null(predict_function)) {
             if (model$spec$engine %in% c("mboost", "survival", "glmnet", "flexsurv")){
-                predict_function <- function(model, newdata, times) {
-                    predict(model, new_data = newdata, type = "linear_pred")$.pred_linear_pred
-                }
+                predict_function <- function(model, newdata, times) predict(model, new_data = newdata, type = "linear_pred")$.pred_linear_pred
                 attr(predict_function, "verbose_info") <- "predict.model_fit with type = 'linear_pred' will be used"
             } else {
-                predict_function <- function(model, newdata, times) {
-                    rowSums(predict_cumulative_hazard_function(model, newdata, times = times))
-                }
+                predict_function <- function(model, newdata, times) rowSums(predict_cumulative_hazard_function(model, newdata, times = times))
                 attr(predict_function, "verbose_info") <- "sum over the predict_cumulative_hazard_function will be used"
             }
             attr(predict_function, "use.times") <- TRUE

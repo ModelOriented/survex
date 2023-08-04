@@ -51,4 +51,6 @@ test_that("model_performance works", {
     plot(cph_rot_perf_roc)
     plot(rsf_rot_perf_roc)
 
+    expect_error(model_performance(rsf_exp_rot, type = "roc", times = NULL))
+
 })
