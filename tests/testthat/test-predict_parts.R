@@ -49,7 +49,6 @@ test_that("survshap explanations work", {
 
 })
 
-
 test_that("survlime explanations work", {
 
     veteran <- survival::veteran
