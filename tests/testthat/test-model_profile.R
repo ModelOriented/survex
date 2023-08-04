@@ -42,6 +42,8 @@ test_that("model_profile with type = 'partial' works", {
     mp_rsf_cat <- model_profile(rsf_ranger_exp, output_type = "survival", variable_splits_type = "uniform", grid_points = 6)
     plot(mp_rsf_cat, variable_type = "categorical")
 
+
+    plot(mp_cph_cat, mp_rsf_cat)
     ### Add tests for plot2 for categorical PDP
     # single timepoint
     plot2(mp_rsf_cat, variable = "celltype", plot_type = "pdp+ice")
@@ -49,7 +51,7 @@ test_that("model_profile with type = 'partial' works", {
     plot2(mp_rsf_cat, variable = "celltype", plot_type = "ice")
     # multiple timepoints
     plot2(mp_rsf_cat, times = c(4, 80.7), variable = "celltype", plot_type = "pdp+ice")
-    plot2(mp_rsf_cat, times = c(4, 80.7), marginalilze_over_time = T, variable = "celltype", plot_type = "pdp+ice")
+    plot2(mp_rsf_cat, times = c(4, 80.7), marginalize_over_time = T, variable = "celltype", plot_type = "pdp+ice")
     plot2(mp_rsf_cat, times = c(4, 80.7), variable = "celltype", plot_type = "pdp")
     plot2(mp_rsf_cat, times = c(4, 80.7), variable = "celltype", plot_type = "ice")
 
@@ -98,7 +100,7 @@ test_that("model_profile with type = 'accumulated' works", {
 
     ### Add tests for plot2 for categorical ALE
     # single timepoint
-    plot2(mp_cph_cat, variable = "celltype", plot_type = "ale")
+    plot2(mp_cph_cat, variable = "celltype")
     # multiple timepoints
     plot2(mp_cph_cat, times = c(4, 80.7), variable = "celltype", plot_type = "ale")
 
@@ -106,6 +108,10 @@ test_that("model_profile with type = 'accumulated' works", {
     expect_true(all(mp_cph_cat$eval_times == cph_exp$times))
     expect_equal(ncol(mp_cph_cat$result), 7)
     expect_true(all(unique(mp_cph_cat$result$`_vname_`) %in% colnames(cph_exp$data)))
+    expect_error(plot2(mp_cph_cat, variable = "celltype", plot_type = "pdp"))
+    expect_error(plot2(mp_cph_cat, variable = "celltype", plot_type = "nonexistent"))
+    expect_error(plot2(mp_cph_cat, variable = 1, plot_type = "nonexistent"))
+    expect_error(plot2(mp_cph_cat, variable = c("celltype", "trt"), plot_type = "nonexistent"))
 
 
     mp_cph_num <- model_profile(cph_exp,

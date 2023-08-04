@@ -14,6 +14,11 @@ test_that("model_profile_2d with type = 'partial' works", {
                                                     c("karno", "age")),
                                    categorical_variables = "trt",
                                    grid_points = 6)
+    mp_small <- model_profile_2d(cph_exp,
+                                 variables = list(c("trt", "age")),
+                                 categorical_variables = 1,
+                                 grid_points = 2,
+                                 N = 2)
     plot(mp_cph_pdp)
 
     mp_rsf_pdp <-  model_profile_2d(rsf_exp,
@@ -58,6 +63,11 @@ test_that("model_profile_2d with type = 'accumulated' works", {
                                    output_type = "survival",
                                    type = "accumulated",
                                    center = FALSE)
+
+    expect_error(model_profile_2d(rsf_exp,
+                                  type = "accumulated",
+                                  variables = list(c("karno", "celltype"))))
+                                  
     plot(mp_rsf_ale)
     plot(mp_rsf_ale, times=rsf_exp$times[1])
 
