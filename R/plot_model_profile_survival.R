@@ -196,6 +196,9 @@ plot2.model_profile_survival <- function(x,
 
     if (!is.null(subtitle) && subtitle == "default") {
         subtitle <- paste0("created for the ", unique(variable), " variable")
+        if (single_timepoint){
+            subtitle <- paste0(subtitle, " and time=", times)
+        }
     }
 
     single_timepoint <- ((length(times) == 1) || marginalize_over_time)

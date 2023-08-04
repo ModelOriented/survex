@@ -102,7 +102,7 @@ test_that("setting theme works",{
 
     expect_error(set_theme_survex(1, 1))
     expect_error(set_theme_survex("nonexistant"))
-    expect_error(set_theme_survex_vertical("ema", 5))
+    expect_error(set_theme_survex("ema", 5))
 
 })
 

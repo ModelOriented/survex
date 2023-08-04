@@ -26,7 +26,7 @@ test_that("global survshap explanations with kernelshap work for ranger, using n
     plot(ranger_global_survshap, kind = "profile")
     plot(ranger_global_survshap, kind = "profile", variable = "karno", color_variable = "celltype")
     plot(ranger_global_survshap, kind = "profile", variable = "karno", color_variable = "age")
-
+    expect_error(plot(ranger_global_survshap, kind = "nonexistent"))
 
     expect_s3_class(ranger_global_survshap, c("aggregated_surv_shap", "surv_shap"))
     expect_equal(length(ranger_global_survshap$eval_times), length(rsf_ranger_exp$times))

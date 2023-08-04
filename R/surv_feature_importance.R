@@ -35,9 +35,8 @@ surv_feature_importance.surv_explainer <- function(x,
                                                    variable_groups = NULL,
                                                    N = NULL,
                                                    label = NULL) {
-    if (is.null(x$data)) stop("The feature_importance() function requires explainers created with specified 'data' parameter.")
-    if (is.null(x$y)) stop("The feature_importance() function requires explainers created with specified 'y' parameter.")
-    if (is.null(x$predict_survival_function)) stop("The feature_importance() function requires explainers created with specified 'predict_survival_function' parameter.")
+    
+    test_explainer(x, "feature_importance", has_data = TRUE, has_y = TRUE, has_survival = TRUE)
 
     model <- x$model
     data <- x$data
@@ -94,8 +93,8 @@ surv_feature_importance.default <- function(x,
             all(variable_set %in% colnames(data))
         }))
 
-        if (wrong_names) stop("You have passed wrong variables names in variable_groups argument")
         if (!all(sapply(variable_groups, class) == "character")) stop("Elements of variable_groups argument should be of class character")
+        if (wrong_names) stop("You have passed wrong variables names in variable_groups argument")
         if (is.null(names(variable_groups))) warning("You have passed an unnamed list. The names of variable groupings will be created from variables names.")
     }
 
