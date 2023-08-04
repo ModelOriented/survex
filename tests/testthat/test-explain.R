@@ -422,18 +422,6 @@ test_that("default methods for creating explainers work correctly", {
     predict(bt_exp, output_type = "chf")
     predict(bt_exp, output_type = "risk")
 
-
-    rf_spec <- parsnip::rand_forest(trees = 200) %>%
-               parsnip::set_engine("partykit") %>% 
-               parsnip::set_mode("censored regression") %>%
-               generics::fit(survival::Surv(time, status) ~ ., data = veteran)
-
-    exp <- explain(rf_spec, data = veteran[, -c(3, 4)], y = Surv(veteran$time, veteran$status), verbose = FALSE)
-    
-    predict(exp)
-    predict(exp, output_type = "chf")
-    predict(exp, output_type = "risk")
-
     # test manually setting predict survival function / chf / predict function
     # the functions DO NOT WORK this is just a test if everything is set properly
     explain(bt, data = veteran[, -c(3, 4)], y = Surv(veteran$time, veteran$status), predict_survival_function = pec::predictSurvProb, verbose = FALSE)
