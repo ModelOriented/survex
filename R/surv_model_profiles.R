@@ -103,13 +103,6 @@ surv_ale <- function(x,
                      categorical_variables,
                      grid_points,
                      center = FALSE) {
-    test_explainer(
-        x,
-        has_data = TRUE,
-        has_survival = TRUE,
-        function_name = "surv_ale"
-    )
-
     if (is.null(variables))
         variables <- colnames(data)
 
@@ -127,15 +120,12 @@ surv_ale <- function(x,
     times <- x$times
 
     # Make predictions for original levels
-    predictions_original <- predict_survival_function(model = model,
-                                                      newdata = data,
-                                                      times = times)
+    predictions_original <- predict_survival_function(model, data, times)
     mean_pred <- colMeans(predictions_original)
 
     profiles <- lapply(variables, function(variable) {
         X_lower <- X_upper <- data
         variable_values <- data[, variable]
-
         if (variable %in% categorical_variables) {
             if (!is.factor(variable_values)){
                 is_numeric <- is.numeric(variable_values)
@@ -146,6 +136,7 @@ surv_ale <- function(x,
             }
             levels_original <- levels(droplevels(variable_values))
             levels_n <- nlevels(droplevels(variable_values))
+
             if (inherits(variable_values, "ordered")) {
                 level_order <- 1:levels_n
             } else {
@@ -243,6 +234,7 @@ surv_ale <- function(x,
             if (!center){
                 ale_values$ale <- ale_values$ale + mean_pred
             }
+
             return(
                 data.frame(
                     `_vname_` = variable,
