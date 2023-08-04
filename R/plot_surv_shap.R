@@ -75,7 +75,7 @@ plot.surv_shap <- function(x,
 
     base_plot <- with(long_df, {
     ggplot(data = long_df, aes(x = times, y = values, color = ind)) +
-        geom_line(linewidth = 0.8, size = 0.8) +
+        geom_line(linewidth = 0.8) +
         ylab(y_lab) + xlab("") +
         xlim(c(0,NA))+
         labs(title = title, subtitle = subtitle) +

@@ -98,10 +98,11 @@ test_that("setting theme works",{
     old <- set_theme_survex("drwhy")
     plot(parts_cph)
     old <- set_theme_survex(ggplot2::theme_bw(), ggplot2::theme_bw())
-    plot(parts_cph)
+    plot(parts_cph) + theme_vertical_default_survex()
 
-    expect_error(set_theme_survex(1,1))
+    expect_error(set_theme_survex(1, 1))
     expect_error(set_theme_survex("nonexistant"))
+    expect_error(set_theme_survex_vertical("ema", 5))
 
 })
 

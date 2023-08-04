@@ -212,3 +212,40 @@ calculate_integral <- function(values, times, normalization = "t_max", ...){
     }
 }
 
+# based on iml::order_levels
+#' @importFrom stats ecdf xtabs cmdscale
+#' @keywords internal
+order_levels <- function(data, variable_values, variable_name) {
+    feature <- droplevels(variable_values)
+    x.count <- as.numeric(table(feature))
+    x.prob <- x.count / sum(x.count)
+    K <- nlevels(feature)
+
+    dists <- lapply(setdiff(colnames(data), variable_name), function(x) {
+        feature.x <- data[, x]
+        dists <- expand.grid(levels(feature), levels(feature))
+        colnames(dists) <- c("from.level", "to.level")
+        if (inherits(feature.x, "factor")) {
+            A <- table(feature, feature.x) / x.count
+            dists$dist <- rowSums(abs(A[dists[, "from.level"], ] - A[dists[, "to.level"], ])) / 2
+        } else {
+            quants <- quantile(feature.x, probs = seq(0, 1, length.out = 100), na.rm = TRUE, names = FALSE)
+            ecdfs <- data.frame(lapply(levels(feature), function(lev) {
+                x.ecdf <- ecdf(feature.x[feature == lev])(quants)
+            }))
+            colnames(ecdfs) <- levels(feature)
+            ecdf.dists.all <- abs(ecdfs[, dists$from.level] - ecdfs[, dists$to.level])
+            dists$dist <- apply(ecdf.dists.all, 2, max)
+        }
+        dists
+    })
+
+    dists.cumulated.long <- Reduce(function(d1, d2) {
+        d1$dist <- d1$dist + d2$dist
+        d1
+    }, dists)
+    dists.cumulated <- xtabs(dist ~ from.level + to.level, dists.cumulated.long)
+    scaled <- cmdscale(dists.cumulated, k = 1)
+    order(scaled)
+}
+

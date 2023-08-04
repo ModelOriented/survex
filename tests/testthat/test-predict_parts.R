@@ -10,7 +10,7 @@ test_that("survshap explanations work", {
     rsf_src_exp <- explain(rsf_src, verbose = FALSE)
 
     parts_cph <- predict_parts(cph_exp, veteran[1, !colnames(veteran) %in% c("time", "status")], y_true = matrix(c(100, 1), ncol = 2), aggregation_method = "sum_of_squares")
-    parts_cph <- predict_parts(cph_exp, veteran[1, !colnames(veteran) %in% c("time", "status")], y_true = matrix(c(100, 1), ncol = 2), calculation_method = "exact_kernel")
+    parts_cph <- predict_parts(cph_exp, veteran[1, !colnames(veteran) %in% c("time", "status")], y_true = matrix(c(100, 1), ncol = 2), calculation_method = "exact_kernel", aggregation_method = "max_absolute")
     plot(parts_cph)
     plot(parts_cph, rug = "events")
     plot(parts_cph, rug = "censors")
@@ -62,8 +62,11 @@ test_that("survlime explanations work", {
     rsf_src_exp <- explain(rsf_src, verbose = FALSE)
 
     cph_survlime <- predict_parts(cph_exp, new_observation = veteran[1, -c(3, 4)], type = "survlime")
-    ranger_survlime <- predict_parts(rsf_ranger_exp, new_observation = veteran[1, -c(3, 4)], type = "survlime")
-    rsf_survlime <- predict_parts(rsf_src_exp, new_observation = veteran[1, -c(3, 4)], type = "survlime")
+    ranger_survlime <- predict_parts(rsf_ranger_exp, new_observation = veteran[1, -c(3, 4)], type = "survlime", sample_around_instance = FALSE)
+    rsf_survlime <- predict_parts(rsf_src_exp, new_observation = veteran[1, -c(3, 4)], type = "survlime", categorical_variables = 1)
+
+    # error on to few columns
+    expect_error(predict_parts(rsf_src_exp, new_observation = veteran[1, -c(1, 2 ,3, 4)], type = "survlime"))
 
     plot(cph_survlime, type = "coefficients")
     plot(cph_survlime, type = "local_importance")

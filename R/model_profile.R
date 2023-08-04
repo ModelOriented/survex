@@ -10,10 +10,11 @@
 #' @param ... other parameters passed to `DALEX::model_profile` if `output_type == "risk"`, otherwise ignored
 #' @param categorical_variables character, a vector of names of additional variables which should be treated as categorical (factors are automatically treated as categorical variables). If it contains variable names not present in the `variables` argument, they will be added at the end.
 #' @param grid_points maximum number of points for profile calculations. Note that the final number of points may be lower than grid_points. Will be passed to internal function. By default `51`.
+#' @param variable_splits_type character, decides how variable grids should be calculated. Use `"quantiles"` for percentiles or `"uniform"` (default) to get uniform grid of points.
 #' @param groups if `output_type == "risk"` a variable name that will be used for grouping. By default `NULL`, so no groups are calculated. If `output_type == "survival"` then ignored
 #' @param k passed to `DALEX::model_profile` if `output_type == "risk"`, otherwise ignored
 #' @param center logical, should profiles be centered before clustering
-#' @param type the type of variable profile. If `output_type == "survival"` then only `"partial"` is implemented, otherwise passed to `DALEX::model_profile`.
+#' @param type the type of variable profile, `"partial"` for Partial Dependence, `"accumulated"` for Accumulated Local Effects, or `"conditional"` (available only for `output_type == "risk"`)
 #' @param output_type either `"survival"` or `"risk"` the type of survival model output that should be considered for explanations. If `"survival"` the explanations are based on the survival function. Otherwise the scalar risk predictions are used by the `DALEX::model_profile` function.
 #'
 #' @return An object of class `model_profile_survival`. It is a list with the element `result` containing the results of the calculation.
@@ -54,7 +55,7 @@ model_profile <- function(explainer,
                           ...,
                           groups = NULL,
                           k = NULL,
-                          center = TRUE,
+                          center = FALSE,
                           type = "partial",
                           output_type = "survival") UseMethod("model_profile", explainer)
 
@@ -66,6 +67,7 @@ model_profile.surv_explainer <- function(explainer,
                                          ...,
                                          categorical_variables = NULL,
                                          grid_points = 51,
+                                         variable_splits_type = "uniform",
                                          groups = NULL,
                                          k = NULL,
                                          center = TRUE,
@@ -84,28 +86,40 @@ model_profile.surv_explainer <- function(explainer,
                                                    type = type),
             "survival" = {
                 test_explainer(explainer, "model_profile", has_data = TRUE, has_survival = TRUE)
-
                 data <- explainer$data
                 if (!is.null(N) && N < nrow(data)) {
-                    ndata <- data[sample(1:nrow(data), N), ]
+                    ndata <- data[sample(1:nrow(data), N), , drop = FALSE]
                 } else {
-                    ndata <- data
+                    ndata <- data[1:nrow(data), , drop = FALSE]
                 }
 
-                cp_profiles <- surv_ceteris_paribus(explainer,
+                if (type == "partial"){
+                    cp_profiles <- surv_ceteris_paribus(explainer,
                                                         new_observation = ndata,
                                                         variables = variables,
                                                         categorical_variables = categorical_variables,
                                                         grid_points = grid_points,
+                                                        variable_splits_type = variable_splits_type,
                                                         ...)
+                    result <- surv_aggregate_profiles(cp_profiles, ...,
+                                                            variables = variables,
+                                                            center = center)
+                } else if (type == "accumulated"){
+                    cp_profiles <- list(variable_values = data.frame(ndata))
+                    result <- surv_ale(explainer,
+                                       data = ndata,
+                                       variables = variables,
+                                       categorical_variables = categorical_variables,
+                                       grid_points = grid_points,
+                                       ...)
+                } else {
+                    stop("Currently only `partial` and `accumulated` types are implemented")
+                }
 
-                agr_profiles <- surv_aggregate_profiles(cp_profiles, ...,
-                                                             groups = groups,
-                                                             type = type,
-                                                             variables = variables,
-                                                             center = center)
-
-                ret <- list(eval_times = unique(agr_profiles$`_times_`), cp_profiles = cp_profiles, result = agr_profiles)
+                ret <- list(eval_times = unique(result$`_times_`),
+                            cp_profiles = cp_profiles,
+                            result = result,
+                            type = type)
                 class(ret) <- c("model_profile_survival", "list")
                 ret$event_times <- explainer$y[explainer$y[, 1] <= max(explainer$times), 1]
                 ret$event_statuses <- explainer$y[explainer$y[, 1] <= max(explainer$times), 2]

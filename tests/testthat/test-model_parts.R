@@ -41,7 +41,7 @@ test_that("C-index fpi works", {
     expect_s3_class(mp_cph_cind, "model_parts")
 
 
-    cph_model_parts_dalex <- model_parts(cph_exp, loss_function = loss_one_minus_c_index,
+    cph_model_parts_dalex <- model_parts(cph_exp, loss = loss_one_minus_c_index,
                                          output_type = "risk", type = "raw")
 
     expect_true(all(cph_model_parts_dalex$dropout_loss <= 1))
@@ -52,10 +52,8 @@ test_that("C-index fpi works", {
     expect_error(model_parts(coxph_explainer, output_type = "nonexistent"))
 
     plot(cph_model_parts_dalex)
-    expect_error(plot(cph_model_parts_dalex, desc_sorting = "non-logical"))
     plot(cph_model_parts_dalex, show_boxplots = FALSE, max_vars = 2)
-
-
+    expect_error(plot(cph_model_parts_dalex, desc_sorting = "non-logical"))
 })
 
 
@@ -86,6 +84,7 @@ test_that("Brier score fpi works", {
     # specifying loss function brier
     rsf_src_model_parts_brier <- model_parts(rsf_src_exp, loss_function = loss_brier_score, output_type = "survival")
     plot(rsf_src_model_parts_brier)
+    expect_error(plot(rsf_src_model_parts_brier, desc_sorting = "non-logical"))
 
     expect_s3_class(rsf_src_model_parts_brier, "model_parts_survival")
     expect_equal(ncol(rsf_src_model_parts_brier$result), ncol(cph_exp$data) + 5) # times, full_model, permutation, baseline, label
