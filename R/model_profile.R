@@ -86,12 +86,11 @@ model_profile.surv_explainer <- function(explainer,
                                                    type = type),
             "survival" = {
                 test_explainer(explainer, "model_profile", has_data = TRUE, has_survival = TRUE)
-
                 data <- explainer$data
                 if (!is.null(N) && N < nrow(data)) {
-                    ndata <- data[sample(1:nrow(data), N), ]
+                    ndata <- data[sample(1:nrow(data), N), , drop = FALSE]
                 } else {
-                    ndata <- data
+                    ndata <- data[1:nrow(data), , drop = FALSE]
                 }
 
                 if (type == "partial"){
@@ -107,8 +106,7 @@ model_profile.surv_explainer <- function(explainer,
                                                             variables = variables,
                                                             center = center)
                 } else if (type == "accumulated"){
-                    cp_profiles <- NULL
-
+                    cp_profiles <- list(variable_values = data.frame(ndata))
                     result <- surv_ale(explainer,
                                        data = ndata,
                                        variables = variables,
