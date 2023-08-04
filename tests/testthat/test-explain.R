@@ -330,7 +330,7 @@ test_that("default methods for creating explainers work correctly", {
     surv <- survival::Surv(veteran$time, veteran$status)
     cph <- rms::cph(surv ~ trt + celltype + karno + diagtime + age + prior,
                     data = veteran, surv=TRUE, model=TRUE, x=TRUE, y=TRUE)
-    cph_rms_exp <- explain(cph)
+    cph_rms_exp <- explain(cph, verbose = FALSE)
     expect_s3_class(cph_rms_exp, c("surv_explainer", "explainer"))
     expect_equal(cph_rms_exp$label, "coxph", ignore_attr = TRUE)
 
