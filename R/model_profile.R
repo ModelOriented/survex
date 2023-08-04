@@ -101,7 +101,6 @@ model_profile.surv_explainer <- function(explainer,
                                                         grid_points = grid_points,
                                                         variable_splits_type = variable_splits_type,
                                                         ...)
-
                     result <- surv_aggregate_profiles(cp_profiles, ...,
                                                             variables = variables,
                                                             center = center)

@@ -18,6 +18,10 @@ test_that("model_profile with type = 'partial' works", {
     expect_equal(ncol(mp_cph_cat$result), 7)
     expect_true(all(unique(mp_cph_cat$result$`_vname_`) %in% colnames(cph_exp$data)))
 
+    mp_chosen_var <- model_profile(cph_exp, output_type = "survival", variable_splits_type = "quantiles", grid_points = 6, variables = "karno")
+    expect_s3_class(mp_chosen_var, "model_profile_survival")
+    expect_true(all(mp_chosen_var$eval_times == cph_exp$times))
+    expect_equal(ncol(mp_chosen_var$result), 7)
 
     mp_cph_num <- model_profile(cph_exp, output_type = "survival", variable_splits_type = "quantiles", grid_points = 6)
     plot(mp_cph_num, variable_type = "numerical")

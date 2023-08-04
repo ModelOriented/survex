@@ -63,8 +63,11 @@ test_that("survlime explanations work", {
     rsf_src_exp <- explain(rsf_src, verbose = FALSE)
 
     cph_survlime <- predict_parts(cph_exp, new_observation = veteran[1, -c(3, 4)], type = "survlime")
-    ranger_survlime <- predict_parts(rsf_ranger_exp, new_observation = veteran[1, -c(3, 4)], type = "survlime")
-    rsf_survlime <- predict_parts(rsf_src_exp, new_observation = veteran[1, -c(3, 4)], type = "survlime")
+    ranger_survlime <- predict_parts(rsf_ranger_exp, new_observation = veteran[1, -c(3, 4)], type = "survlime", sample_around_instance = FALSE)
+    rsf_survlime <- predict_parts(rsf_src_exp, new_observation = veteran[1, -c(3, 4)], type = "survlime", categorical_variables = 1)
+
+    # error on to few columns
+    expect_error(predict_parts(rsf_src_exp, new_observation = veteran[1, -c(1, 2 ,3, 4)], type = "survlime"))
 
     plot(cph_survlime, type = "coefficients")
     plot(cph_survlime, type = "local_importance")
