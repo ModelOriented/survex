@@ -327,6 +327,8 @@ test_that("default methods for creating explainers work correctly", {
 
 
     ### rms::cph ###
+
+    library(rms, quietly = TRUE)
     surv <- survival::Surv(veteran$time, veteran$status)
     cph <- rms::cph(surv ~ trt + celltype + karno + diagtime + age + prior,
                     data = veteran, surv=TRUE, model=TRUE, x=TRUE, y=TRUE)
