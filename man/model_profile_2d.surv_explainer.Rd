@@ -61,21 +61,18 @@ library(survival)
 library(survex)
 
 cph <- coxph(Surv(time, status) ~ ., data = veteran, model = TRUE, x = TRUE, y = TRUE)
-rsf_src <- randomForestSRC::rfsrc(Surv(time, status) ~ ., data = veteran)
-
 cph_exp <- explain(cph)
-rsf_src_exp <- explain(rsf_src)
 
 cph_model_profile_2d <- model_profile_2d(cph_exp,
                                         variables = list(c("age", "celltype")))
 head(cph_model_profile_2d$result)
 plot(cph_model_profile_2d)
 
-rsf_model_profile_2d <- model_profile_2d(rsf_src_exp,
+cph_model_profile_2d_ale <- model_profile_2d(cph_exp,
                                         variables = list(c("age", "karno")),
                                         type = "accumulated")
-head(rsf_model_profile_2d$result)
-plot(rsf_model_profile_2d)
+head(cph_model_profile_2d_ale$result)
+plot(cph_model_profile_2d_ale)
 }
 
 }
