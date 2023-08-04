@@ -315,7 +315,7 @@ plot_pdp_num <- function(pdp_dt,
         if (single_timepoint == TRUE) { ## single timepoint
             if (plot_type == "ice") {
                 ggplot(data = ice_dt, aes(x = !!feature_name_sym, y = predictions)) +
-                    geom_line(alpha = 0.2, mapping = aes(group = id)) +
+                    geom_line(alpha = 0.2, mapping = aes(group = id), color = colors_discrete_drwhy(1)) +
                     geom_rug(data = data_dt, aes(x = !!feature_name_sym, y = y_ceiling_pd), sides = "b", alpha = 0.8, position = "jitter") +
                     ylim(y_floor_ice, y_ceiling_ice)
             }
@@ -323,14 +323,14 @@ plot_pdp_num <- function(pdp_dt,
             else if (plot_type == "pdp+ice") {
                 ggplot(data = ice_dt, aes(x = !!feature_name_sym, y = predictions)) +
                     geom_line(mapping = aes(group = id), alpha = 0.2) +
-                    geom_line(data = pdp_dt, aes(x = !!feature_name_sym, y = pd), linewidth = 2, color = "gold") +
-                    geom_rug(data = data_dt, aes(x = !!feature_name_sym, y = y_ceiling_pd), sides = "b", alpha = 0.8, position = "jitter") +
+                    geom_line(data = pdp_dt, aes(x = !!feature_name_sym, y = pd), linewidth = 2, color = colors_discrete_drwhy(1)) +
+                    geom_rug(data = data_dt, aes(x = !!feature_name_sym, y = y_ceiling_pd), sides = "b", alpha = 0.8, position = "jitter", color = colors_discrete_drwhy(1)) +
                     ylim(y_floor_ice, y_ceiling_ice)
             }
             # PDP
             else if (plot_type == "pdp" || plot_type == "ale") {
                 ggplot(data = pdp_dt, aes(x = !!feature_name_sym, y = pd)) +
-                    geom_line() +
+                    geom_line(color = colors_discrete_drwhy(1)) +
                     geom_rug(data = data_dt, aes(x = !!feature_name_sym, y = y_ceiling_pd), sides = "b", alpha = 0.8, position = "jitter") +
                     ylim(y_floor_pd, y_ceiling_pd)
             }
@@ -379,16 +379,16 @@ plot_pdp_cat <- function(pdp_dt,
         if (single_timepoint == TRUE) { ## single timepoint
             if (plot_type == "ice") {
                 ggplot(data = ice_dt, aes(x = !!feature_name_count_sym, y = predictions)) +
-                    geom_boxplot(alpha = 0.2) +
+                    geom_boxplot(alpha = 0.2, color = colors_discrete_drwhy(1)) +
                     scale_color_manual(name = "time", values = colors)
             } else if (plot_type == "pdp+ice") {
                 ggplot() +
-                    geom_boxplot(data = ice_dt, aes(x = !!feature_name_count_sym, y = predictions), alpha = 0.2) +
-                    geom_line(data = pdp_dt, aes(x = !!feature_name_count_sym, y = pd, group = 1), linewidth = 2, color = "gold") +
+                    geom_boxplot(data = ice_dt, aes(x = !!feature_name_count_sym, y = predictions), alpha = 0.2, color = colors_discrete_drwhy(1)) +
+                    geom_line(data = pdp_dt, aes(x = !!feature_name_count_sym, y = pd, group = 1), linewidth = 2, color = colors_discrete_drwhy(1)) +
                     scale_color_manual(name = "time", values = colors)
             } else if (plot_type == "pdp" || plot_type == "ale") {
                 ggplot(data = pdp_dt, aes(x = !!feature_name_count_sym, y = pd), ) +
-                    geom_bar(stat = "identity", width = 0.5) +
+                    geom_bar(stat = "identity", width = 0.5, fill = colors_discrete_drwhy(1)) +
                     scale_fill_manual(name = "time", values = colors)
             }
         } else {
