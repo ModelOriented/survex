@@ -10,7 +10,7 @@ test_that("model_profile with type = 'partial' works", {
     rsf_src_exp <- explain(rsf_src, verbose = FALSE)
 
 
-    mp_cph_cat <- model_profile(cph_exp, output_type = "survival", variable_splits_type = "quantiles", variable_type = "categorical", grid_points = 6)
+    mp_cph_cat <- model_profile(cph_exp, output_type = "survival", variable_splits_type = "quantiles", grid_points = 6)
     plot(mp_cph_cat, variables = "celltype", variable_type = "categorical")
 
     expect_s3_class(mp_cph_cat, "model_profile_survival")
@@ -19,7 +19,7 @@ test_that("model_profile with type = 'partial' works", {
     expect_true(all(unique(mp_cph_cat$result$`_vname_`) %in% colnames(cph_exp$data)))
 
 
-    mp_cph_num <- model_profile(cph_exp, output_type = "survival", variable_splits_type = "quantiles", variable_type = "numerical", grid_points = 6)
+    mp_cph_num <- model_profile(cph_exp, output_type = "survival", variable_splits_type = "quantiles", grid_points = 6)
     plot(mp_cph_num, variable_type = "numerical")
     plot(mp_cph_num, numerical_plot_type = "contours")
 
@@ -39,7 +39,7 @@ test_that("model_profile with type = 'partial' works", {
     expect_true(all(unique(mp_cph_num$result$`_vname_`) %in% colnames(cph_exp$data)))
 
 
-    mp_rsf_cat <- model_profile(rsf_ranger_exp, output_type = "survival", variable_splits_type = "uniform", variable_type = "categorical", grid_points = 6)
+    mp_rsf_cat <- model_profile(rsf_ranger_exp, output_type = "survival", variable_splits_type = "uniform", grid_points = 6)
     plot(mp_rsf_cat, variable_type = "categorical")
 
     ### Add tests for plot2 for categorical PDP
@@ -60,7 +60,7 @@ test_that("model_profile with type = 'partial' works", {
     expect_true(all(unique(mp_rsf_cat$result$`_vname_`) %in% colnames(rsf_ranger_exp$data)))
 
 
-    mp_rsf_num <- model_profile(rsf_ranger_exp, output_type = "survival", variable_splits_type = "uniform", variable_type = "numerical", grid_points = 6)
+    mp_rsf_num <- model_profile(rsf_ranger_exp, output_type = "survival", variable_splits_type = "uniform", grid_points = 6)
     plot(mp_rsf_num, variable_type = "numerical")
     plot(mp_rsf_num, variable_type = "numerical", numerical_plot_type = "contours")
 
@@ -110,9 +110,9 @@ test_that("model_profile with type = 'accumulated' works", {
 
     mp_cph_num <- model_profile(cph_exp,
                                 output_type = "survival",
-                                variable_type = "numerical",
                                 grid_points = 6,
-                                type = 'accumulated')
+                                type = 'accumulated',
+                                categorical_variables = "trt")
     plot(mp_cph_num, variable_type = "numerical")
     plot(mp_cph_num, numerical_plot_type = "contours")
 

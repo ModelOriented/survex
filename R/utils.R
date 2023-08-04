@@ -189,14 +189,13 @@ add_rug_to_plot <- function(base_plot, rug_df, rug, rug_colors){
 # based on iml::order_levels
 #' @importFrom stats ecdf xtabs cmdscale
 #' @keywords internal
-order_levels <- function(data, variable) {
-    data[, variable] <- droplevels(data[, variable])
-    feature <- data[, variable]
-    x.count <- as.numeric(table(data[, variable]))
+order_levels <- function(data, variable_values, variable_name) {
+    feature <- droplevels(variable_values)
+    x.count <- as.numeric(table(feature))
     x.prob <- x.count / sum(x.count)
-    K <- nlevels(data[, variable])
+    K <- nlevels(feature)
 
-    dists <- lapply(setdiff(colnames(data), variable), function(x) {
+    dists <- lapply(setdiff(colnames(data), variable_name), function(x) {
         feature.x <- data[, x]
         dists <- expand.grid(levels(feature), levels(feature))
         colnames(dists) <- c("from.level", "to.level")
