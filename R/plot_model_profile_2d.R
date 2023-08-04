@@ -7,6 +7,7 @@
 #' @param ... additional objects of class `model_profile_2d_survival` to be plotted together
 #' @param variables list of character vectors of length 2, names of pairs of variables to be plotted
 #' @param times numeric vector, times for which the profile should be plotted, the times must be present in the 'times' field of the explainer. If `NULL` (default) then the median time from the explainer object is used.
+#' @param marginalize_over_time logical, if `TRUE` then the profile is calculated for all times and then averaged over time, if `FALSE` (default) then the profile is calculated for each time separately
 #' @param facet_ncol number of columns for arranging subplots
 #' @param title character, title of the plot. `'default'` automatically generates either "2D partial dependence survival profiles" or "2D accumulated local effects survival profiles" depending on the explanation type.
 #' @param subtitle  character, subtitle of the plot, `'default'` automatically generates "created for the XXX model", where XXX is the explainer labels, if `marginalize_over_time = FALSE`, time is also added to the subtitle

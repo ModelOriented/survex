@@ -25,6 +25,8 @@
 
 \item{times}{numeric vector, times for which the profile should be plotted, the times must be present in the 'times' field of the explainer. If \code{NULL} (default) then the median time from the explainer object is used.}
 
+\item{marginalize_over_time}{logical, if \code{TRUE} then the profile is calculated for all times and then averaged over time, if \code{FALSE} (default) then the profile is calculated for each time separately}
+
 \item{facet_ncol}{number of columns for arranging subplots}
 
 \item{title}{character, title of the plot. \code{'default'} automatically generates either "2D partial dependence survival profiles" or "2D accumulated local effects survival profiles" depending on the explanation type.}

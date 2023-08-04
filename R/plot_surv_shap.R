@@ -97,7 +97,8 @@ plot.surv_shap <- function(x,
 #' explanations of survival models created using the `model_survshap()` function.
 #'
 #' @param x an object of class `aggregated_surv_shap` to be plotted
-#' @param kind character, one of `"importance"`, `"swarm"`, or `"profile"`. Type of chart to be plotted: `"importance"` shows the importance of variables over time and aggregated, `"swarm"` shows the distribution of SurvSHAP(t) values for variables and observations, `"profile"` shows the dependence of SurvSHAP(t) values on variable values.
+#' @param kind character, one of `"importance"`, `"swarm"`, or `"profile"`. Type of chart to be plotted; `"importance"` shows the importance of variables over time and aggregated, `"swarm"` shows the distribution of SurvSHAP(t) values for variables and observations, `"profile"` shows the dependence of SurvSHAP(t) values on variable values.
+#' @param ... additional parameters passed to internal functions
 #' @param title character, title of the plot
 #' @param subtitle character, subtitle of the plot, `'default'` automatically generates "created for the XXX model (n = YYY)", where XXX is the explainer label and YYY is the number of observations used for calculations
 #' @param max_vars maximum number of variables to be plotted (least important variables are ignored), by default 7
@@ -116,7 +117,7 @@ plot.surv_shap <- function(x,
 #'
 #' ## `plot.aggregated_surv_shap(type = "swarm")`
 #'
-#' * no additional options
+#' * no additional parameters
 #'
 #'
 #' ## `plot.aggregated_surv_shap(type = "swarm")`
@@ -141,6 +142,9 @@ plot.surv_shap <- function(x,
 plot.aggregated_surv_shap <- function(x,
                                       kind = "importance",
                                       ...,
+                                      title="default",
+                                      subtitle="default",
+                                      max_vars=7,
                                       colors = NULL){
     if (is.null(colors)){
         colors <- c(low = "#9fe5bd",
@@ -165,7 +169,7 @@ plot.aggregated_surv_shap <- function(x,
 
 plot_shap_global_importance <- function(x,
                                         ...,
-                                        title = "Feature importance according to aggregated |SurvSHAP(t)|",
+                                        title = "default",
                                         subtitle = "default",
                                         max_vars = 7,
                                         colors = NULL,
@@ -190,6 +194,8 @@ plot_shap_global_importance <- function(x,
     long_df <- stack(x$aggregate)
     long_df <- long_df[order(long_df$values, decreasing = TRUE),][1:min(max_vars, length(x$aggregate)), ]
 
+    if (!is.null(subtitle) && subtitle == "default")
+        title <- "Feature importance according to aggregated |SurvSHAP(t)|"
     if (!is.null(subtitle) && subtitle == "default") {
         subtitle <- paste0(
             "created for the ", label, " model ",
@@ -220,7 +226,7 @@ plot_shap_global_importance <- function(x,
 
 plot_shap_global_swarm <- function(x,
                                    ...,
-                                   title = "Aggregated SurvSHAP(t) values summary",
+                                   title = "default",
                                    subtitle = "default",
                                    max_vars = 7,
                                    colors = NULL){
@@ -236,6 +242,8 @@ plot_shap_global_swarm <- function(x,
     df <- cbind(df, var_value)
 
     label <- attr(x, "label")
+    if (!is.null(subtitle) && subtitle == "default")
+        title <- "Aggregated SurvSHAP(t) values summary"
     if (!is.null(subtitle) && subtitle == "default") {
         subtitle <- paste0(
             "created for the ", label, " model ",
@@ -269,7 +277,7 @@ plot_shap_global_profile <- function(x,
                                      ...,
                                      variable = NULL,
                                      color_variable = NULL,
-                                     title = "Aggregated SurvSHAP(t) profile",
+                                     title = "default",
                                      subtitle = "default",
                                      max_vars = 7,
                                      colors = NULL){
@@ -292,6 +300,8 @@ plot_shap_global_profile <- function(x,
     colnames(df) <- c("shap_val", "variable_val", "color_variable_val")
 
     label <- attr(x, "label")
+    if (!is.null(subtitle) && subtitle == "default")
+        title <- "Aggregated SurvSHAP(t) profile"
     if (!is.null(subtitle) && subtitle == "default") {
         subtitle <- paste0(
             "created for the ", label, " model ",

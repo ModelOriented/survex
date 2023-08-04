@@ -4,20 +4,30 @@
 \alias{plot.aggregated_surv_shap}
 \title{Plot Aggregated SurvSHAP(t) Explanations for Survival Models}
 \usage{
-\method{plot}{aggregated_surv_shap}(x, kind = "importance", ..., colors = NULL)
+\method{plot}{aggregated_surv_shap}(
+  x,
+  kind = "importance",
+  ...,
+  title = "default",
+  subtitle = "default",
+  max_vars = 7,
+  colors = NULL
+)
 }
 \arguments{
 \item{x}{an object of class \code{aggregated_surv_shap} to be plotted}
 
-\item{kind}{character, one of \code{"importance"}, \code{"swarm"}, or \code{"profile"}. Type of chart to be plotted: \code{"importance"} shows the importance of variables over time and aggregated, \code{"swarm"} shows the distribution of SurvSHAP(t) values for variables and observations, \code{"profile"} shows the dependence of SurvSHAP(t) values on variable values.}
+\item{kind}{character, one of \code{"importance"}, \code{"swarm"}, or \code{"profile"}. Type of chart to be plotted; \code{"importance"} shows the importance of variables over time and aggregated, \code{"swarm"} shows the distribution of SurvSHAP(t) values for variables and observations, \code{"profile"} shows the dependence of SurvSHAP(t) values on variable values.}
 
-\item{colors}{character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")}
+\item{...}{additional parameters passed to internal functions}
 
 \item{title}{character, title of the plot}
 
 \item{subtitle}{character, subtitle of the plot, \code{'default'} automatically generates "created for the XXX model (n = YYY)", where XXX is the explainer label and YYY is the number of observations used for calculations}
 
 \item{max_vars}{maximum number of variables to be plotted (least important variables are ignored), by default 7}
+
+\item{colors}{character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")}
 }
 \value{
 An object of the class \code{ggplot}.
@@ -38,7 +48,7 @@ explanations of survival models created using the \code{model_survshap()} functi
 
 \subsection{\code{plot.aggregated_surv_shap(type = "swarm")}}{
 \itemize{
-\item no additional options
+\item no additional parameters
 }
 }
 
