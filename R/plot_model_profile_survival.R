@@ -383,12 +383,13 @@ plot_pdp_cat <- function(pdp_dt,
                     scale_color_manual(name = "time", values = colors)
             } else if (plot_type == "pdp+ice") {
                 ggplot() +
-                    geom_boxplot(data = ice_dt, aes(x = !!feature_name_count_sym, y = predictions), alpha = 0.2, color = colors_discrete_drwhy(1)) +
-                    geom_line(data = pdp_dt, aes(x = !!feature_name_count_sym, y = pd, group = 1), linewidth = 2, color = colors_discrete_drwhy(1)) +
+                    geom_boxplot(data = ice_dt, aes(x = !!feature_name_count_sym, y = predictions), alpha = 0.2, color = colors_discrete_drwhy(1), width = 0.7) +
+                    geom_line(data = pdp_dt, aes(x = !!feature_name_count_sym, y = pd, group = 1), linewidth = 2, color = colors_discrete_drwhy(1), position = position_dodge(0.7)) +
                     scale_color_manual(name = "time", values = colors)
             } else if (plot_type == "pdp" || plot_type == "ale") {
                 ggplot(data = pdp_dt, aes(x = !!feature_name_count_sym, y = pd), ) +
                     geom_bar(stat = "identity", width = 0.5, fill = colors_discrete_drwhy(1)) +
+                    scale_y_continuous(expand = c(0, NA)) +
                     scale_fill_manual(name = "time", values = colors)
             }
         } else {
@@ -398,12 +399,13 @@ plot_pdp_cat <- function(pdp_dt,
                     scale_color_manual(name = "time", values = colors)
             } else if (plot_type == "pdp+ice") {
                 ggplot(mapping = aes(color = time)) +
-                    geom_boxplot(data = ice_dt, aes(x = !!feature_name_count_sym, y = predictions), alpha = 0.2) +
-                    geom_line(data = pdp_dt, aes(x = !!feature_name_count_sym, y = pd, group = time), linewidth = 0.6) +
+                    geom_boxplot(data = ice_dt, aes(x = !!feature_name_count_sym, y = predictions), alpha = 0.2, width = 0.7) +
+                    geom_line(data = pdp_dt, aes(x = !!feature_name_count_sym, y = pd, group = time), linewidth = 0.6, position = position_dodge(0.7)) +
                     scale_color_manual(name = "time", values = colors)
             } else if (plot_type == "pdp" || plot_type == "ale") {
                 ggplot(data = pdp_dt, aes(x = !!feature_name_count_sym, y = pd, fill = time)) +
                     geom_bar(stat = "identity", width = 0.5, position = "dodge") +
+                    scale_y_continuous(expand = c(0, NA)) +
                     scale_fill_manual(name = "time", values = colors)
             }
         }
