@@ -1,3 +1,41 @@
+#' Plot 2-Dimensional Model Profile for Survival Models
+#'
+#' This function plots objects of class `"model_profile_2d_survival"` created
+#' using the `model_profile_2d()` function.
+#'
+#' @param x an object of class `model_profile_2d_survival` to be plotted
+#' @param ... additional objects of class `model_profile_2d_survival` to be plotted together
+#' @param variables list of character vectors of length 2, names of pairs of variables to be plotted
+#' @param times numeric vector, times for which the profile should be plotted, the times must be present in the 'times' field of the explainer. If `NULL` (default) then the median time from the explainer object is used.
+#' @param facet_ncol number of columns for arranging subplots
+#' @param title character, title of the plot. `'default'` automatically generates either "2D partial dependence survival profiles" or "2D accumulated local effects survival profiles" depending on the explanation type.
+#' @param subtitle  character, subtitle of the plot, `'default'` automatically generates "created for the XXX model", where XXX is the explainer labels, if `marginalize_over_time = FALSE`, time is also added to the subtitle
+#' @param colors character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")
+#'
+#' @return A collection of `ggplot` objects arranged with the `patchwork` package.
+#'
+#'
+#' @examples
+#' \donttest{
+#' library(survival)
+#' library(survex)
+#'
+#' cph <- coxph(Surv(time, status) ~ ., data = veteran, model = TRUE, x = TRUE, y = TRUE)
+#' cph_exp <- explain(cph)
+#'
+#' cph_model_profile_2d <- model_profile_2d(cph_exp,
+#'                                         variables = list(c("age", "celltype"),
+#'                                                          c("age", "karno")))
+#' head(cph_model_profile_2d$result)
+#' plot(cph_model_profile_2d, variables = list(c("age", "celltype")), times = 88.5)
+#'
+#' cph_model_profile_2d_ale <- model_profile_2d(cph_exp,
+#'                                         variables = list(c("age", "karno")),
+#'                                         type = "accumulated")
+#' head(cph_model_profile_2d_ale$result)
+#' plot(cph_model_profile_2d_ale, times = c(4, 88.5), marginalize_over_time = TRUE)
+#' }
+#'
 #' @export
 plot.model_profile_2d_survival <- function(x,
                                            ...,
@@ -77,10 +115,12 @@ prepare_model_profile_2d_plots <- function(x,
 ){
     if (is.null(times)) {
         times <- quantile(x$eval_times, p = 0.5, type = 1)
+        warning("Plot will be prepared for the median time point from the `times` vector. For another time point, set the value of `times`.")
     }
 
-    if (!marginalize_over_time) {
+    if (!marginalize_over_time && length(times) > 1) {
         times <- times[1]
+        warning("Plot will be prepared for the first time point in the `times` vector. For aggregation over time, set the option `marginalize_over_time = TRUE`.")
     }
 
     if (!all(times %in% x$eval_times)) {
@@ -93,7 +133,10 @@ prepare_model_profile_2d_plots <- function(x,
 
     all_profiles <- x$result
     df_time <- all_profiles[all_profiles$`_times_` %in% times, ]
-
+    df_time$`_times_` <- NULL
+    if (marginalize_over_time){
+        df_time <- aggregate(`_yhat_`~., data=df_time, FUN=mean)
+    }
     sf_range <- range(df_time$`_yhat_`)
 
     pl <- lapply(seq_along(variables), function(i){
