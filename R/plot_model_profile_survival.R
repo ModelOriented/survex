@@ -4,7 +4,7 @@
 #' using the `model_profile()` function.
 #'
 #' @param x an object of class `model_profile_survival` to be plotted
-#' @param ... additional objects of class `"model_profile_survival"` to be plotted together
+#' @param ... additional objects of class `model_profile_survival` to be plotted together
 #' @param variables character, names of the variables to be plotted
 #' @param variable_type character, either `"numerical"`, `"categorical"` or `NULL` (default), select only one type of variable for plotting, or leave `NULL` for all
 #' @param facet_ncol number of columns for arranging subplots
@@ -174,6 +174,7 @@ plot2.model_profile_survival <- function(x,
 
     if (is.null(times)) {
         times <- quantile(x$eval_times, p = 0.5, type = 1)
+        warning("Plot will be prepared for the median time point from the `times` vector. For another time point, set the value of `times`.")
     }
 
     if (!all(times %in% x$eval_times)) {
