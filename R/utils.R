@@ -71,7 +71,7 @@ test_explainer <- function(explainer,
 #' @importFrom DALEX colors_discrete_drwhy
 generate_discrete_color_scale <- function(n, colors = NULL) {
 
-    if (is.null(colors)) return(colors_discrete_drwhy(n))
+    if (is.null(colors) || length(colors) < n) return(colors_discrete_drwhy(n))
     else return(colors[(0:(n - 1) %% length(colors)) + 1])
 
 }
