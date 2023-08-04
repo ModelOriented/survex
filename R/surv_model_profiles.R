@@ -1,7 +1,6 @@
 #' @keywords internal
 surv_aggregate_profiles <- function(x,
                                     ...,
-                                    variable_type = NULL,
                                     groups = NULL,
                                     variables = NULL,
                                     center = FALSE) {
@@ -22,16 +21,6 @@ surv_aggregate_profiles <- function(x,
                 paste(all_variables, collapse = ", ")
             ))
         all_variables <- all_variables_intersect
-    }
-
-    if (!is.null(variable_type) && variable_type == "numerical") {
-        all_profiles <-
-            all_profiles[all_profiles$`_vtype_` == "numerical",]
-    }
-
-    if (!is.null(variable_type) && variable_type == "categorical") {
-        all_profiles <-
-            all_profiles[all_profiles$`_vtype_` == "categorical",]
     }
 
     all_variables <-
@@ -149,15 +138,18 @@ surv_ale <- function(x,
 
         if (variable %in% categorical_variables) {
             if (!is.factor(variable_values)){
-                data[, variable] <- as.factor(data[, variable])
+                is_numeric <- is.numeric(variable_values)
+                is_factorized <- TRUE
                 variable_values <- as.factor(variable_values)
+            } else {
+                is_factorized <- FALSE
             }
             levels_original <- levels(droplevels(variable_values))
             levels_n <- nlevels(droplevels(variable_values))
             if (inherits(variable_values, "ordered")) {
                 level_order <- 1:levels_n
             } else {
-                level_order <- order_levels(data, variable)
+                level_order <- order_levels(data, variable_values, variable)
             }
 
             # The new order of the levels
@@ -170,6 +162,14 @@ surv_ale <- function(x,
             # Filter rows which are not already at maximum or minimum level values
             row_ind_increase <- (1:nrow(data))[x_ordered < levels_n]
             row_ind_decrease <- (1:nrow(data))[x_ordered > 1]
+
+            if (is_factorized){
+                levels_ordered <- as.character(levels_ordered)
+                if (is_numeric){
+                    levels_ordered <- as.numeric(levels_ordered)
+                }
+            }
+
             X_lower[row_ind_decrease, variable] <-
                 levels_ordered[x_ordered[row_ind_decrease] - 1]
             X_upper[row_ind_increase, variable] <-
