@@ -6,7 +6,7 @@
 #' @param y_true a two element numeric vector or matrix of one row and two columns, the first element being the true observed time and the second the status of the observation, used for plotting
 #' @param calculation_method a character, either `"kernelshap"` for use of `kernelshap` library (providing faster Kernel SHAP with refinements), `"exact_kernel"` for exact Kernel SHAP estimation,
 #'   or `"treeshap"` for use of `treeshap` library (efficient implementation to compute SHAP values for tree-based models).
-#' @param aggregation_method a character, either `"mean_absolute"` or `"integral"`, `"max_absolute"`, `"sum_of_squares"`
+#' @param aggregation_method a character, either `"integral"`, `"integral_absolute"`, `"mean_absolute"`, `"max_absolute"`, or `"sum_of_squares"`
 #' @param observation_aggregation_method a function, if `new_observation` contains multiple observation this function is applied to the same time point of generated shap profiles for each observation. Defaults to `mean`.
 #'
 #' @return A list, containing the calculated SurvSHAP(t) results in the `result` field
@@ -212,20 +212,15 @@ make_prediction_for_simplified_input <- function(explainer, model, data, simplif
     return(t(preds))
 }
 
-aggregate_surv_shap <- function(survshap, times, method) {
+aggregate_surv_shap <- function(survshap, times, method, ...) {
     switch(
         method,
         "sum_of_squares" = return(apply(survshap, 2, function(x) sum(x^2))),
         "mean_absolute" = return(apply(survshap, 2, function(x) mean(abs(x)))),
         "max_absolute" = return(apply(survshap, 2, function(x) max(abs(x)))),
-        "integral" = return(apply(survshap, 2, function(x) {
-            x <- abs(x)
-            names(x) <- NULL
-            n <- length(x)
-            i <- (x[1:(n - 1)] + x[2:n]) * diff(times) / 2
-            sum(i) / (max(times) - min(times))
-            })),
-        stop("aggregation_method has to be one of `sum_of_squares`, `mean_absolute`, `max_absolute` or `integral`")
+        "integral" = return(apply(survshap, 2, function(x) calculate_integral(x, times, normalization = "t_max"))),
+        "integral_absolute" = return(apply(survshap, 2, function(x) calculate_integral(abs(x), times, normalization = "t_max"))),
+        stop("aggregation_method has to be one of 'integral', 'integral_absolute', 'mean_absolute', 'max_absolute', or 'sum_of_squares'")
         )
 }
 
@@ -336,7 +331,7 @@ use_treeshap <- function(explainer, new_observation, ...){
 
 }
 
-# @internal
+#'@keywords internal
 aggregate_shap_multiple_observations <- function(shap_res_list, feature_names, aggregation_function) {
 
     if (length(shap_res_list) > 1) {

@@ -28,7 +28,7 @@ surv_shap(
 \item{calculation_method}{a character, either \code{"kernelshap"} for use of \code{kernelshap} library (providing faster Kernel SHAP with refinements), \code{"exact_kernel"} for exact Kernel SHAP estimation,
 or \code{"treeshap"} for use of \code{treeshap} library (efficient implementation to compute SHAP values for tree-based models).}
 
-\item{aggregation_method}{a character, either \code{"mean_absolute"} or \code{"integral"}, \code{"max_absolute"}, \code{"sum_of_squares"}}
+\item{aggregation_method}{a character, either \code{"integral"}, \code{"integral_absolute"}, \code{"mean_absolute"}, \code{"max_absolute"}, or \code{"sum_of_squares"}}
 
 \item{observation_aggregation_method}{a function, if \code{new_observation} contains multiple observation this function is applied to the same time point of generated shap profiles for each observation. Defaults to \code{mean}.}
 }

@@ -27,7 +27,7 @@ loss_integrate <- function(loss_function, ..., normalization = NULL , max_quanti
         times <- times[quantile_mask]
         surv <- surv[,quantile_mask]
 
-        loss_values <- loss_function(y_true = y_true, risk = risk, surv = surv,times = times)
+        loss_values <- loss_function(y_true = y_true, risk = risk, surv = surv, times = times)
 
         na_mask <- (!is.na(loss_values))
 
@@ -35,30 +35,7 @@ loss_integrate <- function(loss_function, ..., normalization = NULL , max_quanti
         loss_values <- loss_values[na_mask]
         surv <- surv[na_mask]
 
-        n <- length(loss_values)
-        # integral using trapezoid method
-
-        if (is.null(normalization)){
-            tmp <- (loss_values[1:(n - 1)] + loss_values[2:n]) * diff(times) / 2
-            integrated_metric <- sum(tmp) / (max(times) - min(times))
-            return(integrated_metric)
-        }
-        else if (normalization == "t_max") {
-            tmp <- (loss_values[1:(n - 1)] + loss_values[2:n]) * diff(times) / 2
-            integrated_metric <- sum(tmp)
-            return(integrated_metric/max(times))
-        } else if (normalization == "survival"){
-
-            km <- survival::survfit(y_true ~ 1)
-            estimator <- stepfun(km$time, c(1, km$surv))
-
-            dwt <- 1 - estimator(times)
-
-            tmp <- (loss_values[1:(n - 1)] + loss_values[2:n]) * diff(dwt) / 2
-            integrated_metric <- sum(tmp)
-            return(integrated_metric/(1 - estimator(max(times))))
-        }
-
+        calculate_integral(loss_values, times, normalization, y_true=y_true)
     }
 
     attr(integrated_loss_function, "loss_type") <- "integrated"

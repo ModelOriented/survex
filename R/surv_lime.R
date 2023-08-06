@@ -117,7 +117,6 @@ generate_neighbourhood <- function(data_org,
     additional_categorical_variables <- categorical_variables
     factor_variables <- colnames(data_org)[sapply(data_org, is.factor)]
     categorical_variables <- unique(c(additional_categorical_variables, factor_variables))
-    if (is.null(ncol(data_row))) stop("The observation to be explained has to be data.frame")
     data_row <- data_row[colnames(data_org)]
 
     feature_frequencies <- list(length(categorical_variables))

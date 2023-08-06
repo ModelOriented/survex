@@ -9,12 +9,11 @@ model_survshap(explainer, ...)
 
 \method{model_survshap}{surv_explainer}(
   explainer,
-  calculation_method = "kernelshap",
-  aggregation_method = "integral",
   new_observation = NULL,
   y_true = NULL,
-  ...,
-  N = NULL
+  calculation_method = "kernelshap",
+  aggregation_method = "integral",
+  ...
 )
 }
 \arguments{
@@ -22,16 +21,14 @@ model_survshap(explainer, ...)
 
 \item{...}{additional parameters, passed to internal functions}
 
-\item{calculation_method}{a character, either \code{"kernelshap"} for use of \code{kernelshap} library (providing faster Kernel SHAP with refinements), \code{"exact_kernel"} for exact Kernel SHAP estimation,
-or \code{"treeshap"} for use of \code{treeshap} library (efficient implementation to compute SHAP values for tree-based models).}
-
-\item{aggregation_method}{a character, either \code{"mean_absolute"} or \code{"integral"}, \code{"max_absolute"}, \code{"sum_of_squares"}}
-
 \item{new_observation}{new observations for which predictions need to be explained}
 
 \item{y_true}{a two element numeric vector or matrix of one row and two columns, the first element being the true observed time and the second the status of the observation, used for plotting}
 
-\item{N}{A positive integer indicating the number of observations that should be used to compute global SHAP values.}
+\item{calculation_method}{a character, either \code{"kernelshap"} for use of \code{kernelshap} library (providing faster Kernel SHAP with refinements), \code{"exact_kernel"} for exact Kernel SHAP estimation,
+or \code{"treeshap"} for use of \code{treeshap} library (efficient implementation to compute SHAP values for tree-based models).}
+
+\item{aggregation_method}{a character, either \code{"integral"}, \code{"integral_absolute"}, \code{"mean_absolute"}, \code{"max_absolute"}, or \code{"sum_of_squares"}}
 }
 \value{
 An object of class \code{aggregated_surv_shap} containing the computed global SHAP values.
@@ -43,4 +40,33 @@ This function computes global SHAP values.
 If specifying \code{y_true}, also \code{new_observation} must be specified.
 Using the argument \code{new_observation}, global SHAP values are computed for the provided data. Otherwise,
 global SHAP values are computed for the data, the \code{explainer} was trained with.
+}
+\examples{
+\donttest{
+veteran <- survival::veteran
+rsf_ranger <- ranger::ranger(
+  survival::Surv(time, status) ~ .,
+  data = veteran,
+  respect.unordered.factors = TRUE,
+  num.trees = 100,
+  mtry = 3,
+  max.depth = 5
+)
+rsf_ranger_exp <- explain(
+  rsf_ranger,
+  data = veteran[, -c(3, 4)],
+  y = survival::Surv(veteran$time, veteran$status),
+  verbose = FALSE
+)
+
+ranger_global_survshap <- model_survshap(
+  explainer = rsf_ranger_exp,
+  new_observation = veteran[1:40, !colnames(veteran) \%in\% c("time", "status")],
+  y_true = survival::Surv(veteran$time[1:40], veteran$status[1:40]),
+  aggregation_method = "mean_absolute",
+  calculation_method = "kernelshap",
+)
+plot(ranger_global_survshap)
+}
+
 }

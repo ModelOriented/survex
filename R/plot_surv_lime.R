@@ -88,7 +88,7 @@ plot.surv_lime <- function(x,
         pl2 <- with(sf_df,{
 
             ggplot(data = sf_df, aes(x = times, y = sfs, group = type, color = type)) +
-            geom_line(linewidth = 0.8, size = 0.8) +
+            geom_line(linewidth = 0.8) +
             theme_default_survex() +
             xlab("") +
             xlim(c(0,NA))+

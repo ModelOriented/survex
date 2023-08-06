@@ -306,6 +306,8 @@ test_that("default methods for creating explainers work correctly", {
     expect_error(explain(cph_wihtout_params_2, verbose = FALSE))
 
     expect_output(explain(cph))
+
+
     ### ranger::ranger ###
 
     rsf_ranger <- ranger::ranger(survival::Surv(time, status) ~ ., data = veteran, respect.unordered.factors = TRUE, num.trees = 100, mtry = 3, max.depth = 5)
@@ -314,6 +316,7 @@ test_that("default methods for creating explainers work correctly", {
     expect_s3_class(rsf_ranger_exp, c("surv_explainer", "explainer"))
     expect_equal(rsf_ranger_exp$label, "ranger")
 
+
     ### randomForestSRC::rfsrc ###
 
     rsf_src <- randomForestSRC::rfsrc(Surv(time, status) ~ ., data = veteran)
@@ -321,6 +324,18 @@ test_that("default methods for creating explainers work correctly", {
     rsf_src_exp <- explain(rsf_src, verbose = FALSE)
     expect_s3_class(rsf_src_exp, c("surv_explainer", "explainer"))
     expect_equal(rsf_src_exp$label, "rfsrc", ignore_attr = TRUE)
+
+
+    ### rms::cph ###
+
+    library(rms, quietly = TRUE)
+    surv <- survival::Surv(veteran$time, veteran$status)
+    cph <- rms::cph(surv ~ trt + celltype + karno + diagtime + age + prior,
+                    data = veteran, surv=TRUE, model=TRUE, x=TRUE, y=TRUE)
+    cph_rms_exp <- explain(cph, verbose = FALSE)
+    expect_s3_class(cph_rms_exp, c("surv_explainer", "explainer"))
+    expect_equal(cph_rms_exp$label, "coxph", ignore_attr = TRUE)
+
 
     ### parsnip::boost_tree ###
 
