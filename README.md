@@ -60,6 +60,7 @@ plot(predict_parts(explainer, veteran[1, -c(3, 4)]))
 ## Functionalities and roadmap
 
 Existing functionalities:
+- [x] unified prediction interface using the explainer object - `predict()`
 - [x] calculation of performance metrics (Brier Score, Time-dependent C/D AUC, metrics from `mlr3proba`) - `model_performance()`
 - [x] calculation of feature importance (Permutation Feature Importance - PFI) - `model_parts()`
 - [x] calculation of partial dependence (Partial Dependence Profiles - PDP, Accumulated Local Effects - ALE) - `model_profile()`
