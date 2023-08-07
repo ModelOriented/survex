@@ -118,11 +118,11 @@ plot(model_parts_cph_auc,model_parts_rsf_auc)
 
 We observe that the results are consistent with `loss_brier_score()`. That's good news - a simple sanity check that these variables are the most important for these models.
 
-**Important note (new functionality):** We can also measure the importance of variables using global SurvSHAP(t) explanations. Details on how to do so, are presented in this vignette.
+**Important note (new functionality):** We can also measure the importance of variables using global SurvSHAP(t) explanations. Details on how to do so, are presented in this vignette: `vignette("global-survshap")`.
 
 ## Partial dependence
 
-**Important note (new functionality):** A more detailed description of the partial dependence explanation, with added functionality is presented in this vignette.
+**Important note (new functionality):** A more detailed description of the partial dependence explanation, with added functionality is presented in this vignette: `vignette("pdp")`.
 
 The next type of global explanation this package provides is partial dependence plots. This is calculated using the `model_profile()` function. These plots show how setting one variable to a different value would, on average, influence the model's prediction. Again, this is an extension of [partial dependence](https://ema.drwhy.ai/partialDependenceProfiles.html) known from regression and classification tasks, applied to survival models by extending it to take the time dimension into account.
 
