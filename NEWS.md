@@ -1,6 +1,13 @@
 # survex (development)
 
 * Fix not being able to plot or print SurvLIME results for the cph model sometimes. ([#72](https://github.com/ModelOriented/survex/issues/72))
+* Add global explanations via the SurvSHAP(t) method (see `model_survshap()` function)
+* Add plots for global SurvSHAP(t) explanations (see `plot.aggregated_surv_shap()`)
+* Add Accumulated Local Effects (ALE) explanations (see `model_profile(..., type = "accumulated")`)
+* Add 2-dimensional PDP and ALE plots (see `model_profile_2d()` function)
+* Add `plot2()` function for plotting PDP and ALE explanations without the time dimension
+* Improvement on the vignettes for the package (see `vignette("pdp")` and `vignette("global-survshap")`)
+* Increase the test coverage of the pacakge.
 
 # survex 1.0.0
 
