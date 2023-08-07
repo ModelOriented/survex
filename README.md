@@ -57,6 +57,23 @@ plot(model_parts(explainer))
 plot(predict_parts(explainer, veteran[1, -c(3, 4)]))
 ```
 
+## Functionalities and roadmap
+
+Existing functionalities:
+- [x] calculation of performance metrics (Brier Score, Time-dependent C/D AUC, metrics from `mlr3proba`) - `model_performance()`
+- [x] calculation of feature importance (Permutation Feature Importance - PFI) - `model_parts()`
+- [x] calculation of partial dependence (Partial Dependence Profiles - PDP, Accumulated Local Effects - ALE) - `model_profile()`
+- [x] calculation of 2-dimensional partial dependence (2D PDP, 2D ALE) - `model_profile_2d()`
+- [x] calculation of local feature attributions (SurvSHAP(t), SurvLIME) - `predict_parts()`
+- [x] calculation of local ceteris paribus explanations (Ceteris Paribus profiles - CP/ Individual Conditional Expectations - ICE) - `predict_profile()`
+- [x] calculation of global feature attributions using SurvSHAP(t) - `model_survshap()`
+
+Currently in develompment:
+- [ ] ...
+
+Future plans:
+- [ ] ... (raise an Issue on GitHub if you have any suggestions)
+
 ## Usage
 
 [![`survex` usage cheatsheet](man/figures/cheatsheet.png)](https://github.com/ModelOriented/survex/blob/main/misc/cheatsheet.pdf)
