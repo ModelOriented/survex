@@ -40,7 +40,8 @@
 #' plot(cph_model_profile)
 #'
 #' rsf_model_profile <- model_profile(rsf_src_exp, output_type = "survival",
-#'                                    variables = c("age", "celltype"))
+#'                                    variables = c("age", "celltype"),
+#'                                    type = "accumulated")
 #'
 #' head(rsf_model_profile$result)
 #'

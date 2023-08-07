@@ -29,9 +29,9 @@ test_that("model_profile with type = 'partial' works", {
 
     ### Add tests for plot2 for numerical PDP
     # single timepoint
-    plot2(mp_cph_num, variable = "karno", plot_type = "pdp+ice")
-    plot2(mp_cph_num, variable = "karno", plot_type = "pdp")
-    plot2(mp_cph_num, variable = "karno", plot_type = "ice")
+    plot2(mp_cph_num, variable = "karno", plot_type = "pdp+ice", times = cph_exp$times[1])
+    plot2(mp_cph_num, variable = "karno", plot_type = "pdp", times = cph_exp$times[1])
+    plot2(mp_cph_num, variable = "karno", plot_type = "ice", times = cph_exp$times[1])
     # multiple timepoints
     plot2(mp_cph_num, times = c(4, 80.7), variable = "karno", plot_type = "pdp+ice")
     plot2(mp_cph_num, times = c(4, 80.7), variable = "karno", plot_type = "pdp")
@@ -50,9 +50,9 @@ test_that("model_profile with type = 'partial' works", {
     plot(mp_cph_cat, mp_rsf_cat)
     ### Add tests for plot2 for categorical PDP
     # single timepoint
-    plot2(mp_rsf_cat, variable = "celltype", plot_type = "pdp+ice")
-    plot2(mp_rsf_cat, variable = "celltype", plot_type = "pdp")
-    plot2(mp_rsf_cat, variable = "celltype", plot_type = "ice")
+    plot2(mp_rsf_cat, variable = "celltype", plot_type = "pdp+ice", times = rsf_ranger_exp$times[1])
+    plot2(mp_rsf_cat, variable = "celltype", plot_type = "pdp", times = rsf_ranger_exp$times[1])
+    plot2(mp_rsf_cat, variable = "celltype", plot_type = "ice", times = rsf_ranger_exp$times[1])
     # multiple timepoints
     plot2(mp_rsf_cat, times = c(4, 80.7), variable = "celltype", plot_type = "pdp+ice")
     plot2(mp_rsf_cat, times = c(4, 80.7), marginalize_over_time = T, variable = "celltype", plot_type = "pdp+ice")
@@ -76,8 +76,8 @@ test_that("model_profile with type = 'partial' works", {
     expect_true(all(unique(mp_rsf_num$result$`_vname_`) %in% colnames(rsf_ranger_exp$data)))
 
     expect_output(print(mp_cph_num))
+    expect_warning(plot2(mp_rsf_cat, variable = "celltype", plot_type = "pdp+ice"))
     expect_error(plot(mp_rsf_num, variables = "nonexistent", grid_points = 6))
-
     expect_error(model_profile(rsf_ranger_exp, type = "conditional"))
     expect_error(plot2(mp_rsf_num, variable = "nonexistent"))
     expect_error(plot2(mp_rsf_num, variable = "age", times = -1))
@@ -104,7 +104,7 @@ test_that("model_profile with type = 'accumulated' works", {
 
     ### Add tests for plot2 for categorical ALE
     # single timepoint
-    plot2(mp_cph_cat, variable = "celltype")
+    plot2(mp_cph_cat, variable = "celltype", times=cph_exp$times[1])
     # multiple timepoints
     plot2(mp_cph_cat, times = c(4, 80.7), variable = "celltype", plot_type = "ale")
 
@@ -128,7 +128,7 @@ test_that("model_profile with type = 'accumulated' works", {
 
     ### Add tests for plot2 for numerical ALE
     # single timepoint
-    plot2(mp_cph_num, variable = "karno", plot_type = "ale")
+    plot2(mp_cph_num, variable = "karno", plot_type = "ale", times=cph_exp$times[1])
     # multiple timepoints
     plot2(mp_cph_num, times = c(4, 80.7), variable = "karno", plot_type = "ale")
 

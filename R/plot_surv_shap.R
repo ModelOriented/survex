@@ -3,7 +3,7 @@
 #' This functions plots objects of class `surv_shap` - time-dependent explanations of
 #' survival models created using the `predict_parts(..., type="survshap")` function.
 #'
-#' @param x an object of class `"surv_shap"` to be plotted
+#' @param x an object of class `surv_shap` to be plotted
 #' @param ... additional objects of class `surv_shap` to be plotted together
 #' @param title character, title of the plot
 #' @param subtitle character, subtitle of the plot, `'default'` automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels
@@ -91,12 +91,67 @@ plot.surv_shap <- function(x,
 }
 
 
-
+#' Plot Aggregated SurvSHAP(t) Explanations for Survival Models
+#'
+#' This functions plots objects of class `aggregated_surv_shap` - aggregated time-dependent
+#' explanations of survival models created using the `model_survshap()` function.
+#'
+#' @param x an object of class `aggregated_surv_shap` to be plotted
+#' @param kind character, one of `"importance"`, `"swarm"`, or `"profile"`. Type of chart to be plotted; `"importance"` shows the importance of variables over time and aggregated, `"swarm"` shows the distribution of SurvSHAP(t) values for variables and observations, `"profile"` shows the dependence of SurvSHAP(t) values on variable values.
+#' @param ... additional parameters passed to internal functions
+#' @param title character, title of the plot
+#' @param subtitle character, subtitle of the plot, `'default'` automatically generates "created for the XXX model (n = YYY)", where XXX is the explainer label and YYY is the number of observations used for calculations
+#' @param max_vars maximum number of variables to be plotted (least important variables are ignored), by default 7
+#' @param colors character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")
+#'
+#' @return An object of the class `ggplot`.
+#'
+#' @section Plot options:
+#'
+#' ## `plot.aggregated_surv_shap(type = "importance")`
+#'
+#' * `rug` - character, one of `"all"`, `"events"`, `"censors"`, `"none"` or `NULL`. Which times to mark on the x axis in `geom_rug()`.
+#' * `rug_colors` - character vector containing two colors (containing either hex codes "#FF69B4", or names "blue"). The first color (red by default) will be used to mark event times, whereas the second (grey by default) will be used to mark censor times.
+#' * `xlab_left, ylab_right` - axis labels for left and right plots (due to different aggregation possibilities)
+#'
+#'
+#' ## `plot.aggregated_surv_shap(type = "swarm")`
+#'
+#' * no additional parameters
+#'
+#'
+#' ## `plot.aggregated_surv_shap(type = "swarm")`
+#'
+#' * `variable` - variable for which the profile is to be plotted, by default first from result data
+#' * `color_variable` - variable used to denote the color, by default equal to `variable`
+#'
+#'
+#' @examples
+#' \donttest{
+#' library(survival)
+#' library(survex)
+#'
+#' model <- randomForestSRC::rfsrc(Surv(time, status) ~ ., data = veteran)
+#' exp <- explain(model)
+#'
+#' p_parts_shap <- predict_parts(exp, veteran[1, -c(3, 4)], type = "survshap")
+#' plot(p_parts_shap)
+#' }
+#'
 #'@export
 plot.aggregated_surv_shap <- function(x,
                                       kind = "importance",
                                       ...,
+                                      title="default",
+                                      subtitle="default",
+                                      max_vars=7,
                                       colors = NULL){
+    if (is.null(colors)){
+        colors <- c(low = "#9fe5bd",
+                    mid = "#46bac2",
+                    high = "#371ea3")
+    }
+
     switch(
         kind,
         "importance" = plot_shap_global_importance(x = x,
@@ -114,7 +169,7 @@ plot.aggregated_surv_shap <- function(x,
 
 plot_shap_global_importance <- function(x,
                                         ...,
-                                        title = "Feature importance according to aggregated |SurvSHAP(t)|",
+                                        title = "default",
                                         subtitle = "default",
                                         max_vars = 7,
                                         colors = NULL,
@@ -130,7 +185,7 @@ plot_shap_global_importance <- function(x,
                                  title = NULL,
                                  subtitle = NULL,
                                  max_vars = max_vars,
-                                 colors = colors,
+                                 colors = NULL,
                                  rug = rug,
                                  rug_colors = rug_colors) +
         labs(y = ylab_right)
@@ -139,6 +194,8 @@ plot_shap_global_importance <- function(x,
     long_df <- stack(x$aggregate)
     long_df <- long_df[order(long_df$values, decreasing = TRUE),][1:min(max_vars, length(x$aggregate)), ]
 
+    if (!is.null(subtitle) && subtitle == "default")
+        title <- "Feature importance according to aggregated |SurvSHAP(t)|"
     if (!is.null(subtitle) && subtitle == "default") {
         subtitle <- paste0(
             "created for the ", label, " model ",
@@ -148,7 +205,7 @@ plot_shap_global_importance <- function(x,
 
     left_plot <- with(long_df, {
         ggplot(long_df, aes(x = values, y = reorder(ind, values))) +
-            geom_col(fill = "#46bac2") +
+            geom_col(fill = colors[2]) +
             theme_default_survex() +
             labs(x = xlab_left) +
             theme(axis.title.y = element_blank())
@@ -169,7 +226,7 @@ plot_shap_global_importance <- function(x,
 
 plot_shap_global_swarm <- function(x,
                                    ...,
-                                   title = "Aggregated SurvSHAP(t) values summary",
+                                   title = "default",
                                    subtitle = "default",
                                    max_vars = 7,
                                    colors = NULL){
@@ -185,22 +242,23 @@ plot_shap_global_swarm <- function(x,
     df <- cbind(df, var_value)
 
     label <- attr(x, "label")
+    if (!is.null(subtitle) && subtitle == "default")
+        title <- "Aggregated SurvSHAP(t) values summary"
     if (!is.null(subtitle) && subtitle == "default") {
         subtitle <- paste0(
             "created for the ", label, " model ",
             "(n=", x$n_observations, ")"
         )
     }
-
     with(df, {
     ggplot(data = df, aes(x = shap_value, y = variable, color = var_value)) +
         geom_vline(xintercept = 0, color = "#ceced9", linetype="solid") +
         geom_jitter(width=0) +
         scale_color_gradient2(
             name = "Variable value",
-            low = "#9fe5bd",
-            mid = "#46bac2",
-            high = "#371ea3",
+            low = colors[1],
+            mid = colors[2],
+            high = colors[3],
             midpoint = 0.5,
             limits=c(0,1),
             breaks = c(0, 1),
@@ -219,7 +277,7 @@ plot_shap_global_profile <- function(x,
                                      ...,
                                      variable = NULL,
                                      color_variable = NULL,
-                                     title = "Aggregated SurvSHAP(t) profile",
+                                     title = "default",
                                      subtitle = "default",
                                      max_vars = 7,
                                      colors = NULL){
@@ -242,6 +300,8 @@ plot_shap_global_profile <- function(x,
     colnames(df) <- c("shap_val", "variable_val", "color_variable_val")
 
     label <- attr(x, "label")
+    if (!is.null(subtitle) && subtitle == "default")
+        title <- "Aggregated SurvSHAP(t) profile"
     if (!is.null(subtitle) && subtitle == "default") {
         subtitle <- paste0(
             "created for the ", label, " model ",
@@ -265,9 +325,9 @@ plot_shap_global_profile <- function(x,
     if (!is.factor(df$color_variable_val)) {
         p + scale_color_gradient2(
             name = paste(color_variable, "value"),
-            low = "#9fe5bd",
-            mid = "#46bac2",
-            high = "#371ea3",
+            low = colors[1],
+            mid = colors[2],
+            high = colors[3],
             midpoint = median(df$color_variable_val))
     } else {
         p + scale_color_manual(name = paste(color_variable, "value"),
@@ -279,7 +339,6 @@ preprocess_values_to_common_scale <- function(data) {
     # Scale numerical columns to range [0, 1]
     num_cols <- sapply(data, is.numeric)
     data[num_cols] <- lapply(data[num_cols], function(x) (x - min(x)) / (max(x) - min(x)))
-
     # Map categorical columns to integers with even differences
     cat_cols <- sapply(data, function(x) !is.numeric(x) & is.factor(x))
     data[cat_cols] <- lapply(data[cat_cols], function(x) {

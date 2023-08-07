@@ -23,21 +23,18 @@
 #' library(survex)
 #'
 #' cph <- coxph(Surv(time, status) ~ ., data = veteran, model = TRUE, x = TRUE, y = TRUE)
-#' rsf_src <- randomForestSRC::rfsrc(Surv(time, status) ~ ., data = veteran)
-#'
 #' cph_exp <- explain(cph)
-#' rsf_src_exp <- explain(rsf_src)
 #'
 #' cph_model_profile_2d <- model_profile_2d(cph_exp,
 #'                                         variables = list(c("age", "celltype")))
 #' head(cph_model_profile_2d$result)
 #' plot(cph_model_profile_2d)
 #'
-#' rsf_model_profile_2d <- model_profile_2d(rsf_src_exp,
+#' cph_model_profile_2d_ale <- model_profile_2d(cph_exp,
 #'                                         variables = list(c("age", "karno")),
 #'                                         type = "accumulated")
-#' head(rsf_model_profile_2d$result)
-#' plot(rsf_model_profile_2d)
+#' head(cph_model_profile_2d_ale$result)
+#' plot(cph_model_profile_2d_ale)
 #' }
 #'
 #' @rdname model_profile_2d.surv_explainer
@@ -159,8 +156,8 @@ surv_pdp_2d <- function(x,
             "_v2name_" = var2,
             "_v1type_" = ifelse(var1 %in% categorical_variables, "categorical", "numerical"),
             "_v2type_" = ifelse(var2 %in% categorical_variables, "categorical", "numerical"),
-            "_v1value_" = rep(expanded_data[,var1], each=length(times)),
-            "_v2value_" = rep(expanded_data[,var2], each=length(times)),
+            "_v1value_" = as.character(rep(expanded_data[,var1], each=length(times))),
+            "_v2value_" = as.character(rep(expanded_data[,var2], each=length(times))),
             "_times_" = rep(times, nrow(expanded_data)),
             "_yhat_" = c(t(predictions)),
             "_label_" = label,

@@ -19,14 +19,14 @@ test_that("model_profile_2d with type = 'partial' works", {
                                  categorical_variables = 1,
                                  grid_points = 2,
                                  N = 2)
-    plot(mp_cph_pdp)
+    plot(mp_cph_pdp, times=cph_exp$times[1])
 
     mp_rsf_pdp <-  model_profile_2d(rsf_exp,
                                     variables = list(c("karno", "age")),
                                     grid_points = 6,
                                     output_type = "survival",
                                     N = 25)
-    plot(mp_cph_pdp, mp_rsf_pdp, variables = list(c("karno", "age")))
+    plot(mp_cph_pdp, mp_rsf_pdp, variables = list(c("karno", "age")), times=cph_exp$times[1])
 
     expect_output(print(mp_cph_pdp))
     expect_s3_class(mp_cph_pdp, "model_profile_2d_survival")
@@ -35,6 +35,7 @@ test_that("model_profile_2d with type = 'partial' works", {
     expect_true(all(unique(c(mp_cph_pdp$result$`_v1name_`, mp_cph_pdp$result$`_v2name_`))
                     %in% colnames(cph_exp$data)))
 
+    expect_warning(plot(mp_cph_pdp))
     expect_error(model_profile_2d(rsf_exp))
     expect_error(model_profile_2d(rsf_exp, type = "conditional",
                                   variables = list(c("karno", "age"))))
@@ -67,8 +68,7 @@ test_that("model_profile_2d with type = 'accumulated' works", {
     expect_error(model_profile_2d(rsf_exp,
                                   type = "accumulated",
                                   variables = list(c("karno", "celltype"))))
-                                  
-    plot(mp_rsf_ale)
+
     plot(mp_rsf_ale, times=rsf_exp$times[1])
 
     expect_output(print(mp_rsf_ale))
