@@ -35,7 +35,7 @@ Suggests:
     generics,
     glmnet,
     ingredients,
-    knitr (>= 4.2),
+    knitr (>= 1.42),
     mboost,
     parsnip,
     progressr,
