@@ -31,7 +31,6 @@ reference:
 - subtitle: Model Profile
 - contents:
   - plot.model_profile_survival
-  - plot2.model_profile_survival
   - plot.model_profile_2d_survival
 - subtitle: Model SurvSHAP(t)
 - contents: plot.aggregated_surv_shap
