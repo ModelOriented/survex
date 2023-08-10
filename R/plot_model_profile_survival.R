@@ -4,15 +4,19 @@
 #' using the `model_profile()` function.
 #'
 #' @param x an object of class `model_profile_survival` to be plotted
-#' @param ... additional objects of class `model_profile_survival` to be plotted together
-#' @param variables character, names of the variables to be plotted
-#' @param variable_type character, either `"numerical"`, `"categorical"` or `NULL` (default), select only one type of variable for plotting, or leave `NULL` for all
-#' @param facet_ncol number of columns for arranging subplots
-#' @param numerical_plot_type character, either `"lines"`, or `"contours"` selects the type of numerical variable plots
-#' @param title character, title of the plot
-#' @param subtitle character, subtitle of the plot, `'default'` automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels
-#' @param colors character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")
-#' @param rug character, one of `"all"`, `"events"`, `"censors"`, `"none"` or `NULL`. Which times to mark on the x axis in `geom_rug()`.
+#' @param ... additional objects of class `model_profile_survival` to be plotted together. Only available for `geom = "time"`
+#' @param geom character, either "time" or "variable". Selects the type of plot to be prepared. If `"time"` then the x-axis represents survival times, and variable is denoted by colors, if `"variable"` then the x-axis represents the variable values, and mean predictions at selected timepoints.
+#' @param variables character, names of the variables to be plotted. When `geom = "variable"` it needs to be a name of a single variable, when `geom = "time"` it can be a vector of variable names. If `NULL` (default) then all variables are plotted.
+#' @param variable_type character, either `"numerical"`, `"categorical"` or `NULL` (default), select only one type of variable for plotting, or leave `NULL` for all. Only used when `geom = "time"`
+#' @param facet_ncol number of columns for arranging subplots. Only used when `geom = "time"`
+#' @param numerical_plot_type character, either `"lines"`, or `"contours"` selects the type of numerical variable plots. Only used when `geom = "time"`
+#' @param marginalize_over_time logical, if `TRUE` then the profile is calculated for all times and then averaged over time, if `FALSE` (default) then the profile is calculated for each time separately. Only used when `geom = "variable"`
+#' @param plot_type character, one of `"pdp"`, `"ice"`, `"pdp+ice"`, or `NULL` (default). If `NULL` then the type of plot is chosen automatically based on the number of variables to be plotted. Only used when `geom = "variable"`
+#' @param times numeric vector, times for which the profile should be plotted, the times must be present in the "times" field of the explainer. If `NULL` (default) then the median time from the explainer object is used. Only used when `geom = "variable"` and `marginalize_over_time = FALSE
+#' @param title character, title of the plot 
+#' @param subtitle character, subtitle of the plot, `"default"` automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels 
+#' @param colors character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue"). 
+#' @param rug character, one of `"all"`, `"events"`, `"censors"`, `"none"` or `NULL`. Which times to mark on the x axis in `geom_rug()`. Only used when `geom = "time"`.
 #' @param rug_colors character vector containing two colors (containing either hex codes "#FF69B4", or names "blue"). The first color (red by default) will be used to mark event times, whereas the second (grey by default) will be used to mark censor times.
 #'
 #' @return A collection of `ggplot` objects arranged with the `patchwork` package.
@@ -32,21 +36,58 @@
 #' plot(m_prof, numerical_plot_type = "contours")
 #'
 #' plot(m_prof, variables = c("trt", "age"), facet_ncol = 1)
+#' 
+#' plot(m_prof, geom = "variable", variables = "karno", plot_type = "pdp+ice")
+#' 
+#' plot(m_prof, geom = "variable", times = c(1, 2.72), variables = "karno", plot_type = "pdp+ice")
+#' 
+#' plot(m_prof, geom = "variable", times = c(1, 2.72), variables = "trt", plot_type = "pdp+ice")
 #' }
 #'
 #' @export
 plot.model_profile_survival <- function(x,
                                         ...,
+                                        geom = "time",
                                         variables = NULL,
                                         variable_type = NULL,
                                         facet_ncol = NULL,
                                         numerical_plot_type = "lines",
+                                        times = NULL,
+                                        marginalize_over_time = FALSE,
+                                        plot_type = NULL,
                                         title = "default",
                                         subtitle = "default",
                                         colors = NULL,
                                         rug = "all",
                                         rug_colors = c("#dd0000", "#222222")) {
+
+    if (!geom %in% c("time", "variable")) {
+        stop("`geom` must be one of 'time' or 'survival'.")
+    }
+
+    if (geom == "variable") {
+
+        pl <- plot2(
+            x = x,
+            variable = variables,
+            times = times,
+            marginalize_over_time = marginalize_over_time,
+            plot_type = plot_type,
+            ... = ...,
+            title = title,
+            subtitle = subtitle,
+            colors = colors
+        )
+        return(pl)
+    }
+
+    lapply(list(x, ...), function(x) {
+        if (!inherits(x, "model_profile_survival")) {
+            stop("All ... must be objects of class `model_profile_survival`.")
+        }
+    })
     explanations_list <- c(list(x), list(...))
+    
     num_models <- length(explanations_list)
     if (title == "default") {
         if (x$type == "partial") {
@@ -97,55 +138,17 @@ plot.model_profile_survival <- function(x,
     return(return_plot)
 }
 
-#' @rdname plot2.model_profile_survival
-#' @export
-plot2 <- function(x, ...) UseMethod("plot2")
 
-#' Plot Model Profile for Survival Models (without continuous time aspect)
-#'
-#' This function plots objects of class `"model_profile_survival"` created
-#' using the `model_profile()` function.
-#'
-#' @param x an object of class `model_profile_survival` to be plotted
-#' @param variable character, name of a single variable to be plotted
-#' @param times numeric vector, times for which the profile should be plotted, the times must be present in the 'times' field of the explainer. If `NULL` (default) then the median time from the explainer object is used.
-#' @param marginalize_over_time logical, if `TRUE` then the profile is calculated for all times and then averaged over time, if `FALSE` (default) then the profile is calculated for each time separately
-#' @param plot_type character, one of `"pdp"`, `"ice"`, `"pdp+ice"`, or `"ale"` selects the type of plot to be drawn
-#' @param ... other parameters. Currently ignored.
-#' @param title character, title of the plot. `'default'` automatically generates either "Partial dependence survival profiles" or "Accumulated local effects survival profiles" depending on the explanation type.
-#' @param subtitle character, subtitle of the plot, `'default'` automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels
-#' @param colors character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")
-#'
-#' @return A `ggplot` object.
-#'
-#' @rdname plot2.model_profile_survival
-#' @examples
-#' \donttest{
-#' library(survival)
-#' library(survex)
-#'
-#' model <- randomForestSRC::rfsrc(Surv(time, status) ~ ., data = veteran)
-#' exp <- explain(model)
-#'
-#' m_prof <- model_profile(exp, categorical_variables = "trt")
-#'
-#' plot2(m_prof, variable = "karno", plot_type = "pdp+ice")
-#'
-#' plot2(m_prof, times = c(1, 2.72), variable = "karno", plot_type = "pdp+ice")
-#'
-#' plot2(m_prof, times = c(1, 2.72), variable = "celltype", plot_type = "pdp+ice")
-#' }
-#'
-#' @export
-plot2.model_profile_survival <- function(x,
-                                         variable,
-                                         times = NULL,
-                                         marginalize_over_time = FALSE,
-                                         plot_type = NULL,
-                                         ...,
-                                         title = "default",
-                                         subtitle = "default",
-                                         colors = NULL) {
+#' @keywords internal
+plot2 <- function(x,
+                  variable,
+                  times = NULL,
+                  marginalize_over_time = FALSE,
+                  plot_type = NULL,
+                  ...,
+                  title = "default",
+                  subtitle = "default",
+                  colors = NULL) {
     if (is.null(plot_type)) {
         if (x$type == "accumulated") {
             plot_type <- "ale"
@@ -161,11 +164,11 @@ plot2.model_profile_survival <- function(x,
     }
 
     if (is.null(variable) || !is.character(variable)) {
-        stop("A variable must be specified by name")
+        stop("The variable must be specified by name")
     }
 
     if (length(variable) > 1) {
-        stop("Only one variable can be specified")
+        stop("Only one variable can be specified for `geom`='variable'")
     }
 
     if (!variable %in% x$result$`_vname_`) {

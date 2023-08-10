@@ -57,30 +57,30 @@ The `plot()` function can also be used to plot the explanations for a subset of 
 plot(pdp, variables = c("karno"), numerical_plot_type = "contours")
 ```
 
-The plots above make use of the time dependent output of survival models, by placing the time dimension on the x-axis. However, for people familiar with Partial Dependence explanations in classification and regression, it might be more intuitive to place the variable values on the x-axis. For this reason, we provide the `plot2()` function, which can display the explanations without the aspect of time. 
+The plots above make use of the time dependent output of survival models, by placing the time dimension on the x-axis. However, for people familiar with Partial Dependence explanations in classification and regression, it might be more intuitive to place the variable values on the x-axis. For this reason, we provide the `geom = "variable"` argument, which can display the explanations without the aspect of time. 
 
 To use this function a specific time of interest has to be chosen. This time needs to be one of the values in the `times` field of the explainer. If the automatically generated times do not contain the time of interest, one needs to manually specify the `times` argument when creating the explainer.
 
 The example below shows the PD explanations for the `karno` variable at time 80. The y-axis represents the mean prediction (survival function), x-axis represents the values of the studied variable. Thin background lines are individual ceteris paribus profiles (otherwise known as ICE profiles).
 
 ```{r}
-plot2(pdp, variable = "karno", times = 80)
+plot(pdp, geom = "variable", variables = "karno", times = 80)
 ```
 
 The same plot can be generated for the categorical `celltype` variable. In this case the x-axis represents the different values of the studied variable, boxplots present the distribution of individual ceteris paribus profiles, and the line represents the mean prediction (survival function), which is the PD explanation.
 
 ```{r}
-plot2(pdp, variable = "celltype", times = 80)
+plot(pdp, geom = "variable", variables = "celltype", times = 80)
 ```
 
 Of course, the plots can be prepared for multiple timepoints, at the same time and presented on one plot.
 
 ```{r}
-plot2(pdp, variable = "karno", times = c(1, 80, 151.72))
+plot(pdp, geom = "variable", variables = "karno", times = c(1, 80, 151.72))
 ```
 
 ```{r}
-plot2(pdp, variable = "celltype", times = c(1, 80, 151.72))
+plot(pdp, geom = "variable", variables = "celltype", times = c(1, 80, 151.72))
 ```
 
 
