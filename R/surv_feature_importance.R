@@ -121,7 +121,11 @@ surv_feature_importance.default <- function(x,
 
     # start: actual calculations
     # one permutation round: subsample data, permute variables and compute losses
-    if (requireNamespace("progressr", quietly = TRUE)) prog <- progressr::progressor(along = 1:((length(variables) + 2) * B))
+    if (requireNamespace("progressr", quietly = TRUE)) {
+        prog <- progressr::progressor(along = 1:((length(variables) + 2) * B))
+    } else {
+        prog <- function() NULL
+    }
     sampled_rows <- 1:nrow(data)
     loss_after_permutation <- function() {
         if (!is.null(N)) {
@@ -138,17 +142,17 @@ surv_feature_importance.default <- function(x,
         risk_true <- predict_function(x, sampled_data)
         # loss on the full model or when outcomes are permuted
         loss_full <- loss_function(observed, risk_true, surv_true, times)
-        if (requireNamespace("progressr", quietly = TRUE)) prog()
+        prog()
         chosen <- sample(1:nrow(observed))
         loss_baseline <- loss_function(observed[chosen, ],  risk_true, surv_true, times)
-        if (requireNamespace("progressr", quietly = TRUE)) prog()
+        prog()
         # loss upon dropping a single variable (or a single group)
         loss_variables <- sapply(variables, function(variables_set) {
             ndf <- sampled_data
             ndf[, variables_set] <- ndf[sample(1:nrow(ndf)), variables_set]
             predicted <- predict_function(x, ndf)
             predicted_surv <- predict_survival_function(x, ndf, times)
-            if (requireNamespace("progressr", quietly = TRUE)) prog()
+            prog()
             loss_function(observed, predicted, predicted_surv, times)
         })
 
