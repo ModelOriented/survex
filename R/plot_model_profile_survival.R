@@ -13,9 +13,9 @@
 #' @param marginalize_over_time logical, if `TRUE` then the profile is calculated for all times and then averaged over time, if `FALSE` (default) then the profile is calculated for each time separately. Only used when `geom = "variable"`
 #' @param plot_type character, one of `"pdp"`, `"ice"`, `"pdp+ice"`, or `NULL` (default). If `NULL` then the type of plot is chosen automatically based on the number of variables to be plotted. Only used when `geom = "variable"`
 #' @param times numeric vector, times for which the profile should be plotted, the times must be present in the "times" field of the explainer. If `NULL` (default) then the median time from the explainer object is used. Only used when `geom = "variable"` and `marginalize_over_time = FALSE
-#' @param title character, title of the plot 
-#' @param subtitle character, subtitle of the plot, `"default"` automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels 
-#' @param colors character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue"). 
+#' @param title character, title of the plot
+#' @param subtitle character, subtitle of the plot, `"default"` automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels
+#' @param colors character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue").
 #' @param rug character, one of `"all"`, `"events"`, `"censors"`, `"none"` or `NULL`. Which times to mark on the x axis in `geom_rug()`. Only used when `geom = "time"`.
 #' @param rug_colors character vector containing two colors (containing either hex codes "#FF69B4", or names "blue"). The first color (red by default) will be used to mark event times, whereas the second (grey by default) will be used to mark censor times.
 #'
@@ -200,7 +200,7 @@ plot2 <- function(x,
     single_timepoint <- ((length(times) == 1) || marginalize_over_time)
     if (!is.null(subtitle) && subtitle == "default") {
         subtitle <- paste0("created for the ", unique(variable), " variable")
-        if (single_timepoint & !marginalize_over_time){
+        if (single_timepoint && !marginalize_over_time){
             subtitle <- paste0(subtitle, " and time=", times)
         }
     }
