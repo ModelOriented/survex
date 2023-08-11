@@ -34,7 +34,7 @@ exp <- explain(cph, data = vet[, -c(3,4)], y = Surv(vet$time, vet$status))
 We use the explainer and the `model_survshap()` function to calculate SurvSHAP(t) explanations. We can specify the observations for which we want to calculate the explanations. In this example we calculate the explanations for the first 20 observations in the veteran dataset. **Note:** The background for generating SHAP values is the `data` field of the explainer! If you want to calculate explanations with a background that is not the training data, you need to manually specify the `data` argument, when creating the explainer.  
 
 ```{r}
-shap <- model_survshap(exp, veteran[1:20, -c(3,4)])
+shap <- model_survshap(exp, veteran[c(1:4, 17:20, 110:113, 126:129), -c(3,4)])
 ```
 
 We plot these explanations using the `plot.aggregated_surv_shap()` function.  By default the plot features 2 panels, the one on the left depicts overall importance of variables. The panel on the right demonstates the time-dependent importance of each variable calculated as the mean absolute SHAP value at each time point across all observations.

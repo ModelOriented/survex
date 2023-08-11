@@ -60,9 +60,9 @@ rsf_ranger_exp <- explain(
 
 ranger_global_survshap <- model_survshap(
   explainer = rsf_ranger_exp,
-  new_observation = veteran[1:40, !colnames(veteran) \%in\% c("time", "status")],
-  y_true = survival::Surv(veteran$time[1:40], veteran$status[1:40]),
-  aggregation_method = "mean_absolute",
+  new_observation = veteran[c(1:4, 17:20, 110:113, 126:129), !colnames(veteran) \%in\% c("time", "status")],
+  y_true = survival::Surv(veteran$time[c(1:4, 17:20, 110:113, 126:129)], veteran$status[c(1:4, 17:20, 110:113, 126:129)]),
+  aggregation_method = "integral",
   calculation_method = "kernelshap",
 )
 plot(ranger_global_survshap)

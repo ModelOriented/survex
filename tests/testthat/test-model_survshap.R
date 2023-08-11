@@ -16,8 +16,8 @@ test_that("global survshap explanations with kernelshap work for ranger, using n
 
     ranger_global_survshap <- model_survshap(
         explainer = rsf_ranger_exp,
-        new_observation = veteran[c(1:3, 16:18, 111:113, 126:128), !colnames(veteran) %in% c("time", "status")],
-        y_true = Surv(veteran$time[c(1:3, 16:18, 111:113, 126:128)], veteran$status[c(1:3, 16:18, 111:113, 126:128)]),
+        new_observation = veteran[c(1:4, 17:20, 110:113, 126:129), !colnames(veteran) %in% c("time", "status")],
+        y_true = Surv(veteran$time[c(1:4, 17:20, 110:113, 126:129)], veteran$status[c(1:4, 17:20, 110:113, 126:129)]),
         aggregation_method = "mean_absolute",
         calculation_method = "kernelshap"
     )
