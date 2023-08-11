@@ -253,7 +253,7 @@ plot_shap_global_swarm <- function(x,
     with(df, {
     ggplot(data = df, aes(x = shap_value, y = variable, color = var_value)) +
         geom_vline(xintercept = 0, color = "#ceced9", linetype="solid") +
-        geom_jitter(width=0) +
+        geom_jitter(width=0, height=0.15) +
         scale_color_gradient2(
             name = "Variable value",
             low = colors[1],
