@@ -122,7 +122,7 @@ surv_feature_importance.default <- function(x,
     # start: actual calculations
     # one permutation round: subsample data, permute variables and compute losses
     if (requireNamespace("progressr", quietly = TRUE)) {
-        prog <- progressr::progressor(along = 1:((length(variables) + 2) * B))
+        prog <- progressr::progressor(steps = (length(variables) + 2) * B)
     } else {
         prog <- function() NULL
     }
