@@ -189,7 +189,6 @@ calculate_variable_survival_profile.default <- function(data, variable_splits, m
             `_ids_` = rep(ids, each = length(times) * length(split_points)),
             check.names = FALSE
         )
-        # print(table(ids))
         prog()
         new_data
     })
