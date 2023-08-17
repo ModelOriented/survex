@@ -13,7 +13,7 @@
 #' @param variable_splits_type character, decides how variable grids should be calculated. Use `"quantiles"` for percentiles or `"uniform"` (default) to get uniform grid of points.
 #' @param groups if `output_type == "risk"` a variable name that will be used for grouping. By default `NULL`, so no groups are calculated. If `output_type == "survival"` then ignored
 #' @param k passed to `DALEX::model_profile` if `output_type == "risk"`, otherwise ignored
-#' @param center logical, should profiles be centered before clustering
+#' @param center logical, should profiles be centered around the average prediction
 #' @param type the type of variable profile, `"partial"` for Partial Dependence, `"accumulated"` for Accumulated Local Effects, or `"conditional"` (available only for `output_type == "risk"`)
 #' @param output_type either `"survival"` or `"risk"` the type of survival model output that should be considered for explanations. If `"survival"` the explanations are based on the survival function. Otherwise the scalar risk predictions are used by the `DALEX::model_profile` function.
 #'
@@ -56,8 +56,8 @@ model_profile <- function(explainer,
                           ...,
                           groups = NULL,
                           k = NULL,
-                          center = FALSE,
                           type = "partial",
+                          center = FALSE,
                           output_type = "survival") UseMethod("model_profile", explainer)
 
 #' @rdname model_profile.surv_explainer
@@ -71,7 +71,7 @@ model_profile.surv_explainer <- function(explainer,
                                          variable_splits_type = "uniform",
                                          groups = NULL,
                                          k = NULL,
-                                         center = TRUE,
+                                         center = FALSE,
                                          type = "partial",
                                          output_type = "survival") {
 
@@ -101,10 +101,11 @@ model_profile.surv_explainer <- function(explainer,
                                                         categorical_variables = categorical_variables,
                                                         grid_points = grid_points,
                                                         variable_splits_type = variable_splits_type,
+                                                        center = center,
                                                         ...)
+
                     result <- surv_aggregate_profiles(cp_profiles, ...,
-                                                            variables = variables,
-                                                            center = center)
+                                                            variables = variables)
                 } else if (type == "accumulated"){
                     cp_profiles <- list(variable_values = data.frame(ndata))
                     result <- surv_ale(explainer,
@@ -112,6 +113,7 @@ model_profile.surv_explainer <- function(explainer,
                                        variables = variables,
                                        categorical_variables = categorical_variables,
                                        grid_points = grid_points,
+                                       center = center,
                                        ...)
                 } else {
                     stop("Currently only `partial` and `accumulated` types are implemented")
@@ -120,7 +122,8 @@ model_profile.surv_explainer <- function(explainer,
                 ret <- list(eval_times = unique(result$`_times_`),
                             cp_profiles = cp_profiles,
                             result = result,
-                            type = type)
+                            type = type,
+                            center = center)
                 class(ret) <- c("model_profile_survival", "list")
                 ret$event_times <- explainer$y[explainer$y[, 1] <= max(explainer$times), 1]
                 ret$event_statuses <- explainer$y[explainer$y[, 1] <= max(explainer$times), 2]
