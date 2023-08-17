@@ -707,7 +707,7 @@ explain.model_fit <-
         }
 
         if (is.null(predict_survival_function)) {
-            predict_survival_function <- function(model, newdata, times) { prediction <- predict(model, new_data = newdata, type = "survival", time = times )$.pred
+            predict_survival_function <- function(model, newdata, times) { prediction <- predict(model, new_data = newdata, type = "survival", eval_time = times )$.pred
                 return_matrix <- t(sapply(prediction, function(x) x$.pred_survival))
                 return_matrix[is.na(return_matrix)] <- 0
                 return_matrix
