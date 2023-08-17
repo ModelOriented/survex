@@ -54,12 +54,10 @@ plot.surv_ceteris_paribus <- function(x,
                                       rug_colors = c("#dd0000", "#222222")) {
     if (!is.null(variable_type))
         check_variable_type(variable_type)
-
     check_numerical_plot_type(numerical_plot_type)
 
     explanations_list <- c(list(x), list(...))
     num_models <- length(explanations_list)
-
 
     if (num_models == 1){
         result <- prepare_ceteris_paribus_plots(x,
@@ -112,10 +110,11 @@ prepare_ceteris_paribus_plots <- function(x,
                                           subtitle = "default",
                                           rug = "all",
                                           rug_colors = c("#dd0000", "#222222")){
-
     rug_df <- data.frame(times = x$event_times, statuses = as.character(x$event_statuses), label = unique(x$result$`_label_`))
-    obs <- x$variable_values
+    obs <- as.data.frame(x$variable_values)
+    center <- x$center
     x <- x$result
+
 
     all_profiles <- x
     class(all_profiles) <- "data.frame"
@@ -161,11 +160,9 @@ prepare_ceteris_paribus_plots <- function(x,
                    "_yhat_",
                    "_label_",
                    "_ids_")]
-
         key <- obs[, sv, drop = FALSE]
 
-        tmp$`_real_point_` <-
-            tmp[, sv] == key[as.character(tmp$`_ids_`), sv]
+        tmp$`_real_point_` <- tmp[, sv] == key[, sv]
 
         colnames(tmp)[1] <- "_x_"
         tmp$`_x_` <- as.character(tmp$`_x_`)
@@ -181,7 +178,8 @@ prepare_ceteris_paribus_plots <- function(x,
         numerical_plot_type = numerical_plot_type,
         rug_df = rug_df,
         rug = rug,
-        rug_colors = rug_colors)
+        rug_colors = rug_colors,
+        center = center)
 
     patchwork::wrap_plots(pl, ncol = facet_ncol) +
         patchwork::plot_annotation(title = title,
@@ -196,7 +194,9 @@ plot_individual_ceteris_paribus_survival <- function(all_profiles,
                                                      numerical_plot_type,
                                                      rug_df,
                                                      rug,
-                                                     rug_colors) {
+                                                     rug_colors,
+                                                     center) {
+
     pl <- lapply(variables, function(var) {
         df <- all_profiles[all_profiles$`_vname_` == var, ]
 
@@ -228,10 +228,11 @@ plot_individual_ceteris_paribus_survival <- function(all_profiles,
                     ) +
                     geom_line(data = df[df$`_real_point_`, ], color =
                                   "red", linewidth = 0.8) +
-                    xlab("") + ylab("survival function value") + ylim(c(0, 1)) + xlim(c(0,NA))+
+                    xlab("") + ylab("survival function value") + xlim(c(0,NA))+
                     theme_default_survex() +
                     facet_wrap(~`_vname_`)
                 })
+                if (!center) base_plot <- base_plot + ylim(c(0, 1))
             } else {
                 base_plot <- with(df, {
                         ggplot(
@@ -277,8 +278,9 @@ plot_individual_ceteris_paribus_survival <- function(all_profiles,
                 scale_color_manual(name = paste0(unique(df$`_vname_`), " value"),
                                    values = generate_discrete_color_scale(n_colors, colors)) +
                 theme_default_survex() +
-                xlab("") + ylab("survival function value") + ylim(c(0, 1)) + xlim(c(0,NA))+
+                xlab("") + ylab("survival function value") + xlim(c(0,NA))+
                 facet_wrap(~`_vname_`) })
+            if (!center) base_plot <- base_plot + ylim(c(0, 1))
         }
 
         return_plot <- add_rug_to_plot(base_plot, rug_df, rug, rug_colors)

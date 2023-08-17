@@ -15,6 +15,7 @@ surv_ceteris_paribus(x, ...)
   variable_splits = NULL,
   grid_points = 101,
   variable_splits_type = "uniform",
+  center = FALSE,
   ...
 )
 }

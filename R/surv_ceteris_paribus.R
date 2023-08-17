@@ -26,9 +26,9 @@ surv_ceteris_paribus.surv_explainer <- function(x,
                                                 variable_splits = NULL,
                                                 grid_points = 101,
                                                 variable_splits_type = "uniform",
+                                                center = FALSE,
                                                 ...) {
     test_explainer(x, has_data = TRUE, has_survival = TRUE, has_y = TRUE, function_name = "ceteris_paribus_survival")
-
     data <- x$data
     model <- x$model
     label <- x$label
@@ -46,6 +46,7 @@ surv_ceteris_paribus.surv_explainer <- function(x,
         grid_points = grid_points,
         variable_splits_type = variable_splits_type,
         variable_splits_with_obs = TRUE,
+        center = center,
         label = label,
         times = times,
         ...
@@ -62,6 +63,7 @@ surv_ceteris_paribus.default <- function(x,
                                          grid_points = 101,
                                          variable_splits_type = "uniform",
                                          variable_splits_with_obs = TRUE,
+                                         center = center,
                                          label = NULL,
                                          times = times,
                                          ...) {
@@ -97,8 +99,10 @@ surv_ceteris_paribus.default <- function(x,
         new_observation,
         variable_splits,
         x,
+        center,
         predict_survival_function,
-        times
+        times,
+        ...
     )
 
     profiles$`_vtype_` <- ifelse(profiles$`_vname_` %in% categorical_variables, "categorical", "numerical")
@@ -113,7 +117,8 @@ surv_ceteris_paribus.default <- function(x,
     ret <- list(
         eval_times = times,
         variable_values = new_observation,
-        result = cbind(profiles, `_label_` = label)
+        result = cbind(profiles, `_label_` = label),
+        center = center
     )
 
     class(ret) <- c("surv_ceteris_paribus", "list")
@@ -160,11 +165,11 @@ calculate_variable_split.default <- function(data, variables = colnames(data), c
 
 
 
-calculate_variable_survival_profile <- function(data, variable_splits, model, predict_survival_function = NULL, times = NULL, ...) {
+calculate_variable_survival_profile <- function(data, variable_splits, model, center, predict_survival_function = NULL, times = NULL, ...) {
     UseMethod("calculate_variable_survival_profile")
 }
 
-calculate_variable_survival_profile.default <- function(data, variable_splits, model, predict_survival_function = NULL, times = NULL, ...) {
+calculate_variable_survival_profile.default <- function(data, variable_splits, model, center, predict_survival_function = NULL, times = NULL, ...) {
     variables <- names(variable_splits)
     prog <- progressr::progressor(along = 1:(length(variables)))
 
@@ -174,6 +179,9 @@ calculate_variable_survival_profile.default <- function(data, variable_splits, m
         ids <- rownames(data)
     }
 
+    predictions_original <- predict_survival_function(model, data, times)
+    mean_pred <- colMeans(predictions_original)
+
     profiles <- lapply(variables, function(variable) {
         split_points <- variable_splits[[variable]]
 
@@ -181,6 +189,9 @@ calculate_variable_survival_profile.default <- function(data, variable_splits, m
         new_data[, variable] <- rep(split_points, nrow(data))
 
         yhat <- c(t(predict_survival_function(model, new_data, times)))
+        if (center){
+            yhat <- yhat - mean_pred
+        }
 
         new_data <- data.frame(new_data[rep(seq_len(nrow(new_data)), each = length(times)), ],
             `_times_` = rep(times, times = nrow(new_data)),

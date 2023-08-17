@@ -10,6 +10,7 @@
 #' @param type character, only `"ceteris_paribus"` is implemented
 #' @param output_type either `"survival"` or `"risk"` the type of survival model output that should be considered for explanations. If `"survival"` the explanations are based on the survival function. Otherwise the scalar risk predictions are used by the `DALEX::predict_profile` function.
 #' @param variable_splits_type character, decides how variable grids should be calculated. Use `"quantiles"` for percentiles or `"uniform"` (default) to get uniform grid of points.
+#' @param center logical, should profiles be centered around the average prediction
 #'
 #' @return An object of class `c("predict_profile_survival", "surv_ceteris_paribus")`. It is a list with the final result in the `result` element.
 #'
@@ -43,7 +44,8 @@ predict_profile <- function(explainer,
                             categorical_variables = NULL,
                             ...,
                             type = "ceteris_paribus",
-                            variable_splits_type = "uniform")
+                            variable_splits_type = "uniform",
+                            center = FALSE)
     UseMethod("predict_profile", explainer)
 
 #' @rdname predict_profile.surv_explainer
@@ -55,12 +57,15 @@ predict_profile.surv_explainer <- function(explainer,
                                            ...,
                                            type = "ceteris_paribus",
                                            output_type = "survival",
-                                           variable_splits_type = "uniform")
+                                           variable_splits_type = "uniform",
+                                           center = FALSE)
 {
 
     variables <- unique(variables, categorical_variables)
     if (!type %in% "ceteris_paribus") stop("Type not supported")
     if (!output_type %in% c("risk", "survival")) stop("output_type not supported")
+    if (length(dim(new_observation)) != 2 & nrow(new_observation) != 1)
+        stop("new_observation should be a single row data.frame")
 
     if (output_type == "risk") {
         return(DALEX::predict_profile(explainer = explainer,
@@ -78,6 +83,7 @@ predict_profile.surv_explainer <- function(explainer,
                                         variables = variables,
                                         categorical_variables = categorical_variables,
                                         variable_splits_type = variable_splits_type,
+                                        center = center,
                                         ...)
             class(res) <- c("predict_profile_survival", class(res))
             res$event_times <- explainer$y[explainer$y[, 1] <= max(explainer$times), 1]
