@@ -35,8 +35,8 @@ We use the explainer and the `model_profile()` function to calculate Partial Dep
 We can calculate Accumulated Local Effects in the same way, by setting the `type` argument to `"accumulated"`.
 
 ```{r}
-pdp <- model_profile(exp, variables = c("karno", "celltype"), n = 20)
-ale <- model_profile(exp, variables = c("karno", "celltype"), n = 20, type = "accumulated")
+pdp <- model_profile(exp, variables = c("karno", "celltype"), N = 20)
+ale <- model_profile(exp, variables = c("karno", "celltype"), N = 20, type = "accumulated")
 ```
 
 To plot these explanations you can use the plot function. By default the explanations for all calculated variables are plotted. This example demonstrates this for the `pdp` object which contains the explanations for 2 variables.
