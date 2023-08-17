@@ -111,8 +111,9 @@ surv_ale <- function(x,
         categorical_variables <- colnames(data)[categorical_variables]
     additional_categorical_variables <- categorical_variables
     factor_variables <- colnames(data)[sapply(data, is.factor)]
+    character_variables <- colnames(data)[sapply(data, is.character)]
     categorical_variables <-
-        unique(c(additional_categorical_variables, factor_variables))
+        unique(c(additional_categorical_variables, character_variables, factor_variables))
 
     model <- x$model
     label <- x$label
@@ -259,7 +260,6 @@ surv_ale <- function(x,
             # Quantile points vector
             quantile_vec <- c(min(variable_values), quantile_vals)
             quantile_vec <- unique(quantile_vec)
-
             quantile_df <-
                 data.frame(id = 1:length(quantile_vec),
                            value = quantile_vec)
@@ -279,6 +279,7 @@ surv_ale <- function(x,
                 predict_survival_function(model = model,
                                           newdata = X_lower,
                                           times = times)
+
             predictions_upper <-
                 predict_survival_function(model = model,
                                           newdata = X_upper,
