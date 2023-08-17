@@ -36,11 +36,11 @@
 #' plot(m_prof, numerical_plot_type = "contours")
 #'
 #' plot(m_prof, variables = c("trt", "age"), facet_ncol = 1)
-#' 
+#'
 #' plot(m_prof, geom = "variable", variables = "karno", plot_type = "pdp+ice")
-#' 
+#'
 #' plot(m_prof, geom = "variable", times = c(1, 2.72), variables = "karno", plot_type = "pdp+ice")
-#' 
+#'
 #' plot(m_prof, geom = "variable", times = c(1, 2.72), variables = "trt", plot_type = "pdp+ice")
 #' }
 #'
@@ -65,6 +65,18 @@ plot.model_profile_survival <- function(x,
         stop("`geom` must be one of 'time' or 'survival'.")
     }
 
+    if (title == "default") {
+        if (x$type == "partial") {
+            title <- "Partial dependence survival profiles"
+            if (geom == "variable") {
+              title <- "default"
+            }
+        }
+        if (x$type == "accumulated") {
+            title <- "Accumulated local effects survival profiles"
+        }
+    }
+
     if (geom == "variable") {
 
         pl <- plot2(
@@ -87,16 +99,8 @@ plot.model_profile_survival <- function(x,
         }
     })
     explanations_list <- c(list(x), list(...))
-    
+
     num_models <- length(explanations_list)
-    if (title == "default") {
-        if (x$type == "partial") {
-            title <- "Partial dependence survival profiles"
-        }
-        if (x$type == "accumulated") {
-            title <- "Accumulated local effects survival profiles"
-        }
-    }
 
     if (num_models == 1) {
         result <- prepare_model_profile_plots(x,
@@ -155,6 +159,12 @@ plot2 <- function(x,
         } else if (x$type == "partial") plot_type <- "pdp+ice"
     }
 
+    if (plot_type == "ice") {
+        title <- "Individual conditional expectation survival profiles"
+    } else if (plot_type == "pdp+ice") {
+        title <- "Partial dependence with individual conditional expectation survival profiles"
+    }
+
     if (x$type == "accumulated" && plot_type != "ale") {
         stop("For accumulated local effects explanations only plot_type = 'ale' is available")
     }
@@ -186,15 +196,6 @@ plot2 <- function(x,
          Please modify the times argument in your explainer or use only values from the following:  ",
             paste(x$eval_times, collapse = ", ")
         ))
-    }
-
-    if (title == "default") {
-        if (x$type == "partial") {
-            title <- "Partial dependence survival profiles"
-        }
-        if (x$type == "accumulated") {
-            title <- "Accumulated local effects survival profiles"
-        }
     }
 
     single_timepoint <- ((length(times) == 1) || marginalize_over_time)
