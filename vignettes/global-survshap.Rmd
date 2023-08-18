@@ -43,14 +43,14 @@ We plot these explanations using the `plot.aggregated_surv_shap()` function.  By
 plot(shap)
 ```
 
-The `plot.aggregated_surv_shap()` function can also be used to plot the explanations for a single variable. The `variable` argument specifies the variable for which the explanations are plotted. The `kind` argument specifies the type of plot. For `kind = "profile"` a plot is generated that shows the mean SHAP value (averaged across the time domain) depending on the value of the variable.
+The `plot.aggregated_surv_shap()` function can also be used to plot the explanations for a single variable. The `variable` argument specifies the variable for which the explanations are plotted. The `geom` argument specifies the type of plot. For `geom = "profile"` a plot is generated that shows the mean SHAP value (averaged across the time domain) depending on the value of the variable.
 
 ```{r}
-plot(shap, variable = "karno", kind = "profile")
+plot(shap, variable = "karno", geom = "profile")
 ```
 
-For `kind = "beeswarm"` a bee swarm plot is generated that shows the SHAP values for each observation. The swarm plot is a good way to assess the distribution of SHAP values for each variable.
+For `geom = "beeswarm"` a bee swarm plot is generated that shows the SHAP values for each observation. The swarm plot is a good way to assess the distribution of SHAP values for each variable.
 
 ```{r}
-plot(shap, kind = "beeswarm")
+plot(shap, geom = "beeswarm")
 ```
