@@ -45,6 +45,7 @@ reference:
   - plot.surv_ceteris_paribus
 - title: Utility functions
 - contents:
+  - extract_predict_survshap
   - transform_to_stepfunction
   - risk_from_chf
   - cumulative_hazard_to_survival
