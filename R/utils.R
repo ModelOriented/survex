@@ -205,7 +205,7 @@ risk_from_chf <- function(predict_cumulative_hazard_function, times) {
 #'
 #' @export
 extract_predict_survshap <- function(aggregated_survshap, index){
-    if (inherits(aggregated_survshap, "aggregated_surv_shap"))
+    if (!inherits(aggregated_survshap, "aggregated_surv_shap"))
         stop("`aggregated_survshap` object must be of class 'aggregated_surv_shap'")
 
     if (index > aggregated_survshap$n_observations)
