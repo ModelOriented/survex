@@ -202,11 +202,10 @@ risk_from_chf <- function(predict_cumulative_hazard_function, times) {
 #'
 #' local_survshap_1 <- extract_predict_survshap(ranger_global_survshap, index = 1)
 #' plot(local_survshap_1)
-#' )
 #'
 #' @export
 extract_predict_survshap <- function(aggregated_survshap, index){
-    if (class(aggregated_survshap) != "aggregated_surv_shap")
+    if (inherits(aggregated_survshap, "aggregated_surv_shap"))
         stop("`aggregated_survshap` object must be of class 'aggregated_surv_shap'")
 
     if (index > aggregated_survshap$n_observations)

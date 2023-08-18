@@ -42,6 +42,5 @@ ranger_global_survshap <- model_survshap(
 
 local_survshap_1 <- extract_predict_survshap(ranger_global_survshap, index = 1)
 plot(local_survshap_1)
-)
 
 }
