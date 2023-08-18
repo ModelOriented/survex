@@ -9,7 +9,7 @@
 #' @param N number of observations used for the calculation of aggregated profiles. By default `100`. If `NULL` all observations are used.
 #' @param categorical_variables character, a vector of names of additional variables which should be treated as categorical (factors are automatically treated as categorical variables). If it contains variable names not present in the `variables` argument, they will be added at the end.
 #' @param grid_points maximum number of points for profile calculations. Note that the final number of points may be lower than grid_points. Will be passed to internal function. By default `25`.
-#' @param center logical, should profiles be centered at 0
+#' @param center logical, should profiles be centered around the average prediction
 #' @param variable_splits_type character, decides how variable grids should be calculated. Use `"quantiles"` for quantiles or `"uniform"` (default) to get uniform grid of points. Used only if `type = "partial"`.
 #' @param type the type of variable profile, `"partial"` for Partial Dependence or `"accumulated"` for Accumulated Local Effects
 #' @param output_type either `"survival"` or `"risk"` the type of survival model output that should be considered for explanations. Currently only `"survival"` is available.
@@ -44,7 +44,7 @@ model_profile_2d <- function(explainer,
                              N = 100,
                              categorical_variables = NULL,
                              grid_points = 25,
-                             center = TRUE,
+                             center = FALSE,
                              variable_splits_type = "uniform",
                              type = "partial",
                              output_type = "survival")
@@ -58,7 +58,7 @@ model_profile_2d.surv_explainer <- function(explainer,
                                          N = 100,
                                          categorical_variables = NULL,
                                          grid_points = 25,
-                                         center = TRUE,
+                                         center = FALSE,
                                          variable_splits_type = "uniform",
                                          type = "partial",
                                          output_type = "survival"
@@ -95,7 +95,8 @@ model_profile_2d.surv_explainer <- function(explainer,
             variables = variables,
             categorical_variables = categorical_variables,
             grid_points = grid_points,
-            variable_splits_type = variable_splits_type
+            variable_splits_type = variable_splits_type,
+            center = center
         )
     } else if (type == "accumulated") {
         result <- surv_ale_2d(
@@ -125,7 +126,8 @@ surv_pdp_2d <- function(x,
                         variables,
                         categorical_variables,
                         grid_points,
-                        variable_splits_type
+                        variable_splits_type,
+                        center
                         ) {
     model <- x$model
     label <- x$label
@@ -148,9 +150,21 @@ surv_pdp_2d <- function(x,
         names(expanded_data)[colnames(expanded_data) == "x"] <- var2
         expanded_data <- expanded_data[,colnames(data)]
 
+
+        predictions_original <- predict_survival_function(model = model,
+                                                          newdata = data,
+                                                          times = times)
+        mean_pred <- colMeans(predictions_original)
+
         predictions <- predict_survival_function(model = model,
                                        newdata = expanded_data,
                                        times = times)
+
+        preds <- c(t(predictions))
+        if (center) {
+            preds <- preds - mean_pred
+        }
+
         res <- data.frame(
             "_v1name_" = var1,
             "_v2name_" = var2,
@@ -159,7 +173,7 @@ surv_pdp_2d <- function(x,
             "_v1value_" = as.character(rep(expanded_data[,var1], each=length(times))),
             "_v2value_" = as.character(rep(expanded_data[,var2], each=length(times))),
             "_times_" = rep(times, nrow(expanded_data)),
-            "_yhat_" = c(t(predictions)),
+            "_yhat_" = preds,
             "_label_" = label,
             check.names = FALSE
         )
@@ -363,7 +377,7 @@ surv_ale_2d_num_num <- function(model,
     ale <- merge(ale, ale1, by = c("time", "interval1"))
     ale <- merge(ale, ale2, by = c("time", "interval2"))
     ale$ale <- ale$yhat_cumsum - ale$ale1 - ale$ale2 - ale$fJ0
-    ale <- ale[order(ale$time, ale$interval1, ale$interval2),]
+    ale <- ale[order(ale$interval1, ale$interval2, ale$time),]
 
     if (!center){
         ale$ale <- ale$ale + mean_pred

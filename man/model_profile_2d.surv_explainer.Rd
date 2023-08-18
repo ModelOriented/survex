@@ -11,7 +11,7 @@ model_profile_2d(
   N = 100,
   categorical_variables = NULL,
   grid_points = 25,
-  center = TRUE,
+  center = FALSE,
   variable_splits_type = "uniform",
   type = "partial",
   output_type = "survival"
@@ -40,7 +40,7 @@ model_profile_2d(
 
 \item{grid_points}{maximum number of points for profile calculations. Note that the final number of points may be lower than grid_points. Will be passed to internal function. By default \code{25}.}
 
-\item{center}{logical, should profiles be centered at 0}
+\item{center}{logical, should profiles be centered around the average prediction}
 
 \item{variable_splits_type}{character, decides how variable grids should be calculated. Use \code{"quantiles"} for quantiles or \code{"uniform"} (default) to get uniform grid of points. Used only if \code{type = "partial"}.}
 
