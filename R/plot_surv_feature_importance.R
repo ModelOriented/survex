@@ -88,11 +88,9 @@ plot.surv_feature_importance <- function(x, ...,
     ggplot(data = plotting_df, aes(x = `_times_`, y = values, color = ind, label = ind)) +
         geom_line(linewidth = 0.8) +
         theme_default_survex() +
-        xlab("") +
-        ylab(y_lab) +
-        xlim(c(0,NA))+
+        labs(x = "time", y = y_lab, title = title, subtitle = subtitle) +
+        xlim(c(0,NA)) +
         scale_color_manual(name = "Variable", values = c("#000000", generate_discrete_color_scale(num_vars, colors))) +
-        labs(title = title, subtitle = subtitle) +
         facet_wrap(~label)
     })
 

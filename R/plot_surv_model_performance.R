@@ -73,10 +73,8 @@ plot_td_surv_model_performance <- function(x, ..., metrics = NULL, title = NULL,
     ggplot(data = df[df$ind %in% metrics, ], aes(x = times, y = values, group = label, color = label)) +
         geom_line(linewidth = 0.8) +
         theme_default_survex() +
-        xlab("") +
-        ylab("metric value") +
-        xlim(c(0,NA))+
-        labs(title = title, subtitle = subtitle) +
+        labs(x = "time", y = "metric value", title = title, subtitle = subtitle) +
+        xlim(c(0,NA)) +
         scale_color_manual("", values = generate_discrete_color_scale(num_colors, colors)) +
         facet_wrap(~ind, ncol = facet_ncol, scales = "free_y")
     })
@@ -102,9 +100,7 @@ plot_scalar_surv_model_performance <- function(x, ..., metrics = NULL, title = N
     ggplot(data = df, aes(x = label, y = values, fill = label)) +
         geom_col() +
         theme_default_survex() +
-        xlab("") +
-        ylab("metric value") +
-        labs(title = title, subtitle = subtitle) +
+        labs(x = "model", y = "metric value", title = title, subtitle = subtitle) +
         scale_fill_manual("", values = generate_discrete_color_scale(num_colors, colors)) +
         facet_wrap(~ind, ncol = facet_ncol, scales = "free_y")
     })

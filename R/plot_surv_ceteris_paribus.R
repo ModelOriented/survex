@@ -229,7 +229,8 @@ plot_individual_ceteris_paribus_survival <- function(all_profiles,
                     ) +
                     geom_line(data = df[df$`_real_point_`, ], color =
                                   "red", linewidth = 0.8) +
-                    xlab("") + ylab("centered profile value") + xlim(c(0,NA))+
+                    labs(x = "time", y = "centered profile value") +
+                    xlim(c(0,NA)) +
                     theme_default_survex() +
                     facet_wrap(~`_vname_`)
                 })
@@ -257,7 +258,8 @@ plot_individual_ceteris_paribus_survival <- function(all_profiles,
                                                        barheight =  0.02*unit(par("pin")[2], "in"),
                                                        reverse = TRUE,
                                                        show.limits = TRUE)) +
-                        xlab("") + ylab("variable value") + xlim(c(0,NA)) +
+                        labs(x = "time", y = "variable value") +
+                        xlim(c(0,NA)) +
                         theme_default_survex() +
                         facet_wrap(~`_vname_`)
                 } else {
@@ -272,7 +274,8 @@ plot_individual_ceteris_paribus_survival <- function(all_profiles,
                                                        reverse = TRUE,
                                                        show.limits = TRUE,
                                                        label.theme = element_text(size=7))) +
-                        xlab("") + ylab("variable value") + xlim(c(0,NA)) +
+                        labs(x = "time", y = "variable value") +
+                        xlim(c(0,NA)) +
                         theme_default_survex() +
                         facet_wrap(~`_vname_`)
                 }
@@ -302,7 +305,8 @@ plot_individual_ceteris_paribus_survival <- function(all_profiles,
                 scale_color_manual(name = paste0(unique(df$`_vname_`), " value"),
                                    values = generate_discrete_color_scale(n_colors, colors)) +
                 theme_default_survex() +
-                xlab("") + ylab("centered profle value") + xlim(c(0,NA))+
+                labs(x = "time", y = "centered profile value") +
+                xlim(c(0,NA))+
                 facet_wrap(~`_vname_`) })
             if (!center) {
                 base_plot <- base_plot + ylim(c(0, 1)) + ylab("survival function value")
