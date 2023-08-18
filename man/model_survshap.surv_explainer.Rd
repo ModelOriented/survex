@@ -68,6 +68,8 @@ ranger_global_survshap <- model_survshap(
   calculation_method = "kernelshap",
 )
 plot(ranger_global_survshap)
+plot(ranger_global_survshap, kind = "beeswarm")
+plot(ranger_global_survshap, kind = "profile", color_variable = "karno")
 }
 
 }

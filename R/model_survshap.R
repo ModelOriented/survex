@@ -40,6 +40,8 @@
 #'   calculation_method = "kernelshap",
 #' )
 #' plot(ranger_global_survshap)
+#' plot(ranger_global_survshap, kind = "beeswarm")
+#' plot(ranger_global_survshap, kind = "profile", color_variable = "karno")
 #' }
 #'
 #' @rdname model_survshap.surv_explainer

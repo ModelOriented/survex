@@ -49,8 +49,8 @@ The `plot.aggregated_surv_shap()` function can also be used to plot the explanat
 plot(shap, variable = "karno", kind = "profile")
 ```
 
-For `kind = "swarm"` a swarm plot is generated that shows the SHAP values for each observation. The swarm plot is a good way to assess the distribution of SHAP values for each variable.
+For `kind = "beeswarm"` a bee swarm plot is generated that shows the SHAP values for each observation. The swarm plot is a good way to assess the distribution of SHAP values for each variable.
 
 ```{r}
-plot(shap, kind = "swarm")
+plot(shap, kind = "beeswarm")
 ```

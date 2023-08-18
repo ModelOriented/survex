@@ -22,11 +22,11 @@ test_that("global survshap explanations with kernelshap work for ranger, using n
         calculation_method = "kernelshap"
     )
     plot(ranger_global_survshap)
-    plot(ranger_global_survshap, kind = "swarm")
-    plot(ranger_global_survshap, kind = "profile")
-    plot(ranger_global_survshap, kind = "profile", variable = "karno", color_variable = "celltype")
-    plot(ranger_global_survshap, kind = "profile", variable = "karno", color_variable = "age")
-    expect_error(plot(ranger_global_survshap, kind = "nonexistent"))
+    plot(ranger_global_survshap, geom = "beeswarm")
+    plot(ranger_global_survshap, geom = "profile")
+    plot(ranger_global_survshap, geom = "profile", variable = "karno", color_variable = "celltype")
+    plot(ranger_global_survshap, geom = "profile", variable = "karno", color_variable = "age")
+    expect_error(plot(ranger_global_survshap, geom = "nonexistent"))
 
     expect_s3_class(ranger_global_survshap, c("aggregated_surv_shap", "surv_shap"))
     expect_equal(length(ranger_global_survshap$eval_times), length(rsf_ranger_exp$times))
@@ -41,10 +41,10 @@ test_that("global survshap explanations with kernelshap work for coxph, using ex
         calculation_method = "kernelshap"
     )
     plot(cph_global_survshap)
-    plot(cph_global_survshap, kind = "swarm")
-    plot(cph_global_survshap, kind = "profile")
-    plot(cph_global_survshap, kind = "profile", variable = "karno", color_variable = "celltype")
-    plot(cph_global_survshap, kind = "profile", variable = "karno", color_variable = "age")
+    plot(cph_global_survshap, geom = "beeswarm")
+    plot(cph_global_survshap, geom = "profile")
+    plot(cph_global_survshap, geom = "profile", variable = "karno", color_variable = "celltype")
+    plot(cph_global_survshap, geom = "profile", variable = "karno", color_variable = "age")
 
     expect_s3_class(cph_global_survshap, c("aggregated_surv_shap", "surv_shap"))
     expect_equal(length(cph_global_survshap$eval_times), length(cph_exp$times))

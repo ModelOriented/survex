@@ -6,7 +6,7 @@
 \usage{
 \method{plot}{aggregated_surv_shap}(
   x,
-  kind = "importance",
+  geom = "importance",
   ...,
   title = "default",
   subtitle = "default",
@@ -17,7 +17,7 @@
 \arguments{
 \item{x}{an object of class \code{aggregated_surv_shap} to be plotted}
 
-\item{kind}{character, one of \code{"importance"}, \code{"swarm"}, or \code{"profile"}. Type of chart to be plotted; \code{"importance"} shows the importance of variables over time and aggregated, \code{"swarm"} shows the distribution of SurvSHAP(t) values for variables and observations, \code{"profile"} shows the dependence of SurvSHAP(t) values on variable values.}
+\item{geom}{character, one of \code{"importance"}, \code{"beeswarm"}, or \code{"profile"}. Type of chart to be plotted; \code{"importance"} shows the importance of variables over time and aggregated, \code{"beeswarm"} shows the distribution of SurvSHAP(t) values for variables and observations, \code{"profile"} shows the dependence of SurvSHAP(t) values on variable values.}
 
 \item{...}{additional parameters passed to internal functions}
 
@@ -38,7 +38,7 @@ explanations of survival models created using the \code{model_survshap()} functi
 }
 \section{Plot options}{
 
-\subsection{\code{plot.aggregated_surv_shap(type = "importance")}}{
+\subsection{\code{plot.aggregated_surv_shap(geom = "importance")}}{
 \itemize{
 \item \code{rug} - character, one of \code{"all"}, \code{"events"}, \code{"censors"}, \code{"none"} or \code{NULL}. Which times to mark on the x axis in \code{geom_rug()}.
 \item \code{rug_colors} - character vector containing two colors (containing either hex codes "#FF69B4", or names "blue"). The first color (red by default) will be used to mark event times, whereas the second (grey by default) will be used to mark censor times.
@@ -46,13 +46,13 @@ explanations of survival models created using the \code{model_survshap()} functi
 }
 }
 
-\subsection{\code{plot.aggregated_surv_shap(type = "swarm")}}{
+\subsection{\code{plot.aggregated_surv_shap(geom = "beeswarm")}}{
 \itemize{
 \item no additional parameters
 }
 }
 
-\subsection{\code{plot.aggregated_surv_shap(type = "swarm")}}{
+\subsection{\code{plot.aggregated_surv_shap(geom = "profile")}}{
 \itemize{
 \item \code{variable} - variable for which the profile is to be plotted, by default first from result data
 \item \code{color_variable} - variable used to denote the color, by default equal to \code{variable}
@@ -62,14 +62,34 @@ explanations of survival models created using the \code{model_survshap()} functi
 
 \examples{
 \donttest{
-library(survival)
-library(survex)
+veteran <- survival::veteran
+rsf_ranger <- ranger::ranger(
+  survival::Surv(time, status) ~ .,
+  data = veteran,
+  respect.unordered.factors = TRUE,
+  num.trees = 100,
+  mtry = 3,
+  max.depth = 5
+)
+rsf_ranger_exp <- explain(
+  rsf_ranger,
+  data = veteran[, -c(3, 4)],
+  y = survival::Surv(veteran$time, veteran$status),
+  verbose = FALSE
+)
 
-model <- randomForestSRC::rfsrc(Surv(time, status) ~ ., data = veteran)
-exp <- explain(model)
-
-p_parts_shap <- predict_parts(exp, veteran[1, -c(3, 4)], type = "survshap")
-plot(p_parts_shap)
+ranger_global_survshap <- model_survshap(
+  explainer = rsf_ranger_exp,
+  new_observation = veteran[c(1:4, 17:20, 110:113, 126:129),
+                            !colnames(veteran) \%in\% c("time", "status")],
+  y_true = survival::Surv(veteran$time[c(1:4, 17:20, 110:113, 126:129)],
+                          veteran$status[c(1:4, 17:20, 110:113, 126:129)]),
+  aggregation_method = "integral",
+  calculation_method = "kernelshap",
+)
+plot(ranger_global_survshap)
+plot(ranger_global_survshap, kind = "beeswarm")
+plot(ranger_global_survshap, kind = "profile", color_variable = "karno")
 }
 
 }

@@ -93,7 +93,7 @@ plot.surv_shap <- function(x,
 #' explanations of survival models created using the `model_survshap()` function.
 #'
 #' @param x an object of class `aggregated_surv_shap` to be plotted
-#' @param kind character, one of `"importance"`, `"swarm"`, or `"profile"`. Type of chart to be plotted; `"importance"` shows the importance of variables over time and aggregated, `"swarm"` shows the distribution of SurvSHAP(t) values for variables and observations, `"profile"` shows the dependence of SurvSHAP(t) values on variable values.
+#' @param geom character, one of `"importance"`, `"beeswarm"`, or `"profile"`. Type of chart to be plotted; `"importance"` shows the importance of variables over time and aggregated, `"beeswarm"` shows the distribution of SurvSHAP(t) values for variables and observations, `"profile"` shows the dependence of SurvSHAP(t) values on variable values.
 #' @param ... additional parameters passed to internal functions
 #' @param title character, title of the plot
 #' @param subtitle character, subtitle of the plot, `'default'` automatically generates "created for the XXX model (n = YYY)", where XXX is the explainer label and YYY is the number of observations used for calculations
@@ -104,19 +104,19 @@ plot.surv_shap <- function(x,
 #'
 #' @section Plot options:
 #'
-#' ## `plot.aggregated_surv_shap(type = "importance")`
+#' ## `plot.aggregated_surv_shap(geom = "importance")`
 #'
 #' * `rug` - character, one of `"all"`, `"events"`, `"censors"`, `"none"` or `NULL`. Which times to mark on the x axis in `geom_rug()`.
 #' * `rug_colors` - character vector containing two colors (containing either hex codes "#FF69B4", or names "blue"). The first color (red by default) will be used to mark event times, whereas the second (grey by default) will be used to mark censor times.
 #' * `xlab_left, ylab_right` - axis labels for left and right plots (due to different aggregation possibilities)
 #'
 #'
-#' ## `plot.aggregated_surv_shap(type = "swarm")`
+#' ## `plot.aggregated_surv_shap(geom = "beeswarm")`
 #'
 #' * no additional parameters
 #'
 #'
-#' ## `plot.aggregated_surv_shap(type = "swarm")`
+#' ## `plot.aggregated_surv_shap(geom = "profile")`
 #'
 #' * `variable` - variable for which the profile is to be plotted, by default first from result data
 #' * `color_variable` - variable used to denote the color, by default equal to `variable`
@@ -124,19 +124,39 @@ plot.surv_shap <- function(x,
 #'
 #' @examples
 #' \donttest{
-#' library(survival)
-#' library(survex)
+#' veteran <- survival::veteran
+#' rsf_ranger <- ranger::ranger(
+#'   survival::Surv(time, status) ~ .,
+#'   data = veteran,
+#'   respect.unordered.factors = TRUE,
+#'   num.trees = 100,
+#'   mtry = 3,
+#'   max.depth = 5
+#' )
+#' rsf_ranger_exp <- explain(
+#'   rsf_ranger,
+#'   data = veteran[, -c(3, 4)],
+#'   y = survival::Surv(veteran$time, veteran$status),
+#'   verbose = FALSE
+#' )
 #'
-#' model <- randomForestSRC::rfsrc(Surv(time, status) ~ ., data = veteran)
-#' exp <- explain(model)
-#'
-#' p_parts_shap <- predict_parts(exp, veteran[1, -c(3, 4)], type = "survshap")
-#' plot(p_parts_shap)
+#' ranger_global_survshap <- model_survshap(
+#'   explainer = rsf_ranger_exp,
+#'   new_observation = veteran[c(1:4, 17:20, 110:113, 126:129),
+#'                             !colnames(veteran) %in% c("time", "status")],
+#'   y_true = survival::Surv(veteran$time[c(1:4, 17:20, 110:113, 126:129)],
+#'                           veteran$status[c(1:4, 17:20, 110:113, 126:129)]),
+#'   aggregation_method = "integral",
+#'   calculation_method = "kernelshap",
+#' )
+#' plot(ranger_global_survshap)
+#' plot(ranger_global_survshap, kind = "beeswarm")
+#' plot(ranger_global_survshap, kind = "profile", color_variable = "karno")
 #' }
 #'
 #'@export
 plot.aggregated_surv_shap <- function(x,
-                                      kind = "importance",
+                                      geom = "importance",
                                       ...,
                                       title="default",
                                       subtitle="default",
@@ -148,18 +168,21 @@ plot.aggregated_surv_shap <- function(x,
                     high = "#371ea3")
     }
 
+    if (geom == "swarm")
+        geom <- "beeswarm"
+
     switch(
-        kind,
+        geom,
         "importance" = plot_shap_global_importance(x = x,
                                           ... = ...,
                                           colors = colors),
-        "swarm" = plot_shap_global_swarm(x = x,
+        "beeswarm" = plot_shap_global_beeswarm(x = x,
                                      ... = ...,
                                      colors = colors),
         "profile" = plot_shap_global_profile(x = x,
                                            ... = ...,
                                            colors = colors),
-        stop("`kind` must be one of 'importance', 'swarm' or 'profile'")
+        stop("`kind` must be one of 'importance', 'beeswarm' or 'profile'")
     )
 }
 
@@ -220,7 +243,7 @@ plot_shap_global_importance <- function(x,
     return(pl)
 }
 
-plot_shap_global_swarm <- function(x,
+plot_shap_global_beeswarm <- function(x,
                                    ...,
                                    title = "default",
                                    subtitle = "default",
