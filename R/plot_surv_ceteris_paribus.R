@@ -228,11 +228,13 @@ plot_individual_ceteris_paribus_survival <- function(all_profiles,
                     ) +
                     geom_line(data = df[df$`_real_point_`, ], color =
                                   "red", linewidth = 0.8) +
-                    xlab("") + ylab("survival function value") + xlim(c(0,NA))+
+                    xlab("") + ylab("centered profile value") + xlim(c(0,NA))+
                     theme_default_survex() +
                     facet_wrap(~`_vname_`)
                 })
-                if (!center) base_plot <- base_plot + ylim(c(0, 1))
+                if (!center) {
+                    base_plot <- base_plot + ylim(c(0, 1)) + ylab("survival function value")
+                }
             } else {
                 base_plot <- with(df, {
                         ggplot(
@@ -242,16 +244,37 @@ plot_individual_ceteris_paribus_survival <- function(all_profiles,
                         y = as.numeric(as.character(`_x_`)),
                         z = `_yhat_`
                     )
-                ) +
-                    geom_contour_filled(breaks = seq(1, 0, -0.1)) +
-                    scale_fill_manual(name = "SF value", values = grDevices::colorRampPalette(c("#c7f5bf", "#8bdcbe", "#46bac2", "#4378bf", "#371ea3"))(10),
-                                    labels = seq(1, 0, -0.1)) +
-                    guides(fill = guide_legend(nrow = 1, label.position = "top")) +
-                    xlab("") + ylab("variable value") + xlim(c(0,NA))+
-                    theme_default_survex() +
-                    theme(legend.spacing = grid::unit(0.1, 'line')) +
-                    facet_wrap(~`_vname_`)
-                })
+                ) })
+                if (!center){
+                    base_plot <- base_plot +
+                        geom_contour_filled(binwidth=0.1) +
+                        scale_fill_manual(name = "SF value",
+                                          values = grDevices::colorRampPalette(c("#c7f5bf", "#8bdcbe", "#46bac2", "#4378bf", "#371ea3"))(10),
+                                          drop = FALSE) +
+                        guides(fill = guide_colorsteps(direction = "horizontal",
+                                                       barwidth = 0.5*unit(par("pin")[1], "in"),
+                                                       barheight =  0.02*unit(par("pin")[2], "in"),
+                                                       reverse = TRUE,
+                                                       show.limits = TRUE)) +
+                        xlab("") + ylab("variable value") + xlim(c(0,NA)) +
+                        theme_default_survex() +
+                        facet_wrap(~`_vname_`)
+                } else {
+                    base_plot <- base_plot +
+                        geom_contour_filled(bins=10) +
+                        scale_fill_manual(name = "centered profile value",
+                                          values = grDevices::colorRampPalette(c("#c7f5bf", "#8bdcbe", "#46bac2", "#4378bf", "#371ea3"))(10),
+                                          drop = FALSE) +
+                        guides(fill = guide_colorsteps(direction = "horizontal",
+                                                       barwidth = 0.5*unit(par("pin")[1], "in"),
+                                                       barheight =  0.02*unit(par("pin")[2], "in"),
+                                                       reverse = TRUE,
+                                                       show.limits = TRUE,
+                                                       label.theme = element_text(size=7))) +
+                        xlab("") + ylab("variable value") + xlim(c(0,NA)) +
+                        theme_default_survex() +
+                        facet_wrap(~`_vname_`)
+                }
                 if (any(df$`_real_point_`)) {
                     range_time <- range(df["_times_"])
                     var_val <- as.numeric(unique(df[df$`_real_point_`, "_x_"]))
@@ -278,9 +301,11 @@ plot_individual_ceteris_paribus_survival <- function(all_profiles,
                 scale_color_manual(name = paste0(unique(df$`_vname_`), " value"),
                                    values = generate_discrete_color_scale(n_colors, colors)) +
                 theme_default_survex() +
-                xlab("") + ylab("survival function value") + xlim(c(0,NA))+
+                xlab("") + ylab("centered profle value") + xlim(c(0,NA))+
                 facet_wrap(~`_vname_`) })
-            if (!center) base_plot <- base_plot + ylim(c(0, 1))
+            if (!center) {
+                base_plot <- base_plot + ylim(c(0, 1)) + ylab("survival function value")
+            }
         }
 
         return_plot <- add_rug_to_plot(base_plot, rug_df, rug, rug_colors)
