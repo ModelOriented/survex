@@ -64,7 +64,7 @@ predict_profile.surv_explainer <- function(explainer,
     variables <- unique(variables, categorical_variables)
     if (!type %in% "ceteris_paribus") stop("Type not supported")
     if (!output_type %in% c("risk", "survival")) stop("output_type not supported")
-    if (length(dim(new_observation)) != 2 & nrow(new_observation) != 1)
+    if (length(dim(new_observation)) != 2 | nrow(new_observation) != 1)
         stop("new_observation should be a single row data.frame")
 
     if (output_type == "risk") {
