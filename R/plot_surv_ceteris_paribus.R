@@ -188,6 +188,7 @@ prepare_ceteris_paribus_plots <- function(x,
 }
 
 #' @import ggplot2
+#' @importFrom graphics par
 plot_individual_ceteris_paribus_survival <- function(all_profiles,
                                                      variables,
                                                      colors,
