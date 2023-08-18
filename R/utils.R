@@ -168,6 +168,65 @@ risk_from_chf <- function(predict_cumulative_hazard_function, times) {
     function(model, newdata) rowSums(predict_cumulative_hazard_function(model, newdata, times))
 }
 
+#' Extract Local SurvSHAP(t) from Global SurvSHAP(t)
+#'
+#' Helper function to extract local SurvSHAP(t) explanation from global one.
+#' Can be can be useful for creating SurvSHAP(t) plots for single observations.
+#'
+#' @param aggregated_survshap an object of class `aggregated_surv_shap` containing the computed global SHAP values
+#' @param index a numeric value, position of an observation to be extracted in the result of global explanation
+#'
+#' @return An object of classes `c("predict_parts_survival", "surv_shap")`. It is a list with the element `result` containing the results of the explanation.
+#'
+#' @examples
+#' veteran <- survival::veteran
+#' rsf_ranger <- ranger::ranger(
+#'   survival::Surv(time, status) ~ .,
+#'   data = veteran,
+#'   respect.unordered.factors = TRUE,
+#'   num.trees = 100,
+#'   mtry = 3,
+#'   max.depth = 5
+#' )
+#' rsf_ranger_exp <- explain(
+#'   rsf_ranger,
+#'   data = veteran[, -c(3, 4)],
+#'   y = survival::Surv(veteran$time, veteran$status),
+#'   verbose = FALSE
+#' )
+#'
+#' ranger_global_survshap <- model_survshap(
+#'   explainer = rsf_ranger_exp,
+#'   new_observation = veteran[c(1:4, 17:20, 110:113, 126:129),
+#'                             !colnames(veteran) %in% c("time", "status")])
+#'
+#' local_survshap_1 <- extract_predict_survshap(ranger_global_survshap, index = 1)
+#' plot(local_survshap_1)
+#' )
+#'
+#' @export
+extract_predict_survshap <- function(aggregated_survshap, index){
+    if (class(aggregated_survshap) != "aggregated_surv_shap")
+        stop("`aggregated_survshap` object must be of class 'aggregated_surv_shap'")
+
+    if (index > aggregated_survshap$n_observations)
+        stop(paste("Incorrect `index`, number of observations in `aggregated_survshap` is", aggregated_survshap$n_observations))
+
+
+    res <- list()
+    res$eval_times <- aggregated_survshap$eval_times
+    res$event_times <- aggregated_survshap$event_times
+    res$event_statuses <- aggregated_survshap$event_statuses
+    res$variable_values <- aggregated_survshap$variable_values[index,]
+    res$result <- aggregated_survshap$result[[index]]
+    res$aggregate <- aggregated_survshap$aggregate[[index]]
+    class(res) <- c("predict_parts_survival", "surv_shap")
+    attr(res, "label") <- attr(aggregated_survshap, "label")
+
+    res
+}
+
+
 #' @keywords internal
 add_rug_to_plot <- function(base_plot, rug_df, rug, rug_colors){
     if (rug == "all"){

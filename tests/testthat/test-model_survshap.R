@@ -28,6 +28,12 @@ test_that("global survshap explanations with kernelshap work for ranger, using n
     plot(ranger_global_survshap, geom = "profile", variable = "karno", color_variable = "age")
     expect_error(plot(ranger_global_survshap, geom = "nonexistent"))
 
+    single_survshap <- extract_predict_survshap(ranger_global_survshap, 5)
+    expect_s3_class(single_survshap, c("predict_parts_survival", "surv_shap"))
+    expect_error(extract_predict_survshap(ranger_global_survshap, 200))
+    expect_error(extract_predict_survshap(single_survshap, 5))
+
+
     expect_s3_class(ranger_global_survshap, c("aggregated_surv_shap", "surv_shap"))
     expect_equal(length(ranger_global_survshap$eval_times), length(rsf_ranger_exp$times))
     expect_true(all(names(ranger_global_survshap$variable_values) == colnames(rsf_ranger_exp$data)))
