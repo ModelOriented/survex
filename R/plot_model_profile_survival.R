@@ -90,6 +90,9 @@ plot.model_profile_survival <- function(x,
             subtitle = subtitle,
             colors = colors
         )
+        if (x$center) {
+            pl <- pl + labs(y = "centered profile value")
+        }
         return(pl)
     }
 
@@ -187,7 +190,7 @@ plot2 <- function(x,
 
     if (is.null(times)) {
         times <- quantile(x$eval_times, p = 0.5, type = 1)
-        warning("Plot will be prepared for the median time point from the `times` vector. For another time point, set the value of `times`.")
+        warning("Plot will be prepared for the median time point from the explainer's `times` vector. For another time point, set the value of `times`.")
     }
 
     if (!all(times %in% x$eval_times)) {

@@ -116,12 +116,12 @@ prepare_model_profile_2d_plots <- function(x,
 ){
     if (is.null(times)) {
         times <- quantile(x$eval_times, p = 0.5, type = 1)
-        warning("Plot will be prepared for the median time point from the `times` vector. For another time point, set the value of `times`.")
+        warning("Plot will be prepared for the median time point from the explainer's `times` vector. For another time point, set the value of `times`.")
     }
 
     if (!marginalize_over_time && length(times) > 1) {
         times <- times[1]
-        warning("Plot will be prepared for the first time point in the `times` vector. For aggregation over time, set the option `marginalize_over_time = TRUE`.")
+        warning("Plot will be prepared for the first time point in the provided `times` vector. For aggregation over time, set the option `marginalize_over_time = TRUE`.")
     }
 
     if (!all(times %in% x$eval_times)) {
