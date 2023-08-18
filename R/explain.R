@@ -728,7 +728,7 @@ explain.model_fit <-
         }
 
         if (is.null(predict_function)) {
-            if (model$spec$engine %in% c("mboost", "survival", "glmnet", "flexsurv")){
+            if (model$spec$engine %in% c("mboost", "survival", "glmnet", "flexsurv", "flexsurvspline")){
                 predict_function <- function(model, newdata, times) predict(model, new_data = newdata, type = "linear_pred")$.pred_linear_pred
                 attr(predict_function, "verbose_info") <- "predict.model_fit with type = 'linear_pred' will be used"
             } else {
