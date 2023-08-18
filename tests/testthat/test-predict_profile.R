@@ -22,11 +22,18 @@ test_that("ceteris_paribus works", {
 
     expect_error(plot(cph_pp, variable_type = "nonexistent"))
     expect_error(plot(cph_pp, numerical_plot_type = "nonexistent"))
+    expect_error(predict_profile(cph_exp, veteran[2, -c(3, 4)], output_type = "nonexistent"))
+    expect_error(predict_profile(cph_exp, veteran[2:3, -c(3, 4)]))
+    expect_error(predict_profile(cph_exp, veteran[2, -c(3, 4)], type = "nonexistent"))
+
+    cph_pp_centered <- predict_profile(cph_exp, veteran[2, -c(3, 4)], center = TRUE)
+    plot(cph_pp_centered)
+    plot(cph_pp_centered, numerical_plot_type = "contours")
 
     cph_pp_cat <- predict_profile(cph_exp, veteran[2, -c(3, 4)], variables = c("celltype"))
+    plot(predict_profile(cph_exp, veteran[2, -c(3, 4)], categorical_variables = 1))
     plot(cph_pp_cat, variable_type = "categorical", colors = c("#ff0000", "#00ff00", "#0000ff"))
     plot(cph_pp_cat, variable_type = "categorical")
-
 
     expect_s3_class(cph_pp, c("predict_profile_survival", "surv_ceteris_paribus"))
     expect_s3_class(cph_pp_cat, c("predict_profile_survival", "surv_ceteris_paribus"))
@@ -44,7 +51,6 @@ test_that("ceteris_paribus works", {
     expect_setequal(cph_pp_cat$eval_times, cph_exp$times)
 
     expect_output(print(cph_pp))
-
 })
 
 
