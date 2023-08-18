@@ -23,7 +23,7 @@ model_profile_2d(
   N = 100,
   categorical_variables = NULL,
   grid_points = 25,
-  center = TRUE,
+  center = FALSE,
   variable_splits_type = "uniform",
   type = "partial",
   output_type = "survival"
