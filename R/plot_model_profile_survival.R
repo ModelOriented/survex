@@ -166,6 +166,8 @@ plot2 <- function(x,
         title <- "Individual conditional expectation survival profiles"
     } else if (plot_type == "pdp+ice") {
         title <- "Partial dependence with individual conditional expectation survival profiles"
+    } else if (plot_type == "pdp"){
+        title <- "Partial dependence survival profiles"
     }
 
     if (x$type == "accumulated" && plot_type != "ale") {
@@ -221,6 +223,7 @@ plot2 <- function(x,
         pdp_df$time <- as.factor(pdp_df$time)
     }
 
+    ice_df <- NULL
     if (ice_needed) {
         ice_df <- x$cp_profiles$result[(x$cp_profiles$result$`_vname_` == variable) &
             (x$cp_profiles$result$`_times_` %in% times), ]
@@ -266,7 +269,10 @@ plot2 <- function(x,
         ice_df <- aggregate(predictions ~ ., data = ice_df, mean)
         color_scale <- generate_discrete_color_scale(1, colors)
     } else {
-        color_scale <- generate_discrete_color_scale(length(times), colors)
+        if (is.null(colors) | length(colors) < 3)
+            color_scale <- c(low = "#9fe5bd",
+                             mid = "#46bac2",
+                             high = "#371ea3")
     }
 
     if (is_categorical) {
@@ -346,29 +352,45 @@ plot_pdp_num <- function(pdp_dt,
                     ylim(y_floor_pd, y_ceiling_pd)
             }
         } else { ## multiple timepoints
+            pdp_dt$time <- as.numeric(as.character(pdp_dt$time))
+            if (!is.null(ice_dt))
+                ice_dt$time <- as.numeric(as.character(ice_dt$time))
+
             if (plot_type == "ice") {
                 ggplot(data = ice_dt, aes(x = !!feature_name_sym, y = predictions)) +
                     geom_line(alpha = 0.2, mapping = aes(group = interaction(id, time), color = time)) +
                     geom_rug(data = data_dt, aes(x = !!feature_name_sym, y = y_ceiling_ice), sides = "b", alpha = 0.8, position = position_jitter(width=0.01 * x_width)) +
-                    scale_color_manual(name = "time", values = colors) +
+                    scale_colour_gradient2(
+                        low = colors[1],
+                        mid = colors[2],
+                        high = colors[3],
+                        midpoint = median(as.numeric(as.character(pdp_dt$time)))) +
                     ylim(y_floor_ice, y_ceiling_ice)
             }
             # PDP + ICE
             else if (plot_type == "pdp+ice") {
                 ggplot() +
                     geom_line(data = ice_dt, aes(x = !!feature_name_sym, y = predictions, group = interaction(id, time), color = time), alpha = 0.1) +
-                    geom_path(data = pdp_dt, aes(x = !!feature_name_sym, y = pd, color = time), linewidth = 1.5, lineend = "round", linejoin = "round") +
+                    geom_path(data = pdp_dt, aes(x = !!feature_name_sym, y = pd, color = time, group = time), linewidth = 1.5, lineend = "round", linejoin = "round") +
                     geom_path(data = pdp_dt, aes(x = !!feature_name_sym, y = pd, group = time), color = "black", linewidth = 0.5, linetype = "dashed", lineend = "round", linejoin = "round") +
                     geom_rug(data = data_dt, aes(x = !!feature_name_sym, y = y_ceiling_ice), sides = "b", alpha = 0.8, position = position_jitter(width=0.01 * x_width)) +
-                    scale_color_manual(name = "time", values = colors) +
+                    scale_colour_gradient2(
+                        low = colors[1],
+                        mid = colors[2],
+                        high = colors[3],
+                        midpoint = median(as.numeric(as.character(pdp_dt$time)))) +
                     ylim(y_floor_ice, y_ceiling_ice)
             }
             # PDP
             else if (plot_type == "pdp" || plot_type == "ale") {
                 ggplot(data = pdp_dt, aes(x = !!feature_name_sym, y = pd)) +
-                    geom_line(aes(color = time)) +
+                    geom_line(aes(color = time, group = time)) +
                     geom_rug(data = data_dt, aes(x = !!feature_name_sym, y = y_ceiling_pd), sides = "b", alpha = 0.8, position = position_jitter(width=0.01 * x_width)) +
-                    scale_color_manual(name = "time", values = colors) +
+                    scale_colour_gradient2(
+                        low = colors[1],
+                        mid = colors[2],
+                        high = colors[3],
+                        midpoint = median(as.numeric(as.character(pdp_dt$time)))) +
                     ylim(y_floor_pd, y_ceiling_pd)
             }
         }
