@@ -19,9 +19,7 @@ surv_shap <- function(explainer,
                       ...,
                       y_true = NULL,
                       calculation_method = "kernelshap",
-                      aggregation_method = "integral")
-{
-    # make this code work for multiple observations
+                      aggregation_method = "integral") {
     stopifnot(
         "`y_true` must be either a matrix with one per observation in `new_observation` or a vector of length == 2" = ifelse(
             !is.null(y_true),
@@ -31,7 +29,8 @@ surv_shap <- function(explainer,
                 is.null(dim(y_true)) && length(y_true) == 2L
             ),
             TRUE
-        ))
+        )
+    )
 
     test_explainer(explainer, "surv_shap", has_data = TRUE, has_y = TRUE, has_survival = TRUE)
 
@@ -43,7 +42,9 @@ surv_shap <- function(explainer,
         new_observation <- new_observation[, col_index]
     }
 
-    if (ncol(explainer$data) != ncol(new_observation)) stop("New observation and data have different number of columns (variables)")
+    if (ncol(explainer$data) != ncol(new_observation)) {
+        stop("New observation and data have different number of columns (variables)")
+    }
     if (!is.null(y_true)) {
         if (is.matrix(y_true)) {
             # above, we have already checked that nrows of observations are
@@ -62,15 +63,16 @@ surv_shap <- function(explainer,
     # to display final object correctly, when is.matrix(new_observation) == TRUE
     res$variable_values <- as.data.frame(new_observation)
     res$result <- switch(calculation_method,
-                         "exact_kernel" = use_exact_shap(explainer, new_observation, ...),
-                         "kernelshap" = use_kernelshap(explainer, new_observation, ...),
-                         stop("Only `exact_kernel` and `kernelshap` calculation methods are implemented"))
+        "exact_kernel" = use_exact_shap(explainer, new_observation, ...),
+        "kernelshap" = use_kernelshap(explainer, new_observation, ...),
+        stop("Only `exact_kernel` and `kernelshap` calculation methods are implemented")
+    )
 
     if (!is.null(y_true)) res$y_true <- c(y_true_time = y_true_time, y_true_ind = y_true_ind)
 
     res$aggregate <- lapply(res$result, aggregate_surv_shap, method = aggregation_method, times = res$eval_times)
 
-    if(nrow(new_observation) > 1){
+    if (nrow(new_observation) > 1) {
         class(res) <- "aggregated_surv_shap"
         # res$aggregation_method <- aggregation_method
         res$n_observations <- nrow(new_observation)
@@ -83,25 +85,21 @@ surv_shap <- function(explainer,
     return(res)
 }
 
-use_exact_shap <- function(explainer, new_observation, observation_aggregation_method, ...){
-
+use_exact_shap <- function(explainer, new_observation, observation_aggregation_method, ...) {
     shap_values <- sapply(
         X = as.character(seq_len(nrow(new_observation))),
         FUN = function(i) {
-            as.data.frame(shap_kernel(explainer, new_observation[as.integer(i),], ...))
+            as.data.frame(shap_kernel(explainer, new_observation[as.integer(i), ], ...))
         },
         USE.NAMES = TRUE,
         simplify = FALSE
     )
 
     return(shap_values)
-
 }
 
 
 shap_kernel <- function(explainer, new_observation, ...) {
-
-
     timestamps <- explainer$times
     p <- ncol(explainer$data)
 
@@ -113,32 +111,39 @@ shap_kernel <- function(explainer, new_observation, ...) {
     permutations <- expand.grid(rep(list(0:1), p))
     kernel_weights <- generate_shap_kernel_weights(permutations, p)
 
-    shap_values <- calculate_shap_values(explainer, explainer$model, baseline_sf, as.data.frame(explainer$data), permutations, kernel_weights, as.data.frame(new_observation), timestamps)
+    shap_values <- calculate_shap_values(
+        explainer,
+        explainer$model,
+        baseline_sf,
+        as.data.frame(explainer$data),
+        permutations, kernel_weights,
+        as.data.frame(new_observation),
+        timestamps
+    )
 
 
 
     shap_values <- as.data.frame(shap_values, row.names = colnames(explainer$data))
     colnames(shap_values) <- paste("t=", timestamps, sep = "")
 
-    return (t(shap_values))
+    return(t(shap_values))
 }
 
 generate_shap_kernel_weights <- function(permutations, p) {
-
     apply(permutations, 1, function(row) {
         row <- as.numeric(row)
-        num_available_variables = sum(row != 0)
+        num_available_variables <- sum(row != 0)
 
-        if (num_available_variables == 0 || num_available_variables == p) 1e12
-        else {
+        if (num_available_variables == 0 || num_available_variables == p) {
+            1e12
+        } else {
             (p - 1) / (choose(p, num_available_variables) * num_available_variables * (p - num_available_variables))
         }
-        })
+    })
 }
 
 
 calculate_shap_values <- function(explainer, model, avg_survival_function, data, simplified_inputs, shap_kernel_weights, new_observation, timestamps) {
-
     w <- shap_kernel_weights
     X <- as.matrix(simplified_inputs)
 
@@ -146,16 +151,16 @@ calculate_shap_values <- function(explainer, model, avg_survival_function, data,
 
     y <- make_prediction_for_simplified_input(explainer, model, data, simplified_inputs, new_observation, timestamps)
 
-    y <- sweep(y,
-               2,
-               avg_survival_function)
+    y <- sweep(
+        y,
+        2,
+        avg_survival_function
+    )
 
     R %*% y
-
 }
 
 make_prediction_for_simplified_input <- function(explainer, model, data, simplified_inputs, new_observation, timestamps) {
-
     preds <- apply(simplified_inputs, 1, function(row) {
         row <- as.logical(row)
 
@@ -164,30 +169,25 @@ make_prediction_for_simplified_input <- function(explainer, model, data, simplif
         colnames(X_tmp) <- colnames(data)
 
         colMeans(explainer$predict_survival_function(model, X_tmp, timestamps))
-
     })
 
     return(t(preds))
-
-
 }
 
 aggregate_surv_shap <- function(survshap, times, method, ...) {
-    switch(
-        method,
+    switch(method,
         "sum_of_squares" = return(apply(survshap, 2, function(x) sum(x^2))),
         "mean_absolute" = return(apply(survshap, 2, function(x) mean(abs(x)))),
         "max_absolute" = return(apply(survshap, 2, function(x) max(abs(x)))),
         "integral" = return(apply(survshap, 2, function(x) calculate_integral(x, times, normalization = "t_max"))),
         "integral_absolute" = return(apply(survshap, 2, function(x) calculate_integral(abs(x), times, normalization = "t_max"))),
         stop("aggregation_method has to be one of 'integral', 'integral_absolute', 'mean_absolute', 'max_absolute', or 'sum_of_squares'")
-        )
+    )
 }
 
 
-use_kernelshap <- function(explainer, new_observation, observation_aggregation_method, ...){
-
-    predfun <- function(model, newdata){
+use_kernelshap <- function(explainer, new_observation, observation_aggregation_method, ...) {
+    predfun <- function(model, newdata) {
         explainer$predict_survival_function(
             model,
             newdata,
@@ -215,12 +215,10 @@ use_kernelshap <- function(explainer, new_observation, observation_aggregation_m
     )
 
     return(shap_values)
-
 }
 
-#'@keywords internal
+#' @keywords internal
 aggregate_shap_multiple_observations <- function(shap_res_list, feature_names, aggregation_function) {
-
     if (length(shap_res_list) > 1) {
         shap_res_list <- lapply(shap_res_list, function(x) {
             x$rn <- rownames(x)
@@ -234,12 +232,13 @@ aggregate_shap_multiple_observations <- function(shap_res_list, feature_names, a
         # multiple observations
 
         tmp_res <- aggregate(full_survshap_results[, !colnames(full_survshap_results) %in% c("rn")],
-                             by = list(full_survshap_results$rn),
-                             FUN = aggregation_function)
+            by = list(full_survshap_results$rn),
+            FUN = aggregation_function
+        )
         rownames(tmp_res) <- tmp_res$Group.1
-        ordering <- order(as.numeric(substring(rownames(tmp_res),3)))
+        ordering <- order(as.numeric(substring(rownames(tmp_res), 3)))
 
-        tmp_res <- tmp_res[ordering, !colnames(tmp_res) %in% c("rn","Group.1")]
+        tmp_res <- tmp_res[ordering, !colnames(tmp_res) %in% c("rn", "Group.1")]
     } else {
         # no aggregation required
         tmp_res <- shap_res_list[[1]]

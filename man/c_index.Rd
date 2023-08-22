@@ -37,7 +37,8 @@ rotterdam <- survival::rotterdam
 rotterdam$year <- NULL
 cox_rotterdam_rec <- coxph(Surv(rtime, recur) ~ .,
     data = rotterdam,
-    model = TRUE, x = TRUE, y = TRUE)
+    model = TRUE, x = TRUE, y = TRUE
+)
 coxph_explainer <- explain(cox_rotterdam_rec)
 
 risk <- coxph_explainer$predict_function(coxph_explainer$model, coxph_explainer$data)

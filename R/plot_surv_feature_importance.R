@@ -41,7 +41,6 @@ plot.surv_feature_importance <- function(x, ...,
                                          colors = NULL,
                                          rug = "all",
                                          rug_colors = c("#dd0000", "#222222")) {
-
     df_list <- c(list(x), list(...))
 
     transformed_dfs <- lapply(df_list, function(x) {
@@ -51,7 +50,7 @@ plot.surv_feature_importance <- function(x, ...,
         plotting_df <- with(x, cbind(x[1], stack(x, select = -`_times_`), label, row.names = NULL))
     })
 
-    transformed_rug_dfs <- lapply(df_list, function(x){
+    transformed_rug_dfs <- lapply(df_list, function(x) {
         rug_df <- data.frame(times = x$event_times, statuses = as.character(x$event_statuses), label = unique(x$result$label))
     })
 
@@ -68,9 +67,10 @@ plot.surv_feature_importance <- function(x, ...,
     num_vars <- length(unique(plotting_df$ind)) - 1 # remove full_model; note that num_vars <= max_vars
 
     additional_info <- switch(attr(x, "type"),
-                              "raw" = "",
-                              "ratio" = "\ndivided by the loss of full model",
-                              "difference" = "\nwith loss of full model subtracted")
+        "raw" = "",
+        "ratio" = "\ndivided by the loss of full model",
+        "difference" = "\nwith loss of full model subtracted"
+    )
 
     if (!is.null(attr(x, "loss_name"))) {
         y_lab <- paste0(paste(attr(x, "loss_name")[1], "loss after permutations"), additional_info)
@@ -84,14 +84,13 @@ plot.surv_feature_importance <- function(x, ...,
     }
 
     base_plot <- with(plotting_df, {
-
-    ggplot(data = plotting_df, aes(x = `_times_`, y = values, color = ind, label = ind)) +
-        geom_line(linewidth = 0.8) +
-        theme_default_survex() +
-        labs(x = "time", y = y_lab, title = title, subtitle = subtitle) +
-        xlim(c(0,NA)) +
-        scale_color_manual(name = "Variable", values = c("#000000", generate_discrete_color_scale(num_vars, colors))) +
-        facet_wrap(~label)
+        ggplot(data = plotting_df, aes(x = `_times_`, y = values, color = ind, label = ind)) +
+            geom_line(linewidth = 0.8) +
+            theme_default_survex() +
+            labs(x = "time", y = y_lab, title = title, subtitle = subtitle) +
+            xlim(c(0, NA)) +
+            scale_color_manual(name = "Variable", values = c("#000000", generate_discrete_color_scale(num_vars, colors))) +
+            facet_wrap(~label)
     })
 
     return_plot <- add_rug_to_plot(base_plot, rug_df, rug, rug_colors)

@@ -125,14 +125,20 @@ with \code{pec::predictSurvProb()} method.
 library(survival)
 library(survex)
 
-cph <- survival::coxph(survival::Surv(time, status) ~ ., data = veteran,
-                       model = TRUE, x = TRUE)
+cph <- survival::coxph(survival::Surv(time, status) ~ .,
+    data = veteran,
+    model = TRUE, x = TRUE
+)
 cph_exp <- explain(cph)
 
-rsf_ranger <- ranger::ranger(survival::Surv(time, status) ~ ., data = veteran,
- respect.unordered.factors = TRUE, num.trees = 100, mtry = 3, max.depth = 5)
-rsf_ranger_exp <- explain(rsf_ranger, data = veteran[, -c(3, 4)],
- y = Surv(veteran$time, veteran$status))
+rsf_ranger <- ranger::ranger(survival::Surv(time, status) ~ .,
+    data = veteran,
+    respect.unordered.factors = TRUE, num.trees = 100, mtry = 3, max.depth = 5
+)
+rsf_ranger_exp <- explain(rsf_ranger,
+    data = veteran[, -c(3, 4)],
+    y = Surv(veteran$time, veteran$status)
+)
 
 rsf_src <- randomForestSRC::rfsrc(Surv(time, status) ~ ., data = veteran)
 rsf_src_exp <- explain(rsf_src)
@@ -140,28 +146,30 @@ rsf_src_exp <- explain(rsf_src)
 library(censored, quietly = TRUE)
 
 bt <- parsnip::boost_tree() \%>\%
-   parsnip::set_engine("mboost") \%>\%
-   parsnip::set_mode("censored regression") \%>\%
-   generics::fit(survival::Surv(time, status) ~ ., data = veteran)
+    parsnip::set_engine("mboost") \%>\%
+    parsnip::set_mode("censored regression") \%>\%
+    generics::fit(survival::Surv(time, status) ~ ., data = veteran)
 bt_exp <- explain(bt, data = veteran[, -c(3, 4)], y = Surv(veteran$time, veteran$status))
 
 ###### explain_survival() ######
 
-cph <- coxph(Surv(time, status) ~ ., data=veteran)
+cph <- coxph(Surv(time, status) ~ ., data = veteran)
 
-veteran_data <- veteran[, -c(3,4)]
+veteran_data <- veteran[, -c(3, 4)]
 veteran_y <- Surv(veteran$time, veteran$status)
 risk_pred <- function(model, newdata) predict(model, newdata, type = "risk")
 surv_pred <- function(model, newdata, times) pec::predictSurvProb(model, newdata, times)
 chf_pred <- function(model, newdata, times) -log(surv_pred(model, newdata, times))
 
-manual_cph_explainer <- explain_survival(model = cph,
-                                         data = veteran_data,
-                                         y = veteran_y,
-                                         predict_function = risk_pred,
-                                         predict_survival_function = surv_pred,
-                                         predict_cumulative_hazard_function = chf_pred,
-                                         label = "manual coxph")
+manual_cph_explainer <- explain_survival(
+    model = cph,
+    data = veteran_data,
+    y = veteran_y,
+    predict_function = risk_pred,
+    predict_survival_function = surv_pred,
+    predict_cumulative_hazard_function = chf_pred,
+    label = "manual coxph"
+)
 }
 
 }

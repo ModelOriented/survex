@@ -32,7 +32,6 @@ print.surv_ceteris_paribus <- function(x, ...) {
 
 #' @export
 print.surv_feature_importance <- function(x, ...) {
-
     res <- x$result
     text <- paste0("Permutational feature importance for the ", unique(res$label), " model:\n")
     cat(text)
@@ -54,7 +53,6 @@ print.surv_lime <- function(x, ...) {
 
 #' @export
 print.surv_shap <- function(x, ...) {
-
     res <- x$result
     cat("SurvSHAP(t) for observation:\n\n")
     print.data.frame(x$variable_values, row.names = FALSE)

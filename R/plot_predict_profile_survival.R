@@ -49,8 +49,6 @@
 #' }
 #' @export
 plot.predict_profile_survival <- function(x, ...) {
-
     class(x) <- class(x)[-1]
     plot(x, ...)
-
 }

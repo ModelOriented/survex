@@ -27,8 +27,9 @@
 #' rsf_src_exp <- explain(rsf_src)
 #'
 #' cph_predict_profile <- predict_profile(cph_exp, veteran[2, -c(3, 4)],
-#'                                        variables = c("trt", "celltype", "karno", "age"),
-#'                                        categorical_variables = "trt")
+#'     variables = c("trt", "celltype", "karno", "age"),
+#'     categorical_variables = "trt"
+#' )
 #' plot(cph_predict_profile, facet_ncol = 2)
 #'
 #'
@@ -45,8 +46,9 @@ predict_profile <- function(explainer,
                             ...,
                             type = "ceteris_paribus",
                             variable_splits_type = "uniform",
-                            center = FALSE)
+                            center = FALSE) {
     UseMethod("predict_profile", explainer)
+}
 
 #' @rdname predict_profile.surv_explainer
 #' @export
@@ -58,41 +60,43 @@ predict_profile.surv_explainer <- function(explainer,
                                            type = "ceteris_paribus",
                                            output_type = "survival",
                                            variable_splits_type = "uniform",
-                                           center = FALSE)
-{
-
+                                           center = FALSE) {
     variables <- unique(variables, categorical_variables)
     if (!type %in% "ceteris_paribus") stop("Type not supported")
     if (!output_type %in% c("risk", "survival")) stop("output_type not supported")
-    if (length(dim(new_observation)) != 2 | nrow(new_observation) != 1)
+    if (length(dim(new_observation)) != 2 || nrow(new_observation) != 1) {
         stop("new_observation should be a single row data.frame")
+    }
 
     if (output_type == "risk") {
-        return(DALEX::predict_profile(explainer = explainer,
-                                      new_observation = new_observation,
-                                      variables = variables,
-                                      ... = ...,
-                                      type = type,
-                                      variable_splits_type = variable_splits_type))
-
+        return(DALEX::predict_profile(
+            explainer = explainer,
+            new_observation = new_observation,
+            variables = variables,
+            ... = ...,
+            type = type,
+            variable_splits_type = variable_splits_type
+        ))
     }
     if (output_type == "survival") {
         if (type == "ceteris_paribus") {
-            res <- surv_ceteris_paribus(explainer,
-                                        new_observation = new_observation,
-                                        variables = variables,
-                                        categorical_variables = categorical_variables,
-                                        variable_splits_type = variable_splits_type,
-                                        center = center,
-                                        ...)
+            res <- surv_ceteris_paribus(
+                explainer,
+                new_observation = new_observation,
+                variables = variables,
+                categorical_variables = categorical_variables,
+                variable_splits_type = variable_splits_type,
+                center = center,
+                ...
+            )
             class(res) <- c("predict_profile_survival", class(res))
             res$event_times <- explainer$y[explainer$y[, 1] <= max(explainer$times), 1]
             res$event_statuses <- explainer$y[explainer$y[, 1] <= max(explainer$times), 2]
             return(res)
+        } else {
+            stop("For survival output only type=`ceteris_paribus` is implemented")
         }
-        else stop("For survival output only type=`ceteris_paribus` is implemented")
     }
-
 }
 
 #' @export

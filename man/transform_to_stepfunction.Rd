@@ -39,9 +39,10 @@ library(survival)
 rsf_src <- randomForestSRC::rfsrc(Surv(time, status) ~ ., data = veteran)
 
 chf_function <- transform_to_stepfunction(predict,
-                                          type = "chf",
-                                          prediction_element = "chf",
-                                          times_element = "time.interest")
+    type = "chf",
+    prediction_element = "chf",
+    times_element = "time.interest"
+)
 
 explainer <- explain(rsf_src, predict_cumulative_hazard_function = chf_function)
 

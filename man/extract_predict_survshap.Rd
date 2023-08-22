@@ -19,28 +19,33 @@ Helper function to extract local SurvSHAP(t) explanation from global one.
 Can be can be useful for creating SurvSHAP(t) plots for single observations.
 }
 \examples{
+\donttest{
 veteran <- survival::veteran
 rsf_ranger <- ranger::ranger(
-  survival::Surv(time, status) ~ .,
-  data = veteran,
-  respect.unordered.factors = TRUE,
-  num.trees = 100,
-  mtry = 3,
-  max.depth = 5
+    survival::Surv(time, status) ~ .,
+    data = veteran,
+    respect.unordered.factors = TRUE,
+    num.trees = 100,
+    mtry = 3,
+    max.depth = 5
 )
 rsf_ranger_exp <- explain(
-  rsf_ranger,
-  data = veteran[, -c(3, 4)],
-  y = survival::Surv(veteran$time, veteran$status),
-  verbose = FALSE
+    rsf_ranger,
+    data = veteran[, -c(3, 4)],
+    y = survival::Surv(veteran$time, veteran$status),
+    verbose = FALSE
 )
 
 ranger_global_survshap <- model_survshap(
-  explainer = rsf_ranger_exp,
-  new_observation = veteran[c(1:4, 17:20, 110:113, 126:129),
-                            !colnames(veteran) \%in\% c("time", "status")])
+    explainer = rsf_ranger_exp,
+    new_observation = veteran[
+        c(1:4, 17:20, 110:113, 126:129),
+        !colnames(veteran) \%in\% c("time", "status")
+    ]
+)
 
 local_survshap_1 <- extract_predict_survshap(ranger_global_survshap, index = 1)
 plot(local_survshap_1)
+}
 
 }

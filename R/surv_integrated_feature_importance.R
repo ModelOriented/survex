@@ -30,7 +30,6 @@ surv_integrated_feature_importance <- function(x,
                                                variable_groups = NULL,
                                                N = NULL,
                                                label = NULL) {
-
     test_explainer(x, "feature_importance", has_data = TRUE, has_y = TRUE)
 
     # extracts model, data and predict function from the explainer
@@ -109,7 +108,6 @@ surv_integrated_feature_importance <- function(x,
             predicted_survs <- predict_survival_function(x, ndf, times)
             prog()
             loss_function(observed, predicted_risks, predicted_survs, times)
-
         })
         c("_full_model_" = loss_full, loss_variables, "_baseline_" = loss_baseline)
     }
@@ -129,10 +127,10 @@ surv_integrated_feature_importance <- function(x,
         row.names = NULL
     )
     if (type == "ratio") {
-        res$dropout_loss = res$dropout_loss / res_full
+        res$dropout_loss <- res$dropout_loss / res_full
     }
     if (type == "difference") {
-        res$dropout_loss = res$dropout_loss - res_full
+        res$dropout_loss <- res$dropout_loss - res_full
     }
 
 
@@ -149,10 +147,10 @@ surv_integrated_feature_importance <- function(x,
 
         # here mean full model is used (full model for given permutation is an option)
         if (type == "ratio") {
-            res_B$dropout_loss = res_B$dropout_loss / res_full
+            res_B$dropout_loss <- res_B$dropout_loss / res_full
         }
         if (type == "difference") {
-            res_B$dropout_loss = res_B$dropout_loss - res_full
+            res_B$dropout_loss <- res_B$dropout_loss - res_full
         }
 
         res <- rbind(res, res_B)
@@ -164,5 +162,4 @@ surv_integrated_feature_importance <- function(x,
         attr(res, "loss_name") <- attr(loss_function, "loss_name")
     }
     res
-
 }

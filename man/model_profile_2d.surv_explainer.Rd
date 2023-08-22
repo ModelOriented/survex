@@ -64,13 +64,15 @@ cph <- coxph(Surv(time, status) ~ ., data = veteran, model = TRUE, x = TRUE, y =
 cph_exp <- explain(cph)
 
 cph_model_profile_2d <- model_profile_2d(cph_exp,
-                                        variables = list(c("age", "celltype")))
+    variables = list(c("age", "celltype"))
+)
 head(cph_model_profile_2d$result)
 plot(cph_model_profile_2d)
 
 cph_model_profile_2d_ale <- model_profile_2d(cph_exp,
-                                        variables = list(c("age", "karno")),
-                                        type = "accumulated")
+    variables = list(c("age", "karno")),
+    type = "accumulated"
+)
 head(cph_model_profile_2d_ale$result)
 plot(cph_model_profile_2d_ale)
 }

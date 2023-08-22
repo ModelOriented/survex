@@ -15,17 +15,15 @@ utils::globalVariables(c("PredictionSurv"))
 #' - \[1\] Graf, Erika, et al. ["Assessment and comparison of prognostic classification schemes for survival data."](https://onlinelibrary.wiley.com/doi/abs/10.1002/%28SICI%291097-0258%2819990915/30%2918%3A17/18%3C2529%3A%3AAID-SIM274%3E3.0.CO%3B2-5) Statistics in Medicine 18.17‐18 (1999): 2529-2545.
 #'
 #' @export
-loss_integrate <- function(loss_function, ..., normalization = NULL , max_quantile = 1){
-
-    if (!is.null(normalization)){
+loss_integrate <- function(loss_function, ..., normalization = NULL, max_quantile = 1) {
+    if (!is.null(normalization)) {
         if (!normalization %in% c("t_max", "survival")) stop("normalization should be either NULL, `t_max` or `survival`")
     }
 
-    integrated_loss_function <- function(y_true = NULL, risk = NULL, surv = NULL, times = NULL){
-
-        quantile_mask <- (times <= quantile(y_true[,1],max_quantile))
+    integrated_loss_function <- function(y_true = NULL, risk = NULL, surv = NULL, times = NULL) {
+        quantile_mask <- (times <= quantile(y_true[, 1], max_quantile))
         times <- times[quantile_mask]
-        surv <- surv[,quantile_mask]
+        surv <- surv[, quantile_mask]
 
         loss_values <- loss_function(y_true = y_true, risk = risk, surv = surv, times = times)
 
@@ -35,7 +33,7 @@ loss_integrate <- function(loss_function, ..., normalization = NULL , max_quanti
         loss_values <- loss_values[na_mask]
         surv <- surv[na_mask]
 
-        calculate_integral(loss_values, times, normalization, y_true=y_true)
+        calculate_integral(loss_values, times, normalization, y_true = y_true)
     }
 
     attr(integrated_loss_function, "loss_type") <- "integrated"
@@ -73,7 +71,8 @@ loss_integrate <- function(loss_function, ..., normalization = NULL , max_quanti
 #' rotterdam$year <- NULL
 #' cox_rotterdam_rec <- coxph(Surv(rtime, recur) ~ .,
 #'     data = rotterdam,
-#'     model = TRUE, x = TRUE, y = TRUE)
+#'     model = TRUE, x = TRUE, y = TRUE
+#' )
 #' coxph_explainer <- explain(cox_rotterdam_rec)
 #'
 #' risk <- coxph_explainer$predict_function(coxph_explainer$model, coxph_explainer$data)
@@ -82,7 +81,6 @@ loss_integrate <- function(loss_function, ..., normalization = NULL , max_quanti
 #'
 #' @export
 c_index <- function(y_true = NULL, risk = NULL, surv = NULL, times = NULL) {
-
     n_rows <- length(y_true[, 1])
 
     yi <- matrix(rep(y_true[, 1], n_rows), ncol = n_rows)
@@ -97,7 +95,6 @@ c_index <- function(y_true = NULL, risk = NULL, surv = NULL, times = NULL) {
     bot <- sum(ifelse(yj < yi, 1, 0) * dj)
 
     top / bot
-
 }
 attr(c_index, "loss_name") <- "C-index"
 attr(c_index, "loss_type") <- "risk-based"
@@ -126,7 +123,8 @@ attr(c_index, "loss_type") <- "risk-based"
 #' rotterdam$year <- NULL
 #' cox_rotterdam_rec <- coxph(Surv(rtime, recur) ~ .,
 #'     data = rotterdam,
-#'     model = TRUE, x = TRUE, y = TRUE)
+#'     model = TRUE, x = TRUE, y = TRUE
+#' )
 #' coxph_explainer <- explain(cox_rotterdam_rec)
 #'
 #' risk <- coxph_explainer$predict_function(coxph_explainer$model, coxph_explainer$data)
@@ -177,8 +175,11 @@ attr(loss_one_minus_c_index, "loss_type") <- "risk-based"
 #' @export
 brier_score <- function(y_true = NULL, risk = NULL, surv = NULL, times = NULL) {
     # if times is not provided use
-    if (is.null(times)) times <- sort(unique(y_true[, 1]))
-    else times <- sort(unique(times))
+    if (is.null(times)) {
+        times <- sort(unique(y_true[, 1]))
+    } else {
+        times <- sort(unique(times))
+    }
 
 
     # calculate the inverse probability of censoring weights
@@ -195,7 +196,7 @@ brier_score <- function(y_true = NULL, risk = NULL, surv = NULL, times = NULL) {
     ti <- t(matrix(rep(times, n_rows), ncol = n_rows))
 
     gti <- matrix(G(ti), ncol = n_cols, nrow = n_rows)
-    gy  <- matrix(G(y), ncol = n_cols, nrow = n_rows)
+    gy <- matrix(G(y), ncol = n_cols, nrow = n_rows)
 
     ind_1 <- ifelse(y <= ti & delta == 1, 1, 0)
     ind_2 <- ifelse(y > ti, 1, 0)
@@ -203,7 +204,6 @@ brier_score <- function(y_true = NULL, risk = NULL, surv = NULL, times = NULL) {
     brier_score <- ind_1 * (surv^2) / gy + ind_2 * ((1 - surv)^2) / gti
 
     apply(brier_score, 2, mean, na.rm = TRUE)
-
 }
 attr(brier_score, "loss_name") <- "Brier score"
 attr(brier_score, "loss_type") <- "time-dependent"
@@ -253,7 +253,6 @@ attr(loss_brier_score, "loss_type") <- "time-dependent"
 #'
 #' @export
 cd_auc <- function(y_true = NULL, risk = NULL, surv = NULL, times = NULL) {
-
     y_true[, 2] <- 1 - y_true[, 2]
     km <- survival::survfit(y_true ~ 1)
     G <- stepfun(km$time, c(1, km$surv))
@@ -275,7 +274,7 @@ cd_auc <- function(y_true = NULL, risk = NULL, surv = NULL, times = NULL) {
         survi <- matrix(rep(surv[, tt], n_rows), ncol = n_rows)
         survj <- t(matrix(rep(surv[, tt], n_rows), ncol = n_rows))
 
-        top <- sum(ifelse(yj > time & yi <= time &  survj > survi, 1, 0) / G(time))
+        top <- sum(ifelse(yj > time & yi <= time & survj > survi, 1, 0) / G(time))
 
         bl <- sum(ifelse(yi[, 1] > time, 1, 0))
         br <- sum(ifelse(yi[, 1] <= time, 1, 0) / G(time))
@@ -284,7 +283,6 @@ cd_auc <- function(y_true = NULL, risk = NULL, surv = NULL, times = NULL) {
     })
 
     unlist(results)
-
 }
 attr(cd_auc, "loss_name") <- "C/D AUC"
 attr(cd_auc, "loss_type") <- "time-dependent"
@@ -466,10 +464,8 @@ attr(loss_integrated_brier_score, "loss_type") <- "integrated"
 #' }
 #'
 #' @export
-loss_adapt_mlr3proba <- function(measure, reverse = FALSE, ...){
-
-    loss_function <- function(y_true = NULL, risk = NULL, surv = NULL, times = NULL){
-
+loss_adapt_mlr3proba <- function(measure, reverse = FALSE, ...) {
+    loss_function <- function(y_true = NULL, risk = NULL, surv = NULL, times = NULL) {
         colnames(surv) <- times
 
         surv_pred <- PredictionSurv$new(
@@ -488,8 +484,11 @@ loss_adapt_mlr3proba <- function(measure, reverse = FALSE, ...){
         return(output)
     }
 
-    if (reverse) attr(loss_function, "loss_name") <- paste("one minus", measure$id)
-    else attr(loss_function, "loss_name") <- measure$id
+    if (reverse) {
+        attr(loss_function, "loss_name") <- paste("one minus", measure$id)
+    } else {
+        attr(loss_function, "loss_name") <- measure$id
+    }
     attr(loss_function, "loss_type") <- "integrated"
 
     return(loss_function)

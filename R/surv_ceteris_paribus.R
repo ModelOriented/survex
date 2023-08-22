@@ -79,14 +79,17 @@ surv_ceteris_paribus.default <- function(x,
     factor_variables <- colnames(data)[sapply(data, is.factor)]
     categorical_variables <- unique(c(additional_categorical_variables, factor_variables))
 
-    if (is.null(data))
+    if (is.null(data)) {
         stop("The ceteris_paribus() function requires explainers created with specified 'data'.")
+    }
 
     # calculate splits
     if (is.null(variable_splits)) {
-        if (is.null(variables))
+        if (is.null(variables)) {
             variables <- colnames(data)
-        variable_splits <- calculate_variable_split(data,
+        }
+        variable_splits <- calculate_variable_split(
+            data,
             variables = variables,
             categorical_variables = categorical_variables,
             grid_points = grid_points,
@@ -189,7 +192,7 @@ calculate_variable_survival_profile.default <- function(data, variable_splits, m
         new_data[, variable] <- rep(split_points, nrow(data))
 
         yhat <- c(t(predict_survival_function(model, new_data, times)))
-        if (center){
+        if (center) {
             yhat <- yhat - mean_pred
         }
 

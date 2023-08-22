@@ -32,16 +32,20 @@
 #' cph_exp <- explain(cph)
 #' rsf_src_exp <- explain(rsf_src)
 #'
-#' cph_model_profile <- model_profile(cph_exp, output_type = "survival",
-#'                                    variables = c("age"))
+#' cph_model_profile <- model_profile(cph_exp,
+#'     output_type = "survival",
+#'     variables = c("age")
+#' )
 #'
 #' head(cph_model_profile$result)
 #'
 #' plot(cph_model_profile)
 #'
-#' rsf_model_profile <- model_profile(rsf_src_exp, output_type = "survival",
-#'                                    variables = c("age", "celltype"),
-#'                                    type = "accumulated")
+#' rsf_model_profile <- model_profile(rsf_src_exp,
+#'     output_type = "survival",
+#'     variables = c("age", "celltype"),
+#'     type = "accumulated"
+#' )
 #'
 #' head(rsf_model_profile$result)
 #'
@@ -58,7 +62,9 @@ model_profile <- function(explainer,
                           k = NULL,
                           type = "partial",
                           center = FALSE,
-                          output_type = "survival") UseMethod("model_profile", explainer)
+                          output_type = "survival") {
+    UseMethod("model_profile", explainer)
+}
 
 #' @rdname model_profile.surv_explainer
 #' @export
@@ -74,62 +80,67 @@ model_profile.surv_explainer <- function(explainer,
                                          center = FALSE,
                                          type = "partial",
                                          output_type = "survival") {
-
     variables <- unique(variables, categorical_variables)
     switch(output_type,
-            "risk" = DALEX::model_profile(explainer = explainer,
-                                                   variables = variables,
-                                                   N = N,
-                                                   ... = ...,
-                                                   groups = groups,
-                                                   k = k,
-                                                   center = center,
-                                                   type = type),
-            "survival" = {
-                test_explainer(explainer, "model_profile", has_data = TRUE, has_survival = TRUE)
-                data <- explainer$data
-                if (!is.null(N) && N < nrow(data)) {
-                    ndata <- data[sample(1:nrow(data), N), , drop = FALSE]
-                } else {
-                    ndata <- data[1:nrow(data), , drop = FALSE]
-                }
+        "risk" = DALEX::model_profile(
+            explainer = explainer,
+            variables = variables,
+            N = N,
+            ... = ...,
+            groups = groups,
+            k = k,
+            center = center,
+            type = type
+        ),
+        "survival" = {
+            test_explainer(explainer, "model_profile", has_data = TRUE, has_survival = TRUE)
+            data <- explainer$data
+            if (!is.null(N) && N < nrow(data)) {
+                ndata <- data[sample(1:nrow(data), N), , drop = FALSE]
+            } else {
+                ndata <- data[1:nrow(data), , drop = FALSE]
+            }
 
-                if (type == "partial"){
-                    cp_profiles <- surv_ceteris_paribus(explainer,
-                                                        new_observation = ndata,
-                                                        variables = variables,
-                                                        categorical_variables = categorical_variables,
-                                                        grid_points = grid_points,
-                                                        variable_splits_type = variable_splits_type,
-                                                        center = center,
-                                                        ...)
+            if (type == "partial") {
+                cp_profiles <- surv_ceteris_paribus(explainer,
+                    new_observation = ndata,
+                    variables = variables,
+                    categorical_variables = categorical_variables,
+                    grid_points = grid_points,
+                    variable_splits_type = variable_splits_type,
+                    center = center,
+                    ...
+                )
 
-                    result <- surv_aggregate_profiles(cp_profiles, ...,
-                                                            variables = variables)
-                } else if (type == "accumulated"){
-                    cp_profiles <- list(variable_values = data.frame(ndata))
-                    result <- surv_ale(explainer,
-                                       data = ndata,
-                                       variables = variables,
-                                       categorical_variables = categorical_variables,
-                                       grid_points = grid_points,
-                                       center = center,
-                                       ...)
-                } else {
-                    stop("Currently only `partial` and `accumulated` types are implemented")
-                }
+                result <- surv_aggregate_profiles(cp_profiles, ...,
+                    variables = variables
+                )
+            } else if (type == "accumulated") {
+                cp_profiles <- list(variable_values = data.frame(ndata))
+                result <- surv_ale(explainer,
+                    data = ndata,
+                    variables = variables,
+                    categorical_variables = categorical_variables,
+                    grid_points = grid_points,
+                    center = center,
+                    ...
+                )
+            } else {
+                stop("Currently only `partial` and `accumulated` types are implemented")
+            }
 
-                ret <- list(eval_times = unique(result$`_times_`),
-                            cp_profiles = cp_profiles,
-                            result = result,
-                            type = type,
-                            center = center)
-                class(ret) <- c("model_profile_survival", "list")
-                ret$event_times <- explainer$y[explainer$y[, 1] <= max(explainer$times), 1]
-                ret$event_statuses <- explainer$y[explainer$y[, 1] <= max(explainer$times), 2]
-                ret
-                },
-
+            ret <- list(
+                eval_times = unique(result$`_times_`),
+                cp_profiles = cp_profiles,
+                result = result,
+                type = type,
+                center = center
+            )
+            class(ret) <- c("model_profile_survival", "list")
+            ret$event_times <- explainer$y[explainer$y[, 1] <= max(explainer$times), 1]
+            ret$event_statuses <- explainer$y[explainer$y[, 1] <= max(explainer$times), 2]
+            ret
+        },
         stop("Currently only `risk` and `survival` output types are implemented")
     )
 }

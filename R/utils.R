@@ -18,7 +18,7 @@
 #'
 #' @export
 cumulative_hazard_to_survival <- function(hazard_functions) {
-        return(exp(-hazard_functions))
+    return(exp(-hazard_functions))
 }
 
 #' Transform Survival to Cumulative Hazard
@@ -41,7 +41,7 @@ cumulative_hazard_to_survival <- function(hazard_functions) {
 #'
 #' @export
 survival_to_cumulative_hazard <- function(survival_functions, epsilon = 0) {
-        return(-log(survival_functions))
+    return(-log(survival_functions))
 }
 
 # tests if the explainer has all the required fields
@@ -51,29 +51,35 @@ test_explainer <- function(explainer,
                            has_y = FALSE,
                            has_survival = FALSE,
                            has_chf = FALSE,
-                           has_predict = FALSE)
-{
-    if (!("surv_explainer" %in% class(explainer)))
-       stop(paste0("The ", function_name, " function requires an object created with survex::explain() function."))
-    if (has_data && is.null(explainer$data))
-       stop(paste0("The ", function_name, " function requires explainers with specified `data` parameter"))
-    if (has_y && is.null(explainer$y))
+                           has_predict = FALSE) {
+    if (!("surv_explainer" %in% class(explainer))) {
+        stop(paste0("The ", function_name, " function requires an object created with survex::explain() function."))
+    }
+    if (has_data && is.null(explainer$data)) {
+        stop(paste0("The ", function_name, " function requires explainers with specified `data` parameter"))
+    }
+    if (has_y && is.null(explainer$y)) {
         stop(paste0("The ", function_name, " function requires explainers with specified `y` parameter"))
-    if (has_survival && is.null(explainer$predict_survival_function))
+    }
+    if (has_survival && is.null(explainer$predict_survival_function)) {
         stop(paste0("The ", function_name, " function requires explainers with specified `predict_survival_function` parameter"))
-    if (has_chf && is.null(explainer$predict_cumulative_hazard_function))
+    }
+    if (has_chf && is.null(explainer$predict_cumulative_hazard_function)) {
         stop(paste0("The ", function_name, " function requires explainers with specified `predict_cumulative_hazard_function` parameter"))
-    if (has_predict && is.null(explainer$predict_function))
+    }
+    if (has_predict && is.null(explainer$predict_function)) {
         stop(paste0("The ", function_name, " function requires explainers with specified `predict_risk` parameter"))
+    }
 }
 
 
 #' @importFrom DALEX colors_discrete_drwhy
 generate_discrete_color_scale <- function(n, colors = NULL) {
-
-    if (is.null(colors) || length(colors) < n) return(colors_discrete_drwhy(n))
-    else return(colors[(0:(n - 1) %% length(colors)) + 1])
-
+    if (is.null(colors) || length(colors) < n) {
+        return(colors_discrete_drwhy(n))
+    } else {
+        return(colors[(0:(n - 1) %% length(colors)) + 1])
+    }
 }
 
 #' Transform Fixed Point Prediction into a Stepfunction
@@ -96,46 +102,45 @@ generate_discrete_color_scale <- function(n, colors = NULL) {
 #' rsf_src <- randomForestSRC::rfsrc(Surv(time, status) ~ ., data = veteran)
 #'
 #' chf_function <- transform_to_stepfunction(predict,
-#'                                           type = "chf",
-#'                                           prediction_element = "chf",
-#'                                           times_element = "time.interest")
+#'     type = "chf",
+#'     prediction_element = "chf",
+#'     times_element = "time.interest"
+#' )
 #'
 #' explainer <- explain(rsf_src, predict_cumulative_hazard_function = chf_function)
 #'
 #' @export
 transform_to_stepfunction <- function(predict_function, eval_times = NULL, ..., type = NULL, prediction_element = NULL, times_element = NULL) {
+    function(model, newdata, times) {
+        raw_prediction <- predict_function(model, newdata, ...)
+        if (!is.null(times_element)) eval_times <- raw_prediction[[times_element]]
+        if (!is.null(prediction_element)) prediction <- raw_prediction[[prediction_element]]
+        n_rows <- ifelse(is.null(dim(prediction)), 1, nrow(prediction))
+        return_matrix <- matrix(nrow = n_rows, ncol = length(times))
 
-        function(model, newdata, times) {
-            raw_prediction <- predict_function(model, newdata, ...)
-            if (!is.null(times_element)) eval_times <- raw_prediction[[times_element]]
-            if (!is.null(prediction_element)) prediction <- raw_prediction[[prediction_element]]
-            n_rows <- ifelse(is.null(dim(prediction)), 1, nrow(prediction))
-            return_matrix <- matrix(nrow = n_rows, ncol = length(times))
 
-
-            if (is.null(dim(prediction))) {
+        if (is.null(dim(prediction))) {
+            padding <- switch(type,
+                "survival" = 1,
+                "chf" = 0,
+                prediction[1]
+            )
+            stepfunction <- stepfun(eval_times, c(padding, prediction))
+            return_matrix[1, ] <- stepfunction(times)
+        } else {
+            for (i in 1:n_rows) {
                 padding <- switch(type,
-                                  "survival" = 1,
-                                  "chf" = 0,
-                                  prediction[1])
-                stepfunction <- stepfun(eval_times, c(padding, prediction))
-                return_matrix[1, ] <- stepfunction(times)
-
+                    "survival" = 1,
+                    "chf" = 0,
+                    prediction[i, 1]
+                )
+                stepfunction <- stepfun(eval_times, c(padding, prediction[i, ]))
+                return_matrix[i, ] <- stepfunction(times)
             }
-            else {
-                for (i in 1:n_rows) {
-                    padding <- switch(type,
-                                      "survival" = 1,
-                                      "chf" = 0,
-                                      prediction[i, 1])
-                    stepfunction <- stepfun(eval_times, c(padding, prediction[i, ]))
-                    return_matrix[i, ] <- stepfunction(times)
-                }
-            }
-
-            return_matrix
         }
 
+        return_matrix
+    }
 }
 
 #' Generate Risk Prediction based on the Survival Function
@@ -154,14 +159,16 @@ transform_to_stepfunction <- function(predict_function, eval_times = NULL, ..., 
 #' rsf_src <- randomForestSRC::rfsrc(Surv(time, status) ~ ., data = veteran)
 #'
 #' chf_function <- transform_to_stepfunction(predict,
-#'                                           type = "chf",
-#'                                           prediction_element = "chf",
-#'                                           times_element = "time.interest")
+#'     type = "chf",
+#'     prediction_element = "chf",
+#'     times_element = "time.interest"
+#' )
 #' risk_function <- risk_from_chf(chf_function, unique(veteran$time))
 #'
 #' explainer <- explain(rsf_src,
-#'                      predict_cumulative_hazard_function = chf_function,
-#'                      predict_function = risk_function)
+#'     predict_cumulative_hazard_function = chf_function,
+#'     predict_function = risk_function
+#' )
 #'
 #' @export
 risk_from_chf <- function(predict_cumulative_hazard_function, times) {
@@ -179,44 +186,51 @@ risk_from_chf <- function(predict_cumulative_hazard_function, times) {
 #' @return An object of classes `c("predict_parts_survival", "surv_shap")`. It is a list with the element `result` containing the results of the explanation.
 #'
 #' @examples
+#' \donttest{
 #' veteran <- survival::veteran
 #' rsf_ranger <- ranger::ranger(
-#'   survival::Surv(time, status) ~ .,
-#'   data = veteran,
-#'   respect.unordered.factors = TRUE,
-#'   num.trees = 100,
-#'   mtry = 3,
-#'   max.depth = 5
+#'     survival::Surv(time, status) ~ .,
+#'     data = veteran,
+#'     respect.unordered.factors = TRUE,
+#'     num.trees = 100,
+#'     mtry = 3,
+#'     max.depth = 5
 #' )
 #' rsf_ranger_exp <- explain(
-#'   rsf_ranger,
-#'   data = veteran[, -c(3, 4)],
-#'   y = survival::Surv(veteran$time, veteran$status),
-#'   verbose = FALSE
+#'     rsf_ranger,
+#'     data = veteran[, -c(3, 4)],
+#'     y = survival::Surv(veteran$time, veteran$status),
+#'     verbose = FALSE
 #' )
 #'
 #' ranger_global_survshap <- model_survshap(
-#'   explainer = rsf_ranger_exp,
-#'   new_observation = veteran[c(1:4, 17:20, 110:113, 126:129),
-#'                             !colnames(veteran) %in% c("time", "status")])
+#'     explainer = rsf_ranger_exp,
+#'     new_observation = veteran[
+#'         c(1:4, 17:20, 110:113, 126:129),
+#'         !colnames(veteran) %in% c("time", "status")
+#'     ]
+#' )
 #'
 #' local_survshap_1 <- extract_predict_survshap(ranger_global_survshap, index = 1)
 #' plot(local_survshap_1)
+#' }
 #'
 #' @export
-extract_predict_survshap <- function(aggregated_survshap, index){
-    if (!inherits(aggregated_survshap, "aggregated_surv_shap"))
+extract_predict_survshap <- function(aggregated_survshap, index) {
+    if (!inherits(aggregated_survshap, "aggregated_surv_shap")) {
         stop("`aggregated_survshap` object must be of class 'aggregated_surv_shap'")
+    }
 
-    if (index > aggregated_survshap$n_observations)
+    if (index > aggregated_survshap$n_observations) {
         stop(paste("Incorrect `index`, number of observations in `aggregated_survshap` is", aggregated_survshap$n_observations))
+    }
 
 
     res <- list()
     res$eval_times <- aggregated_survshap$eval_times
     res$event_times <- aggregated_survshap$event_times
     res$event_statuses <- aggregated_survshap$event_statuses
-    res$variable_values <- aggregated_survshap$variable_values[index,]
+    res$variable_values <- aggregated_survshap$variable_values[index, ]
     res$result <- aggregated_survshap$result[[index]]
     res$aggregate <- aggregated_survshap$aggregate[[index]]
     class(res) <- c("predict_parts_survival", "surv_shap")
@@ -227,17 +241,23 @@ extract_predict_survshap <- function(aggregated_survshap, index){
 
 
 #' @keywords internal
-add_rug_to_plot <- function(base_plot, rug_df, rug, rug_colors){
-    if (rug == "all"){
-        return_plot <- with(rug_df, { base_plot +
-                geom_rug(data = rug_df[rug_df$statuses == 1,], mapping = aes(x=times, color = statuses), inherit.aes=F, color = rug_colors[1]) +
-                geom_rug(data = rug_df[rug_df$statuses == 0,], mapping = aes(x=times, color = statuses), inherit.aes=F, color = rug_colors[2]) })
+add_rug_to_plot <- function(base_plot, rug_df, rug, rug_colors) {
+    if (rug == "all") {
+        return_plot <- with(rug_df, {
+            base_plot +
+                geom_rug(data = rug_df[rug_df$statuses == 1, ], mapping = aes(x = times, color = statuses), inherit.aes = F, color = rug_colors[1]) +
+                geom_rug(data = rug_df[rug_df$statuses == 0, ], mapping = aes(x = times, color = statuses), inherit.aes = F, color = rug_colors[2])
+        })
     } else if (rug == "events") {
-        return_plot <- with(rug_df, { base_plot +
-                geom_rug(data = rug_df[rug_df$statuses == 1,], mapping = aes(x=times, color = statuses), inherit.aes=F, color = rug_colors[1]) })
+        return_plot <- with(rug_df, {
+            base_plot +
+                geom_rug(data = rug_df[rug_df$statuses == 1, ], mapping = aes(x = times, color = statuses), inherit.aes = F, color = rug_colors[1])
+        })
     } else if (rug == "censors") {
-        return_plot <- with(rug_df, { base_plot +
-                geom_rug(data = rug_df[rug_df$statuses == 0,], mapping = aes(x=times, color = statuses), inherit.aes=F, color = rug_colors[2]) })
+        return_plot <- with(rug_df, {
+            base_plot +
+                geom_rug(data = rug_df[rug_df$statuses == 0, ], mapping = aes(x = times, color = statuses), inherit.aes = F, color = rug_colors[2])
+        })
     } else {
         return_plot <- base_plot
     }
@@ -245,19 +265,18 @@ add_rug_to_plot <- function(base_plot, rug_df, rug, rug_colors){
 
 
 #' @keywords internal
-calculate_integral <- function(values, times, normalization = "t_max", ...){
+calculate_integral <- function(values, times, normalization = "t_max", ...) {
     n <- length(values)
 
-    if (is.null(normalization)){
+    if (is.null(normalization)) {
         tmp <- (values[1:(n - 1)] + values[2:n]) * diff(times) / 2
         integrated_metric <- sum(tmp) / (max(times) - min(times))
         return(integrated_metric)
-    }
-    else if (normalization == "t_max") {
+    } else if (normalization == "t_max") {
         tmp <- (values[1:(n - 1)] + values[2:n]) * diff(times) / 2
         integrated_metric <- sum(tmp)
-        return(integrated_metric/max(times))
-    } else if (normalization == "survival"){
+        return(integrated_metric / max(times))
+    } else if (normalization == "survival") {
         y_true <- list(...)$y_true
         km <- survival::survfit(y_true ~ 1)
         estimator <- stepfun(km$time, c(1, km$surv))
@@ -266,7 +285,7 @@ calculate_integral <- function(values, times, normalization = "t_max", ...){
 
         tmp <- (values[1:(n - 1)] + values[2:n]) * diff(dwt) / 2
         integrated_metric <- sum(tmp)
-        return(integrated_metric/(1 - estimator(max(times))))
+        return(integrated_metric / (1 - estimator(max(times))))
     }
 }
 
@@ -306,4 +325,3 @@ order_levels <- function(data, variable_values, variable_name) {
     scaled <- cmdscale(dists.cumulated, k = 1)
     order(scaled)
 }
-

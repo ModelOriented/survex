@@ -12,31 +12,32 @@
 surv_model_performance <- function(explainer, ..., times = NULL, type = "metrics", metrics = NULL) {
     newdata <- explainer$data
     if (type == "metrics") {
-    if (is.null(times)) times <- explainer$times
-    sf <- explainer$predict_survival_function(explainer$model, newdata, times)
-    risk <- explainer$predict_function(explainer$model, newdata)
-    y <- explainer$y
-    ret_list <- lapply(metrics, function(x) { output <- x(y, risk, sf, times)
-                                                  attr(output, "loss_type") <- attr(x, "loss_type")
-                                                  output})
+        if (is.null(times)) times <- explainer$times
+        
+        sf <- explainer$predict_survival_function(explainer$model, newdata, times)
+        risk <- explainer$predict_function(explainer$model, newdata)
+        y <- explainer$y
+        ret_list <- lapply(metrics, function(x) {
+            output <- x(y, risk, sf, times)
+            attr(output, "loss_type") <- attr(x, "loss_type")
+            output
+        })
 
-    ret_list <- list(result = ret_list, eval_times = times)
-    ret_list$event_times <- explainer$y[explainer$y[, 1] <= max(explainer$times), 1]
-    ret_list$event_statuses <- explainer$y[explainer$y[, 1] <= max(explainer$times), 2]
+        ret_list <- list(result = ret_list, eval_times = times)
+        ret_list$event_times <- explainer$y[explainer$y[, 1] <= max(explainer$times), 1]
+        ret_list$event_statuses <- explainer$y[explainer$y[, 1] <= max(explainer$times), 2]
 
-    class(ret_list) <- c("surv_model_performance", class(ret_list))
-    attr(ret_list, "label") <- explainer$label
+        class(ret_list) <- c("surv_model_performance", class(ret_list))
+        attr(ret_list, "label") <- explainer$label
 
-    ret_list
-    }
-
-    else {
+        ret_list
+    } else {
         if (is.null(times)) stop("Times cannot be NULL for type `roc`")
         rocs <- lapply(times, function(time) {
             censored_earlier_mask <- (explainer$y[, 1] < time & explainer$y[, 2] == 0)
             event_later_mask <- explainer$y[, 1] > time
             newdata_t <- newdata[!censored_earlier_mask, ]
-            labels <- explainer$y[,2]
+            labels <- explainer$y[, 2]
             labels[event_later_mask] <- 0
             labels <- labels[!censored_earlier_mask]
             scores <- explainer$predict_survival_function(explainer$model, newdata_t, time)
@@ -45,10 +46,12 @@ surv_model_performance <- function(explainer, ..., times = NULL, type = "metrics
             FPR <- cumsum(!labels) / sum(!labels)
             vals <- 1 - FPR
             n <- length(vals)
-            AUC <- sum((vals[1:(n-1)] + vals[2:n]) * diff(TPR) / 2)
-            cbind(time = time, data.frame(TPR = TPR,
-                                          FPR = FPR,
-                                          AUC = AUC))
+            AUC <- sum((vals[1:(n - 1)] + vals[2:n]) * diff(TPR) / 2)
+            cbind(time = time, data.frame(
+                TPR = TPR,
+                FPR = FPR,
+                AUC = AUC
+            ))
         })
 
 
@@ -58,6 +61,4 @@ surv_model_performance <- function(explainer, ..., times = NULL, type = "metrics
         attr(rocs_df, "label") <- explainer$label
         rocs_df
     }
-
-
 }

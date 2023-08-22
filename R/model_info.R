@@ -24,19 +24,24 @@
 #' @examples
 #' library(survival)
 #' library(survex)
-#' cph <- survival::coxph(survival::Surv(time, status) ~ ., data = veteran,
-#'                        model = TRUE, x = TRUE, y = TRUE)
+#' cph <- survival::coxph(survival::Surv(time, status) ~ .,
+#'     data = veteran,
+#'     model = TRUE, x = TRUE, y = TRUE
+#' )
 #' surv_model_info(cph)
 #'
 #' \donttest{
 #' library(ranger)
-#' rsf_ranger <- ranger::ranger(survival::Surv(time, status) ~ ., data = veteran,
-#'  num.trees = 50, mtry = 3, max.depth = 5)
+#' rsf_ranger <- ranger::ranger(survival::Surv(time, status) ~ .,
+#'     data = veteran,
+#'     num.trees = 50, mtry = 3, max.depth = 5
+#' )
 #' surv_model_info(rsf_ranger)
 #' }
 #'
-surv_model_info <- function(model, ...)
+surv_model_info <- function(model, ...) {
     UseMethod("surv_model_info")
+}
 
 
 #' @rdname surv_model_info

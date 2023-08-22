@@ -75,16 +75,20 @@ rsf_src <- randomForestSRC::rfsrc(Surv(time, status) ~ ., data = veteran)
 cph_exp <- explain(cph)
 rsf_src_exp <- explain(rsf_src)
 
-cph_model_profile <- model_profile(cph_exp, output_type = "survival",
-                                   variables = c("age"))
+cph_model_profile <- model_profile(cph_exp,
+    output_type = "survival",
+    variables = c("age")
+)
 
 head(cph_model_profile$result)
 
 plot(cph_model_profile)
 
-rsf_model_profile <- model_profile(rsf_src_exp, output_type = "survival",
-                                   variables = c("age", "celltype"),
-                                   type = "accumulated")
+rsf_model_profile <- model_profile(rsf_src_exp,
+    output_type = "survival",
+    variables = c("age", "celltype"),
+    type = "accumulated"
+)
 
 head(rsf_model_profile$result)
 

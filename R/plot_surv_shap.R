@@ -37,13 +37,12 @@ plot.surv_shap <- function(x,
                            colors = NULL,
                            rug = "all",
                            rug_colors = c("#dd0000", "#222222")) {
-
     dfl <- c(list(x), list(...))
 
     long_df <- lapply(dfl, function(x) {
         label <- attr(x, "label")
         cols <- sort(head(order(x$aggregate, decreasing = TRUE), max_vars))
-        sv <- x$result[,cols]
+        sv <- x$result[, cols]
         times <- x$eval_times
         transposed <- as.data.frame(cbind(times = times, sv))
         rownames(transposed) <- NULL
@@ -54,7 +53,7 @@ plot.surv_shap <- function(x,
         )
     })
 
-    transformed_rug_dfs <- lapply(dfl, function(x){
+    transformed_rug_dfs <- lapply(dfl, function(x) {
         label <- attr(x, "label")
         rug_df <- data.frame(times = x$event_times, statuses = as.character(x$event_statuses), label = label)
     })
@@ -71,19 +70,18 @@ plot.surv_shap <- function(x,
     n_colors <- length(unique(long_df$ind))
 
     base_plot <- with(long_df, {
-    ggplot(data = long_df, aes(x = times, y = values, color = ind)) +
-        geom_line(linewidth = 0.8) +
-        labs(x = "time", y = "SurvSHAP(t) value", title = title, subtitle = subtitle) +
-        xlim(c(0,NA)) +
-        scale_color_manual("variable", values = generate_discrete_color_scale(n_colors, colors)) +
-        theme_default_survex() +
-        facet_wrap(~label, ncol = 1, scales = "free_y")
+        ggplot(data = long_df, aes(x = times, y = values, color = ind)) +
+            geom_line(linewidth = 0.8) +
+            labs(x = "time", y = "SurvSHAP(t) value", title = title, subtitle = subtitle) +
+            xlim(c(0, NA)) +
+            scale_color_manual("variable", values = generate_discrete_color_scale(n_colors, colors)) +
+            theme_default_survex() +
+            facet_wrap(~label, ncol = 1, scales = "free_y")
     })
 
     return_plot <- add_rug_to_plot(base_plot, rug_df, rug, rug_colors)
 
     return(return_plot)
-
 }
 
 
@@ -126,62 +124,74 @@ plot.surv_shap <- function(x,
 #' \donttest{
 #' veteran <- survival::veteran
 #' rsf_ranger <- ranger::ranger(
-#'   survival::Surv(time, status) ~ .,
-#'   data = veteran,
-#'   respect.unordered.factors = TRUE,
-#'   num.trees = 100,
-#'   mtry = 3,
-#'   max.depth = 5
+#'     survival::Surv(time, status) ~ .,
+#'     data = veteran,
+#'     respect.unordered.factors = TRUE,
+#'     num.trees = 100,
+#'     mtry = 3,
+#'     max.depth = 5
 #' )
 #' rsf_ranger_exp <- explain(
-#'   rsf_ranger,
-#'   data = veteran[, -c(3, 4)],
-#'   y = survival::Surv(veteran$time, veteran$status),
-#'   verbose = FALSE
+#'     rsf_ranger,
+#'     data = veteran[, -c(3, 4)],
+#'     y = survival::Surv(veteran$time, veteran$status),
+#'     verbose = FALSE
 #' )
 #'
 #' ranger_global_survshap <- model_survshap(
-#'   explainer = rsf_ranger_exp,
-#'   new_observation = veteran[c(1:4, 17:20, 110:113, 126:129),
-#'                             !colnames(veteran) %in% c("time", "status")],
-#'   y_true = survival::Surv(veteran$time[c(1:4, 17:20, 110:113, 126:129)],
-#'                           veteran$status[c(1:4, 17:20, 110:113, 126:129)]),
-#'   aggregation_method = "integral",
-#'   calculation_method = "kernelshap",
+#'     explainer = rsf_ranger_exp,
+#'     new_observation = veteran[
+#'         c(1:4, 17:20, 110:113, 126:129),
+#'         !colnames(veteran) %in% c("time", "status")
+#'     ],
+#'     y_true = survival::Surv(
+#'         veteran$time[c(1:4, 17:20, 110:113, 126:129)],
+#'         veteran$status[c(1:4, 17:20, 110:113, 126:129)]
+#'     ),
+#'     aggregation_method = "integral",
+#'     calculation_method = "kernelshap",
 #' )
 #' plot(ranger_global_survshap)
 #' plot(ranger_global_survshap, geom = "beeswarm")
 #' plot(ranger_global_survshap, geom = "profile", color_variable = "karno")
 #' }
 #'
-#'@export
+#' @export
 plot.aggregated_surv_shap <- function(x,
                                       geom = "importance",
                                       ...,
-                                      title="default",
-                                      subtitle="default",
-                                      max_vars=7,
-                                      colors = NULL){
-    if (is.null(colors)){
-        colors <- c(low = "#9fe5bd",
-                    mid = "#46bac2",
-                    high = "#371ea3")
+                                      title = "default",
+                                      subtitle = "default",
+                                      max_vars = 7,
+                                      colors = NULL) {
+    if (is.null(colors)) {
+        colors <- c(
+            low = "#9fe5bd",
+            mid = "#46bac2",
+            high = "#371ea3"
+        )
     }
 
-    if (geom == "swarm")
+    if (geom == "swarm") {
         geom <- "beeswarm"
+    }
 
-    switch(
-        geom,
-        "importance" = plot_shap_global_importance(x = x,
-                                          ... = ...,
-                                          colors = colors),
-        "beeswarm" = plot_shap_global_beeswarm(x = x,
-                                     ... = ...,
-                                     colors = colors),
-        "profile" = plot_shap_global_profile(x = x,
-                                           ... = ...,
-                                           colors = colors),
+    switch(geom,
+        "importance" = plot_shap_global_importance(
+            x = x,
+            ... = ...,
+            colors = colors
+        ),
+        "beeswarm" = plot_shap_global_beeswarm(
+            x = x,
+            ... = ...,
+            colors = colors
+        ),
+        "profile" = plot_shap_global_profile(
+            x = x,
+            ... = ...,
+            colors = colors
+        ),
         stop("`geom` must be one of 'importance', 'beeswarm' or 'profile'")
     )
 }
@@ -195,26 +205,28 @@ plot_shap_global_importance <- function(x,
                                         rug = "all",
                                         rug_colors = c("#dd0000", "#222222"),
                                         xlab_left = "Average |aggregated SurvSHAP(t)| value",
-                                        ylab_right = "Average |SurvSHAP(t)| value"){
-
+                                        ylab_right = "Average |SurvSHAP(t)| value") {
     x$result <- aggregate_shap_multiple_observations(x$result, colnames(x$result[[1]]), function(x) mean(abs(x)))
     x$aggregate <- apply(do.call(rbind, x$aggregate), 2, function(x) mean(abs(x)))
 
-    right_plot <- plot.surv_shap(x = x,
-                                 title = NULL,
-                                 subtitle = NULL,
-                                 max_vars = max_vars,
-                                 colors = NULL,
-                                 rug = rug,
-                                 rug_colors = rug_colors) +
+    right_plot <- plot.surv_shap(
+        x = x,
+        title = NULL,
+        subtitle = NULL,
+        max_vars = max_vars,
+        colors = NULL,
+        rug = rug,
+        rug_colors = rug_colors
+    ) +
         labs(y = ylab_right)
 
     label <- attr(x, "label")
     long_df <- stack(x$aggregate)
-    long_df <- long_df[order(long_df$values, decreasing = TRUE),][1:min(max_vars, length(x$aggregate)), ]
+    long_df <- long_df[order(long_df$values, decreasing = TRUE), ][1:min(max_vars, length(x$aggregate)), ]
 
-    if (!is.null(subtitle) && subtitle == "default")
+    if (!is.null(subtitle) && subtitle == "default") {
         title <- "Feature importance according to aggregated |SurvSHAP(t)|"
+    }
     if (!is.null(subtitle) && subtitle == "default") {
         subtitle <- paste0(
             "created for the ", label, " model ",
@@ -228,41 +240,42 @@ plot_shap_global_importance <- function(x,
             theme_default_survex() +
             labs(x = xlab_left) +
             theme(axis.title.y = element_blank())
-
     })
 
 
     pl <- left_plot +
         right_plot +
-        patchwork::plot_layout(widths = c(3,5), guides = "collect") +
+        patchwork::plot_layout(widths = c(3, 5), guides = "collect") +
         patchwork::plot_annotation(title = title, subtitle = subtitle) &
-        theme(legend.position = "top",
-              plot.title = element_text(color = "#371ea3", size = 16, hjust = 0),
-              plot.subtitle = element_text(color = "#371ea3", hjust = 0),)
+        theme(
+            legend.position = "top",
+            plot.title = element_text(color = "#371ea3", size = 16, hjust = 0),
+            plot.subtitle = element_text(color = "#371ea3", hjust = 0),
+        )
 
     return(pl)
 }
 
 plot_shap_global_beeswarm <- function(x,
-                                   ...,
-                                   title = "default",
-                                   subtitle = "default",
-                                   max_vars = 7,
-                                   colors = NULL){
-
+                                      ...,
+                                      title = "default",
+                                      subtitle = "default",
+                                      max_vars = 7,
+                                      colors = NULL) {
     df <- as.data.frame(do.call(rbind, x$aggregate))
     cols <- names(sort(colMeans(abs(df))))[1:min(max_vars, length(df))]
-    df <- df[,cols]
+    df <- df[, cols]
     df <- stack(df)
     colnames(df) <- c("shap_value", "variable")
 
-    original_values <- as.data.frame(x$variable_values)[,cols]
+    original_values <- as.data.frame(x$variable_values)[, cols]
     var_value <- preprocess_values_to_common_scale(original_values)
     df <- cbind(df, var_value)
 
     label <- attr(x, "label")
-    if (!is.null(subtitle) && subtitle == "default")
+    if (!is.null(subtitle) && subtitle == "default") {
         title <- "Aggregated SurvSHAP(t) values summary"
+    }
     if (!is.null(subtitle) && subtitle == "default") {
         subtitle <- paste0(
             "created for the ", label, " model ",
@@ -270,26 +283,28 @@ plot_shap_global_beeswarm <- function(x,
         )
     }
     with(df, {
-    ggplot(data = df, aes(x = shap_value, y = variable, color = var_value)) +
-        geom_vline(xintercept = 0, color = "#ceced9", linetype="solid") +
-        geom_jitter(width=0, height=0.15) +
-        scale_color_gradient2(
-            name = "Variable value",
-            low = colors[1],
-            mid = colors[2],
-            high = colors[3],
-            midpoint = 0.5,
-            limits=c(0,1),
-            breaks = c(0, 1),
-            labels=c("", "")) +
-        labs(title = title, subtitle = subtitle,
-             x = "Aggregated SurvSHAP(t) value",
-             y = "Variable") +
-        theme_default_survex() +
-        theme(legend.position = "bottom") +
-        guides(color = guide_colorbar(title.position = "top", title.hjust = 0.5))
-    }
-  )
+        ggplot(data = df, aes(x = shap_value, y = variable, color = var_value)) +
+            geom_vline(xintercept = 0, color = "#ceced9", linetype = "solid") +
+            geom_jitter(width = 0, height = 0.15) +
+            scale_color_gradient2(
+                name = "Variable value",
+                low = colors[1],
+                mid = colors[2],
+                high = colors[3],
+                midpoint = 0.5,
+                limits = c(0, 1),
+                breaks = c(0, 1),
+                labels = c("", "")
+            ) +
+            labs(
+                title = title, subtitle = subtitle,
+                x = "Aggregated SurvSHAP(t) value",
+                y = "Variable"
+            ) +
+            theme_default_survex() +
+            theme(legend.position = "bottom") +
+            guides(color = guide_colorbar(title.position = "top", title.hjust = 0.5))
+    })
 }
 
 plot_shap_global_profile <- function(x,
@@ -299,28 +314,28 @@ plot_shap_global_profile <- function(x,
                                      title = "default",
                                      subtitle = "default",
                                      max_vars = 7,
-                                     colors = NULL){
-
+                                     colors = NULL) {
     df <- as.data.frame(do.call(rbind, x$aggregate))
 
-    if (is.null(variable)){
+    if (is.null(variable)) {
         variable <- colnames(df)[1]
     }
-    if (is.null(color_variable)){
+    if (is.null(color_variable)) {
         color_variable <- variable
     }
 
-    shap_val <- df[,variable]
+    shap_val <- df[, variable]
 
     original_values <- as.data.frame(x$variable_values)
-    var_vals <- original_values[,c(variable, color_variable)]
+    var_vals <- original_values[, c(variable, color_variable)]
 
     df <- cbind(shap_val, var_vals)
     colnames(df) <- c("shap_val", "variable_val", "color_variable_val")
 
     label <- attr(x, "label")
-    if (!is.null(subtitle) && subtitle == "default")
+    if (!is.null(subtitle) && subtitle == "default") {
         title <- "Aggregated SurvSHAP(t) profile"
+    }
     if (!is.null(subtitle) && subtitle == "default") {
         subtitle <- paste0(
             "created for the ", label, " model ",
@@ -329,16 +344,18 @@ plot_shap_global_profile <- function(x,
     }
 
     p <- with(df, {
-      ggplot(df, aes(x = variable_val, y = shap_val, color = color_variable_val)) +
-        geom_hline(yintercept = 0, color = "#ceced9", linetype="solid") +
-        geom_point() +
-        geom_rug(aes(x = df$variable_val), inherit.aes=F, color = "#ceced9") +
-        labs(x = paste(variable, "value"),
-             y = "Aggregated SurvSHAP(t) value",
-             title = title,
-             subtitle = subtitle) +
-        theme_default_survex() +
-        theme(legend.position = "bottom")
+        ggplot(df, aes(x = variable_val, y = shap_val, color = color_variable_val)) +
+            geom_hline(yintercept = 0, color = "#ceced9", linetype = "solid") +
+            geom_point() +
+            geom_rug(aes(x = df$variable_val), inherit.aes = F, color = "#ceced9") +
+            labs(
+                x = paste(variable, "value"),
+                y = "Aggregated SurvSHAP(t) value",
+                title = title,
+                subtitle = subtitle
+            ) +
+            theme_default_survex() +
+            theme(legend.position = "bottom")
     })
 
     if (!is.factor(df$color_variable_val)) {
@@ -347,10 +364,13 @@ plot_shap_global_profile <- function(x,
             low = colors[1],
             mid = colors[2],
             high = colors[3],
-            midpoint = median(df$color_variable_val))
+            midpoint = median(df$color_variable_val)
+        )
     } else {
-        p + scale_color_manual(name = paste(color_variable, "value"),
-                           values = generate_discrete_color_scale(length(unique(df$color_variable_val)), colors))
+        p + scale_color_manual(
+            name = paste(color_variable, "value"),
+            values = generate_discrete_color_scale(length(unique(df$color_variable_val)), colors)
+        )
     }
 }
 
@@ -367,7 +387,5 @@ preprocess_values_to_common_scale <- function(data) {
     })
     res <- stack(data)
     colnames(res) <- c("var_value", "variable")
-    return(res[,1])
+    return(res[, 1])
 }
-
-

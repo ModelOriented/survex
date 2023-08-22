@@ -35,7 +35,6 @@ surv_feature_importance.surv_explainer <- function(x,
                                                    variable_groups = NULL,
                                                    N = NULL,
                                                    label = NULL) {
-    
     test_explainer(x, "feature_importance", has_data = TRUE, has_y = TRUE, has_survival = TRUE)
 
     model <- x$model
@@ -50,21 +49,20 @@ surv_feature_importance.surv_explainer <- function(x,
 
 
     surv_feature_importance.default(model,
-                                    data,
-                                    y,
-                                    times,
-                                    predict_function = predict_function,
-                                    predict_survival_function = predict_survival_function,
-                                    loss_function = loss_function,
-                                    label = label,
-                                    type = type,
-                                    N = N,
-                                    B = B,
-                                    variables = variables,
-                                    variable_groups = variable_groups,
-                                    ...
+        data,
+        y,
+        times,
+        predict_function = predict_function,
+        predict_survival_function = predict_survival_function,
+        loss_function = loss_function,
+        label = label,
+        type = type,
+        N = N,
+        B = B,
+        variables = variables,
+        variable_groups = variable_groups,
+        ...
     )
-
 }
 
 
@@ -82,10 +80,6 @@ surv_feature_importance.default <- function(x,
                                             variables = NULL,
                                             N = NULL,
                                             variable_groups = NULL) {
-
-
-
-
     if (!is.null(variable_groups)) {
         if (!inherits(variable_groups, "list")) stop("variable_groups should be of class list")
 
@@ -144,7 +138,7 @@ surv_feature_importance.default <- function(x,
         loss_full <- loss_function(observed, risk_true, surv_true, times)
         prog()
         chosen <- sample(1:nrow(observed))
-        loss_baseline <- loss_function(observed[chosen, ],  risk_true, surv_true, times)
+        loss_baseline <- loss_function(observed[chosen, ], risk_true, surv_true, times)
         prog()
         # loss upon dropping a single variable (or a single group)
         loss_variables <- sapply(variables, function(variables_set) {
@@ -173,13 +167,11 @@ surv_feature_importance.default <- function(x,
         res_full <- res[res$`_permutation_` == 0, c("_times_", "_full_model_")]
         colnames(res_full) <- c("_times_", "_reference_")
         res <- merge(res, res_full, by = "_times_")
-        res <- res[order(res$`_permutation_`, res$`_times_`),]
+        res <- res[order(res$`_permutation_`, res$`_times_`), ]
     }
     if (type == "ratio") {
-
         res[, 2:(ncol(res) - 3)] <- res[, 2:(ncol(res) - 3)] / res[["_reference_"]]
         res$`_reference_` <- NULL
-
     }
     if (type == "difference") {
         res[, 2:(ncol(res) - 3)] <- res[, 2:(ncol(res) - 3)] - res[["_reference_"]]

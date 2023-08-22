@@ -65,8 +65,9 @@ cph_exp <- explain(cph)
 rsf_src_exp <- explain(rsf_src)
 
 cph_predict_profile <- predict_profile(cph_exp, veteran[2, -c(3, 4)],
-                                       variables = c("trt", "celltype", "karno", "age"),
-                                       categorical_variables = "trt")
+    variables = c("trt", "celltype", "karno", "age"),
+    categorical_variables = "trt"
+)
 plot(cph_predict_profile, facet_ncol = 2)
 
 
