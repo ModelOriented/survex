@@ -29,7 +29,7 @@ Imports:
     survival,
     patchwork
 Suggests:
-    censored,
+    censored (>= 0.2.0),
     covr,
     gbm,
     generics,
