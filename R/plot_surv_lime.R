@@ -98,4 +98,5 @@ plot.surv_lime <- function(x,
         })
         return(patchwork::wrap_plots(pl, pl2, nrow = 1, widths = c(3, 5)))
     }
+    pl
 }
