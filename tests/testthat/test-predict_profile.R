@@ -20,6 +20,7 @@ test_that("ceteris_paribus works", {
     plot(cph_pp, rug = "censors", variable_type = "numerical")
     plot(cph_pp, rug = "none")
 
+    expect_error(plot(cph_pp, variables = "aaa"))
     expect_error(plot(cph_pp, variable_type = "nonexistent"))
     expect_error(plot(cph_pp, numerical_plot_type = "nonexistent"))
     expect_error(predict_profile(cph_exp, veteran[2, -c(3, 4)], output_type = "nonexistent"))

@@ -37,6 +37,12 @@ test_that("model_profile with type = 'partial' works", {
     plot(mp_cph_num, geom = "variable", times = c(4, 80.7), variables = "karno", plot_type = "pdp")
     plot(mp_cph_num, geom = "variable", times = c(4, 80.7), variables = "karno", plot_type = "ice")
 
+    expect_error(plot(mp_cph_num, geom = "variable", variables = "karno", plot_type = "nonexistent", times = cph_exp$times[1]))
+    expect_error(plot(mp_cph_num, geom = "variable", variables = 1, plot_type = "pdp+ice", times = cph_exp$times[1]))
+    expect_error(plot(mp_cph_num, geom = "variable", variables = c("karno", "diagtime"), plot_type = "pdp+ice", times = cph_exp$times[1]))
+    expect_error(plot(mp_cph_num, geom = "variable", variables = "nonexistent", plot_type = "pdp+ice", times = cph_exp$times[1]))
+
+
     expect_s3_class(mp_cph_num, "model_profile_survival")
     expect_true(all(unique(mp_cph_num$eval_times) == cph_exp$times))
     expect_equal(ncol(mp_cph_num$result), 7)
@@ -83,7 +89,11 @@ test_that("model_profile with type = 'partial' works", {
     expect_error(plot(mp_rsf_num, geom = "variable", variables = "age", times = -1))
     expect_error(plot(mp_rsf_num, geom = "nonexistent"))
     expect_error(plot(mp_rsf_num, nonsense_argument = "character"))
-    })
+
+    centered_mp <- model_profile(rsf_src_exp, variables = "karno", center = TRUE)
+    plot(centered_mp, geom = "variable", variables = "karno", times = rsf_src_exp$times[1])
+
+})
 
 test_that("model_profile with type = 'accumulated' works", {
     veteran <- survival::veteran[c(1:3, 16:18, 46:48, 56:58, 71:73, 91:93, 111:113, 126:128), ]

@@ -44,12 +44,17 @@ test_that("model_performance works", {
     plot(cph_rot_perf, rsf_rot_perf, rug = "censors")
     plot(cph_rot_perf, rsf_rot_perf, rug = "none")
     plot(cph_rot_perf, rsf_rot_perf, metrics_type = "scalar")
+    plot(cph_rot_perf, metrics = "Integrated Brier score")
+
+    expect_error(plot(cph_rot_perf, metrics_type = "nonexistent"))
 
     cph_rot_perf_roc <- model_performance(cph_exp_rot, type = "roc", times = c(100, 200))
     rsf_rot_perf_roc <- model_performance(rsf_exp_rot, type = "roc", times = c(100, 200))
 
     plot(cph_rot_perf_roc)
     plot(rsf_rot_perf_roc)
+
+
 
     expect_error(model_performance(rsf_exp_rot, type = "roc", times = NULL))
 

@@ -33,6 +33,8 @@ test_that("C-index fpi works", {
                                 y = survival::Surv(rotterdam$rtime, rotterdam$recur), verbose = FALSE)
 
 
+
+    expect_error(model_parts(coxph_explainer, output_type = "nonexistent"))
     mp_cph_cind <- model_parts(coxph_explainer, loss = loss_one_minus_c_index, type = "variable_importance", output_type = "risk")
     mp_rsf_cind <- model_parts(forest_explainer, loss = loss_one_minus_c_index, output_type = "risk")
 
@@ -202,6 +204,6 @@ test_that("integrated metrics fpi works", {
 
     rsf_ranger_exp$data <- NULL
     expect_error(model_parts(rsf_ranger_exp, loss = loss_integrated_brier_score, B = 10, type = "raw"))
-    
+
 
 })
