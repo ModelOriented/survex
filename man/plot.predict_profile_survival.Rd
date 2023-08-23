@@ -4,39 +4,55 @@
 \alias{plot.predict_profile_survival}
 \title{Plot Predict Profile for Survival Models}
 \usage{
-\method{plot}{predict_profile_survival}(x, ...)
+\method{plot}{predict_profile_survival}(
+  x,
+  ...,
+  geom = "time",
+  variables = NULL,
+  variable_type = NULL,
+  facet_ncol = NULL,
+  numerical_plot_type = "lines",
+  times = NULL,
+  marginalize_over_time = FALSE,
+  title = "default",
+  subtitle = "default",
+  colors = NULL,
+  rug = "all",
+  rug_colors = c("#dd0000", "#222222")
+)
 }
 \arguments{
-\item{x}{an object of class  \code{"predict_profile_survival"} to be plotted}
+\item{x}{an object of class \code{predict_profile_survival} to be plotted}
 
-\item{...}{additional parameters passed to the \code{plot.surv_ceteris_paribus} function}
+\item{...}{additional objects of class \code{"predict_profile_survival"} to be plotted together. Only available for \code{geom = "time"}.}
+
+\item{geom}{character, either \code{"time"} or \code{"variable"}. Selects the type of plot to be prepared. If \code{"time"} then the x-axis represents survival times, and variable is denoted by colors, if \code{"variable"} then the x-axis represents the variable values, and y-axis represents the predictions at selected time points.}
+
+\item{variables}{character, names of the variables to be plotted. When \code{geom = "variable"} it needs to be a name of a single variable, when \code{geom = "time"} it can be a vector of variable names. If \code{NULL} (default) then first variable (for \code{geom = "variable"}) or all variables (for \code{geom = "time"}) are plotted.}
+
+\item{variable_type}{character, either \code{"numerical"}, \code{"categorical"} or \code{NULL} (default), select only one type of variable for plotting, or leave \code{NULL} for all.  Only used when \code{geom = "time"}.}
+
+\item{facet_ncol}{number of columns for arranging subplots.  Only used when \code{geom = "time"}.}
+
+\item{numerical_plot_type}{character, either \code{"lines"}, or \code{"contours"} selects the type of numerical variable plots.  Only used when \code{geom = "time"}.}
+
+\item{title}{character, title of the plot}
+
+\item{subtitle}{character, subtitle of the plot, \code{'default'} automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels}
+
+\item{colors}{character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")}
+
+\item{rug}{character, one of \code{"all"}, \code{"events"}, \code{"censors"}, \code{"none"} or \code{NULL}. Which times to mark on the x axis in \code{geom_rug()}.}
+
+\item{rug_colors}{character vector containing two colors (containing either hex codes \code{"#FF69B4"}, or names \code{"blue"}). The first color (red by default) will be used to mark event times, whereas the second (grey by default) will be used to mark censor times.}
 }
 \value{
 A collection of \code{ggplot} objects arranged with the \code{patchwork} package.
 }
 \description{
-This function plots objects of class \code{"predict_profile_survival"} - local explanations
-for survival models created using the \code{predict_profile()} function.
+This function plots objects of class \code{"predict_profile_survival"} created using
+the \code{predict_profile()} function.
 }
-\section{Plot options}{
-
-\subsection{\code{plot.surv_ceteris_paribus}}{
-\itemize{
-\item \code{x} - an object of class \code{predict_profile_survival} to be plotted
-\item \code{...} - additional parameters, unused, currently ignored
-\item \code{colors} - character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")
-\item \code{variable_type} - character, either \code{"numerical"}, \code{"categorical"} or \code{NULL} (default), select only one type of variable for plotting, or leave \code{NULL} for all
-\item \code{facet_ncol} - number of columns for arranging subplots
-\item \code{variables} - character, names of the variables to be plotted
-\item \code{numerical_plot_type} - character, either \code{"lines"}, or \code{"contours"} selects the type of numerical variable plots
-\item \code{title} - character, title of the plot
-\item \code{subtitle} - character, subtitle of the plot, \code{'default'} automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels
-\item \code{rug} - character, one of \code{"all"}, \code{"events"}, \code{"censors"}, \code{"none"} or \code{NULL}. Which times to mark on the x axis in \code{geom_rug()}.
-\item \code{rug_colors} - character vector containing two colors (containing either hex codes "#FF69B4", or names "blue"). The first color (red by default) will be used to mark event times, whereas the second (grey by default) will be used to mark censor times.
-}
-}
-}
-
 \examples{
 \donttest{
 library(survival)
@@ -57,9 +73,5 @@ p_profile_with_cat <- predict_profile(
 
 plot(p_profile_with_cat)
 }
+
 }
-\seealso{
-Other functions for plotting 'predict_profile_survival' objects: 
-\code{\link{plot.surv_ceteris_paribus}()}
-}
-\concept{functions for plotting 'predict_profile_survival' objects}

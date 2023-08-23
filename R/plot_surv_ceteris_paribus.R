@@ -1,115 +1,10 @@
-#' Plot Predict Profile for Survival Models
-#'
-#' This function plots objects of class `"predict_profile_survival"` created using
-#' the `predict_profile()` function.
-#'
-#' @param x an object of class `predict_profile_survival` to be plotted
-#' @param ... additional objects of class `"predict_profile_survival"` to be plotted together
-#' @param colors character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")
-#' @param variable_type character, either `"numerical"`, `"categorical"` or `NULL` (default), select only one type of variable for plotting, or leave `NULL` for all
-#' @param facet_ncol number of columns for arranging subplots
-#' @param variables character, names of the variables to be plotted
-#' @param numerical_plot_type character, either `"lines"`, or `"contours"` selects the type of numerical variable plots
-#' @param title character, title of the plot
-#' @param subtitle character, subtitle of the plot, `'default'` automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels
-#' @param rug character, one of `"all"`, `"events"`, `"censors"`, `"none"` or `NULL`. Which times to mark on the x axis in `geom_rug()`.
-#' @param rug_colors character vector containing two colors (containing either hex codes `"#FF69B4"`, or names `"blue"`). The first color (red by default) will be used to mark event times, whereas the second (grey by default) will be used to mark censor times.
-#'
-#' @return A collection of `ggplot` objects arranged with the `patchwork` package.
-#'
-#' @family functions for plotting 'predict_profile_survival' objects
-#'
-#' @examples
-#' \donttest{
-#' library(survival)
-#' library(survex)
-#'
-#' model <- randomForestSRC::rfsrc(Surv(time, status) ~ ., data = veteran)
-#' exp <- explain(model)
-#'
-#' p_profile <- predict_profile(exp, veteran[1, -c(3, 4)])
-#'
-#' plot(p_profile)
-#'
-#' p_profile_with_cat <- predict_profile(
-#'     exp,
-#'     veteran[1, -c(3, 4)],
-#'     categorical_variables = c("trt", "prior")
-#' )
-#'
-#' plot(p_profile_with_cat)
-#' }
-#'
-#' @export
-plot.surv_ceteris_paribus <- function(x,
-                                      ...,
-                                      colors = NULL,
-                                      variable_type = NULL,
-                                      facet_ncol = NULL,
-                                      variables = NULL,
-                                      numerical_plot_type = "lines",
-                                      title = "Ceteris paribus survival profile",
-                                      subtitle = "default",
-                                      rug = "all",
-                                      rug_colors = c("#dd0000", "#222222")) {
-    if (!is.null(variable_type)) {
-        check_variable_type(variable_type)
-    }
-    check_numerical_plot_type(numerical_plot_type)
-
-    explanations_list <- c(list(x), list(...))
-    num_models <- length(explanations_list)
-
-    if (num_models == 1) {
-        result <- prepare_ceteris_paribus_plots(
-            x,
-            colors,
-            variable_type,
-            facet_ncol,
-            variables,
-            numerical_plot_type,
-            title,
-            subtitle,
-            rug,
-            rug_colors
-        )
-        return(result)
-    }
-
-    return_list <- list()
-    labels <- list()
-    for (i in 1:num_models) {
-        this_title <- unique(explanations_list[[i]]$result$`_label_`)
-        return_list[[i]] <- prepare_ceteris_paribus_plots(
-            explanations_list[[i]],
-            colors,
-            variable_type,
-            1,
-            variables,
-            numerical_plot_type,
-            this_title,
-            NULL,
-            rug,
-            rug_colors
-        )
-        labels[[i]] <- c(this_title, rep("", length(return_list[[i]]$patches) - 2))
-    }
-
-    labels <- unlist(labels)
-    return_plot <- patchwork::wrap_plots(return_list, nrow = 1, tag_level = "keep") +
-        patchwork::plot_annotation(title, tag_levels = list(labels)) & theme_default_survex()
-
-    return(return_plot)
-}
-
-
 prepare_ceteris_paribus_plots <- function(x,
                                           colors = NULL,
                                           variable_type = NULL,
                                           facet_ncol = NULL,
                                           variables = NULL,
                                           numerical_plot_type = "lines",
-                                          title = "Ceteris paribus survival profile",
+                                          title = "default",
                                           subtitle = "default",
                                           rug = "all",
                                           rug_colors = c("#dd0000", "#222222")) {
@@ -117,7 +12,6 @@ prepare_ceteris_paribus_plots <- function(x,
     obs <- as.data.frame(x$variable_values)
     center <- x$center
     x <- x$result
-
 
     all_profiles <- x
     class(all_profiles) <- "data.frame"
@@ -348,17 +242,4 @@ plot_individual_ceteris_paribus_survival <- function(all_profiles,
     })
 
     pl
-}
-
-
-check_variable_type <- function(variable_type) {
-    if (!(variable_type %in% c("numerical", "categorical"))) {
-        stop("variable_type needs to be 'numerical' or 'categorical'")
-    }
-}
-
-check_numerical_plot_type <- function(numerical_plot_type) {
-    if (!(numerical_plot_type %in% c("lines", "contours"))) {
-        stop("numerical_plot_type needs to be 'lines' or 'contours'")
-    }
 }
