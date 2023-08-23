@@ -145,7 +145,7 @@ dev.off()
 ```
 ``` {r, fig.height=18}
 model_profile_rsf <- model_profile(rsf_exp, categorical_variables=c("trt", "prior"))
-plot(model_profile_rsf, facet_ncol = 1, numerical_plot_type = "contour")
+plot(model_profile_rsf, facet_ncol = 1, numerical_plot_type = "contours")
 ```
 
 This type of plot also gives us valuable insight that is easy to overlook in the other type. For example, we see a sharp drop in survival function values around `diagtime=25`. We also observe that the most significant influence of the `karno` variable is consistent across the proportional hazards and random survival forest.
