@@ -283,7 +283,7 @@ surv_ale <- function(x,
 
             # First order finite differences
             prediction_deltas <- predictions_upper - predictions_lower
-            # Rename columns to timepoints for which predictions were made
+            # Rename columns to time points for which predictions were made
             colnames(prediction_deltas) <- times
 
             deltas <- data.frame(

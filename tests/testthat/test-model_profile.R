@@ -28,11 +28,11 @@ test_that("model_profile with type = 'partial' works", {
     plot(mp_cph_num, numerical_plot_type = "contours")
 
     ### Add tests for plot for numerical PDP
-    # single timepoint
+    # single time point
     plot(mp_cph_num, geom = "variable", variables = "karno", plot_type = "pdp+ice", times = cph_exp$times[1])
     plot(mp_cph_num, geom = "variable", variables = "karno", plot_type = "pdp", times = cph_exp$times[1])
     plot(mp_cph_num, geom = "variable", variables = "karno", plot_type = "ice", times = cph_exp$times[1])
-    # multiple timepoints
+    # multiple time points
     plot(mp_cph_num, geom = "variable", times = c(4, 80.7), variables = "karno", plot_type = "pdp+ice")
     plot(mp_cph_num, geom = "variable", times = c(4, 80.7), variables = "karno", plot_type = "pdp")
     plot(mp_cph_num, geom = "variable", times = c(4, 80.7), variables = "karno", plot_type = "ice")
@@ -55,11 +55,11 @@ test_that("model_profile with type = 'partial' works", {
 
     plot(mp_cph_cat, mp_rsf_cat)
     ### Add tests for plot for categorical PDP
-    # single timepoint
+    # single time point
     plot(mp_rsf_cat, geom = "variable", variables = "celltype", plot_type = "pdp+ice", times = rsf_ranger_exp$times[1])
     plot(mp_rsf_cat, geom = "variable", variables = "celltype", plot_type = "pdp", times = rsf_ranger_exp$times[1])
     plot(mp_rsf_cat, geom = "variable", variables = "celltype", plot_type = "ice", times = rsf_ranger_exp$times[1])
-    # multiple timepoints
+    # multiple time points
     plot(mp_rsf_cat, geom = "variable", times = c(4, 80.7), variables = "celltype", plot_type = "pdp+ice")
     plot(mp_rsf_cat, geom = "variable", times = c(4, 80.7), marginalize_over_time = T, variables = "celltype", plot_type = "pdp+ice")
     plot(mp_rsf_cat, geom = "variable", times = c(4, 80.7), variables = "celltype", plot_type = "pdp")
@@ -115,9 +115,9 @@ test_that("model_profile with type = 'accumulated' works", {
     plot(mp_cph_cat, variables = "celltype", variable_type = "categorical")
 
     ### Add tests for plot for categorical ALE
-    # single timepoint
+    # single time point
     plot(mp_cph_cat, geom = "variable", variables = "celltype", times=cph_exp$times[1])
-    # multiple timepoints
+    # multiple time points
     plot(mp_cph_cat, geom = "variable", times = c(4, 80.7), variables = "celltype", plot_type = "ale")
 
     expect_s3_class(mp_cph_cat, "model_profile_survival")
@@ -139,9 +139,9 @@ test_that("model_profile with type = 'accumulated' works", {
     plot(mp_cph_num, numerical_plot_type = "contours")
 
     ### Add tests for plot for numerical ALE
-    # single timepoint
+    # single time point
     plot(mp_cph_num, geom = "variable", variables = "karno", plot_type = "ale", times=cph_exp$times[1])
-    # multiple timepoints
+    # multiple time points
     plot(mp_cph_num, geom = "variable", times = c(4, 80.7), variables = "karno", plot_type = "ale")
 
     expect_s3_class(mp_cph_num, "model_profile_survival")

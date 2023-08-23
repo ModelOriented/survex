@@ -29,7 +29,7 @@
 #' @export
 plot.surv_model_performance_rocs <- function(x,
                                              ...,
-                                             title = "ROC curves for selected timepoints",
+                                             title = "ROC curves for selected time points",
                                              subtitle = "default",
                                              auc = TRUE,
                                              colors = NULL,
