@@ -938,7 +938,9 @@ explain.sksurv <- function(model,
         attr(data, "verbose_info") <- "colnames_changed"
     }
 
-    class(model) <- c("sksurv", class(model))
+    if (class(model)[1] != "sksurv"){
+        class(model) <- c("sksurv", class(model))
+    }
 
     explain_survival(
         model,
