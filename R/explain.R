@@ -190,7 +190,11 @@ explain_survival <-
             if (!is.null(attr(data, "verbose_info")) && attr(data, "verbose_info") == "extracted") {
                 verbose_cat("  -> data              : ", n, " rows ", ncol(data), " cols", "(", color_codes$yellow_start, "extracted from the model", color_codes$yellow_end, ")", verbose = verbose)
                 attr(data, "verbose_info") <- NULL
-            } else {
+            } else if (!is.null(attr(data, "verbose_info")) && attr(data, "verbose_info") == "colnames_changed") {
+                verbose_cat("  -> data              : ", n, " rows ", ncol(data), " cols", "(", color_codes$yellow_start, "colnames changed to comply with the model", color_codes$yellow_end, ")", verbose = verbose)
+                attr(data, "verbose_info") <- NULL
+            }
+            else {
                 verbose_cat("  -> data              : ", n, " rows ", ncol(data), " cols", verbose = verbose)
             }
         }
@@ -254,7 +258,7 @@ explain_survival <-
         # verbose predict function
         if (is.null(predict_function)) {
             if (!is.null(predict_cumulative_hazard_function)) {
-                predict_function <- function(model, newdata) risk_from_chf(predict_cumulative_hazard_function(model, newdata, times = times))
+                predict_function <- risk_from_chf(predict_cumulative_hazard_function, times)
                 verbose_cat("  -> predict function  : ", "sum over the predict_cumulative_hazard_function will be used", is.default = TRUE, verbose = verbose)
             } else {
                 verbose_cat("  -> predict function   :  not specified! (", color_codes$red_start, "WARNING", color_codes$red_end, ")", verbose = verbose)
@@ -411,22 +415,41 @@ explain.default <- function(model,
                 predict_survival_function = pec::predictSurvProb
             )
         )
-    } else {
-        DALEX::explain(model,
-            data = data,
-            y = y,
-            predict_function = predict_function,
-            predict_function_target_column = predict_function_target_column,
-            residual_function = residual_function,
-            weights = weights,
-            ... = ...,
-            label = label,
-            verbose = verbose,
-            colorize = !isTRUE(getOption("knitr.in.progress")),
-            model_info = model_info,
-            type = type
+    }
+    if (inherits(model, "sksurv.base.SurvivalAnalysisMixin")){
+        return(
+            explain.sksurv(model,
+                data = data,
+                y = y,
+                predict_function = predict_function,
+                predict_function_target_column = predict_function_target_column,
+                residual_function = residual_function,
+                weights = weights,
+                ...,
+                label = label,
+                verbose = verbose,
+                colorize = colorize,
+                model_info = model_info,
+                type = type
+            )
         )
     }
+
+    DALEX::explain(model,
+        data = data,
+        y = y,
+        predict_function = predict_function,
+        predict_function_target_column = predict_function_target_column,
+        residual_function = residual_function,
+        weights = weights,
+        ... = ...,
+        label = label,
+        verbose = verbose,
+        colorize = !isTRUE(getOption("knitr.in.progress")),
+        model_info = model_info,
+        type = type
+    )
+
 }
 
 #' @export
@@ -845,6 +868,98 @@ explain.LearnerSurv <- function(model,
     )
 }
 
+#' @export
+explain.sksurv <- function(model,
+                          data = NULL,
+                          y = NULL,
+                          predict_function = NULL,
+                          predict_function_target_column = NULL,
+                          residual_function = NULL,
+                          weights = NULL,
+                          ...,
+                          label = NULL,
+                          verbose = TRUE,
+                          colorize = !isTRUE(getOption("knitr.in.progress")),
+                          model_info = NULL,
+                          type = NULL,
+                          times = NULL,
+                          times_generation = "quantiles",
+                          predict_survival_function = NULL,
+                          predict_cumulative_hazard_function = NULL){
+    if (is.null(label)) {
+        label <- class(model)[1]
+        attr(label, "verbose_info") <- "default"
+    }
+
+    if (is.null(predict_survival_function)) {
+        if (reticulate::py_has_attr(model, "predict_survival_function")) {
+            predict_survival_function <- function(model, newdata, times){
+                raw_preds <- model$predict_survival_function(newdata)
+                t(sapply(raw_preds, function(sf) as.vector(sf(times))))
+            }
+            attr(predict_survival_function, "verbose_info") <- "predict_survival_function from scikit-survival will be used"
+            attr(predict_survival_function, "is.default") <- TRUE
+        }
+    } else {
+        attr(predict_survival_function, "verbose_info") <- deparse(substitute(predict_survival_function))
+    }
+
+    if (is.null(predict_cumulative_hazard_function)) {
+        if (reticulate::py_has_attr(model, "predict_cumulative_hazard_function")) {
+            predict_cumulative_hazard_function <- function(model, newdata, times){
+                raw_preds <- model$predict_cumulative_hazard_function(newdata)
+                t(sapply(raw_preds, function(chf) as.vector(chf(times))))
+            }
+            attr(predict_cumulative_hazard_function, "verbose_info") <- "predict_cumulative_hazard_function from scikit-survival will be used"
+            attr(predict_cumulative_hazard_function, "is.default") <- TRUE
+        }
+    } else {
+        attr(predict_cumulative_hazard_function, "verbose_info") <- deparse(substitute(predict_cumulative_hazard_function))
+    }
+
+    if (is.null(predict_function)) {
+        if (reticulate::py_has_attr(model, "predict")) {
+            predict_function <- function(model, newdata, times) model$predict(newdata)
+            attr(predict_function, "verbose_info") <- "predict from scikit-survival will be used"
+        } else {
+            predict_function <- function(model, newdata, times) {
+                rowSums(predict_cumulative_hazard_function(model, newdata, times))
+            }
+            attr(predict_function, "verbose_info") <- "sum over the predict_cumulative_hazard_function will be used"
+        }
+        attr(predict_function, "is.default") <- TRUE
+        attr(predict_function, "use.times") <- TRUE
+    } else {
+        attr(predict_function, "verbose_info") <- deparse(substitute(predict_function))
+    }
+
+    if (!is.null(data) & any(colnames(data) != model$feature_names_in_)) {
+        colnames(data) <- sub("[.]", "=", colnames(data))
+        attr(data, "verbose_info") <- "colnames_changed"
+    }
+
+    class(model) <- c("sksurv", class(model))
+
+    explain_survival(
+        model,
+        data = data,
+        y = y,
+        predict_function = predict_function,
+        predict_function_target_column = predict_function_target_column,
+        residual_function = residual_function,
+        weights = weights,
+        ... = ...,
+        label = label,
+        verbose = verbose,
+        colorize = colorize,
+        model_info = model_info,
+        type = type,
+        times = times,
+        times_generation = times_generation,
+        predict_survival_function = predict_survival_function,
+        predict_cumulative_hazard_function = predict_cumulative_hazard_function
+    )
+}
 
 
 verbose_cat <- function(..., is.default = NULL, verbose = TRUE) {

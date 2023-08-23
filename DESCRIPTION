@@ -41,6 +41,7 @@ Suggests:
     progressr,
     randomForestSRC,
     ranger,
+    reticulate,
     rmarkdown,
     rms,
     testthat (>= 3.0.0),
