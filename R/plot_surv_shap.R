@@ -327,9 +327,11 @@ plot_shap_global_profile <- function(x,
 
     if (is.null(variable)) {
         variable <- colnames(df)[1]
+        warning("`variable` was not specified, the first from the result will be used.")
     }
     if (is.null(color_variable)) {
         color_variable <- variable
+        warning("`color_variable` was not specified, the first from the result will be used.")
     }
 
     shap_val <- df[, variable]
