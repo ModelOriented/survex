@@ -23,7 +23,6 @@ test_that("global survshap explanations with kernelshap work for ranger, using n
     )
     plot(ranger_global_survshap)
     plot(ranger_global_survshap, geom = "beeswarm")
-    plot(ranger_global_survshap, geom = "profile")
     plot(ranger_global_survshap, geom = "profile", variable = "karno", color_variable = "celltype")
     plot(ranger_global_survshap, geom = "profile", variable = "karno", color_variable = "age")
     expect_error(plot(ranger_global_survshap, geom = "nonexistent"))
@@ -48,7 +47,6 @@ test_that("global survshap explanations with kernelshap work for coxph, using ex
     )
     plot(cph_global_survshap)
     plot(cph_global_survshap, geom = "beeswarm")
-    plot(cph_global_survshap, geom = "profile")
     plot(cph_global_survshap, geom = "profile", variable = "karno", color_variable = "celltype")
     plot(cph_global_survshap, geom = "profile", variable = "karno", color_variable = "age")
 

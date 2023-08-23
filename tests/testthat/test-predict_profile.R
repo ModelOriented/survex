@@ -19,6 +19,8 @@ test_that("ceteris_paribus works", {
     plot(cph_pp, ranger_pp, rug = "events", variables = c("karno", "age"))
     plot(cph_pp, rug = "censors", variable_type = "numerical")
     plot(cph_pp, rug = "none")
+    plot(cph_pp, geom = "variable", variables = "karno", times=cph_exp$times[1])
+    plot(cph_pp, geom = "variable", times = cph_pp$eval_times[1:2], variables = "karno", marginalize_over_time = TRUE)
 
     expect_error(plot(cph_pp, variables = "aaa"))
     expect_error(plot(cph_pp, variable_type = "nonexistent"))
