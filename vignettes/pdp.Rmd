@@ -73,7 +73,7 @@ The same plot can be generated for the categorical `celltype` variable. In this 
 plot(pdp, geom = "variable", variables = "celltype", times = 80)
 ```
 
-Of course, the plots can be prepared for multiple timepoints, at the same time and presented on one plot.
+Of course, the plots can be prepared for multiple time points, at the same time and presented on one plot.
 
 ```{r}
 plot(pdp, geom = "variable", variables = "karno", times = c(1, 80, 151.72))
