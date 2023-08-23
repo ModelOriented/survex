@@ -4,15 +4,15 @@
 #' using the `model_profile()` function.
 #'
 #' @param x an object of class `model_profile_survival` to be plotted
-#' @param ... additional objects of class `model_profile_survival` to be plotted together. Only available for `geom = "time"`
-#' @param geom character, either "time" or "variable". Selects the type of plot to be prepared. If `"time"` then the x-axis represents survival times, and variable is denoted by colors, if `"variable"` then the x-axis represents the variable values, and mean predictions at selected timepoints.
-#' @param variables character, names of the variables to be plotted. When `geom = "variable"` it needs to be a name of a single variable, when `geom = "time"` it can be a vector of variable names. If `NULL` (default) then all variables are plotted.
-#' @param variable_type character, either `"numerical"`, `"categorical"` or `NULL` (default), select only one type of variable for plotting, or leave `NULL` for all. Only used when `geom = "time"`
-#' @param facet_ncol number of columns for arranging subplots. Only used when `geom = "time"`
-#' @param numerical_plot_type character, either `"lines"`, or `"contours"` selects the type of numerical variable plots. Only used when `geom = "time"`
-#' @param marginalize_over_time logical, if `TRUE` then the profile is calculated for all times and then averaged over time, if `FALSE` (default) then the profile is calculated for each time separately. Only used when `geom = "variable"`
-#' @param plot_type character, one of `"pdp"`, `"ice"`, `"pdp+ice"`, or `NULL` (default). If `NULL` then the type of plot is chosen automatically based on the number of variables to be plotted. Only used when `geom = "variable"`
-#' @param times numeric vector, times for which the profile should be plotted, the times must be present in the "times" field of the explainer. If `NULL` (default) then the median time from the explainer object is used. Only used when `geom = "variable"` and `marginalize_over_time = FALSE
+#' @param ... additional objects of class `model_profile_survival` to be plotted together. Only available for `geom = "time"`.
+#' @param geom character, either `"time"` or `"variable"`. Selects the type of plot to be prepared. If `"time"` then the x-axis represents survival times, and variable is denoted by colors, if `"variable"` then the x-axis represents the variable values, and y-axis represents the predictions at selected time points.
+#' @param variables character, names of the variables to be plotted. When `geom = "variable"` it needs to be a name of a single variable, when `geom = "time"` it can be a vector of variable names. If `NULL` (default) then first variable (for `geom = "variable"`) or all variables (for `geom = "time"`) are plotted.
+#' @param variable_type character, either `"numerical"`, `"categorical"` or `NULL` (default), select only one type of variable for plotting, or leave `NULL` for all. Only used when `geom = "time"`.
+#' @param facet_ncol number of columns for arranging subplots. Only used when `geom = "time"`.
+#' @param numerical_plot_type character, either `"lines"`, or `"contours"` selects the type of numerical variable plots. Only used when `geom = "time"`.
+#' @param times numeric vector, times for which the profile should be plotted, the times must be present in the "times" field of the explainer. If `NULL` (default) then the median time from the explainer object is used. Only used when `geom = "variable"` and `marginalize_over_time = FALSE`.
+#' @param marginalize_over_time logical, if `TRUE` then the profile is calculated for all times and then averaged over time, if `FALSE` (default) then the profile is calculated for each time separately. Only used when `geom = "variable"`.
+#' @param plot_type character, one of `"pdp"`, `"ice"`, `"pdp+ice"`, or `NULL` (default). If `NULL` then the type of plot is chosen automatically based on the number of variables to be plotted. Only used when `geom = "variable"`.
 #' @param title character, title of the plot
 #' @param subtitle character, subtitle of the plot, `"default"` automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels
 #' @param colors character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue").
@@ -61,7 +61,16 @@ plot.model_profile_survival <- function(x,
                                         rug = "all",
                                         rug_colors = c("#dd0000", "#222222")) {
     if (!geom %in% c("time", "variable")) {
-        stop("`geom` must be one of 'time' or 'survival'.")
+        stop("`geom` needs to be one of 'time' or 'variable'.")
+    }
+
+    if (!(numerical_plot_type %in% c("lines", "contours"))) {
+        stop("`numerical_plot_type` needs to be 'lines' or 'contours'")
+    }
+
+    if (!is.null(variable_type) &&
+        !(variable_type %in% c("numerical", "categorical"))) {
+        stop("`variable_type` needs to be 'numerical' or 'categorical'")
     }
 
     if (title == "default") {
@@ -77,7 +86,7 @@ plot.model_profile_survival <- function(x,
     }
 
     if (geom == "variable") {
-        pl <- plot2(
+        pl <- plot2_mp(
             x = x,
             variable = variables,
             times = times,
@@ -100,7 +109,6 @@ plot.model_profile_survival <- function(x,
         }
     })
     explanations_list <- c(list(x), list(...))
-
     num_models <- length(explanations_list)
 
     if (num_models == 1) {
@@ -147,7 +155,7 @@ plot.model_profile_survival <- function(x,
 
 
 #' @keywords internal
-plot2 <- function(x,
+plot2_mp <- function(x,
                   variable,
                   times = NULL,
                   marginalize_over_time = FALSE,
@@ -178,7 +186,12 @@ plot2 <- function(x,
         stop("plot_type must be one of 'pdp', 'ice', 'pdp+ice'")
     }
 
-    if (is.null(variable) || !is.character(variable)) {
+    if (is.null(variable)) {
+        variable <- unique(x$result$`_vname_`)[1]
+        warning("Plot will be prepared for the first variable from the explanation `result`. \nFor another variable, set the value of `variable`.")
+    }
+
+    if (!is.character(variable)) {
         stop("The variable must be specified by name")
     }
 
@@ -191,8 +204,13 @@ plot2 <- function(x,
     }
 
     if (is.null(times)) {
-        times <- quantile(x$eval_times, p = 0.5, type = 1)
-        warning("Plot will be prepared for the median time point from the explainer's `times` vector. For another time point, set the value of `times`.")
+        if (marginalize_over_time){
+            times <- x$eval_times
+            warning("Plot will be prepared with marginalization over all time points from the explainer's `times` vector. \nFor subset of time points, set the value of `times`.")
+        } else{
+            times <- quantile(x$eval_times, p = 0.5, type = 1)
+            warning("Plot will be prepared for the median time point from the explainer's `times` vector. \nFor another time point, set the value of `times`.")
+        }
     }
 
     if (!all(times %in% x$eval_times)) {
@@ -207,7 +225,7 @@ plot2 <- function(x,
     if (!is.null(subtitle) && subtitle == "default") {
         subtitle <- paste0("created for the ", unique(variable), " variable")
         if (single_timepoint && !marginalize_over_time) {
-            subtitle <- paste0(subtitle, " and time=", times)
+            subtitle <- paste0(subtitle, " and time =", times)
         }
     }
 
@@ -354,7 +372,7 @@ plot_pdp_num <- function(pdp_dt,
                     geom_rug(data = data_dt, aes(x = !!feature_name_sym, y = y_ceiling_pd), sides = "b", alpha = 0.8, position = position_jitter(width = 0.01 * x_width)) +
                     ylim(y_floor_pd, y_ceiling_pd)
             }
-        } else { ## multiple timepoints
+        } else { ## multiple time points
             pdp_dt$time <- as.numeric(as.character(pdp_dt$time))
             if (!is.null(ice_dt)) {
                 ice_dt$time <- as.numeric(as.character(ice_dt$time))

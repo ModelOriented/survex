@@ -25,23 +25,23 @@
 \arguments{
 \item{x}{an object of class \code{model_profile_survival} to be plotted}
 
-\item{...}{additional objects of class \code{model_profile_survival} to be plotted together. Only available for \code{geom = "time"}}
+\item{...}{additional objects of class \code{model_profile_survival} to be plotted together. Only available for \code{geom = "time"}.}
 
-\item{geom}{character, either "time" or "variable". Selects the type of plot to be prepared. If \code{"time"} then the x-axis represents survival times, and variable is denoted by colors, if \code{"variable"} then the x-axis represents the variable values, and mean predictions at selected timepoints.}
+\item{geom}{character, either \code{"time"} or \code{"variable"}. Selects the type of plot to be prepared. If \code{"time"} then the x-axis represents survival times, and variable is denoted by colors, if \code{"variable"} then the x-axis represents the variable values, and y-axis represents the predictions at selected time points.}
 
-\item{variables}{character, names of the variables to be plotted. When \code{geom = "variable"} it needs to be a name of a single variable, when \code{geom = "time"} it can be a vector of variable names. If \code{NULL} (default) then all variables are plotted.}
+\item{variables}{character, names of the variables to be plotted. When \code{geom = "variable"} it needs to be a name of a single variable, when \code{geom = "time"} it can be a vector of variable names. If \code{NULL} (default) then first variable (for \code{geom = "variable"}) or all variables (for \code{geom = "time"}) are plotted.}
 
-\item{variable_type}{character, either \code{"numerical"}, \code{"categorical"} or \code{NULL} (default), select only one type of variable for plotting, or leave \code{NULL} for all. Only used when \code{geom = "time"}}
+\item{variable_type}{character, either \code{"numerical"}, \code{"categorical"} or \code{NULL} (default), select only one type of variable for plotting, or leave \code{NULL} for all. Only used when \code{geom = "time"}.}
 
-\item{facet_ncol}{number of columns for arranging subplots. Only used when \code{geom = "time"}}
+\item{facet_ncol}{number of columns for arranging subplots. Only used when \code{geom = "time"}.}
 
-\item{numerical_plot_type}{character, either \code{"lines"}, or \code{"contours"} selects the type of numerical variable plots. Only used when \code{geom = "time"}}
+\item{numerical_plot_type}{character, either \code{"lines"}, or \code{"contours"} selects the type of numerical variable plots. Only used when \code{geom = "time"}.}
 
-\item{times}{numeric vector, times for which the profile should be plotted, the times must be present in the "times" field of the explainer. If \code{NULL} (default) then the median time from the explainer object is used. Only used when \code{geom = "variable"} and `marginalize_over_time = FALSE}
+\item{times}{numeric vector, times for which the profile should be plotted, the times must be present in the "times" field of the explainer. If \code{NULL} (default) then the median time from the explainer object is used. Only used when \code{geom = "variable"} and \code{marginalize_over_time = FALSE}.}
 
-\item{marginalize_over_time}{logical, if \code{TRUE} then the profile is calculated for all times and then averaged over time, if \code{FALSE} (default) then the profile is calculated for each time separately. Only used when \code{geom = "variable"}}
+\item{marginalize_over_time}{logical, if \code{TRUE} then the profile is calculated for all times and then averaged over time, if \code{FALSE} (default) then the profile is calculated for each time separately. Only used when \code{geom = "variable"}.}
 
-\item{plot_type}{character, one of \code{"pdp"}, \code{"ice"}, \code{"pdp+ice"}, or \code{NULL} (default). If \code{NULL} then the type of plot is chosen automatically based on the number of variables to be plotted. Only used when \code{geom = "variable"}}
+\item{plot_type}{character, one of \code{"pdp"}, \code{"ice"}, \code{"pdp+ice"}, or \code{NULL} (default). If \code{NULL} then the type of plot is chosen automatically based on the number of variables to be plotted. Only used when \code{geom = "variable"}.}
 
 \item{title}{character, title of the plot}
 
