@@ -180,16 +180,24 @@ plot.aggregated_surv_shap <- function(x,
         "importance" = plot_shap_global_importance(
             x = x,
             ... = ...,
+            title = title,
+            subtitle = subtitle,
+            max_vars = max_vars,
             colors = colors
         ),
         "beeswarm" = plot_shap_global_beeswarm(
             x = x,
             ... = ...,
+            title = title,
+            subtitle = subtitle,
+            max_vars = max_vars,
             colors = colors
         ),
         "profile" = plot_shap_global_profile(
             x = x,
             ... = ...,
+            title = title,
+            subtitle = subtitle,
             colors = colors
         ),
         stop("`geom` must be one of 'importance', 'beeswarm' or 'profile'")
@@ -224,7 +232,7 @@ plot_shap_global_importance <- function(x,
     long_df <- stack(x$aggregate)
     long_df <- long_df[order(long_df$values, decreasing = TRUE), ][1:min(max_vars, length(x$aggregate)), ]
 
-    if (!is.null(subtitle) && subtitle == "default") {
+    if (!is.null(title) && title == "default") {
         title <- "Feature importance according to aggregated |SurvSHAP(t)|"
     }
     if (!is.null(subtitle) && subtitle == "default") {
@@ -273,7 +281,7 @@ plot_shap_global_beeswarm <- function(x,
     df <- cbind(df, var_value)
 
     label <- attr(x, "label")
-    if (!is.null(subtitle) && subtitle == "default") {
+    if (!is.null(title) && title == "default") {
         title <- "Aggregated SurvSHAP(t) values summary"
     }
     if (!is.null(subtitle) && subtitle == "default") {
@@ -333,7 +341,7 @@ plot_shap_global_profile <- function(x,
     colnames(df) <- c("shap_val", "variable_val", "color_variable_val")
 
     label <- attr(x, "label")
-    if (!is.null(subtitle) && subtitle == "default") {
+    if (!is.null(title) && title == "default") {
         title <- "Aggregated SurvSHAP(t) profile"
     }
     if (!is.null(subtitle) && subtitle == "default") {
