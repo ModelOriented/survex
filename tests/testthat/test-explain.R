@@ -312,6 +312,52 @@ test_that("rsfrc prediction functions work correctly", {
 })
 
 
+test_that("flexsurvreg prediction functions work correctly", {
+    rotterdam <- survival::rotterdam
+    rotterdam$pid <- NULL
+    fsr_rotterdam <-
+        flexsurv::flexsurvreg(
+            survival::Surv(rtime, recur) ~ age + meno + size + grade,
+            data = rotterdam,
+            dist = "exp"
+        )
+
+    fsr_explainer <- explain(fsr_rotterdam, verbose = FALSE)
+
+    times <- fsr_explainer$times
+
+    fsr_explainer$predict_survival_function(fsr_rotterdam, rotterdam[c(1, 2, 3), ], times)
+    sf_preds <- predict(fsr_explainer, rotterdam[c(1, 2, 3), ], times, output_type = "survival")
+    expect_true(inherits(sf_preds, "matrix"))
+    expect_equal(dim(sf_preds), c(3, length(times)))
+
+    fsr_explainer$predict_cumulative_hazard_function(fsr_rotterdam, rotterdam[c(1, 2, 3), ], times)
+    chf_preds <- predict(fsr_explainer, rotterdam[c(1, 2, 3), ], times, output_type = "chf")
+    expect_true(inherits(chf_preds, "matrix"))
+    expect_equal(dim(chf_preds), c(3, length(times)))
+
+    fsr_explainer$predict_function(fsr_rotterdam, rotterdam[c(1, 2, 3), ])
+    risk_preds <- predict(fsr_explainer, rotterdam[c(1, 2, 3), ], output_type = "risk")
+    expect_true(is.numeric(risk_preds))
+    expect_equal(length(risk_preds), 3)
+
+
+    # test manually setting predict survival function / chf / predict function
+    # the functions DO NOT WORK this is just a test if everything is set properly
+    explain(fsr_rotterdam,
+            predict_survival_function = pec::predictSurvProb,
+            verbose = FALSE)
+
+    explain(fsr_rotterdam,
+            predict_cumulative_hazard_function = pec::predictSurvProb,
+            verbose = FALSE)
+
+    explain(fsr_rotterdam,
+            predict_function = predict,
+            verbose = FALSE)
+})
+
+
 test_that("automated `y` and `data` sourcing works", {
 
     rotterdam <- survival::rotterdam

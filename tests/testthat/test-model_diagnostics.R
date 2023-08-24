@@ -12,6 +12,7 @@ test_that("model_diagnostics for survival residuals works", {
     expect_s3_class(md_cph, "model_diagnostics_survival")
     expect_true(all(md_cph$result$time == cph_exp$y[,1]))
     expect_equal(ncol(md_cph$result) - ncol(cph_exp$data), 6)
+    expect_output(print(md_cph))
 
     plot(md_rsf)
     plot(md_rsf, plot_type = "martingale")
