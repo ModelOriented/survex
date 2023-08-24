@@ -1,16 +1,31 @@
 #' Plot Model Diagnostics for Survival Models
 #'
+#' This function plots objects of class `"model_diagnostics_survival"` created
+#' using the `model_diagnostics()` function.
+#'
+#' @param x an object of class `model_diagnostics_survival` to be plotted
+#' @param ... additional objects of class `model_diagnostics_survival` to be plotted together
+#' @param plot_type character, either `"deviance"`, `"martingale"` or `"Cox-Snell"`. Selects the type of plot to be prepared. If `"deviance"` or `"martingale` then deviance/martingale residuals are plotted against `xvariable`. If `"Cox-Snell"` then diagnostic plot of Cox-Snell residuals is prepared, which is CHF estimated based on Cox-Snell residuals against theoretical cumulative hazard trajectory of the Exp(1) -- diagonal line.
+#' @param xvariable character, name of the variable to be plotted on x-axis (can be name of the variable to be drawn on the x-axis (can be any column from the `x$result`: explanatory variable, time, other residuals). By default `"index"` which gives the order of observations.
+#' @param smooth logical, shall the smooth line be added. Only used when `plot_type = "deviance"` or `plot_type = "martingale"`.
+#' @param facet_ncol number of columns for arranging subplots
+#' @param title character, title of the plot
+#' @param subtitle character, subtitle of the plot, `"default"` automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels
+#' @param colors character vector containing the colors to be used for plotting (containing either hex codes "#FF69B4", or names "blue").
+#'
+#' @return An object of the class `ggplot`.
+#'
 #' @importFrom stats qnorm
 #'
 #' @export
 plot.model_diagnostics_survival <- function(x,
                                             ...,
-                                            type = "deviance",
+                                            plot_type = "deviance",
                                             xvariable = "index",
                                             smooth = as.logical(xvariable != "index"),
+                                            facet_ncol = NULL,
                                             title = "Model diagnostics",
                                             subtitle = "default",
-                                            facet_ncol =NULL,
                                             colors = c("#160e3b", "#f05a71", "#ceced9")){
     lapply(list(x, ...), function(x) {
         if (!inherits(x, "model_diagnostics_survival")) {
@@ -28,11 +43,11 @@ plot.model_diagnostics_survival <- function(x,
         subtitle <- paste0("created for the ", paste0(labels, collapse = ", "), endword)
     }
 
-    if (type %in% c("deviance", "martingale")){
+    if (plot_type %in% c("deviance", "martingale")){
         if (!xvariable %in% c("index", colnames(df))){
             stop(paste("`xvariable`", xvariable, "not found"))
         }
-        df$y <- switch(type,
+        df$y <- switch(plot_type,
                        "deviance" = df$deviance_residuals,
                        "martingale" = df$martingale_residuals)
         df$x <- switch(xvariable,
@@ -54,7 +69,7 @@ plot.model_diagnostics_survival <- function(x,
             pl
         })
         return(pl)
-    } else if (type == "Cox-Snell"){
+    } else if (plot_type == "Cox-Snell"){
         split_df <- split(df, df$label)
         df_list <- lapply(split_df, function(df_tmp){
         fit_coxsnell <- survival::survfit(survival::Surv(cox_snell_residuals, as.numeric(status)) ~ 1, data=df_tmp)
@@ -73,7 +88,7 @@ plot.model_diagnostics_survival <- function(x,
         df$label <- sapply(strsplit(rownames(df), "[.]"), function(x) x[1])
         rownames(df) <- NULL
 
-        with(df,
+        pl <- with(df,
              {ggplot(df, aes(x = time, y = cumhaz)) +
                 geom_step(color = colors[1], linewidth = 1) +
                 geom_step(aes(y = lower), linetype = "dashed", color = colors[1], alpha = 0.8) +
@@ -86,7 +101,8 @@ plot.model_diagnostics_survival <- function(x,
                 labs(title = title,
                      subtitle = subtitle)
              })
+        return(pl)
     } else{
-        stop('`type` should be one of `deviance`, `martingale` or `Cox-Snell`')
+        stop('`plot_type` should be one of `deviance`, `martingale` or `Cox-Snell`')
     }
 }
