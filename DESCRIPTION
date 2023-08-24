@@ -31,6 +31,7 @@ Imports:
 Suggests:
     censored (>= 0.2.0),
     covr,
+    flexsurv,
     gbm,
     generics,
     glmnet,
