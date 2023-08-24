@@ -58,8 +58,9 @@ model_diagnostics.surv_explainer <- function(explainer,
             martingale_residuals + statuses *
                 log(statuses - martingale_residuals)
         ))
-    cox_snell_residuals[statuses == 0] <-
-        cox_snell_residuals[statuses == 0] + 1
+    # cox_snell_residuals[statuses == 0] <-
+    #     cox_snell_residuals[statuses == 0] + 1
+    # modification for censored observations
 
     result <- cbind(
         data.frame(
