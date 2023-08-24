@@ -11,10 +11,6 @@ model_diagnostics(explainer, ...)
 }
 \arguments{
 \item{explainer}{an explainer object - model preprocessed by the \code{explain()} function}
-
-\item{...}{other parameters passed to \code{DALEX::model_diagnostics} if \code{output_type == "risk"}, otherwise passed to internal functions}
-
-\item{output_type}{either \code{"chf"}, \code{"survival"} or \code{"risk"} the type of survival model output that should be used for explanations. If \code{"chf"} or \code{"survival"} the explanations are based on survival residuals. Otherwise the scalar risk predictions are used by the \code{DALEX::model_diagnostics} function.}
 }
 \value{
 An object of class \code{c("model_diagnostics_survival")}. It's a list with the explanations in the \code{result} element.
