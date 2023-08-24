@@ -4,7 +4,7 @@
 #'
 #'
 #' @param explainer an explainer object - model preprocessed by the `explain()` function
-#' @param ... other parameters passed to `DALEX::model_diagnostics` if `output_type == "risk"`, otherwise passed to internal functions.
+#' @param ... other parameters passed to `DALEX::model_diagnostics` if `output_type == "risk"`, otherwise passed to internal functions
 #' @param output_type either `"chf"`, `"survival"` or `"risk"` the type of survival model output that should be used for explanations. If `"chf"` or `"survival"` the explanations are based on survival residuals. Otherwise the scalar risk predictions are used by the `DALEX::model_diagnostics` function.
 #'
 #' @return An object of class `c("model_diagnostics_survival")`. It's a list with the explanations in the `result` element.
@@ -35,7 +35,7 @@
 #'
 #' head(cph_residuals$result)
 #' plot(cph_residuals, rsf_residuals, xvariable = "age")
-#' plot(cph_residuals, rsf_residuals, type = "Cox-Snell")
+#' plot(cph_residuals, rsf_residuals, plot_type = "Cox-Snell")
 #'
 #' }
 #' @rdname model_diagnostics.surv_explainer
@@ -47,39 +47,55 @@ model_diagnostics <- function(explainer, ...) UseMethod("model_diagnostics", exp
 model_diagnostics.surv_explainer <- function(explainer,
                                        ...,
                                        output_type = "chf") {
-    n <- nrow(explainer$data)
-    original_times <- explainer$y[, 1]
-    statuses <-  explainer$y[, 2]
 
-    unique_times <- sort(unique(original_times))
-    which_el <- matrix(c(1:n, match(original_times, unique_times)),
-                       nrow = n)
-    chf_preds <-
-        predict(explainer, times = unique_times, output_type = "chf")
-    cox_snell_residuals <- chf_preds[which_el]
-    martingale_residuals <- statuses - cox_snell_residuals
-    deviance_residuals <- sign(martingale_residuals) *
-        sqrt(-2 * (
-            martingale_residuals + statuses *
-                log(statuses - martingale_residuals)
-        ))
-    # cox_snell_residuals[statuses == 0] <-
-    #     cox_snell_residuals[statuses == 0] + 1
-    # modification for censored observations
+    test_explainer(explainer,  has_data = TRUE, has_y = TRUE, has_chf = TRUE, function_name = "model_diagnostics")
 
-    result <- cbind(
-        data.frame(
-            "time" = original_times,
-            "status" = factor(statuses),
-            "cox_snell_residuals" = cox_snell_residuals,
-            "martingale_residuals" = martingale_residuals,
-            "deviance_residuals" = deviance_residuals,
-            "label" = explainer$label
-        ),
-        explainer$data
+    if (output_type == "survival"){
+        output_type <- "chf"
+        warning("Cumulative hazard function (not survival function) is used for calculating survival residuals.")
+    }
+
+    switch("output_type",
+           "risk" = DALEX::model_diagnostics(explainer, ...),
+           "chf" = {
+               n <- nrow(explainer$data)
+               original_times <- explainer$y[, 1]
+               statuses <-  explainer$y[, 2]
+
+               unique_times <- sort(unique(original_times))
+               which_el <- matrix(c(1:n, match(original_times, unique_times)),
+                                  nrow = n)
+               chf_preds <-
+                   predict(explainer, times = unique_times, output_type = "chf")
+               cox_snell_residuals <- chf_preds[which_el]
+               martingale_residuals <- statuses - cox_snell_residuals
+               deviance_residuals <- sign(martingale_residuals) *
+                   sqrt(-2 * (
+                       martingale_residuals + statuses *
+                           log(statuses - martingale_residuals)
+                   ))
+               # cox_snell_residuals[statuses == 0] <-
+               #     cox_snell_residuals[statuses == 0] + 1
+               # modification for censored observations
+
+               result <- cbind(
+                   data.frame(
+                       "time" = original_times,
+                       "status" = factor(statuses),
+                       "cox_snell_residuals" = cox_snell_residuals,
+                       "martingale_residuals" = martingale_residuals,
+                       "deviance_residuals" = deviance_residuals,
+                       "label" = explainer$label
+                   ),
+                   explainer$data
+               )
+
+               res <- list(result = result)
+               class(res) <- c("model_diagnostics_survival", class(res))
+               res
+           },
+           stop("Type should be either `chf` or `risk`")
     )
 
-    res <- list(result = result)
-    class(res) <- c("model_diagnostics_survival", class(res))
-    res
+
 }
