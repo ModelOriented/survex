@@ -63,7 +63,7 @@ plot.model_diagnostics_survival <- function(x,
                 labs(title = title,
                      subtitle = subtitle,
                      x = xvariable,
-                     y = paste(type, "residuals"))
+                     y = paste(plot_type, "residuals"))
             if (smooth)
                 pl <- pl + geom_smooth(se = FALSE, color = colors[3], alpha = 0.5)
             pl
