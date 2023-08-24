@@ -78,9 +78,11 @@ plot(m_prof, variables = c("trt", "age"), facet_ncol = 1)
 
 plot(m_prof, geom = "variable", variables = "karno", plot_type = "pdp+ice")
 
-plot(m_prof, geom = "variable", times = exp$times[c(5, 10)], variables = "karno", plot_type = "pdp+ice")
+plot(m_prof, geom = "variable", times = exp$times[c(5, 10)],
+     variables = "karno", plot_type = "pdp+ice")
 
-plot(m_prof, geom = "variable", times = exp$times[c(5, 10)], variables = "trt", plot_type = "pdp+ice")
+plot(m_prof, geom = "variable", times = exp$times[c(5, 10)],
+     variables = "trt", plot_type = "pdp+ice")
 }
 
 }
