@@ -5,9 +5,9 @@
 \alias{model_diagnostics.surv_explainer}
 \title{Dataset Level Model Diagnostics}
 \usage{
-model_diagnostics(explainer, ...)
+model_diagnostics(explainer)
 
-\method{model_diagnostics}{surv_explainer}(explainer, ..., output_type = "chf")
+\method{model_diagnostics}{surv_explainer}(explainer)
 }
 \arguments{
 \item{explainer}{an explainer object - model preprocessed by the \code{explain()} function}

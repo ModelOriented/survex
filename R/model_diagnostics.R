@@ -37,14 +37,11 @@
 #' }
 #' @rdname model_diagnostics.surv_explainer
 #' @export
-model_diagnostics <- function(explainer, ...) UseMethod("model_diagnostics", explainer)
+model_diagnostics <- function(explainer) UseMethod("model_diagnostics", explainer)
 
 #' @rdname model_diagnostics.surv_explainer
 #' @export
-model_diagnostics.surv_explainer <- function(explainer,
-                                       ...,
-                                       output_type = "chf") {
-
+model_diagnostics.surv_explainer <- function(explainer) {
     test_explainer(explainer,  has_data = TRUE, has_y = TRUE, has_chf = TRUE, function_name = "model_diagnostics")
 
     n <- nrow(explainer$data)
