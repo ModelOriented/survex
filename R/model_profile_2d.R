@@ -114,7 +114,8 @@ model_profile_2d.surv_explainer <- function(explainer,
         result = result,
         eval_times = unique(result$`_times_`),
         variables = variables,
-        type = type
+        type = type,
+        median_survival_time = explainer$median_survival_time
     )
     class(ret) <- c("model_profile_2d_survival", "list")
     return(ret)

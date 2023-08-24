@@ -90,6 +90,7 @@ predict_profile.surv_explainer <- function(explainer,
                 ...
             )
             class(res) <- c("predict_profile_survival", class(res))
+            res$median_survival_time <- explainer$median_survival_time
             res$event_times <- explainer$y[explainer$y[, 1] <= max(explainer$times), 1]
             res$event_statuses <- explainer$y[explainer$y[, 1] <= max(explainer$times), 2]
             return(res)

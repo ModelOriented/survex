@@ -6,7 +6,7 @@
 #' @param x an object of class `model_profile_2d_survival` to be plotted
 #' @param ... additional objects of class `model_profile_2d_survival` to be plotted together
 #' @param variables list of character vectors of length 2, names of pairs of variables to be plotted
-#' @param times numeric vector, times for which the profile should be plotted, the times must be present in the 'times' field of the explainer. If `NULL` (default) then the median time from the explainer object is used.
+#' @param times numeric vector, times for which the profile should be plotted, the times must be present in the 'times' field of the explainer. If `NULL` (default) then the median survival time (if available) or the median time from the explainer object is used.
 #' @param marginalize_over_time logical, if `TRUE` then the profile is calculated for all times and then averaged over time, if `FALSE` (default) then the profile is calculated for each time separately
 #' @param facet_ncol number of columns for arranging subplots
 #' @param title character, title of the plot. `'default'` automatically generates either "2D partial dependence survival profiles" or "2D accumulated local effects survival profiles" depending on the explanation type.
@@ -31,14 +31,14 @@
 #'     )
 #' )
 #' head(cph_model_profile_2d$result)
-#' plot(cph_model_profile_2d, variables = list(c("age", "celltype")), times = 103)
+#' plot(cph_model_profile_2d, variables = list(c("age", "celltype")), times = cph_exp$times[20])
 #'
 #' cph_model_profile_2d_ale <- model_profile_2d(cph_exp,
 #'     variables = list(c("age", "karno")),
 #'     type = "accumulated"
 #' )
 #' head(cph_model_profile_2d_ale$result)
-#' plot(cph_model_profile_2d_ale, times = c(8, 103), marginalize_over_time = TRUE)
+#' plot(cph_model_profile_2d_ale, times = cph_exp$times[c(10, 20)], marginalize_over_time = TRUE)
 #' }
 #'
 #' @export
@@ -122,8 +122,16 @@ prepare_model_profile_2d_plots <- function(x,
                                            subtitle,
                                            colors) {
     if (is.null(times)) {
-        times <- quantile(x$eval_times, p = 0.5, type = 1)
-        warning("Plot will be prepared for the median time point from the explainer's `times` vector. For another time point, set the value of `times`.")
+        if (marginalize_over_time){
+            times <- x$eval_times
+            warning("Plot will be prepared with marginalization over all time points from the explainer's `times` vector. \nFor subset of time points, set the value of `times`.")
+        } else if (!is.null(x$median_survival_time)){
+            times <- x$median_survival_time
+            warning("Plot will be prepared for the median survial time. For another time point, set the value of `times`.")
+        } else {
+            times <- quantile(x$eval_times, p = 0.5, type = 1)
+            warning("Plot will be prepared for the median time point from the explainer's `times` vector. For another time point, set the value of `times`.")
+        }
     }
 
     if (!marginalize_over_time && length(times) > 1) {

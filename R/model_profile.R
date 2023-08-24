@@ -137,6 +137,7 @@ model_profile.surv_explainer <- function(explainer,
                 center = center
             )
             class(ret) <- c("model_profile_survival", "list")
+            ret$median_survival_time <- explainer$median_survival_time
             ret$event_times <- explainer$y[explainer$y[, 1] <= max(explainer$times), 1]
             ret$event_statuses <- explainer$y[explainer$y[, 1] <= max(explainer$times), 2]
             ret

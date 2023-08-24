@@ -10,7 +10,7 @@
 #' @param variable_type character, either `"numerical"`, `"categorical"` or `NULL` (default), select only one type of variable for plotting, or leave `NULL` for all.  Only used when `geom = "time"`.
 #' @param facet_ncol number of columns for arranging subplots.  Only used when `geom = "time"`.
 #' @param numerical_plot_type character, either `"lines"`, or `"contours"` selects the type of numerical variable plots.  Only used when `geom = "time"`.
-#' @param times numeric vector, times for which the profile should be plotted, the times must be present in the "times" field of the explainer. If `NULL` (default) then the median time from the explainer object is used. Only used when `geom = "variable"` and `marginalize_over_time = FALSE`.
+#' @param times numeric vector, times for which the profile should be plotted, the times must be present in the 'times' field of the explainer. If `NULL` (default) then the median survival time (if available) or the median time from the explainer object is used. Only used when `geom = "variable"` and `marginalize_over_time = FALSE`.
 #' @param marginalize_over_time logical, if `TRUE` then the profile is calculated for all times and then averaged over time, if `FALSE` (default) then the profile is calculated for each time separately. Only used when `geom = "variable"`.
 #' @param title character, title of the plot
 #' @param subtitle character, subtitle of the plot, `'default'` automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels
@@ -171,9 +171,12 @@ plot2_cp <- function(x,
         if (marginalize_over_time){
             times <- x$eval_times
             warning("Plot will be prepared with marginalization over all time points from the explainer's `times` vector. \nFor subset of time points, set the value of `times`.")
-        } else{
+        } else if (!is.null(x$median_survival_time)){
+            times <- x$median_survival_time
+            warning("Plot will be prepared for the median survial time. For another time point, set the value of `times`.")
+        } else {
             times <- quantile(x$eval_times, p = 0.5, type = 1)
-            warning("Plot will be prepared for the median time point from the explainer's `times` vector. \nFor another time point, set the value of `times`.")
+            warning("Plot will be prepared for the median time point from the explainer's `times` vector. For another time point, set the value of `times`.")
         }
     }
 

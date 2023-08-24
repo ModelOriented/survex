@@ -33,9 +33,9 @@ test_that("model_profile with type = 'partial' works", {
     plot(mp_cph_num, geom = "variable", variables = "karno", plot_type = "pdp", times = cph_exp$times[1])
     plot(mp_cph_num, geom = "variable", variables = "karno", plot_type = "ice", times = cph_exp$times[1])
     # multiple time points
-    plot(mp_cph_num, geom = "variable", times = c(4, 80.7), variables = "karno", plot_type = "pdp+ice")
-    plot(mp_cph_num, geom = "variable", times = c(4, 80.7), variables = "karno", plot_type = "pdp")
-    plot(mp_cph_num, geom = "variable", times = c(4, 80.7), variables = "karno", plot_type = "ice")
+    plot(mp_cph_num, geom = "variable", times = cph_exp$times[c(1, 20)], variables = "karno", plot_type = "pdp+ice")
+    plot(mp_cph_num, geom = "variable", times = cph_exp$times[c(1, 20)], variables = "karno", plot_type = "pdp")
+    plot(mp_cph_num, geom = "variable", times = cph_exp$times[c(1, 20)], variables = "karno", plot_type = "ice")
 
     expect_error(plot(mp_cph_num, geom = "variable", variables = "karno", plot_type = "nonexistent", times = cph_exp$times[1]))
     expect_error(plot(mp_cph_num, geom = "variable", variables = 1, plot_type = "pdp+ice", times = cph_exp$times[1]))
@@ -60,10 +60,10 @@ test_that("model_profile with type = 'partial' works", {
     plot(mp_rsf_cat, geom = "variable", variables = "celltype", plot_type = "pdp", times = rsf_ranger_exp$times[1])
     plot(mp_rsf_cat, geom = "variable", variables = "celltype", plot_type = "ice", times = rsf_ranger_exp$times[1])
     # multiple time points
-    plot(mp_rsf_cat, geom = "variable", times = c(4, 80.7), variables = "celltype", plot_type = "pdp+ice")
-    plot(mp_rsf_cat, geom = "variable", times = c(4, 80.7), marginalize_over_time = T, variables = "celltype", plot_type = "pdp+ice")
-    plot(mp_rsf_cat, geom = "variable", times = c(4, 80.7), variables = "celltype", plot_type = "pdp")
-    plot(mp_rsf_cat, geom = "variable", times = c(4, 80.7), variables = "celltype", plot_type = "ice")
+    plot(mp_rsf_cat, geom = "variable", times = cph_exp$times[c(1, 20)], variables = "celltype", plot_type = "pdp+ice")
+    plot(mp_rsf_cat, geom = "variable", times = cph_exp$times[c(1, 20)], marginalize_over_time = T, variables = "celltype", plot_type = "pdp+ice")
+    plot(mp_rsf_cat, geom = "variable", times = cph_exp$times[c(1, 20)], variables = "celltype", plot_type = "pdp")
+    plot(mp_rsf_cat, geom = "variable", times = cph_exp$times[c(1, 20)], variables = "celltype", plot_type = "ice")
 
 
     expect_s3_class(mp_rsf_cat, "model_profile_survival")
@@ -118,7 +118,7 @@ test_that("model_profile with type = 'accumulated' works", {
     # single time point
     plot(mp_cph_cat, geom = "variable", variables = "celltype", times=cph_exp$times[1])
     # multiple time points
-    plot(mp_cph_cat, geom = "variable", times = c(4, 80.7), variables = "celltype", plot_type = "ale")
+    plot(mp_cph_cat, geom = "variable", times = cph_exp$times[c(1, 20)], variables = "celltype", plot_type = "ale")
 
     expect_s3_class(mp_cph_cat, "model_profile_survival")
     expect_true(all(mp_cph_cat$eval_times == cph_exp$times))
@@ -142,7 +142,7 @@ test_that("model_profile with type = 'accumulated' works", {
     # single time point
     plot(mp_cph_num, geom = "variable", variables = "karno", plot_type = "ale", times=cph_exp$times[1])
     # multiple time points
-    plot(mp_cph_num, geom = "variable", times = c(4, 80.7), variables = "karno", plot_type = "ale")
+    plot(mp_cph_num, geom = "variable", times = cph_exp$times[c(1, 20)], variables = "karno", plot_type = "ale")
 
     expect_s3_class(mp_cph_num, "model_profile_survival")
     expect_true(all(unique(mp_cph_num$eval_times) == cph_exp$times))

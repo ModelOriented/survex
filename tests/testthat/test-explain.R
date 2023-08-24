@@ -457,7 +457,7 @@ test_that("default methods for creating explainers work correctly", {
     fsr <- flexsurv::flexsurvreg(survival::Surv(time, status) ~
                                      trt + celltype + karno + diagtime + age + prior,
                                  data = veteran, dist = "exp")
-    fsr_exp <- explain(fsr, verbose = FALSE)
+    fsr_exp <- explain(fsr, times_generation = "quantiles", verbose = FALSE)
     expect_s3_class(fsr_exp, c("surv_explainer", "explainer"))
     expect_equal(fsr_exp$label, "flexsurvreg", ignore_attr = TRUE)
 

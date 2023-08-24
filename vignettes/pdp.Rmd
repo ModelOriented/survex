@@ -59,28 +59,32 @@ plot(pdp, variables = c("karno"), numerical_plot_type = "contours")
 
 The plots above make use of the time dependent output of survival models, by placing the time dimension on the x-axis. However, for people familiar with Partial Dependence explanations in classification and regression, it might be more intuitive to place the variable values on the x-axis. For this reason, we provide the `geom = "variable"` argument, which can display the explanations without the aspect of time. 
 
-To use this function a specific time of interest has to be chosen. This time needs to be one of the values in the `times` field of the explainer. If the automatically generated times do not contain the time of interest, one needs to manually specify the `times` argument when creating the explainer.
+To use this function a specific time of interest has to be chosen. This time needs to be one of the values in the `times` field of the explainer. For `times_generation = "survival_quantiles"` (which is the default when creating the explainer) the median survival time point is also available. If the automatically generated times do not contain the time of interest, one needs to manually specify the `times` argument when creating the explainer.
 
-The example below shows the PD explanations for the `karno` variable at time 80. The y-axis represents the mean prediction (survival function), x-axis represents the values of the studied variable. Thin background lines are individual ceteris paribus profiles (otherwise known as ICE profiles).
+The example below shows the PD explanations for the `karno` variable at the median survival time. The y-axis represents the mean prediction (survival function), x-axis represents the values of the studied variable. Thin background lines are individual ceteris paribus profiles (otherwise known as ICE profiles).
 
 ```{r}
-plot(pdp, geom = "variable", variables = "karno", times = 80)
+plot(pdp, geom = "variable", variables = "karno", times = exp$median_survival_time)
 ```
 
 The same plot can be generated for the categorical `celltype` variable. In this case the x-axis represents the different values of the studied variable, boxplots present the distribution of individual ceteris paribus profiles, and the line represents the mean prediction (survival function), which is the PD explanation.
 
 ```{r}
-plot(pdp, geom = "variable", variables = "celltype", times = 80)
+plot(pdp, geom = "variable", variables = "celltype", times = exp$median_survival_time)
 ```
 
 Of course, the plots can be prepared for multiple time points, at the same time and presented on one plot.
-
 ```{r}
-plot(pdp, geom = "variable", variables = "karno", times = c(1, 80, 151.72))
+selected_times <- c(exp$times[1], exp$median_survival_time, exp$times[length(exp$times)])
+selected_times
 ```
 
 ```{r}
-plot(pdp, geom = "variable", variables = "celltype", times = c(1, 80, 151.72))
+plot(pdp, geom = "variable", variables = "karno", times = selected_times)
+```
+
+```{r}
+plot(pdp, geom = "variable", variables = "celltype", times = selected_times)
 ```
 
 
@@ -94,10 +98,10 @@ pdp_2d_num_cat <- model_profile_2d(exp, variables = list(c("karno", "celltype"))
 These explanations can be plotted using the plot function.  
 
 ```{r}
-plot(pdp_2d, times = 80)
+plot(pdp_2d, times = exp$median_survival_time)
 ```
 
 ```{r}
-plot(pdp_2d_num_cat, times = 80)
+plot(pdp_2d_num_cat, times = exp$median_survival_time)
 ```
 
