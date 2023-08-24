@@ -30,7 +30,12 @@
 #'   y = Surv(veteran$time, veteran$status)
 #' )
 #'
-#' TODO kod
+#' cph_residuals <- model_diagnostics(cph_exp)
+#' rsf_residuals <- model_diagnostics(rsf_ranger_exp)
+#'
+#' head(cph_residuals$result)
+#' plot(cph_residuals, rsf_residuals, xvariable = "age")
+#' plot(cph_residuals, rsf_residuals, type = "Cox-Snell")
 #'
 #' }
 #' @rdname model_diagnostics.surv_explainer
