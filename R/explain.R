@@ -1017,7 +1017,7 @@ explain.flexsurvreg <- function(model,
         attr(predict_function, "verbose_info") <- deparse(substitute(predict_function))
     }
 
-    possible_data <- model.frame(parmodel)
+    possible_data <- model.frame(model)
     if (is.null(data)) {
         data <- possible_data[,-c(1, ncol(possible_data))]
         attr(data, "verbose_info") <- "extracted"
