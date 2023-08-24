@@ -9,7 +9,7 @@ test_that("coxph prediction functions work correctly", {
             x = TRUE,
             y = TRUE
         )
-    
+
     cox_wrong <- survival::coxph(
         survival::Surv(rtime, recur) ~ .,
         data = rotterdam[, !colnames(rotterdam) %in% c("year", "dtime", "death")]
@@ -66,11 +66,11 @@ test_that("coxph prediction functions work correctly", {
     explain(cox_rotterdam_rec,
             predict_survival_function = pec::predictSurvProb,
             verbose = FALSE)
-    
+
     explain(cox_rotterdam_rec,
             predict_cumulative_hazard_function = pec::predictSurvProb,
             verbose = FALSE)
-    
+
     explain(cox_rotterdam_rec,
             predict_function = predict,
             verbose = FALSE)
@@ -196,7 +196,7 @@ test_that("ranger prediction functions work correctly", {
             y = survival::Surv(rotterdam$rtime, rotterdam$recur),
             predict_function = predict,
             verbose = FALSE)
-    
+
 
 })
 
@@ -307,7 +307,7 @@ test_that("rsfrc prediction functions work correctly", {
             y = survival::Surv(colon$time, colon$status),
             predict_function = predict,
             verbose = FALSE)
-    
+
 
 })
 
@@ -405,6 +405,15 @@ test_that("default methods for creating explainers work correctly", {
     cph_rms_exp <- explain(cph, verbose = FALSE)
     expect_s3_class(cph_rms_exp, c("surv_explainer", "explainer"))
     expect_equal(cph_rms_exp$label, "coxph", ignore_attr = TRUE)
+
+
+    ### flexsurv::flexsurvreg ###
+    fsr <- flexsurv::flexsurvreg(survival::Surv(time, status) ~
+                                     trt + celltype + karno + diagtime + age + prior,
+                                 data = veteran, dist = "exp")
+    fsr_exp <- explain(fsr, verbose = FALSE)
+    expect_s3_class(fsr_exp, c("surv_explainer", "explainer"))
+    expect_equal(fsr_exp$label, "flexsurvreg", ignore_attr = TRUE)
 
 
     ### parsnip::boost_tree ###
@@ -528,7 +537,7 @@ test_that("warnings in explain_survival work correctly", {
                                     verbose = FALSE,
                                     type = "weird type",
                                     model_info = custom_info))
-    
+
     expect_error(explain_survival(cph,
                                     data = veteran,
                                     survival::Surv(veteran$time, veteran$status),
