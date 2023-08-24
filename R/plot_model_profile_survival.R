@@ -502,9 +502,9 @@ prepare_model_profile_plots <- function(x,
 
 
     if (!is.null(subtitle) && subtitle == "default") {
-        labels <-
-            paste0(unique(aggregated_profiles$`_label_`), collapse = ", ")
-        subtitle <- paste0("created for the ", labels, " model")
+        labels <- unique(aggregated_profiles$`_label_`)
+        endword <- ifelse(length(labels) > 1, " models", " model")
+        subtitle <- paste0("created for the ", paste0(labels, collapse = ", "), endword)
     }
 
     if (is.null(variables)) {

@@ -61,10 +61,11 @@ plot.surv_shap <- function(x,
     rug_df <- do.call(rbind, transformed_rug_dfs)
 
     long_df <- do.call(rbind, long_df)
-    label <- unique(long_df$label)
+    labels <- unique(long_df$label)
 
     if (!is.null(subtitle) && subtitle == "default") {
-        subtitle <- paste0("created for the ", paste(label, collapse = ", "), " model")
+        endword <- ifelse(length(labels) > 1, " models", " model")
+        subtitle <- paste0("created for the ", paste0(labels, collapse = ", "), endword)
     }
 
     n_colors <- length(unique(long_df$ind))
