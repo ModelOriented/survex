@@ -4,7 +4,17 @@
 \alias{plot.model_diagnostics_survival}
 \title{Plot Model Diagnostics for Survival Models}
 \usage{
-\method{plot}{model_diagnostics_survival}(x, ...)
+\method{plot}{model_diagnostics_survival}(
+  x,
+  ...,
+  type = "deviance",
+  xvariable = "index",
+  smooth = as.logical(xvariable != "index"),
+  title = "Model diagnostics",
+  subtitle = "default",
+  facet_ncol = NULL,
+  colors = c("#160e3b", "#f05a71", "#ceced9")
+)
 }
 \description{
 Plot Model Diagnostics for Survival Models
