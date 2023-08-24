@@ -24,7 +24,7 @@
 #' @param type type of a model, by default `"survival"`
 #'
 #' @param times numeric, a vector of times at which the survival function and cumulative hazard function should be evaluated for calculations
-#' @param times_generation either `"survival_quantiles"`, `"uniform"` or `"quantiles"`. Sets the way of generating the vector of times based on times provided in the `y` parameter. If `"survival_quantiles"` the vector contains unique time points out of 50 uniformly distributed survival quantiles of order (0, ..., 1-min(KM_SF)) based on the Kaplan-Meier estimator, and additional time point being the median survival time (if possible); if `"uniform"` the vector contains 50 equally spaced time points between the minimum and maximum observed times; if `"quantiles"` the vector contains unique time points out of 50 time points between 0th and 98th percentiles of observed times. Ignored if `times` is not `NULL`.
+#' @param times_generation either `"survival_quantiles"`, `"uniform"` or `"quantiles"`. Sets the way of generating the vector of times based on times provided in the `y` parameter. If `"survival_quantiles"` the vector contains unique time points out of 50 uniformly distributed survival quantiles based on the Kaplan-Meier estimator, and additional time point being the median survival time (if possible); if `"uniform"` the vector contains 50 equally spaced time points between the minimum and maximum observed times; if `"quantiles"` the vector contains unique time points out of 50 time points between 0th and 98th percentiles of observed times. Ignored if `times` is not `NULL`.
 #' @param predict_survival_function function taking 3 arguments `model`, `newdata` and `times`, and returning a matrix whose each row is a survival function evaluated at `times` for one observation from `newdata`
 #' @param predict_cumulative_hazard_function function taking 3 arguments `model`, `newdata` and `times`, and returning a matrix whose each row is a cumulative hazard function evaluated at `times` for one observation from `newdata`
 #'
@@ -236,14 +236,16 @@ explain_survival <-
                         survobj <- Surv(y[,1], y[,2])
                         sfit <- survival::survfit(survobj ~ 1, type="kaplan-meier")
 
+                        max_sf <- max(sfit$surv[sfit$surv!=1]) # without 1 (for time = 0)
                         min_sf <- min(sfit$surv)
-                        quantiles <- 1 - seq(1, min_sf, length.out=50)
+                        quantiles <- 1 - seq(max_sf, min_sf, length.out=50)
 
                         if(min_sf <= 0.5) median_survival_time <- as.numeric(quantile(sfit, 0.5)$quantile)
                         raw_times <- quantile(sfit, quantiles)$quantile
+                        raw_times[1] <- min()
 
                         times <- sort(na.omit(unique(c(raw_times, median_survival_time))))
-                        method_description <- "uniformly distributed Kaplan-Meier survival quantiles (0, ..., 1-min(KM_SF))"
+                        method_description <- "uniformly distributed survival quantiles based on Kaplan-Meier estimator"
                     },
                     "uniform" = {
                         times <- seq(min(y[, 1]), max(y[, 1]), length.out = 50)
