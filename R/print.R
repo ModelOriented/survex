@@ -59,3 +59,12 @@ print.surv_shap <- function(x, ...) {
     cat("\n")
     print(res, ...)
 }
+
+
+#' @export
+print.model_diagnostics_survival <- function(x, ...){
+    res <- x$result
+    text <- paste0("Survival residuals for the ", unique(res$label), " model:\n")
+    cat(text)
+    print.data.frame(res, ...)
+}
