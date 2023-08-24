@@ -242,7 +242,6 @@ explain_survival <-
 
                         if(min_sf <= 0.5) median_survival_time <- as.numeric(quantile(sfit, 0.5)$quantile)
                         raw_times <- quantile(sfit, quantiles)$quantile
-                        raw_times[1] <- min()
 
                         times <- sort(na.omit(unique(c(raw_times, median_survival_time))))
                         method_description <- "uniformly distributed survival quantiles based on Kaplan-Meier estimator"
