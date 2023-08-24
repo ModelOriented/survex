@@ -126,6 +126,17 @@ surv_model_info.sksurv <- function(model, ...) {
 
 #' @rdname surv_model_info
 #' @export
+surv_model_info.flexsurvreg <- function(model, ...) {
+    type <- "survival"
+    package <- "flexsurv"
+    ver <- get_pkg_ver_safe(package)
+    model_info <- list(package = package, ver = ver, type = type)
+    class(model_info) <- "model_info"
+    model_info
+}
+
+#' @rdname surv_model_info
+#' @export
 surv_model_info.default <- function(model, ...) {
     type <- "survival"
     package <- paste("unrecognized ,", "model of class:", class(model))

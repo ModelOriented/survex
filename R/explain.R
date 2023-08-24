@@ -919,18 +919,12 @@ explain.sksurv <- function(model,
 
     if (is.null(predict_function)) {
         if (reticulate::py_has_attr(model, "predict")) {
-            predict_function <- function(model, newdata, times) model$predict(newdata)
+            predict_function <- function(model, newdata) model$predict(newdata)
             attr(predict_function, "verbose_info") <- "predict from scikit-survival will be used"
+            attr(predict_function, "is.default") <- TRUE
         } else {
-            predict_function <- function(model, newdata, times) {
-                rowSums(predict_cumulative_hazard_function(model, newdata, times))
-            }
-            attr(predict_function, "verbose_info") <- "sum over the predict_cumulative_hazard_function will be used"
-        }
-        attr(predict_function, "is.default") <- TRUE
-        attr(predict_function, "use.times") <- TRUE
-    } else {
         attr(predict_function, "verbose_info") <- deparse(substitute(predict_function))
+        }
     }
 
     if (!is.null(data) & any(colnames(data) != model$feature_names_in_)) {
@@ -963,6 +957,97 @@ explain.sksurv <- function(model,
     )
 }
 
+
+#' @export
+explain.flexsurvreg <- function(model,
+                                data = NULL,
+                                y = NULL,
+                                predict_function = NULL,
+                                predict_function_target_column = NULL,
+                                residual_function = NULL,
+                                weights = NULL,
+                                ...,
+                                label = NULL,
+                                verbose = TRUE,
+                                colorize = !isTRUE(getOption("knitr.in.progress")),
+                                model_info = NULL,
+                                type = NULL,
+                                times = NULL,
+                                times_generation = "quantiles",
+                                predict_survival_function = NULL,
+                                predict_cumulative_hazard_function = NULL) {
+    if (is.null(label)) {
+        label <- class(model)[1]
+        attr(label, "verbose_info") <- "default"
+    }
+
+    if (is.null(predict_survival_function)) {
+        predict_survival_function <-  function(model, newdata, times){
+                    raw_preds <- predict(model, newdata = newdata, times = times, type = "survival")
+                    preds <- do.call(rbind, lapply(raw_preds[[1]], function(x) t(x[".pred_survival"])))
+                    rownames(preds) <- NULL
+                    preds
+                }
+        attr(predict_survival_function, "verbose_info") <- "predict.flexsurvreg with type = 'survival' will be used"
+        attr(predict_survival_function, "is.default") <- TRUE
+    } else {
+        attr(predict_survival_function, "verbose_info") <- deparse(substitute(predict_survival_function))
+    }
+
+    if (is.null(predict_cumulative_hazard_function)) {
+        predict_cumulative_hazard_function <- function(model, newdata, times){
+            raw_preds <- predict(model, newdata = newdata, times = times, type = "cumhaz")
+            preds <- do.call(rbind, lapply(raw_preds[[1]], function(x) t(x[".pred_cumhaz"])))
+            rownames(preds) <- NULL
+            preds
+        }
+        attr(predict_cumulative_hazard_function, "verbose_info") <- "predict.flexsurvreg with type = 'cumhaz' will be used"
+        attr(predict_cumulative_hazard_function, "is.default") <- TRUE
+    } else {
+        attr(predict_cumulative_hazard_function, "verbose_info") <- deparse(substitute(predict_cumulative_hazard_function))
+    }
+
+    if (is.null(predict_function)) {
+        predict_function <- function(model, newdata){
+            predict(model, newdata = newdata, type = "link")[[".pred_link"]]
+        }
+        attr(predict_function, "verbose_info") <- "predict.flexsurvreg with type = 'link' will be used"
+        attr(predict_function, "is.default") <- TRUE
+    } else {
+        attr(predict_function, "verbose_info") <- deparse(substitute(predict_function))
+    }
+
+    possible_data <- model.frame(parmodel)
+    if (is.null(data)) {
+        data <- possible_data[,-c(1, ncol(possible_data))]
+        attr(data, "verbose_info") <- "extracted"
+    }
+
+    if (is.null(y)) {
+        y <- possible_data[,1]
+        attr(y, "verbose_info") <- "extracted"
+    }
+
+    explain_survival(
+        model,
+        data = data,
+        y = y,
+        predict_function = predict_function,
+        predict_function_target_column = predict_function_target_column,
+        residual_function = residual_function,
+        weights = weights,
+        ... = ...,
+        label = label,
+        verbose = verbose,
+        colorize = colorize,
+        model_info = model_info,
+        type = type,
+        times = times,
+        times_generation = times_generation,
+        predict_survival_function = predict_survival_function,
+        predict_cumulative_hazard_function = predict_cumulative_hazard_function
+    )
+}
 
 verbose_cat <- function(..., is.default = NULL, verbose = TRUE) {
     if (verbose) {
