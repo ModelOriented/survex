@@ -8,6 +8,7 @@ test_that("model_diagnostics for survival residuals works", {
     rsf_ranger_exp <- explain(rsf_ranger, data = veteran[, -c(3, 4)], y = Surv(veteran$time, veteran$status), verbose = FALSE)
 
     md_cph <- model_diagnostics(cph_exp)
+    md_rsf <- model_diagnostics(rsf_ranger_exp)
     expect_s3_class(md_cph, "model_diagnostics_survival")
     expect_true(all(md_cph$result$time == cph_exp$y[,1]))
     expect_equal(ncol(md_cph$result) - ncol(cph_exp$data), 6)
