@@ -6,6 +6,7 @@
 * added Accumulated Local Effects (ALE) explanations (see `model_profile(..., type = "accumulated")`)
 * added 2-dimensional PDP and ALE plots (see `model_profile_2d()` function)
 * added `plot2()` function for plotting PDP and ALE explanations without the time dimension
+* added diagnostic explanations - residual analysis (see `model_diagnostics()` function)
 * made improvements on the vignettes for the package (see `vignette("pdp")` and `vignette("global-survshap")`)
 * increased the test coverage of the pacakge
 * reduced the number of expensive `requireNamespace()` calls ([#83](https://github.com/ModelOriented/survex/issues/83))
