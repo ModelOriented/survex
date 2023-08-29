@@ -75,7 +75,7 @@ plot.model_profile_survival <- function(x,
         stop("`variable_type` needs to be 'numerical' or 'categorical'")
     }
 
-    if (title == "default") {
+    if (!is.null(title) && title == "default") {
         if (x$type == "partial") {
             title <- "Partial dependence survival profiles"
             if (geom == "variable") {

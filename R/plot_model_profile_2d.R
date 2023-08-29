@@ -53,7 +53,7 @@ plot.model_profile_2d_survival <- function(x,
                                            colors = NULL) {
     explanations_list <- c(list(x), list(...))
     num_models <- length(explanations_list)
-    if (title == "default") {
+    if (!is.null(title) && title == "default") {
         if (x$type == "partial") {
             title <- "2D partial dependence survival profiles"
         }

@@ -70,7 +70,7 @@ plot.predict_profile_survival <- function(x,
         stop("`variable_type` needs to be 'numerical' or 'categorical'")
     }
 
-    if (title == "default"){
+    if (!is.null(title) && title == "default"){
         title <- "Ceteris paribus survival profile"
     }
 
