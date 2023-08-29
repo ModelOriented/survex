@@ -34,6 +34,8 @@ reference:
   - plot.model_profile_2d_survival
 - subtitle: Model SurvSHAP(t)
 - contents: plot.aggregated_surv_shap
+- subtitle: Model Diagnostics
+- contents: plot.model_diagnostics_survival
 - subtitle: Predict Parts
 - contents:
   - plot.predict_parts_survival
