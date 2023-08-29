@@ -456,20 +456,39 @@ plot_pdp_cat <- function(pdp_dt,
                     scale_fill_manual(name = "time", values = colors)
             }
         } else {
+            pdp_dt$time <- as.numeric(as.character(pdp_dt$time))
+            if (!is.null(ice_dt)) {
+                ice_dt$time <- as.numeric(as.character(ice_dt$time))
+            }
             if (plot_type == "ice") {
                 ggplot(data = ice_dt, aes(x = !!feature_name_count_sym, y = predictions)) +
-                    geom_boxplot(alpha = 0.2, mapping = aes(color = time)) +
-                    scale_color_manual(name = "time", values = colors)
+                    geom_boxplot(mapping = aes(color = time, group = interaction(time, !!feature_name_count_sym)), alpha = 0.2) +
+                    scale_colour_gradient2(
+                        low = colors[1],
+                        mid = colors[2],
+                        high = colors[3],
+                        midpoint = median(as.numeric(as.character(ice_dt$time)))
+                    )
             } else if (plot_type == "pdp+ice") {
                 ggplot(mapping = aes(color = time)) +
-                    geom_boxplot(data = ice_dt, aes(x = !!feature_name_count_sym, y = predictions), alpha = 0.2, width = 0.7) +
+                    geom_boxplot(data = ice_dt, aes(x = !!feature_name_count_sym, y = predictions, group = interaction(time, !!feature_name_count_sym)), alpha = 0.2, width = 0.7) +
                     geom_line(data = pdp_dt, aes(x = !!feature_name_count_sym, y = pd, group = time), linewidth = 0.6, position = position_dodge(0.7)) +
-                    scale_color_manual(name = "time", values = colors)
+                    scale_colour_gradient2(
+                        low = colors[1],
+                        mid = colors[2],
+                        high = colors[3],
+                        midpoint = median(as.numeric(as.character(pdp_dt$time)))
+                    )
             } else if (plot_type == "pdp" || plot_type == "ale") {
-                ggplot(data = pdp_dt, aes(x = !!feature_name_count_sym, y = pd, fill = time)) +
+                ggplot(data = pdp_dt, aes(x = !!feature_name_count_sym, y = pd, fill = time, group = time)) +
                     geom_bar(stat = "identity", width = 0.5, position = "dodge") +
                     scale_y_continuous(expand = c(0, NA)) +
-                    scale_fill_manual(name = "time", values = colors)
+                    scale_fill_gradient2(
+                        low = colors[1],
+                        mid = colors[2],
+                        high = colors[3],
+                        midpoint = median(as.numeric(as.character(pdp_dt$time)))
+                    )
             }
         }
     })

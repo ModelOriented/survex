@@ -272,7 +272,7 @@ plot_ice_num <-function(ice_df,
                     low = colors[1],
                     mid = colors[2],
                     high = colors[3],
-                    midpoint = median(as.numeric(as.character(pdp_dt$time)))
+                    midpoint = median(as.numeric(as.character(ice_df$time)))
                 )
         }
     })
@@ -291,10 +291,16 @@ plot_ice_cat <- function(ice_df,
                 scale_fill_manual(name = "time", values = colors) +
                 geom_hline(yintercept = 0, linetype="dashed")
         } else {
-            ggplot(data = ice_df, aes(x = !!feature_name_sym, y = ice, fill = time)) +
+            ice_df$time <- as.numeric(as.character(ice_df$time))
+            ggplot(data = ice_df, aes(x = !!feature_name_sym, y = ice, fill = time, group = time)) +
                 geom_bar(stat = "identity", width = 0.5, position = "dodge") +
-                scale_y_continuous() +
-                scale_fill_manual(name = "time", values = colors)
+                scale_y_continuous(expand = c(0, NA)) +
+                scale_fill_gradient2(
+                    low = colors[1],
+                    mid = colors[2],
+                    high = colors[3],
+                    midpoint = median(as.numeric(as.character(ice_df$time)))
+                )
         }
     })
 }
