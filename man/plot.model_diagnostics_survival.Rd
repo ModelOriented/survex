@@ -13,7 +13,7 @@
   facet_ncol = NULL,
   title = "Model diagnostics",
   subtitle = "default",
-  colors = c("#160e3b", "#f05a71", "#ceced9")
+  colors = NULL
 )
 }
 \arguments{
