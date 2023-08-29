@@ -75,13 +75,14 @@ predict_parts.surv_explainer <- function(explainer, new_observation, ..., N = NU
         ))
     } else {
         res <- switch(type,
-            "survshap" = surv_shap(explainer, new_observation, ...),
+            "survshap" = surv_shap(explainer, new_observation, output_type, ...),
             "survlime" = surv_lime(explainer, new_observation, ...),
             stop("Only `survshap` and `survlime` methods are implemented for now")
         )
     }
 
     attr(res, "label") <- ifelse(is.null(explanation_label), explainer$label, explanation_label)
+    res$output_type <- output_type
     res$event_times <- explainer$y[explainer$y[, 1] <= max(explainer$times), 1]
     res$event_statuses <- explainer$y[explainer$y[, 1] <= max(explainer$times), 2]
     class(res) <- c("predict_parts_survival", class(res))

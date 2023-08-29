@@ -57,7 +57,7 @@ plot.surv_feature_importance <- function(x, ...,
     plotting_df <- do.call(rbind, transformed_dfs)
     rug_df <- do.call(rbind, transformed_rug_dfs)
 
-    label <- unique(plotting_df$label)
+    labels <- unique(plotting_df$label)
 
     subs <- aggregate(plotting_df$value, by = list(var = plotting_df$ind), function(x) sum(abs(x)))
 
@@ -79,8 +79,8 @@ plot.surv_feature_importance <- function(x, ...,
     }
 
     if (!is.null(subtitle) && subtitle == "default") {
-        glm_labels <- paste0(label, collapse = ", ")
-        subtitle <- paste0("created for the ", glm_labels, " model")
+        endword <- ifelse(length(labels) > 1, " models", " model")
+        subtitle <- paste0("created for the ", paste0(labels, collapse = ", "), endword)
     }
 
     base_plot <- with(plotting_df, {

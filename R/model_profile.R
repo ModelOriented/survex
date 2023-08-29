@@ -15,7 +15,7 @@
 #' @param k passed to `DALEX::model_profile` if `output_type == "risk"`, otherwise ignored
 #' @param center logical, should profiles be centered around the average prediction
 #' @param type the type of variable profile, `"partial"` for Partial Dependence, `"accumulated"` for Accumulated Local Effects, or `"conditional"` (available only for `output_type == "risk"`)
-#' @param output_type either `"survival"` or `"risk"` the type of survival model output that should be considered for explanations. If `"survival"` the explanations are based on the survival function. Otherwise the scalar risk predictions are used by the `DALEX::model_profile` function.
+#' @param output_type either `"survival"`, `"chf"` or `"risk"` the type of survival model output that should be considered for explanations. If `"survival"` the explanations are based on the survival function. If `"chf"` the explanations are based on the cumulative hazard function. Otherwise the scalar risk predictions are used by the `DALEX::predict_profile` function.
 #'
 #' @return An object of class `model_profile_survival`. It is a list with the element `result` containing the results of the calculation.
 #'
@@ -81,8 +81,9 @@ model_profile.surv_explainer <- function(explainer,
                                          type = "partial",
                                          output_type = "survival") {
     variables <- unique(variables, categorical_variables)
-    switch(output_type,
-        "risk" = DALEX::model_profile(
+
+    if (output_type == "risk"){
+        DALEX::model_profile(
             explainer = explainer,
             variables = variables,
             N = N,
@@ -91,58 +92,65 @@ model_profile.surv_explainer <- function(explainer,
             k = k,
             center = center,
             type = type
-        ),
-        "survival" = {
-            test_explainer(explainer, "model_profile", has_data = TRUE, has_survival = TRUE)
-            data <- explainer$data
-            if (!is.null(N) && N < nrow(data)) {
-                ndata <- data[sample(1:nrow(data), N), , drop = FALSE]
-            } else {
-                ndata <- data[1:nrow(data), , drop = FALSE]
-            }
+        )
+    } else if (output_type %in% c("survival", "chf")) {
 
-            if (type == "partial") {
-                cp_profiles <- surv_ceteris_paribus(explainer,
-                    new_observation = ndata,
-                    variables = variables,
-                    categorical_variables = categorical_variables,
-                    grid_points = grid_points,
-                    variable_splits_type = variable_splits_type,
-                    center = center,
-                    ...
-                )
+        test_explainer(explainer, "model_profile", has_data = TRUE, has_survival = TRUE)
+        data <- explainer$data
+        if (!is.null(N) && N < nrow(data)) {
+            ndata <- data[sample(1:nrow(data), N), , drop = FALSE]
+        } else {
+            ndata <- data[1:nrow(data), , drop = FALSE]
+        }
 
-                result <- surv_aggregate_profiles(cp_profiles, ...,
-                    variables = variables
-                )
-            } else if (type == "accumulated") {
-                cp_profiles <- list(variable_values = data.frame(ndata))
-                result <- surv_ale(explainer,
-                    data = ndata,
-                    variables = variables,
-                    categorical_variables = categorical_variables,
-                    grid_points = grid_points,
-                    center = center,
-                    ...
-                )
-            } else {
-                stop("Currently only `partial` and `accumulated` types are implemented")
-            }
-
-            ret <- list(
-                eval_times = unique(result$`_times_`),
-                cp_profiles = cp_profiles,
-                result = result,
-                type = type,
-                center = center
+        if (type == "partial") {
+            cp_profiles <- surv_ceteris_paribus(explainer,
+                                                new_observation = ndata,
+                                                variables = variables,
+                                                categorical_variables = categorical_variables,
+                                                grid_points = grid_points,
+                                                variable_splits_type = variable_splits_type,
+                                                center = center,
+                                                output_type = output_type,
+                                                ...
             )
-            class(ret) <- c("model_profile_survival", "list")
-            ret$event_times <- explainer$y[explainer$y[, 1] <= max(explainer$times), 1]
-            ret$event_statuses <- explainer$y[explainer$y[, 1] <= max(explainer$times), 2]
-            ret
-        },
-        stop("Currently only `risk` and `survival` output types are implemented")
-    )
+
+            result <- surv_aggregate_profiles(cp_profiles, ...,
+                                              variables = variables
+            )
+        } else if (type == "accumulated") {
+            cp_profiles <- list(variable_values = data.frame(ndata))
+            result <- surv_ale(
+                explainer,
+                data = ndata,
+                variables = variables,
+                categorical_variables = categorical_variables,
+                grid_points = grid_points,
+                center = center,
+                output_type = output_type,
+                ...)
+        } else {
+            stop("Currently only `partial` and `accumulated` types are implemented")
+        }
+        ret <- list(
+            eval_times = unique(result$`_times_`),
+            cp_profiles = cp_profiles,
+            result = result,
+            type = type,
+            center = center,
+            output_type = output_type
+        )
+
+        class(ret) <- c("model_profile_survival", "list")
+        ret$median_survival_time <- explainer$median_survival_time
+        ret$event_times <- explainer$y[explainer$y[, 1] <= max(explainer$times), 1]
+        ret$event_statuses <- explainer$y[explainer$y[, 1] <= max(explainer$times), 2]
+        ret
+    } else {
+        stop("The `output_type` argument has to be one of 'survival', 'chf' or 'risk'")
+    }
+
+
 }
 
 #' @export

@@ -7,6 +7,7 @@
 surv_shap(
   explainer,
   new_observation,
+  output_type,
   ...,
   y_true = NULL,
   calculation_method = "kernelshap",
@@ -17,6 +18,8 @@ surv_shap(
 \item{explainer}{an explainer object - model preprocessed by the \code{explain()} function}
 
 \item{new_observation}{new observations for which predictions need to be explained}
+
+\item{output_type}{a character, either \code{"survival"} or \code{"chf"}. Determines which type of prediction should be used for explanations.}
 
 \item{...}{additional parameters, passed to internal functions}
 

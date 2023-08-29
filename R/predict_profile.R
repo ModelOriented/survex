@@ -8,7 +8,7 @@
 #' @param categorical_variables a character vector of names of additional variables which should be treated as categorical (factors are automatically treated as categorical variables). If it contains variable names not present in the `variables` argument, they will be added at the end.
 #' @param ... additional parameters passed to `DALEX::predict_profile` if `output_type =="risk"`
 #' @param type character, only `"ceteris_paribus"` is implemented
-#' @param output_type either `"survival"` or `"risk"` the type of survival model output that should be considered for explanations. If `"survival"` the explanations are based on the survival function. Otherwise the scalar risk predictions are used by the `DALEX::predict_profile` function.
+#' @param output_type either `"survival"`, `"chf"` or `"risk"` the type of survival model output that should be considered for explanations. If `"survival"` the explanations are based on the survival function. If `"chf"` the explanations are based on the cumulative hazard function. Otherwise the scalar risk predictions are used by the `DALEX::predict_profile` function.
 #' @param variable_splits_type character, decides how variable grids should be calculated. Use `"quantiles"` for percentiles or `"uniform"` (default) to get uniform grid of points.
 #' @param center logical, should profiles be centered around the average prediction
 #'
@@ -45,6 +45,7 @@ predict_profile <- function(explainer,
                             categorical_variables = NULL,
                             ...,
                             type = "ceteris_paribus",
+                            output_type = "survival",
                             variable_splits_type = "uniform",
                             center = FALSE) {
     UseMethod("predict_profile", explainer)
@@ -63,7 +64,7 @@ predict_profile.surv_explainer <- function(explainer,
                                            center = FALSE) {
     variables <- unique(variables, categorical_variables)
     if (!type %in% "ceteris_paribus") stop("Type not supported")
-    if (!output_type %in% c("risk", "survival")) stop("output_type not supported")
+    if (!output_type %in% c("risk", "survival", "chf")) stop("output_type not supported")
     if (length(dim(new_observation)) != 2 || nrow(new_observation) != 1) {
         stop("new_observation should be a single row data.frame")
     }
@@ -78,7 +79,7 @@ predict_profile.surv_explainer <- function(explainer,
             variable_splits_type = variable_splits_type
         ))
     }
-    if (output_type == "survival") {
+    if (output_type %in% c("survival", "chf")) {
         if (type == "ceteris_paribus") {
             res <- surv_ceteris_paribus(
                 explainer,
@@ -87,14 +88,17 @@ predict_profile.surv_explainer <- function(explainer,
                 categorical_variables = categorical_variables,
                 variable_splits_type = variable_splits_type,
                 center = center,
+                output_type = output_type,
                 ...
             )
             class(res) <- c("predict_profile_survival", class(res))
+            res$output_type <- output_type
+            res$median_survival_time <- explainer$median_survival_time
             res$event_times <- explainer$y[explainer$y[, 1] <= max(explainer$times), 1]
             res$event_statuses <- explainer$y[explainer$y[, 1] <= max(explainer$times), 2]
             return(res)
         } else {
-            stop("For survival output only type=`ceteris_paribus` is implemented")
+            stop("For 'survival' and 'chf' output only type=`ceteris_paribus` is implemented")
         }
     }
 }

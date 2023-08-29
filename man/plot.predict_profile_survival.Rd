@@ -36,7 +36,7 @@
 
 \item{numerical_plot_type}{character, either \code{"lines"}, or \code{"contours"} selects the type of numerical variable plots.  Only used when \code{geom = "time"}.}
 
-\item{times}{numeric vector, times for which the profile should be plotted, the times must be present in the "times" field of the explainer. If \code{NULL} (default) then the median time from the explainer object is used. Only used when \code{geom = "variable"} and \code{marginalize_over_time = FALSE}.}
+\item{times}{numeric vector, times for which the profile should be plotted, the times must be present in the 'times' field of the explainer. If \code{NULL} (default) then the median survival time (if available) or the median time from the explainer object is used. Only used when \code{geom = "variable"} and \code{marginalize_over_time = FALSE}.}
 
 \item{marginalize_over_time}{logical, if \code{TRUE} then the profile is calculated for all times and then averaged over time, if \code{FALSE} (default) then the profile is calculated for each time separately. Only used when \code{geom = "variable"}.}
 

@@ -79,7 +79,9 @@ plot_td_surv_model_performance <- function(x, ..., metrics = NULL, title = NULL,
     df <- concatenate_td_dfs(x, ...)
 
     if (!is.null(subtitle) && subtitle == "default") {
-        subtitle <- paste0("created for the ", paste(unique(df$label), collapse = ", "), " model")
+        labels <- unique(df$label)
+        endword <- ifelse(length(labels) > 1, " models", " model")
+        subtitle <- paste0("created for the ", paste0(labels, collapse = ", "), endword)
     }
 
     if (is.null(metrics)) metrics <- c("C/D AUC", "Brier score")
@@ -106,7 +108,9 @@ plot_scalar_surv_model_performance <- function(x, ..., metrics = NULL, title = N
     df <- concatenate_dfs(x, ...)
 
     if (!is.null(subtitle) && subtitle == "default") {
-        subtitle <- paste0("created for the ", paste(unique(df$label), collapse = ", "), " model")
+        labels <- unique(df$label)
+        endword <- ifelse(length(labels) > 1, " models", " model")
+        subtitle <- paste0("created for the ", paste0(labels, collapse = ", "), endword)
     }
 
     if (!is.null(metrics)) df <- df[df$ind %in% metrics, ]

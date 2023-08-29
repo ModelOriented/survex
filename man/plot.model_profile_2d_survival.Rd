@@ -23,7 +23,7 @@
 
 \item{variables}{list of character vectors of length 2, names of pairs of variables to be plotted}
 
-\item{times}{numeric vector, times for which the profile should be plotted, the times must be present in the 'times' field of the explainer. If \code{NULL} (default) then the median time from the explainer object is used.}
+\item{times}{numeric vector, times for which the profile should be plotted, the times must be present in the 'times' field of the explainer. If \code{NULL} (default) then the median survival time (if available) or the median time from the explainer object is used.}
 
 \item{marginalize_over_time}{logical, if \code{TRUE} then the profile is calculated for all times and then averaged over time, if \code{FALSE} (default) then the profile is calculated for each time separately}
 
@@ -57,14 +57,14 @@ cph_model_profile_2d <- model_profile_2d(cph_exp,
     )
 )
 head(cph_model_profile_2d$result)
-plot(cph_model_profile_2d, variables = list(c("age", "celltype")), times = 103)
+plot(cph_model_profile_2d, variables = list(c("age", "celltype")), times = cph_exp$times[20])
 
 cph_model_profile_2d_ale <- model_profile_2d(cph_exp,
     variables = list(c("age", "karno")),
     type = "accumulated"
 )
 head(cph_model_profile_2d_ale$result)
-plot(cph_model_profile_2d_ale, times = c(8, 103), marginalize_over_time = TRUE)
+plot(cph_model_profile_2d_ale, times = cph_exp$times[c(10, 20)], marginalize_over_time = TRUE)
 }
 
 }

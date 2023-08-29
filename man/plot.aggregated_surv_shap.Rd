@@ -17,7 +17,7 @@
 \arguments{
 \item{x}{an object of class \code{aggregated_surv_shap} to be plotted}
 
-\item{geom}{character, one of \code{"importance"}, \code{"beeswarm"}, or \code{"profile"}. Type of chart to be plotted; \code{"importance"} shows the importance of variables over time and aggregated, \code{"beeswarm"} shows the distribution of SurvSHAP(t) values for variables and observations, \code{"profile"} shows the dependence of SurvSHAP(t) values on variable values.}
+\item{geom}{character, one of \code{"importance"}, \code{"beeswarm"}, \code{"profile"} or \code{"curves"}. Type of chart to be plotted; \code{"importance"} shows the importance of variables over time and aggregated, \code{"beeswarm"} shows the distribution of SurvSHAP(t) values for variables and observations, \code{"profile"} shows the dependence of SurvSHAP(t) values on variable values, \code{"curves"} shows all SurvSHAP(t) curves for selected variable colored by its value or with functional boxplot if \code{boxplot = TRUE}.}
 
 \item{...}{additional parameters passed to internal functions}
 
@@ -57,6 +57,12 @@ explanations of survival models created using the \code{model_survshap()} functi
 \item \code{variable} - variable for which the profile is to be plotted, by default first from result data
 \item \code{color_variable} - variable used to denote the color, by default equal to \code{variable}
 }
+
+#' ## \code{plot.aggregated_surv_shap(geom = "curves")}
+\itemize{
+\item \code{variable} - variable for which SurvSHAP(t) curves are to be plotted, by default first from result data
+\item \code{boxplot} - whether to plot functional boxplot with marked outliers or all curves colored by variable value
+}
 }
 }
 
@@ -93,7 +99,12 @@ ranger_global_survshap <- model_survshap(
 )
 plot(ranger_global_survshap)
 plot(ranger_global_survshap, geom = "beeswarm")
-plot(ranger_global_survshap, geom = "profile", color_variable = "karno")
+plot(ranger_global_survshap, geom = "profile",
+     variable = "age", color_variable = "karno")
+plot(ranger_global_survshap, geom = "curves",
+     variable = "age")
+plot(ranger_global_survshap, geom = "curves",
+     variable = "age", boxplot = TRUE)
 }
 
 }

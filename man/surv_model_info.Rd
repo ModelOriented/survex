@@ -8,6 +8,8 @@
 \alias{surv_model_info.model_fit}
 \alias{surv_model_info.cph}
 \alias{surv_model_info.LearnerSurv}
+\alias{surv_model_info.sksurv}
+\alias{surv_model_info.flexsurvreg}
 \alias{surv_model_info.default}
 \title{Extract additional information from the model}
 \usage{
@@ -24,6 +26,10 @@ surv_model_info(model, ...)
 \method{surv_model_info}{cph}(model, ...)
 
 \method{surv_model_info}{LearnerSurv}(model, ...)
+
+\method{surv_model_info}{sksurv}(model, ...)
+
+\method{surv_model_info}{flexsurvreg}(model, ...)
 
 \method{surv_model_info}{default}(model, ...)
 }

@@ -37,7 +37,7 @@
 
 \item{numerical_plot_type}{character, either \code{"lines"}, or \code{"contours"} selects the type of numerical variable plots. Only used when \code{geom = "time"}.}
 
-\item{times}{numeric vector, times for which the profile should be plotted, the times must be present in the "times" field of the explainer. If \code{NULL} (default) then the median time from the explainer object is used. Only used when \code{geom = "variable"} and \code{marginalize_over_time = FALSE}.}
+\item{times}{numeric vector, times for which the profile should be plotted, the times must be present in the 'times' field of the explainer. If \code{NULL} (default) then the median survival time (if available) or the median time from the explainer object is used. Only used when \code{geom = "variable"} and \code{marginalize_over_time = FALSE}.}
 
 \item{marginalize_over_time}{logical, if \code{TRUE} then the profile is calculated for all times and then averaged over time, if \code{FALSE} (default) then the profile is calculated for each time separately. Only used when \code{geom = "variable"}.}
 
@@ -78,9 +78,11 @@ plot(m_prof, variables = c("trt", "age"), facet_ncol = 1)
 
 plot(m_prof, geom = "variable", variables = "karno", plot_type = "pdp+ice")
 
-plot(m_prof, geom = "variable", times = c(1, 2.72), variables = "karno", plot_type = "pdp+ice")
+plot(m_prof, geom = "variable", times = exp$times[c(5, 10)],
+     variables = "karno", plot_type = "pdp+ice")
 
-plot(m_prof, geom = "variable", times = c(1, 2.72), variables = "trt", plot_type = "pdp+ice")
+plot(m_prof, geom = "variable", times = exp$times[c(5, 10)],
+     variables = "trt", plot_type = "pdp+ice")
 }
 
 }

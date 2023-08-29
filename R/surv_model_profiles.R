@@ -97,7 +97,8 @@ surv_ale <- function(x,
                      variables,
                      categorical_variables,
                      grid_points,
-                     center = FALSE) {
+                     center = FALSE,
+                     output_type = "survival") {
     if (is.null(variables)) {
         variables <- colnames(data)
     }
@@ -114,7 +115,12 @@ surv_ale <- function(x,
 
     model <- x$model
     label <- x$label
-    predict_survival_function <- x$predict_survival_function
+    if (output_type == "survival"){
+        predict_survival_function <- x$predict_survival_function
+    } else {
+        predict_survival_function <- x$predict_cumulative_hazard_function
+    }
+
     times <- x$times
 
     # Make predictions for original levels

@@ -24,7 +24,7 @@
 #' @param type type of a model, by default `"survival"`
 #'
 #' @param times numeric, a vector of times at which the survival function and cumulative hazard function should be evaluated for calculations
-#' @param times_generation either `"uniform"` or `"quantiles"`. Sets the way of generating the vector of times based on times provided in the `y` parameter. If `"uniform"` the vector contains 50 equally spaced points between the minimum and maximum observed times; if `"quantiles"` the vector contains 50 points between 0th and 98th percentiles of observed times. Ignored if `times` is not `NULL`.
+#' @param times_generation either `"survival_quantiles"`, `"uniform"` or `"quantiles"`. Sets the way of generating the vector of times based on times provided in the `y` parameter. If `"survival_quantiles"` the vector contains unique time points out of 50 uniformly distributed survival quantiles based on the Kaplan-Meier estimator, and additional time point being the median survival time (if possible); if `"uniform"` the vector contains 50 equally spaced time points between the minimum and maximum observed times; if `"quantiles"` the vector contains unique time points out of 50 time points between 0th and 98th percentiles of observed times. Ignored if `times` is not `NULL`.
 #' @param predict_survival_function function taking 3 arguments `model`, `newdata` and `times`, and returning a matrix whose each row is a survival function evaluated at `times` for one observation from `newdata`
 #' @param predict_cumulative_hazard_function function taking 3 arguments `model`, `newdata` and `times`, and returning a matrix whose each row is a cumulative hazard function evaluated at `times` for one observation from `newdata`
 #'
@@ -120,7 +120,7 @@ explain_survival <-
              model_info = NULL,
              type = NULL,
              times = NULL,
-             times_generation = "quantiles",
+             times_generation = "survival_quantiles",
              predict_survival_function = NULL,
              predict_cumulative_hazard_function = NULL) {
         if (!colorize) {
@@ -190,7 +190,11 @@ explain_survival <-
             if (!is.null(attr(data, "verbose_info")) && attr(data, "verbose_info") == "extracted") {
                 verbose_cat("  -> data              : ", n, " rows ", ncol(data), " cols", "(", color_codes$yellow_start, "extracted from the model", color_codes$yellow_end, ")", verbose = verbose)
                 attr(data, "verbose_info") <- NULL
-            } else {
+            } else if (!is.null(attr(data, "verbose_info")) && attr(data, "verbose_info") == "colnames_changed") {
+                verbose_cat("  -> data              : ", n, " rows ", ncol(data), " cols", "(", color_codes$yellow_start, "colnames changed to comply with the model", color_codes$yellow_end, ")", verbose = verbose)
+                attr(data, "verbose_info") <- NULL
+            }
+            else {
                 verbose_cat("  -> data              : ", n, " rows ", ncol(data), " cols", verbose = verbose)
             }
         }
@@ -224,22 +228,36 @@ explain_survival <-
         }
 
         # verbose times
+        median_survival_time <- NULL
         if (is.null(times)) {
             if (!is.null(y)) {
                 switch(times_generation,
+                    "survival_quantiles" = {
+                        survobj <- Surv(y[,1], y[,2])
+                        sfit <- survival::survfit(survobj ~ 1, type="kaplan-meier")
+
+                        max_sf <- max(sfit$surv[sfit$surv!=1]) # without 1 (for time = 0)
+                        min_sf <- min(sfit$surv)
+                        quantiles <- 1 - seq(max_sf, min_sf, length.out=50)
+
+                        if(min_sf <= 0.5) median_survival_time <- as.numeric(quantile(sfit, 0.5)$quantile)
+                        raw_times <- quantile(sfit, quantiles)$quantile
+
+                        times <- sort(na.omit(unique(c(raw_times, median_survival_time))))
+                        method_description <- "uniformly distributed survival quantiles based on Kaplan-Meier estimator"
+                    },
                     "uniform" = {
                         times <- seq(min(y[, 1]), max(y[, 1]), length.out = 50)
-                        method_description <- "50 uniformly distributed time points from min to max"
+                        method_description <- "uniformly distributed time points from min to max observed time"
                     },
                     "quantiles" = {
-                        times <- quantile(y[, 1], seq(0, 0.99, 0.02))
-                        method_description <- "50 time points being consecutive quantiles (0.00, 0.02, ..., 0.98)"
+                        times <- quantile(y[, 1], seq(0, 0.98, 0.02))
+                        method_description <- "time points being consecutive quantiles (0.00, 0.02, ..., 0.98) of observed times"
                     },
-                    stop("times_generation needs to be 'uniform' or 'quantiles'")
+                    stop("times_generation needs to be 'survival_quantiles', 'uniform' or 'quantiles'")
                 )
                 times <- sort(unique(times))
-                times_stats <- get_times_stats(times)
-                verbose_cat("  -> times             : ", times_stats[1], "unique time points", ", min =", times_stats[2], ", mean =", times_stats[3], ", median =", times_stats[4], ", max =", times_stats[5], verbose = verbose)
+                verbose_cat("  -> times             : ", length(times), "unique time points", get_times_stats(times, median_survival_time), verbose = verbose)
                 verbose_cat("  -> times             : ", "(", color_codes$yellow_start, paste("generated from y as", method_description), color_codes$yellow_end, ")", verbose = verbose)
             } else {
                 verbose_cat("  -> times   :  not specified and automatic generation is impossible ('y' is NULL)! (", color_codes$red_start, "WARNING", color_codes$red_end, ")", verbose = verbose)
@@ -248,13 +266,13 @@ explain_survival <-
         } else {
             times <- sort(unique(times))
             times_stats <- get_times_stats(times)
-            verbose_cat("  -> times             : ", times_stats[1], "unique time points", ", min =", times_stats[2], ", mean =", times_stats[3], ", median =", times_stats[4], ", max =", times_stats[5], verbose = verbose)
+            verbose_cat("  -> times             : ", length(times), "unique time points", get_times_stats(times, median_survival_time), verbose = verbose)
         }
 
         # verbose predict function
         if (is.null(predict_function)) {
             if (!is.null(predict_cumulative_hazard_function)) {
-                predict_function <- function(model, newdata) risk_from_chf(predict_cumulative_hazard_function(model, newdata, times = times))
+                predict_function <- risk_from_chf(predict_cumulative_hazard_function, times)
                 verbose_cat("  -> predict function  : ", "sum over the predict_cumulative_hazard_function will be used", is.default = TRUE, verbose = verbose)
             } else {
                 verbose_cat("  -> predict function   :  not specified! (", color_codes$red_start, "WARNING", color_codes$red_end, ")", verbose = verbose)
@@ -346,6 +364,7 @@ explain_survival <-
             model_info = model_info,
             type = type,
             times = times,
+            median_survival_time = median_survival_time,
             predict_survival_function = predict_survival_function,
             predict_cumulative_hazard_function = predict_cumulative_hazard_function,
             ... = ...
@@ -411,22 +430,41 @@ explain.default <- function(model,
                 predict_survival_function = pec::predictSurvProb
             )
         )
-    } else {
-        DALEX::explain(model,
-            data = data,
-            y = y,
-            predict_function = predict_function,
-            predict_function_target_column = predict_function_target_column,
-            residual_function = residual_function,
-            weights = weights,
-            ... = ...,
-            label = label,
-            verbose = verbose,
-            colorize = !isTRUE(getOption("knitr.in.progress")),
-            model_info = model_info,
-            type = type
+    }
+    if (inherits(model, "sksurv.base.SurvivalAnalysisMixin")){
+        return(
+            explain.sksurv(model,
+                data = data,
+                y = y,
+                predict_function = predict_function,
+                predict_function_target_column = predict_function_target_column,
+                residual_function = residual_function,
+                weights = weights,
+                ...,
+                label = label,
+                verbose = verbose,
+                colorize = colorize,
+                model_info = model_info,
+                type = type
+            )
         )
     }
+
+    DALEX::explain(model,
+        data = data,
+        y = y,
+        predict_function = predict_function,
+        predict_function_target_column = predict_function_target_column,
+        residual_function = residual_function,
+        weights = weights,
+        ... = ...,
+        label = label,
+        verbose = verbose,
+        colorize = !isTRUE(getOption("knitr.in.progress")),
+        model_info = model_info,
+        type = type
+    )
+
 }
 
 #' @export
@@ -444,7 +482,7 @@ explain.coxph <- function(model,
                           model_info = NULL,
                           type = NULL,
                           times = NULL,
-                          times_generation = "quantiles",
+                          times_generation = "survival_quantiles",
                           predict_survival_function = NULL,
                           predict_cumulative_hazard_function = NULL) {
     if (is.null(data)) {
@@ -533,7 +571,7 @@ explain.ranger <- function(model,
                            model_info = NULL,
                            type = NULL,
                            times = NULL,
-                           times_generation = "quantiles",
+                           times_generation = "survival_quantiles",
                            predict_survival_function = NULL,
                            predict_cumulative_hazard_function = NULL) {
     if (is.null(predict_survival_function)) {
@@ -608,7 +646,7 @@ explain.rfsrc <- function(model,
                           model_info = NULL,
                           type = NULL,
                           times = NULL,
-                          times_generation = "quantiles",
+                          times_generation = "survival_quantiles",
                           predict_survival_function = NULL,
                           predict_cumulative_hazard_function = NULL) {
     if (is.null(label)) {
@@ -699,7 +737,7 @@ explain.model_fit <- function(model,
                               model_info = NULL,
                               type = NULL,
                               times = NULL,
-                              times_generation = "quantiles",
+                              times_generation = "survival_quantiles",
                               predict_survival_function = NULL,
                               predict_cumulative_hazard_function = NULL) {
     if (is.null(label)) {
@@ -780,7 +818,7 @@ explain.LearnerSurv <- function(model,
                                 model_info = NULL,
                                 type = NULL,
                                 times = NULL,
-                                times_generation = "quantiles",
+                                times_generation = "survival_quantiles",
                                 predict_survival_function = NULL,
                                 predict_cumulative_hazard_function = NULL) {
     if (is.null(label)) {
@@ -845,7 +883,186 @@ explain.LearnerSurv <- function(model,
     )
 }
 
+#' @export
+explain.sksurv <- function(model,
+                          data = NULL,
+                          y = NULL,
+                          predict_function = NULL,
+                          predict_function_target_column = NULL,
+                          residual_function = NULL,
+                          weights = NULL,
+                          ...,
+                          label = NULL,
+                          verbose = TRUE,
+                          colorize = !isTRUE(getOption("knitr.in.progress")),
+                          model_info = NULL,
+                          type = NULL,
+                          times = NULL,
+                          times_generation = "survival_quantiles",
+                          predict_survival_function = NULL,
+                          predict_cumulative_hazard_function = NULL){
+    if (is.null(label)) {
+        label <- class(model)[1]
+        attr(label, "verbose_info") <- "default"
+    }
 
+    if (is.null(predict_survival_function)) {
+        if (reticulate::py_has_attr(model, "predict_survival_function")) {
+            predict_survival_function <- function(model, newdata, times){
+                raw_preds <- model$predict_survival_function(newdata)
+                t(sapply(raw_preds, function(sf) as.vector(sf(times))))
+            }
+            attr(predict_survival_function, "verbose_info") <- "predict_survival_function from scikit-survival will be used"
+            attr(predict_survival_function, "is.default") <- TRUE
+        }
+    } else {
+        attr(predict_survival_function, "verbose_info") <- deparse(substitute(predict_survival_function))
+    }
+
+    if (is.null(predict_cumulative_hazard_function)) {
+        if (reticulate::py_has_attr(model, "predict_cumulative_hazard_function")) {
+            predict_cumulative_hazard_function <- function(model, newdata, times){
+                raw_preds <- model$predict_cumulative_hazard_function(newdata)
+                t(sapply(raw_preds, function(chf) as.vector(chf(times))))
+            }
+            attr(predict_cumulative_hazard_function, "verbose_info") <- "predict_cumulative_hazard_function from scikit-survival will be used"
+            attr(predict_cumulative_hazard_function, "is.default") <- TRUE
+        }
+    } else {
+        attr(predict_cumulative_hazard_function, "verbose_info") <- deparse(substitute(predict_cumulative_hazard_function))
+    }
+
+    if (is.null(predict_function)) {
+        if (reticulate::py_has_attr(model, "predict")) {
+            predict_function <- function(model, newdata) model$predict(newdata)
+            attr(predict_function, "verbose_info") <- "predict from scikit-survival will be used"
+            attr(predict_function, "is.default") <- TRUE
+        } else {
+        attr(predict_function, "verbose_info") <- deparse(substitute(predict_function))
+        }
+    }
+
+    if (!is.null(data) & any(colnames(data) != model$feature_names_in_)) {
+        colnames(data) <- sub("[.]", "=", colnames(data))
+        attr(data, "verbose_info") <- "colnames_changed"
+    }
+
+    if (class(model)[1] != "sksurv"){
+        class(model) <- c("sksurv", class(model))
+    }
+
+    explain_survival(
+        model,
+        data = data,
+        y = y,
+        predict_function = predict_function,
+        predict_function_target_column = predict_function_target_column,
+        residual_function = residual_function,
+        weights = weights,
+        ... = ...,
+        label = label,
+        verbose = verbose,
+        colorize = colorize,
+        model_info = model_info,
+        type = type,
+        times = times,
+        times_generation = times_generation,
+        predict_survival_function = predict_survival_function,
+        predict_cumulative_hazard_function = predict_cumulative_hazard_function
+    )
+}
+
+
+#' @export
+explain.flexsurvreg <- function(model,
+                                data = NULL,
+                                y = NULL,
+                                predict_function = NULL,
+                                predict_function_target_column = NULL,
+                                residual_function = NULL,
+                                weights = NULL,
+                                ...,
+                                label = NULL,
+                                verbose = TRUE,
+                                colorize = !isTRUE(getOption("knitr.in.progress")),
+                                model_info = NULL,
+                                type = NULL,
+                                times = NULL,
+                                times_generation = "survival_quantiles",
+                                predict_survival_function = NULL,
+                                predict_cumulative_hazard_function = NULL) {
+    if (is.null(label)) {
+        label <- class(model)[1]
+        attr(label, "verbose_info") <- "default"
+    }
+
+    if (is.null(predict_survival_function)) {
+        predict_survival_function <-  function(model, newdata, times){
+                    raw_preds <- predict(model, newdata = newdata, times = times, type = "survival")
+                    preds <- do.call(rbind, lapply(raw_preds[[1]], function(x) t(x[".pred_survival"])))
+                    rownames(preds) <- NULL
+                    preds
+                }
+        attr(predict_survival_function, "verbose_info") <- "predict.flexsurvreg with type = 'survival' will be used"
+        attr(predict_survival_function, "is.default") <- TRUE
+    } else {
+        attr(predict_survival_function, "verbose_info") <- deparse(substitute(predict_survival_function))
+    }
+
+    if (is.null(predict_cumulative_hazard_function)) {
+        predict_cumulative_hazard_function <- function(model, newdata, times){
+            raw_preds <- predict(model, newdata = newdata, times = times, type = "cumhaz")
+            preds <- do.call(rbind, lapply(raw_preds[[1]], function(x) t(x[".pred_cumhaz"])))
+            rownames(preds) <- NULL
+            preds
+        }
+        attr(predict_cumulative_hazard_function, "verbose_info") <- "predict.flexsurvreg with type = 'cumhaz' will be used"
+        attr(predict_cumulative_hazard_function, "is.default") <- TRUE
+    } else {
+        attr(predict_cumulative_hazard_function, "verbose_info") <- deparse(substitute(predict_cumulative_hazard_function))
+    }
+
+    if (is.null(predict_function)) {
+        predict_function <- function(model, newdata){
+            predict(model, newdata = newdata, type = "link")[[".pred_link"]]
+        }
+        attr(predict_function, "verbose_info") <- "predict.flexsurvreg with type = 'link' will be used"
+        attr(predict_function, "is.default") <- TRUE
+    } else {
+        attr(predict_function, "verbose_info") <- deparse(substitute(predict_function))
+    }
+
+    possible_data <- model.frame(model)
+    if (is.null(data)) {
+        data <- possible_data[,-c(1, ncol(possible_data))]
+        attr(data, "verbose_info") <- "extracted"
+    }
+
+    if (is.null(y)) {
+        y <- possible_data[,1]
+        attr(y, "verbose_info") <- "extracted"
+    }
+
+    explain_survival(
+        model,
+        data = data,
+        y = y,
+        predict_function = predict_function,
+        predict_function_target_column = predict_function_target_column,
+        residual_function = residual_function,
+        weights = weights,
+        ... = ...,
+        label = label,
+        verbose = verbose,
+        colorize = colorize,
+        model_info = model_info,
+        type = type,
+        times = times,
+        times_generation = times_generation,
+        predict_survival_function = predict_survival_function,
+        predict_cumulative_hazard_function = predict_cumulative_hazard_function
+    )
+}
 
 verbose_cat <- function(..., is.default = NULL, verbose = TRUE) {
     if (verbose) {
@@ -858,8 +1075,9 @@ verbose_cat <- function(..., is.default = NULL, verbose = TRUE) {
     }
 }
 
-get_times_stats <- function(times) {
-    c(length(times), min(times), mean(times), median(times), max(times))
+get_times_stats <- function(times, median_survival_time=NULL) {
+    median_survival_time_str <- ifelse(is.null(median_survival_time), "", paste0(" , median survival time = ", median_survival_time))
+    paste0(", min = ", min(times), median_survival_time_str, " , max = ", max(times))
 }
 
 #

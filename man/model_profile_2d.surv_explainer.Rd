@@ -46,7 +46,7 @@ model_profile_2d(
 
 \item{type}{the type of variable profile, \code{"partial"} for Partial Dependence or \code{"accumulated"} for Accumulated Local Effects}
 
-\item{output_type}{either \code{"survival"} or \code{"risk"} the type of survival model output that should be considered for explanations. Currently only \code{"survival"} is available.}
+\item{output_type}{either \code{"survival"}, \code{"chf"} or \code{"risk"} the type of survival model output that should be considered for explanations. If \code{"survival"} the explanations are based on the survival function. If \code{"chf"} the explanations are based on the cumulative hazard function. Otherwise the scalar risk predictions are used by the \code{DALEX::predict_profile} function.}
 }
 \value{
 An object of class \code{model_profile_2d_survival}. It is a list with the element \code{result} containing the results of the calculation.

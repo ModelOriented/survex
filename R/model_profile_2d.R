@@ -12,7 +12,7 @@
 #' @param center logical, should profiles be centered around the average prediction
 #' @param variable_splits_type character, decides how variable grids should be calculated. Use `"quantiles"` for quantiles or `"uniform"` (default) to get uniform grid of points. Used only if `type = "partial"`.
 #' @param type the type of variable profile, `"partial"` for Partial Dependence or `"accumulated"` for Accumulated Local Effects
-#' @param output_type either `"survival"` or `"risk"` the type of survival model output that should be considered for explanations. Currently only `"survival"` is available.
+#' @param output_type either `"survival"`, `"chf"` or `"risk"` the type of survival model output that should be considered for explanations. If `"survival"` the explanations are based on the survival function. If `"chf"` the explanations are based on the cumulative hazard function. Otherwise the scalar risk predictions are used by the `DALEX::predict_profile` function.
 #'
 #' @return An object of class `model_profile_2d_survival`. It is a list with the element `result` containing the results of the calculation.
 #'
@@ -69,7 +69,7 @@ model_profile_2d.surv_explainer <- function(explainer,
         stop("'variables' must be specified as a list of pairs (two-element vectors)")
     }
 
-    if (output_type != "survival") {
+    if (!output_type %in% c("survival", "chf")) {
         stop("Currently only `survival` output type is implemented")
     }
     test_explainer(explainer, "model_profile", has_data = TRUE, has_survival = TRUE)
@@ -95,7 +95,8 @@ model_profile_2d.surv_explainer <- function(explainer,
             categorical_variables = categorical_variables,
             grid_points = grid_points,
             variable_splits_type = variable_splits_type,
-            center = center
+            center = center,
+            output_type = output_type
         )
     } else if (type == "accumulated") {
         result <- surv_ale_2d(
@@ -104,7 +105,8 @@ model_profile_2d.surv_explainer <- function(explainer,
             variables = variables,
             categorical_variables = categorical_variables,
             grid_points = grid_points,
-            center = center
+            center = center,
+            output_type = output_type
         )
     } else {
         stop("Currently only `partial` and `accumulated` types are implemented")
@@ -114,7 +116,9 @@ model_profile_2d.surv_explainer <- function(explainer,
         result = result,
         eval_times = unique(result$`_times_`),
         variables = variables,
-        type = type
+        type = type,
+        median_survival_time = explainer$median_survival_time,
+        output_type = output_type
     )
     class(ret) <- c("model_profile_2d_survival", "list")
     return(ret)
@@ -126,10 +130,15 @@ surv_pdp_2d <- function(x,
                         categorical_variables,
                         grid_points,
                         variable_splits_type,
-                        center) {
+                        center,
+                        output_type) {
     model <- x$model
     label <- x$label
-    predict_survival_function <- x$predict_survival_function
+    if (output_type == "survival"){
+        predict_survival_function <- x$predict_survival_function
+    } else {
+        predict_survival_function <- x$predict_cumulative_hazard_function
+    }
     times <- x$times
 
     unique_variables <- unlist(variables)
@@ -192,10 +201,15 @@ surv_ale_2d <- function(x,
                         variables,
                         categorical_variables,
                         grid_points,
-                        center) {
+                        center,
+                        output_type) {
     model <- x$model
     label <- x$label
-    predict_survival_function <- x$predict_survival_function
+    if (output_type == "survival"){
+        predict_survival_function <- x$predict_survival_function
+    } else {
+        predict_survival_function <- x$predict_cumulative_hazard_function
+    }
     times <- x$times
 
     predictions_original <- predict_survival_function(

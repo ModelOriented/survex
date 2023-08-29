@@ -2,6 +2,7 @@
 #'
 #' @param explainer an explainer object - model preprocessed by the `explain()` function
 #' @param new_observation new observations for which predictions need to be explained
+#' @param output_type a character, either `"survival"` or `"chf"`. Determines which type of prediction should be used for explanations.
 #' @param ... additional parameters, passed to internal functions
 #' @param y_true a two element numeric vector or matrix of one row and two columns, the first element being the true observed time and the second the status of the observation, used for plotting
 #' @param calculation_method a character, either `"kernelshap"` for use of `kernelshap` library (providing faster Kernel SHAP with refinements) or `"exact_kernel"` for exact Kernel SHAP estimation
@@ -16,6 +17,7 @@
 #' @keywords internal
 surv_shap <- function(explainer,
                       new_observation,
+                      output_type,
                       ...,
                       y_true = NULL,
                       calculation_method = "kernelshap",
@@ -63,8 +65,8 @@ surv_shap <- function(explainer,
     # to display final object correctly, when is.matrix(new_observation) == TRUE
     res$variable_values <- as.data.frame(new_observation)
     res$result <- switch(calculation_method,
-        "exact_kernel" = use_exact_shap(explainer, new_observation, ...),
-        "kernelshap" = use_kernelshap(explainer, new_observation, ...),
+        "exact_kernel" = use_exact_shap(explainer, new_observation, output_type, ...),
+        "kernelshap" = use_kernelshap(explainer, new_observation, output_type, ...),
         stop("Only `exact_kernel` and `kernelshap` calculation methods are implemented")
     )
 
@@ -85,11 +87,11 @@ surv_shap <- function(explainer,
     return(res)
 }
 
-use_exact_shap <- function(explainer, new_observation, observation_aggregation_method, ...) {
+use_exact_shap <- function(explainer, new_observation, output_type, observation_aggregation_method, ...) {
     shap_values <- sapply(
         X = as.character(seq_len(nrow(new_observation))),
         FUN = function(i) {
-            as.data.frame(shap_kernel(explainer, new_observation[as.integer(i), ], ...))
+            as.data.frame(shap_kernel(explainer, new_observation[as.integer(i), ], output_type, ...))
         },
         USE.NAMES = TRUE,
         simplify = FALSE
@@ -99,12 +101,13 @@ use_exact_shap <- function(explainer, new_observation, observation_aggregation_m
 }
 
 
-shap_kernel <- function(explainer, new_observation, ...) {
+shap_kernel <- function(explainer, new_observation, output_type, ...) {
     timestamps <- explainer$times
     p <- ncol(explainer$data)
 
-    target_sf <- explainer$predict_survival_function(explainer$model, new_observation, timestamps)
-    sfs <- explainer$predict_survival_function(explainer$model, explainer$data, timestamps)
+
+    target_sf <- predict(explainer, new_observation, times = timestamps, output_type = output_type)
+    sfs <- predict(explainer, explainer$data, times = timestamps, output_type = output_type)
     baseline_sf <- apply(sfs, 2, mean)
 
 
@@ -186,13 +189,23 @@ aggregate_surv_shap <- function(survshap, times, method, ...) {
 }
 
 
-use_kernelshap <- function(explainer, new_observation, observation_aggregation_method, ...) {
+use_kernelshap <- function(explainer, new_observation, output_type, observation_aggregation_method,  ...) {
     predfun <- function(model, newdata) {
-        explainer$predict_survival_function(
-            model,
-            newdata,
-            times = explainer$times
-        )
+
+        if (output_type == "survival"){
+            explainer$predict_survival_function(
+                model,
+                newdata,
+                times = explainer$times
+            )
+        } else {
+            explainer$predict_cumulative_hazard_function(
+                model,
+                newdata,
+                times = explainer$times
+            )
+        }
+
     }
 
     shap_values <- sapply(

@@ -45,7 +45,9 @@ plot.surv_model_performance_rocs <- function(x,
     df <- do.call(rbind, alldfs)
 
     if (!is.null(subtitle) && subtitle == "default") {
-        subtitle <- paste0("created for the ", paste(unique(df$label), collapse = ", "), " model")
+        labels <- unique(df$label)
+        endword <- ifelse(length(labels) > 1, " models", " model")
+        subtitle <- paste0("created for the ", paste0(labels, collapse = ", "), endword)
     }
 
     num_colors <- length(unique(df$label))

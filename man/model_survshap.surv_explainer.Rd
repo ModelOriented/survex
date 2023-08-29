@@ -13,6 +13,7 @@ model_survshap(explainer, ...)
   y_true = NULL,
   calculation_method = "kernelshap",
   aggregation_method = "integral",
+  output_type = "survival",
   ...
 )
 }
@@ -28,6 +29,8 @@ model_survshap(explainer, ...)
 \item{calculation_method}{a character, either \code{"kernelshap"} for use of \code{kernelshap} library (providing faster Kernel SHAP with refinements) or \code{"exact_kernel"} for exact Kernel SHAP estimation}
 
 \item{aggregation_method}{a character, either \code{"integral"}, \code{"integral_absolute"}, \code{"mean_absolute"}, \code{"max_absolute"}, or \code{"sum_of_squares"}}
+
+\item{output_type}{a character, either \code{"survival"} or \code{"chf"}. Determines which type of prediction should be used for explanations.}
 }
 \value{
 An object of class \code{aggregated_surv_shap} containing the computed global SHAP values.
