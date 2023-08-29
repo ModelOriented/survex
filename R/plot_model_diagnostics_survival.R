@@ -26,7 +26,7 @@ plot.model_diagnostics_survival <- function(x,
                                             facet_ncol = NULL,
                                             title = "Model diagnostics",
                                             subtitle = "default",
-                                            colors = c("#160e3b", "#f05a71", "#ceced9")){
+                                            colors = NULL){
     lapply(list(x, ...), function(x) {
         if (!inherits(x, "model_diagnostics_survival")) {
             stop("All ... must be objects of class `model_diagnostics_survival`.")
@@ -53,6 +53,10 @@ plot.model_diagnostics_survival <- function(x,
         df$x <- switch(xvariable,
                        "index" = unlist(lapply(n_observations, function(x) seq_len(x))),
                        df[[xvariable]])
+
+        if (is.null(colors) || length(colors) < 3)
+            colors <- c("#160e3b", "#f05a71", "#ceced9")
+
         pl <- with(df, {
             pl <- ggplot(df, aes(x = x, y = y, color = status)) +
                 geom_hline(yintercept = 0, color = colors[3], lty = 2, linewidth = 1) +
@@ -70,6 +74,9 @@ plot.model_diagnostics_survival <- function(x,
         })
         return(pl)
     } else if (plot_type == "Cox-Snell"){
+        if (is.null(colors) || length(colors) < 2)
+            colors <- c("#9fe5bd", "#000000")
+
         split_df <- split(df, df$label)
         df_list <- lapply(split_df, function(df_tmp){
         fit_coxsnell <- survival::survfit(survival::Surv(cox_snell_residuals, as.numeric(status)) ~ 1, data=df_tmp)
@@ -90,10 +97,10 @@ plot.model_diagnostics_survival <- function(x,
 
         pl <- with(df,
              {ggplot(df, aes(x = time, y = cumhaz)) +
+                geom_abline(slope = 1, color = colors[2], linewidth = 1) +
                 geom_step(color = colors[1], linewidth = 1) +
                 geom_step(aes(y = lower), linetype = "dashed", color = colors[1], alpha = 0.8) +
                 geom_step(aes(y = upper), linetype = "dashed", color = colors[1], alpha = 0.8) +
-                geom_abline(slope = 1, color = colors[2], linewidth = 1) +
                 labs(x = "Cox-Snell residuals (pseudo observed times)",
                      y = "Cumulative hazard at pseudo observed times") +
                 theme_default_survex() +
