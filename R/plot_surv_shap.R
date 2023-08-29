@@ -540,7 +540,7 @@ plot_shap_global_curves <- function(x,
                              whisker_lower_bound = whisker_lower_bound,
                              whisker_upper_bound = whisker_upper_bound)
 
-        base_plot <- with(list(df_all, df_outliers, df_res),
+        base_plot <- with(list(df_all, df_res),
              {ggplot() +
                  geom_hline(yintercept = 0, alpha = 0.5, color = colors[1]) +
                  geom_line(data = df_all, aes(x = x, y = y, group = obs), col = colors[1], alpha = 0.2, linewidth = 0.2) +
@@ -558,9 +558,12 @@ plot_shap_global_curves <- function(x,
                       subtitle = subtitle)
             })
         if (length(outlier_indices) > 0){
-            base_plot <- base_plot +
-                geom_line(data = df_outliers, aes(x = x, y = y, group = obs),
-                          col = colors[3], linewidth = 0.5, alpha = 0.1)
+            base_plot <- with(df_outliers,
+                              {base_plot +
+                                geom_line(data = df_outliers, aes(x = x, y = y, group = obs),
+                                          col = colors[3], linewidth = 0.5, alpha = 0.1)
+                              }
+            )
             cat("Observations with outlying SurvSHAP(t) values:\n")
             print(x$variable_values[outlier_indices,])
         }
