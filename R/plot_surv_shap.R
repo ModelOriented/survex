@@ -176,13 +176,6 @@ plot.aggregated_surv_shap <- function(x,
                                       subtitle = "default",
                                       max_vars = 7,
                                       colors = NULL) {
-    if (is.null(colors)) {
-        colors <- c(
-            low = "#9fe5bd",
-            mid = "#46bac2",
-            high = "#371ea3"
-        )
-    }
 
     if (geom == "swarm") {
         geom <- "beeswarm"
@@ -245,7 +238,8 @@ plot_shap_global_importance <- function(x,
         rug = rug,
         rug_colors = rug_colors
     ) +
-        labs(y = ylab_right)
+        labs(y = ylab_right) +
+        theme_default_survex()
 
     label <- attr(x, "label")
     long_df <- stack(x$aggregate)
@@ -261,11 +255,19 @@ plot_shap_global_importance <- function(x,
         )
     }
 
+    if (is.null(colors)) {
+        colors <- c(
+            low = "#9fe5bd",
+            mid = "#46bac2",
+            high = "#371ea3"
+        )
+    }
+
     left_plot <- with(long_df, {
         ggplot(long_df, aes(x = values, y = reorder(ind, values))) +
             geom_col(fill = colors[2]) +
             theme_default_survex() +
-            labs(x = xlab_left) +
+            labs(x = xlab_left, y = "variable") +
             theme(axis.title.y = element_blank())
     })
 
@@ -310,6 +312,15 @@ plot_shap_global_beeswarm <- function(x,
             "(n=", x$n_observations, ")"
         )
     }
+
+    if (is.null(colors)) {
+        colors <- c(
+            low = "#9fe5bd",
+            mid = "#46bac2",
+            high = "#371ea3"
+        )
+    }
+
     with(df, {
         ggplot(data = df, aes(x = shap_value, y = variable, color = var_value)) +
             geom_vline(xintercept = 0, color = "#ceced9", linetype = "solid") +
@@ -373,7 +384,7 @@ plot_shap_global_profile <- function(x,
         ggplot(df, aes(x = variable_val, y = shap_val, color = color_variable_val)) +
             geom_hline(yintercept = 0, color = "#ceced9", linetype = "solid") +
             geom_point() +
-            geom_rug(aes(x = df$variable_val), inherit.aes = F, color = "#ceced9") +
+            geom_rug(aes(x = variable_val), inherit.aes = F, color = "#ceced9") +
             labs(
                 x = paste(variable, "value"),
                 y = "Aggregated SurvSHAP(t) value",
@@ -390,6 +401,13 @@ plot_shap_global_profile <- function(x,
             values = generate_discrete_color_scale(length(unique(df$color_variable_val)), colors)
         )
     } else {
+        if (is.null(colors)) {
+            colors <- c(
+                low = "#9fe5bd",
+                mid = "#46bac2",
+                high = "#371ea3"
+            )
+        }
         p + scale_color_gradient2(
             name = paste(color_variable, "value"),
             low = colors[1],
@@ -496,18 +514,24 @@ plot_shap_global_curves <- function(x,
         iqr <- upper_bound - lower_bound
         outlier_indices <- which(colSums((t(df) <= median - coef * iqr) +
                                         (t(df) >= median + coef * iqr)) > 0)
-        outliers <- df[outlier_indices, ]
-        nonoutliers <- df[-outlier_indices,]
+
+        if (length(outlier_indices) > 0){
+            nonoutliers <- df[-outlier_indices,]
+            outliers <- df[outlier_indices, ]
+            df_outliers <- data.frame(x = x$eval_times,
+                                      y = as.vector(t(outliers)),
+                                      obs = rep(1:length(outliers), each = length(x$eval_times)))
+        } else {
+            nonoutliers <- df
+            df_outliers <- NULL
+        }
+
         whisker_lower_bound <- apply(nonoutliers, 2, min)
         whisker_upper_bound <- apply(nonoutliers, 2, max)
 
         df_all <- data.frame(x = x$eval_times,
                              y = as.vector(t(df)),
                              obs = rep(1:n, each = length(x$eval_times)))
-
-        df_outliers <- data.frame(x = x$eval_times,
-                               y = as.vector(t(outliers)),
-                               obs = rep(1:length(outliers), each = length(x$eval_times)))
 
         df_res <- data.frame(x = x$eval_times,
                              median = median,
@@ -521,22 +545,25 @@ plot_shap_global_curves <- function(x,
                  geom_hline(yintercept = 0, alpha = 0.5, color = colors[1]) +
                  geom_line(data = df_all, aes(x = x, y = y, group = obs), col = colors[1], alpha = 0.2, linewidth = 0.2) +
                  geom_ribbon(data = df_res, aes(x = x, ymin = lower_bound, ymax = upper_bound),
-                             fill = colors[2], alpha = 0.2) +
-                 geom_line(data = df_res, aes(x = x, y = median), col = colors[2], alpha = 0.8) +
-                 geom_line(data = df_res, aes(x = x, y = lower_bound), col = colors[2], alpha = 0.8) +
-                 geom_line(data = df_res, aes(x = x, y = upper_bound), col = colors[2], alpha = 0.8) +
-                 geom_line(data = df_res, aes(x = x, y = whisker_lower_bound), col = colors[2], lty = 2, alpha = 0.8) +
-                 geom_line(data = df_res, aes(x = x, y = whisker_upper_bound), col = colors[2], lty = 2, alpha = 0.8) +
-                 geom_line(data = df_outliers, aes(x = x, y = y, group = obs),
-                           col = colors[3], linewidth = 0.5, alpha = 0.1) +
+                             fill = colors[1], alpha = 0.4) +
+                 geom_line(data = df_res, aes(x = x, y = median), col = colors[2], linewidth = 1) +
+                 geom_line(data = df_res, aes(x = x, y = lower_bound), col = colors[2], linewidth = 1) +
+                 geom_line(data = df_res, aes(x = x, y = upper_bound), col = colors[2], linewidth = 1) +
+                 geom_line(data = df_res, aes(x = x, y = whisker_lower_bound), col = colors[2], lty = 2, linewidth = 1) +
+                 geom_line(data = df_res, aes(x = x, y = whisker_upper_bound), col = colors[2], lty = 2, linewidth = 1) +
                  theme_default_survex() +
                  labs(x = "time",
                       y = "SurvSHAP(t) value",
                       title = title,
                       subtitle = subtitle)
             })
-        cat("Observations with outlying SurvSHAP(t) values:\n")
-        print(x$variable_values[outlier_indices,])
+        if (length(outlier_indices) > 0){
+            base_plot <- base_plot +
+                geom_line(data = df_outliers, aes(x = x, y = y, group = obs),
+                          col = colors[3], linewidth = 0.5, alpha = 0.1)
+            cat("Observations with outlying SurvSHAP(t) values:\n")
+            print(x$variable_values[outlier_indices,])
+        }
     }
 
     rug_df <- data.frame(times = x$event_times, statuses = as.character(x$event_statuses))
