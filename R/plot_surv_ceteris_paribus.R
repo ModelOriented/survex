@@ -11,7 +11,9 @@ prepare_ceteris_paribus_plots <- function(x,
     rug_df <- data.frame(times = x$event_times, statuses = as.character(x$event_statuses), label = unique(x$result$`_label_`))
     obs <- as.data.frame(x$variable_values)
     center <- x$center
+    output_type <- x$output_type
     x <- x$result
+
 
     all_profiles <- x
     class(all_profiles) <- "data.frame"
@@ -81,7 +83,8 @@ prepare_ceteris_paribus_plots <- function(x,
         rug_df = rug_df,
         rug = rug,
         rug_colors = rug_colors,
-        center = center
+        center = center,
+        output_type = output_type
     )
 
     patchwork::wrap_plots(pl, ncol = facet_ncol) +
@@ -100,7 +103,8 @@ plot_individual_ceteris_paribus_survival <- function(all_profiles,
                                                      rug_df,
                                                      rug,
                                                      rug_colors,
-                                                     center) {
+                                                     center,
+                                                     output_type) {
     pl <- lapply(variables, function(var) {
         df <- all_profiles[all_profiles$`_vname_` == var, ]
 
@@ -143,7 +147,12 @@ plot_individual_ceteris_paribus_survival <- function(all_profiles,
                         facet_wrap(~`_vname_`)
                 })
                 if (!center) {
-                    base_plot <- base_plot + ylim(c(0, 1)) + ylab("survival function value")
+                    if (output_type == "survival"){
+                        base_plot <- base_plot + ylim(c(0, 1)) + ylab("survival function value")
+                    } else {
+                        base_plot <- base_plot + ylab("CHF value")
+                    }
+
                 }
             } else {
                 base_plot <- with(df, {
@@ -233,7 +242,11 @@ plot_individual_ceteris_paribus_survival <- function(all_profiles,
                     facet_wrap(~`_vname_`)
             })
             if (!center) {
-                base_plot <- base_plot + ylim(c(0, 1)) + ylab("survival function value")
+                if (output_type == "survival"){
+                    base_plot <- base_plot + ylim(c(0, 1)) + ylab("survival function value")
+                } else {
+                    base_plot <- base_plot + ylab("CHF value")
+                }
             }
         }
 

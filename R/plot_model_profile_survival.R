@@ -529,7 +529,7 @@ prepare_model_profile_plots <- function(x,
 
     aggregated_profiles$`_real_point_` <- FALSE
 
-    pl <- plot_individual_ceteris_paribus_survival(aggregated_profiles, variables, colors, numerical_plot_type, rug_df, rug, rug_colors, x$center)
+    pl <- plot_individual_ceteris_paribus_survival(aggregated_profiles, variables, colors, numerical_plot_type, rug_df, rug, rug_colors, x$center, x$output_type)
 
     patchwork::wrap_plots(pl, ncol = facet_ncol) +
         patchwork::plot_annotation(

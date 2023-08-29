@@ -61,6 +61,7 @@ model_survshap.surv_explainer <- function(explainer,
                                           y_true = NULL,
                                           calculation_method = "kernelshap",
                                           aggregation_method = "integral",
+                                          output_type = "survival",
                                           ...) {
     stopifnot(
         "`y_true` must be either a matrix with one per observation in `new_observation` or a vector of length == 2" = ifelse(
@@ -96,6 +97,7 @@ model_survshap.surv_explainer <- function(explainer,
     shap_values <- surv_shap(
         explainer = explainer,
         new_observation = observations,
+        output_type = output_type,
         y_true = y_true,
         calculation_method = calculation_method,
         aggregation_method = aggregation_method
@@ -104,5 +106,6 @@ model_survshap.surv_explainer <- function(explainer,
     attr(shap_values, "label") <- explainer$label
     shap_values$event_times <- explainer$y[explainer$y[, 1] <= max(explainer$times), 1]
     shap_values$event_statuses <- explainer$y[explainer$y[, 1] <= max(explainer$times), 2]
+    shap_values$output_type <- output_type
     return(shap_values)
 }

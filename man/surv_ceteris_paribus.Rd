@@ -16,6 +16,7 @@ surv_ceteris_paribus(x, ...)
   grid_points = 101,
   variable_splits_type = "uniform",
   center = FALSE,
+  output_type = "survival",
   ...
 )
 }

@@ -27,12 +27,18 @@ surv_ceteris_paribus.surv_explainer <- function(x,
                                                 grid_points = 101,
                                                 variable_splits_type = "uniform",
                                                 center = FALSE,
+                                                output_type = "survival",
                                                 ...) {
     test_explainer(x, has_data = TRUE, has_survival = TRUE, has_y = TRUE, function_name = "ceteris_paribus_survival")
     data <- x$data
     model <- x$model
     label <- x$label
-    predict_survival_function <- x$predict_survival_function
+    if (output_type == "survival"){
+        predict_survival_function <- x$predict_survival_function
+    } else {
+        predict_survival_function <- x$predict_cumulative_hazard_function
+    }
+
     times <- x$times
 
     surv_ceteris_paribus.default(

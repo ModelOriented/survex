@@ -12,6 +12,7 @@ predict_profile(
   categorical_variables = NULL,
   ...,
   type = "ceteris_paribus",
+  output_type = "survival",
   variable_splits_type = "uniform",
   center = FALSE
 )
@@ -41,11 +42,11 @@ predict_profile(
 
 \item{type}{character, only \code{"ceteris_paribus"} is implemented}
 
+\item{output_type}{either \code{"survival"}, \code{"chf"} or \code{"risk"} the type of survival model output that should be considered for explanations. If \code{"survival"} the explanations are based on the survival function. If \code{"chf"} the explanations are based on the cumulative hazard function. Otherwise the scalar risk predictions are used by the \code{DALEX::predict_profile} function.}
+
 \item{variable_splits_type}{character, decides how variable grids should be calculated. Use \code{"quantiles"} for percentiles or \code{"uniform"} (default) to get uniform grid of points.}
 
 \item{center}{logical, should profiles be centered around the average prediction}
-
-\item{output_type}{either \code{"survival"} or \code{"risk"} the type of survival model output that should be considered for explanations. If \code{"survival"} the explanations are based on the survival function. Otherwise the scalar risk predictions are used by the \code{DALEX::predict_profile} function.}
 }
 \value{
 An object of class \code{c("predict_profile_survival", "surv_ceteris_paribus")}. It is a list with the final result in the \code{result} element.
