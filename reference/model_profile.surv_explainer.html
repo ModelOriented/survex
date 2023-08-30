@@ -212,12 +212,12 @@ The explanations are calculated as an extension of Partial Dependence Profiles w
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cph_model_profile</span><span class="op">$</span><span class="va">result</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   _vname_   _vtype_ _label_   _x_ _times_    _yhat_ _ids_</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     age numerical   coxph 34.00     1.5 0.9817185     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     age numerical   coxph 34.94     1.5 0.9818648     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     age numerical   coxph 35.00     1.5 0.9818741     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4     age numerical   coxph 35.88     1.5 0.9820100     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5     age numerical   coxph 36.00     1.5 0.9820285     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6     age numerical   coxph 36.82     1.5 0.9821541     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     age numerical   coxph 34.00     1.5 0.9825153     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     age numerical   coxph 34.94     1.5 0.9826553     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     age numerical   coxph 35.00     1.5 0.9826642     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4     age numerical   coxph 35.88     1.5 0.9827942     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5     age numerical   coxph 36.00     1.5 0.9828119     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6     age numerical   coxph 36.82     1.5 0.9829320     0</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cph_model_profile</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="model_profile.surv_explainer-1.png" alt="" width="700" height="433"></span>
@@ -230,12 +230,12 @@ The explanations are calculated as an extension of Partial Dependence Profiles w
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">rsf_model_profile</span><span class="op">$</span><span class="va">result</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   _vname_   _vtype_ _label_ _x_ _times_    _yhat_ _ids_</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     age numerical   rfsrc  34     1.5 0.8691465     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     age numerical   rfsrc  34     4.0 0.7891709     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     age numerical   rfsrc  34     7.0 0.7709787     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4     age numerical   rfsrc  34     8.0 0.7498888     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5     age numerical   rfsrc  34    10.0 0.7381712     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6     age numerical   rfsrc  34    12.0 0.7246671     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     age numerical   rfsrc  34     1.5 0.9756326     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     age numerical   rfsrc  34     4.0 0.9491050     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     age numerical   rfsrc  34     7.0 0.9311754     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4     age numerical   rfsrc  34     8.0 0.9065728     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5     age numerical   rfsrc  34    10.0 0.8920075     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6     age numerical   rfsrc  34    12.0 0.8728671     0</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">rsf_model_profile</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"age"</span>, <span class="st">"celltype"</span><span class="op">)</span>, numerical_plot_type <span class="op">=</span> <span class="st">"contours"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="model_profile.surv_explainer-2.png" alt="" width="700" height="433"></span>
