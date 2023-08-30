@@ -78,6 +78,22 @@
     </div>
 
     <div class="section level2">
+<h2 class="page-header" data-toc-text="1.1.0" id="survex-110">survex 1.1.0<a class="anchor" aria-label="anchor" href="#survex-110"></a></h2>
+<ul><li>fixed not being able to plot or print SurvLIME results for the cph model sometimes. (<a href="https://github.com/ModelOriented/survex/issues/72" class="external-link">#72</a>)</li>
+<li>added global explanations via the SurvSHAP(t) method (see <code><a href="../reference/model_survshap.surv_explainer.html">model_survshap()</a></code> function)</li>
+<li>added plots for global SurvSHAP(t) explanations (see <code><a href="../reference/plot.aggregated_surv_shap.html">plot.aggregated_surv_shap()</a></code>)</li>
+<li>added Accumulated Local Effects (ALE) explanations (see <code>model_profile(..., type = "accumulated")</code>)</li>
+<li>added 2-dimensional PDP and ALE plots (see <code><a href="../reference/model_profile_2d.surv_explainer.html">model_profile_2d()</a></code> function)</li>
+<li>added <code>plot(..., geom="variable")</code> function for plotting PDP and ALE explanations without the time dimension</li>
+<li>new explainers: for <code>flexsurv</code> models and for Python scikit-survival models (can be used with <code>reticulate</code>)</li>
+<li>new plot type for <code><a href="../reference/model_survshap.surv_explainer.html">model_survshap()</a></code> - curves (with functional box plot)</li>
+<li>added diagnostic explanations - residual analysis (see <code><a href="../reference/model_diagnostics.surv_explainer.html">model_diagnostics()</a></code> function)</li>
+<li>added new times generation method <code>"survival_quantiles"</code> and setting it as default (see <code><a href="../reference/explain_survival.html">explain()</a></code>)</li>
+<li>made improvements on the vignettes for the package (see <code><a href="../articles/pdp.html">vignette("pdp")</a></code> and <code><a href="../articles/global-survshap.html">vignette("global-survshap")</a></code>)</li>
+<li>increased the test coverage of the package</li>
+<li>reduced the number of expensive <code><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace()</a></code> calls (<a href="https://github.com/ModelOriented/survex/issues/83" class="external-link">#83</a>)</li>
+</ul></div>
+    <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.0" id="survex-100">survex 1.0.0<small>2023-03-20</small><a class="anchor" aria-label="anchor" href="#survex-100"></a></h2>
 <ul><li>
 <em>breaking change:</em> refactored the structure of <code>model_performance_survival</code> object - calculated metrics are now in a <code>$result</code> list.</li>
