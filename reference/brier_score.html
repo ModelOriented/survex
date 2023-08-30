@@ -25,7 +25,7 @@
         <div class="info">
           <span class="partof">part of the <a href="https://github.com/ModelOriented/DrWhy" class="external-link">DrWhy.AI</a>
            developed by the <a href="https://mi2.ai/" class="external-link">MI².AI</a> </span>
-          <span class="version version-default">1.0.0.9000</span>
+          <span class="version version-default">1.1.0</span>
         </div>
       </div>
     </div>
@@ -44,6 +44,12 @@
     </li>
     <li>
       <a href="../articles/custom-explainers.html">Creating custom explainers</a>
+    </li>
+    <li>
+      <a href="../articles/global-survshap.html">Global explanations with SurvSHAP(t)</a>
+    </li>
+    <li>
+      <a href="../articles/pdp.html">Partial Dependence Explanations</a>
     </li>
     <li>
       <a href="../articles/survex-usage.html">Package usage</a>
@@ -133,8 +139,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; model label       :  coxph ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; data              :  137  rows  6  cols ( <span style="color: #BBBB00;"> extracted from the model </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; target variable   :  137  values ( 128 events and 9 censored , censoring rate = 0.066 ) ( <span style="color: #BBBB00;"> extracted from the model </span> ) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  49 unique time points , min = 1 , mean = 110.6971 , median = 80 , max = 562.52 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  ( <span style="color: #BBBB00;"> generated from y as 50 time points being consecutive quantiles (0.00, 0.02, ..., 0.98) </span> ) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  50 unique time points , min = 1.5 , median survival time = 80 , max = 999 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  ( <span style="color: #BBBB00;"> generated from y as uniformly distributed survival quantiles based on Kaplan-Meier estimator </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict function  :  predict.coxph with type = 'risk' will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict survival function  :  predictSurvProb.coxph will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict cumulative hazard function  :  -log(predict_survival_function) will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
@@ -146,25 +152,25 @@
 <span class="r-in"><span><span class="va">surv</span> <span class="op">&lt;-</span> <span class="va">cph_exp</span><span class="op">$</span><span class="fu">predict_survival_function</span><span class="op">(</span><span class="va">cph</span>, <span class="va">cph_exp</span><span class="op">$</span><span class="va">data</span>, <span class="va">times</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">brier_score</span><span class="op">(</span><span class="va">y</span>, surv <span class="op">=</span> <span class="va">surv</span>, times <span class="op">=</span> <span class="va">times</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.01450469 0.02131799 0.05085721 0.07237285 0.08296505 0.10034947</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] 0.11860639 0.12115921 0.12534671 0.12899805 0.12894844 0.13452743</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [13] 0.13853090 0.14201661 0.15028547 0.15745581 0.15887866 0.16678636</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [19] 0.16054595 0.15386626 0.15595910 0.15824493 0.16763382 0.16343522</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [25] 0.15672279 0.15781375 0.15707059 0.15188724 0.15110733 0.15151055</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [31] 0.15325489 0.16278271 0.16469163 0.16725319 0.16644868 0.16572450</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [37] 0.16073207 0.15352345 0.14642744 0.14359704 0.13666323 0.12885560</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [43] 0.11816123 0.10765794 0.09889997 0.07760702 0.06668832 0.04565290</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [49] 0.02744170</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.014504694 0.033959034 0.050857211 0.072372854 0.082965051 0.100349471</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] 0.108958586 0.121159215 0.125346710 0.128121958 0.128948438 0.134527428</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] 0.138530900 0.142016610 0.150285473 0.158946515 0.158878661 0.171125620</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [19] 0.157656684 0.153866264 0.155959101 0.164717177 0.163641669 0.167682707</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [25] 0.156722788 0.158009982 0.151887243 0.151107331 0.152375352 0.157368703</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [31] 0.164691632 0.167253185 0.170942290 0.165724502 0.160732066 0.159359669</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [37] 0.148453543 0.146427436 0.136663232 0.135249898 0.125593998 0.107657944</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [43] 0.099012796 0.090316700 0.077607024 0.057225102 0.045652900 0.036427095</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [49] 0.017892650 0.000299962</span>
 <span class="r-in"><span><span class="fu">loss_brier_score</span><span class="op">(</span><span class="va">y</span>, surv <span class="op">=</span> <span class="va">surv</span>, times <span class="op">=</span> <span class="va">times</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.01450469 0.02131799 0.05085721 0.07237285 0.08296505 0.10034947</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] 0.11860639 0.12115921 0.12534671 0.12899805 0.12894844 0.13452743</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [13] 0.13853090 0.14201661 0.15028547 0.15745581 0.15887866 0.16678636</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [19] 0.16054595 0.15386626 0.15595910 0.15824493 0.16763382 0.16343522</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [25] 0.15672279 0.15781375 0.15707059 0.15188724 0.15110733 0.15151055</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [31] 0.15325489 0.16278271 0.16469163 0.16725319 0.16644868 0.16572450</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [37] 0.16073207 0.15352345 0.14642744 0.14359704 0.13666323 0.12885560</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [43] 0.11816123 0.10765794 0.09889997 0.07760702 0.06668832 0.04565290</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [49] 0.02744170</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.014504694 0.033959034 0.050857211 0.072372854 0.082965051 0.100349471</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] 0.108958586 0.121159215 0.125346710 0.128121958 0.128948438 0.134527428</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] 0.138530900 0.142016610 0.150285473 0.158946515 0.158878661 0.171125620</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [19] 0.157656684 0.153866264 0.155959101 0.164717177 0.163641669 0.167682707</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [25] 0.156722788 0.158009982 0.151887243 0.151107331 0.152375352 0.157368703</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [31] 0.164691632 0.167253185 0.170942290 0.165724502 0.160732066 0.159359669</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [37] 0.148453543 0.146427436 0.136663232 0.135249898 0.125593998 0.107657944</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [43] 0.099012796 0.090316700 0.077607024 0.057225102 0.045652900 0.036427095</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [49] 0.017892650 0.000299962</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
@@ -176,7 +182,7 @@
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Mikołaj Spytek, Mateusz Krzyziński, Hubert Baniecki, Przemyslaw Biecek.</p>
+  <p></p><p>Developed by Mikołaj Spytek, Mateusz Krzyziński, Sophie Langbein, Hubert Baniecki, Przemyslaw Biecek.</p>
 </div>
 
 <div class="pkgdown">

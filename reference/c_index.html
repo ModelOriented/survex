@@ -25,7 +25,7 @@
         <div class="info">
           <span class="partof">part of the <a href="https://github.com/ModelOriented/DrWhy" class="external-link">DrWhy.AI</a>
            developed by the <a href="https://mi2.ai/" class="external-link">MI².AI</a> </span>
-          <span class="version version-default">1.0.0.9000</span>
+          <span class="version version-default">1.1.0</span>
         </div>
       </div>
     </div>
@@ -44,6 +44,12 @@
     </li>
     <li>
       <a href="../articles/custom-explainers.html">Creating custom explainers</a>
+    </li>
+    <li>
+      <a href="../articles/global-survshap.html">Global explanations with SurvSHAP(t)</a>
+    </li>
+    <li>
+      <a href="../articles/pdp.html">Partial Dependence Explanations</a>
     </li>
     <li>
       <a href="../articles/survex-usage.html">Package usage</a>
@@ -125,14 +131,15 @@
 <span class="r-in"><span><span class="va">rotterdam</span><span class="op">$</span><span class="va">year</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span></span>
 <span class="r-in"><span><span class="va">cox_rotterdam_rec</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/survival/man/coxph.html" class="external-link">coxph</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">rtime</span>, <span class="va">recur</span><span class="op">)</span> <span class="op">~</span> <span class="va">.</span>,</span></span>
 <span class="r-in"><span>    data <span class="op">=</span> <span class="va">rotterdam</span>,</span></span>
-<span class="r-in"><span>    model <span class="op">=</span> <span class="cn">TRUE</span>, x <span class="op">=</span> <span class="cn">TRUE</span>, y <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    model <span class="op">=</span> <span class="cn">TRUE</span>, x <span class="op">=</span> <span class="cn">TRUE</span>, y <span class="op">=</span> <span class="cn">TRUE</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">coxph_explainer</span> <span class="op">&lt;-</span> <span class="fu"><a href="explain_survival.html">explain</a></span><span class="op">(</span><span class="va">cox_rotterdam_rec</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Preparation of a new explainer is initiated </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; model label       :  coxph ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; data              :  2982  rows  12  cols ( <span style="color: #BBBB00;"> extracted from the model </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; target variable   :  2982  values ( 1518 events and 1464 censored , censoring rate = 0.491 ) ( <span style="color: #BBBB00;"> extracted from the model </span> ) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  50 unique time points , min = 36 , mean = 2038.436 , median = 1893.88 , max = 5073.7 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  ( <span style="color: #BBBB00;"> generated from y as 50 time points being consecutive quantiles (0.00, 0.02, ..., 0.98) </span> ) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  51 unique time points , min = 43.5 , median survival time = 2983 , max = 6258 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  ( <span style="color: #BBBB00;"> generated from y as uniformly distributed survival quantiles based on Kaplan-Meier estimator </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict function  :  predict.coxph with type = 'risk' will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict survival function  :  predictSurvProb.coxph will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict cumulative hazard function  :  -log(predict_survival_function) will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
@@ -154,7 +161,7 @@
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Mikołaj Spytek, Mateusz Krzyziński, Hubert Baniecki, Przemyslaw Biecek.</p>
+  <p></p><p>Developed by Mikołaj Spytek, Mateusz Krzyziński, Sophie Langbein, Hubert Baniecki, Przemyslaw Biecek.</p>
 </div>
 
 <div class="pkgdown">

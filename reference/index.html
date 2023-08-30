@@ -25,7 +25,7 @@
         <div class="info">
           <span class="partof">part of the <a href="https://github.com/ModelOriented/DrWhy" class="external-link">DrWhy.AI</a>
            developed by the <a href="https://mi2.ai/" class="external-link">MI².AI</a> </span>
-          <span class="version version-default">1.0.0.9000</span>
+          <span class="version version-default">1.1.0</span>
         </div>
       </div>
     </div>
@@ -44,6 +44,12 @@
     </li>
     <li>
       <a href="../articles/custom-explainers.html">Creating custom explainers</a>
+    </li>
+    <li>
+      <a href="../articles/global-survshap.html">Global explanations with SurvSHAP(t)</a>
+    </li>
+    <li>
+      <a href="../articles/pdp.html">Partial Dependence Explanations</a>
     </li>
     <li>
       <a href="../articles/survex-usage.html">Package usage</a>
@@ -83,6 +89,10 @@
           <p class="section-desc"></p>
         </th>
       </tr></tbody><tbody><tr><td>
+          <p><code><a href="model_diagnostics.surv_explainer.html">model_diagnostics()</a></code> </p>
+        </td>
+        <td><p>Dataset Level Model Diagnostics</p></td>
+      </tr><tr><td>
           <p><code><a href="model_parts.surv_explainer.html">model_parts()</a></code> </p>
         </td>
         <td><p>Dataset Level Variable Importance for Survival Models</p></td>
@@ -94,6 +104,14 @@
           <p><code><a href="model_profile.surv_explainer.html">model_profile()</a></code> </p>
         </td>
         <td><p>Dataset Level Variable Profile as Partial Dependence Explanations for Survival Models</p></td>
+      </tr><tr><td>
+          <p><code><a href="model_profile_2d.surv_explainer.html">model_profile_2d()</a></code> </p>
+        </td>
+        <td><p>Dataset Level 2-Dimensional Variable Profile for Survival Models</p></td>
+      </tr><tr><td>
+          <p><code><a href="model_survshap.surv_explainer.html">model_survshap()</a></code> </p>
+        </td>
+        <td><p>Global SHAP Values</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
           <h2 id="instance-level-explanations">Instance level explanations <a href="#instance-level-explanations" class="anchor" aria-hidden="true"></a></h2>
           <p class="section-desc"></p>
@@ -186,10 +204,6 @@
           <p><code><a href="plot.surv_feature_importance.html">plot(<i>&lt;surv_feature_importance&gt;</i>)</a></code> </p>
         </td>
         <td><p>Plot Permutational Feature Importance for Survival Models</p></td>
-      </tr><tr><td>
-          <p><code><a href="plot.feature_importance_explainer.html">plot(<i>&lt;feature_importance_explainer&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Plots Feature Importance</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
           <h3 id="model-profile">Model Profile <a href="#model-profile" class="anchor" aria-hidden="true"></a></h3>
           <p class="section-desc"></p>
@@ -198,6 +212,26 @@
           <p><code><a href="plot.model_profile_survival.html">plot(<i>&lt;model_profile_survival&gt;</i>)</a></code> </p>
         </td>
         <td><p>Plot Model Profile for Survival Models</p></td>
+      </tr><tr><td>
+          <p><code><a href="plot.model_profile_2d_survival.html">plot(<i>&lt;model_profile_2d_survival&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Plot 2-Dimensional Model Profile for Survival Models</p></td>
+      </tr></tbody><tbody><tr><th colspan="2">
+          <h3 id="model-survshap-t-">Model SurvSHAP(t) <a href="#model-survshap-t-" class="anchor" aria-hidden="true"></a></h3>
+          <p class="section-desc"></p>
+        </th>
+      </tr></tbody><tbody><tr><td>
+          <p><code><a href="plot.aggregated_surv_shap.html">plot(<i>&lt;aggregated_surv_shap&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Plot Aggregated SurvSHAP(t) Explanations for Survival Models</p></td>
+      </tr></tbody><tbody><tr><th colspan="2">
+          <h3 id="model-diagnostics">Model Diagnostics <a href="#model-diagnostics" class="anchor" aria-hidden="true"></a></h3>
+          <p class="section-desc"></p>
+        </th>
+      </tr></tbody><tbody><tr><td>
+          <p><code><a href="plot.model_diagnostics_survival.html">plot(<i>&lt;model_diagnostics_survival&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Plot Model Diagnostics for Survival Models</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
           <h3 id="predict-parts">Predict Parts <a href="#predict-parts" class="anchor" aria-hidden="true"></a></h3>
           <p class="section-desc"></p>
@@ -222,15 +256,15 @@
           <p><code><a href="plot.predict_profile_survival.html">plot(<i>&lt;predict_profile_survival&gt;</i>)</a></code> </p>
         </td>
         <td><p>Plot Predict Profile for Survival Models</p></td>
-      </tr><tr><td>
-          <p><code><a href="plot.surv_ceteris_paribus.html">plot(<i>&lt;surv_ceteris_paribus&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Plot Predict Profile for Survival Models</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
           <h2 id="utility-functions">Utility functions <a href="#utility-functions" class="anchor" aria-hidden="true"></a></h2>
           <p class="section-desc"></p>
         </th>
       </tr></tbody><tbody><tr><td>
+          <p><code><a href="extract_predict_survshap.html">extract_predict_survshap()</a></code> </p>
+        </td>
+        <td><p>Extract Local SurvSHAP(t) from Global SurvSHAP(t)</p></td>
+      </tr><tr><td>
           <p><code><a href="transform_to_stepfunction.html">transform_to_stepfunction()</a></code> </p>
         </td>
         <td><p>Transform Fixed Point Prediction into a Stepfunction</p></td>
@@ -263,7 +297,7 @@
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Mikołaj Spytek, Mateusz Krzyziński, Hubert Baniecki, Przemyslaw Biecek.</p>
+  <p></p><p>Developed by Mikołaj Spytek, Mateusz Krzyziński, Sophie Langbein, Hubert Baniecki, Przemyslaw Biecek.</p>
 </div>
 
 <div class="pkgdown">

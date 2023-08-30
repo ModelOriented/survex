@@ -25,7 +25,7 @@
         <div class="info">
           <span class="partof">part of the <a href="https://github.com/ModelOriented/DrWhy" class="external-link">DrWhy.AI</a>
            developed by the <a href="https://mi2.ai/" class="external-link">MI².AI</a> </span>
-          <span class="version version-default">1.0.0.9000</span>
+          <span class="version version-default">1.1.0</span>
         </div>
       </div>
     </div>
@@ -44,6 +44,12 @@
     </li>
     <li>
       <a href="../articles/custom-explainers.html">Creating custom explainers</a>
+    </li>
+    <li>
+      <a href="../articles/global-survshap.html">Global explanations with SurvSHAP(t)</a>
+    </li>
+    <li>
+      <a href="../articles/pdp.html">Partial Dependence Explanations</a>
     </li>
     <li>
       <a href="../articles/survex-usage.html">Package usage</a>
@@ -118,33 +124,36 @@
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">cph</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/survival/man/coxph.html" class="external-link">coxph</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">time</span>, <span class="va">status</span><span class="op">)</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">veteran</span>, model <span class="op">=</span> <span class="cn">TRUE</span>, x <span class="op">=</span> <span class="cn">TRUE</span>, y <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">rsf_ranger</span> <span class="op">&lt;-</span> <span class="fu">ranger</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ranger/man/ranger.html" class="external-link">ranger</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">time</span>, <span class="va">status</span><span class="op">)</span> <span class="op">~</span> <span class="va">.</span>,</span></span>
-<span class="r-in"><span>                             data <span class="op">=</span> <span class="va">veteran</span>,</span></span>
-<span class="r-in"><span>                             respect.unordered.factors <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
-<span class="r-in"><span>                             num.trees <span class="op">=</span> <span class="fl">100</span>,</span></span>
-<span class="r-in"><span>                             mtry <span class="op">=</span> <span class="fl">3</span>,</span></span>
-<span class="r-in"><span>                             max.depth <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    data <span class="op">=</span> <span class="va">veteran</span>,</span></span>
+<span class="r-in"><span>    respect.unordered.factors <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>    num.trees <span class="op">=</span> <span class="fl">100</span>,</span></span>
+<span class="r-in"><span>    mtry <span class="op">=</span> <span class="fl">3</span>,</span></span>
+<span class="r-in"><span>    max.depth <span class="op">=</span> <span class="fl">5</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">cph_exp</span> <span class="op">&lt;-</span> <span class="fu"><a href="explain_survival.html">explain</a></span><span class="op">(</span><span class="va">cph</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Preparation of a new explainer is initiated </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; model label       :  coxph ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; data              :  137  rows  6  cols ( <span style="color: #BBBB00;"> extracted from the model </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; target variable   :  137  values ( 128 events and 9 censored , censoring rate = 0.066 ) ( <span style="color: #BBBB00;"> extracted from the model </span> ) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  49 unique time points , min = 1 , mean = 110.6971 , median = 80 , max = 562.52 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  ( <span style="color: #BBBB00;"> generated from y as 50 time points being consecutive quantiles (0.00, 0.02, ..., 0.98) </span> ) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  50 unique time points , min = 1.5 , median survival time = 80 , max = 999 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  ( <span style="color: #BBBB00;"> generated from y as uniformly distributed survival quantiles based on Kaplan-Meier estimator </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict function  :  predict.coxph with type = 'risk' will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict survival function  :  predictSurvProb.coxph will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict cumulative hazard function  :  -log(predict_survival_function) will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; model_info        :  package survival , ver. 3.5.5 , task survival ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  <span style="color: #00BB00;"> A new explainer has been created! </span> </span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">rsf_ranger_exp</span> <span class="op">&lt;-</span> <span class="fu"><a href="explain_survival.html">explain</a></span><span class="op">(</span><span class="va">rsf_ranger</span>, data <span class="op">=</span> <span class="va">veteran</span><span class="op">[</span>, <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span><span class="op">]</span>,</span></span>
-<span class="r-in"><span>                          y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">veteran</span><span class="op">$</span><span class="va">time</span>, <span class="va">veteran</span><span class="op">$</span><span class="va">status</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">rsf_ranger_exp</span> <span class="op">&lt;-</span> <span class="fu"><a href="explain_survival.html">explain</a></span><span class="op">(</span><span class="va">rsf_ranger</span>,</span></span>
+<span class="r-in"><span>    data <span class="op">=</span> <span class="va">veteran</span><span class="op">[</span>, <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span><span class="op">]</span>,</span></span>
+<span class="r-in"><span>    y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">veteran</span><span class="op">$</span><span class="va">time</span>, <span class="va">veteran</span><span class="op">$</span><span class="va">status</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Preparation of a new explainer is initiated </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; model label       :  ranger ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; data              :  137  rows  6  cols </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; target variable   :  137  values ( 128 events and 9 censored ) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  49 unique time points , min = 1 , mean = 110.6971 , median = 80 , max = 562.52 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  ( <span style="color: #BBBB00;"> generated from y as 50 time points being consecutive quantiles (0.00, 0.02, ..., 0.98) </span> ) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  50 unique time points , min = 1.5 , median survival time = 80 , max = 999 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  ( <span style="color: #BBBB00;"> generated from y as uniformly distributed survival quantiles based on Kaplan-Meier estimator </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict function  :  sum over the predict_cumulative_hazard_function will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict survival function  :  stepfun based on predict.ranger()$survival will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict cumulative hazard function  :  stepfun based on predict.ranger()$chf will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
@@ -153,16 +162,16 @@
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">cph_exp</span>, <span class="va">veteran</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span>, output_type <span class="op">=</span> <span class="st">"survival"</span><span class="op">)</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.9959425 0.9938949 0.9831475 0.9739694 0.9692183 0.9619751 0.9520137</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [8] 0.9494633 0.9414903 0.9300045</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.9959425 0.9896930 0.9831475 0.9739694 0.9692183 0.9619751 0.9570515</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [8] 0.9494633 0.9414903 0.9358682</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">cph_exp</span>, <span class="va">veteran</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span>, output_type <span class="op">=</span> <span class="st">"risk"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         1 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 0.7354128 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">rsf_ranger_exp</span>, <span class="va">veteran</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span>, output_type <span class="op">=</span> <span class="st">"chf"</span><span class="op">)</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.005363312 0.005363312 0.013942224 0.015756551 0.017933124 0.034856679</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] 0.043851832 0.043851832 0.053968111 0.053968111</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.005118956 0.005118956 0.009754609 0.020734971 0.024819938 0.044713762</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] 0.045704619 0.050232850 0.050667633 0.051000966</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
@@ -174,7 +183,7 @@
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Mikołaj Spytek, Mateusz Krzyziński, Hubert Baniecki, Przemyslaw Biecek.</p>
+  <p></p><p>Developed by Mikołaj Spytek, Mateusz Krzyziński, Sophie Langbein, Hubert Baniecki, Przemyslaw Biecek.</p>
 </div>
 
 <div class="pkgdown">

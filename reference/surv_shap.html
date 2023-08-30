@@ -25,7 +25,7 @@
         <div class="info">
           <span class="partof">part of the <a href="https://github.com/ModelOriented/DrWhy" class="external-link">DrWhy.AI</a>
            developed by the <a href="https://mi2.ai/" class="external-link">MI².AI</a> </span>
-          <span class="version version-default">1.0.0.9000</span>
+          <span class="version version-default">1.1.0</span>
         </div>
       </div>
     </div>
@@ -44,6 +44,12 @@
     </li>
     <li>
       <a href="../articles/custom-explainers.html">Creating custom explainers</a>
+    </li>
+    <li>
+      <a href="../articles/global-survshap.html">Global explanations with SurvSHAP(t)</a>
+    </li>
+    <li>
+      <a href="../articles/pdp.html">Partial Dependence Explanations</a>
     </li>
     <li>
       <a href="../articles/survex-usage.html">Package usage</a>
@@ -80,13 +86,11 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">surv_shap</span><span class="op">(</span></span>
 <span>  <span class="va">explainer</span>,</span>
 <span>  <span class="va">new_observation</span>,</span>
+<span>  <span class="va">output_type</span>,</span>
 <span>  <span class="va">...</span>,</span>
 <span>  y_true <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  calculation_method <span class="op">=</span> <span class="st">"kernelshap"</span>,</span>
-<span>  aggregation_method <span class="op">=</span> <span class="st">"integral"</span>,</span>
-<span>  path <span class="op">=</span> <span class="st">"average"</span>,</span>
-<span>  B <span class="op">=</span> <span class="fl">25</span>,</span>
-<span>  exact <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  aggregation_method <span class="op">=</span> <span class="st">"integral"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -97,7 +101,11 @@
 
 
 <dt>new_observation</dt>
-<dd><p>a new observation for which predictions need to be explained</p></dd>
+<dd><p>new observations for which predictions need to be explained</p></dd>
+
+
+<dt>output_type</dt>
+<dd><p>a character, either <code>"survival"</code> or <code>"chf"</code>. Determines which type of prediction should be used for explanations.</p></dd>
 
 
 <dt>...</dt>
@@ -113,7 +121,11 @@
 
 
 <dt>aggregation_method</dt>
-<dd><p>a character, either <code>"mean_absolute"</code> or <code>"integral"</code>, <code>"max_absolute"</code>, <code>"sum_of_squares"</code></p></dd>
+<dd><p>a character, either <code>"integral"</code>, <code>"integral_absolute"</code>, <code>"mean_absolute"</code>, <code>"max_absolute"</code>, or <code>"sum_of_squares"</code></p></dd>
+
+
+<dt>observation_aggregation_method</dt>
+<dd><p>a function, if <code>new_observation</code> contains multiple observation this function is applied to the same time point of generated shap profiles for each observation. Defaults to <code>mean</code>.</p></dd>
 
 </dl></div>
     <div id="value">
@@ -137,7 +149,7 @@
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Mikołaj Spytek, Mateusz Krzyziński, Hubert Baniecki, Przemyslaw Biecek.</p>
+  <p></p><p>Developed by Mikołaj Spytek, Mateusz Krzyziński, Sophie Langbein, Hubert Baniecki, Przemyslaw Biecek.</p>
 </div>
 
 <div class="pkgdown">

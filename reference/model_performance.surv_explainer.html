@@ -25,7 +25,7 @@
         <div class="info">
           <span class="partof">part of the <a href="https://github.com/ModelOriented/DrWhy" class="external-link">DrWhy.AI</a>
            developed by the <a href="https://mi2.ai/" class="external-link">MI².AI</a> </span>
-          <span class="version version-default">1.0.0.9000</span>
+          <span class="version version-default">1.1.0</span>
         </div>
       </div>
     </div>
@@ -44,6 +44,12 @@
     </li>
     <li>
       <a href="../articles/custom-explainers.html">Creating custom explainers</a>
+    </li>
+    <li>
+      <a href="../articles/global-survshap.html">Global explanations with SurvSHAP(t)</a>
+    </li>
+    <li>
+      <a href="../articles/pdp.html">Partial Dependence Explanations</a>
     </li>
     <li>
       <a href="../articles/survex-usage.html">Package usage</a>
@@ -142,35 +148,39 @@
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">cph</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/survival/man/coxph.html" class="external-link">coxph</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">time</span>, <span class="va">status</span><span class="op">)</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">veteran</span>, model <span class="op">=</span> <span class="cn">TRUE</span>, x <span class="op">=</span> <span class="cn">TRUE</span>, y <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">rsf_ranger</span> <span class="op">&lt;-</span> <span class="fu">ranger</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ranger/man/ranger.html" class="external-link">ranger</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">time</span>, <span class="va">status</span><span class="op">)</span> <span class="op">~</span> <span class="va">.</span>,</span></span>
-<span class="r-in"><span>                            data <span class="op">=</span> <span class="va">veteran</span>,</span></span>
-<span class="r-in"><span>                            respect.unordered.factors <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
-<span class="r-in"><span>                            num.trees <span class="op">=</span> <span class="fl">100</span>,</span></span>
-<span class="r-in"><span>                            mtry <span class="op">=</span> <span class="fl">3</span>,</span></span>
-<span class="r-in"><span>                            max.depth <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    data <span class="op">=</span> <span class="va">veteran</span>,</span></span>
+<span class="r-in"><span>    respect.unordered.factors <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>    num.trees <span class="op">=</span> <span class="fl">100</span>,</span></span>
+<span class="r-in"><span>    mtry <span class="op">=</span> <span class="fl">3</span>,</span></span>
+<span class="r-in"><span>    max.depth <span class="op">=</span> <span class="fl">5</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">rsf_src</span> <span class="op">&lt;-</span> <span class="fu">randomForestSRC</span><span class="fu">::</span><span class="fu"><a href="https://www.randomforestsrc.org//reference/rfsrc.html" class="external-link">rfsrc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">time</span>, <span class="va">status</span><span class="op">)</span> <span class="op">~</span> <span class="va">.</span>,</span></span>
-<span class="r-in"><span>                                data <span class="op">=</span> <span class="va">veteran</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    data <span class="op">=</span> <span class="va">veteran</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">cph_exp</span> <span class="op">&lt;-</span> <span class="fu"><a href="explain_survival.html">explain</a></span><span class="op">(</span><span class="va">cph</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Preparation of a new explainer is initiated </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; model label       :  coxph ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; data              :  137  rows  6  cols ( <span style="color: #BBBB00;"> extracted from the model </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; target variable   :  137  values ( 128 events and 9 censored , censoring rate = 0.066 ) ( <span style="color: #BBBB00;"> extracted from the model </span> ) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  49 unique time points , min = 1 , mean = 110.6971 , median = 80 , max = 562.52 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  ( <span style="color: #BBBB00;"> generated from y as 50 time points being consecutive quantiles (0.00, 0.02, ..., 0.98) </span> ) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  50 unique time points , min = 1.5 , median survival time = 80 , max = 999 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  ( <span style="color: #BBBB00;"> generated from y as uniformly distributed survival quantiles based on Kaplan-Meier estimator </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict function  :  predict.coxph with type = 'risk' will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict survival function  :  predictSurvProb.coxph will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict cumulative hazard function  :  -log(predict_survival_function) will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; model_info        :  package survival , ver. 3.5.5 , task survival ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  <span style="color: #00BB00;"> A new explainer has been created! </span> </span>
-<span class="r-in"><span><span class="va">rsf_ranger_exp</span> <span class="op">&lt;-</span> <span class="fu"><a href="explain_survival.html">explain</a></span><span class="op">(</span><span class="va">rsf_ranger</span>, data <span class="op">=</span> <span class="va">veteran</span><span class="op">[</span>, <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span><span class="op">]</span>,</span></span>
-<span class="r-in"><span>                          y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">veteran</span><span class="op">$</span><span class="va">time</span>, <span class="va">veteran</span><span class="op">$</span><span class="va">status</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">rsf_ranger_exp</span> <span class="op">&lt;-</span> <span class="fu"><a href="explain_survival.html">explain</a></span><span class="op">(</span><span class="va">rsf_ranger</span>,</span></span>
+<span class="r-in"><span>    data <span class="op">=</span> <span class="va">veteran</span><span class="op">[</span>, <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span><span class="op">]</span>,</span></span>
+<span class="r-in"><span>    y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">veteran</span><span class="op">$</span><span class="va">time</span>, <span class="va">veteran</span><span class="op">$</span><span class="va">status</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Preparation of a new explainer is initiated </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; model label       :  ranger ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; data              :  137  rows  6  cols </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; target variable   :  137  values ( 128 events and 9 censored ) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  49 unique time points , min = 1 , mean = 110.6971 , median = 80 , max = 562.52 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  ( <span style="color: #BBBB00;"> generated from y as 50 time points being consecutive quantiles (0.00, 0.02, ..., 0.98) </span> ) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  50 unique time points , min = 1.5 , median survival time = 80 , max = 999 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  ( <span style="color: #BBBB00;"> generated from y as uniformly distributed survival quantiles based on Kaplan-Meier estimator </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict function  :  sum over the predict_cumulative_hazard_function will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict survival function  :  stepfun based on predict.ranger()$survival will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict cumulative hazard function  :  stepfun based on predict.ranger()$chf will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
@@ -181,12 +191,12 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; model label       :  rfsrc ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; data              :  137  rows  6  cols ( <span style="color: #BBBB00;"> extracted from the model </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; target variable   :  137  values ( 128 events and 9 censored , censoring rate = 0.066 ) ( <span style="color: #BBBB00;"> extracted from the model </span> ) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  49 unique time points , min = 1 , mean = 110.6971 , median = 80 , max = 562.52 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  ( <span style="color: #BBBB00;"> generated from y as 50 time points being consecutive quantiles (0.00, 0.02, ..., 0.98) </span> ) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  50 unique time points , min = 1.5 , median survival time = 80 , max = 999 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  ( <span style="color: #BBBB00;"> generated from y as uniformly distributed survival quantiles based on Kaplan-Meier estimator </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict function  :  sum over the predict_cumulative_hazard_function will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict survival function  :  stepfun based on predict.rfsrc()$survival will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict cumulative hazard function  :  stepfun based on predict.rfsrc()$chf will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; model_info        :  package randomForestSRC , ver. 3.2.1 , task survival ( <span style="color: #BBBB00;"> default </span> ) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; model_info        :  package randomForestSRC , ver. 3.2.2 , task survival ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  <span style="color: #00BB00;"> A new explainer has been created! </span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
@@ -202,46 +212,47 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "risk-based"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $result$`Integrated C/D AUC`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.8073755</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.8105198</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"loss_type")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "integrated"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $result$`Brier score`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.01450469 0.02131799 0.05085721 0.07237285 0.08296505 0.10034947</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] 0.11860639 0.12115921 0.12534671 0.12899805 0.12894844 0.13452743</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [13] 0.13853090 0.14201661 0.15028547 0.15745581 0.15887866 0.16678636</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [19] 0.16054595 0.15386626 0.15595910 0.15824493 0.16763382 0.16343522</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [25] 0.15672279 0.15781375 0.15707059 0.15188724 0.15110733 0.15151055</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [31] 0.15325489 0.16278271 0.16469163 0.16725319 0.16644868 0.16572450</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [37] 0.16073207 0.15352345 0.14642744 0.14359704 0.13666323 0.12885560</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [43] 0.11816123 0.10765794 0.09889997 0.07760702 0.06668832 0.04565290</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [49] 0.02744170</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.014504694 0.033959034 0.050857211 0.072372854 0.082965051 0.100349471</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] 0.108958586 0.121159215 0.125346710 0.128121958 0.128948438 0.134527428</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] 0.138530900 0.142016610 0.150285473 0.158946515 0.158878661 0.171125620</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [19] 0.157656684 0.153866264 0.155959101 0.164717177 0.163641669 0.167682707</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [25] 0.156722788 0.158009982 0.151887243 0.151107331 0.152375352 0.157368703</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [31] 0.164691632 0.167253185 0.170942290 0.165724502 0.160732066 0.159359669</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [37] 0.148453543 0.146427436 0.136663232 0.135249898 0.125593998 0.107657944</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [43] 0.099012796 0.090316700 0.077607024 0.057225102 0.045652900 0.036427095</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [49] 0.017892650 0.000299962</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"loss_type")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "time-dependent"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $result$`Integrated Brier score`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.09625172</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.0574109</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"loss_type")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "integrated"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $result$`C/D AUC`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.6592593 0.7388060 0.8352713 0.7846667 0.7845528 0.7411765 0.7516420</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [8] 0.7628458 0.7982143 0.8333333 0.8487523 0.8512279 0.8333333 0.8296703</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [15] 0.8165414 0.8059629 0.8184397 0.8021800 0.8158371 0.8392857 0.8405041</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [22] 0.8363636 0.8174603 0.8299189 0.8432836 0.8410158 0.8326882 0.8454545</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [29] 0.8485378 0.8465632 0.8340173 0.8107607 0.8033097 0.7910557 0.7888720</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [36] 0.7830979 0.7830033 0.7919580 0.7876756 0.7870249 0.7825000 0.7739130</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [43] 0.7818912 0.7852941 0.7572590 0.7849928 0.7673611 0.8689567 0.8233831</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.6592593 0.8045455 0.8352713 0.7846667 0.7845528 0.7411765 0.7506690</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [8] 0.7628458 0.7982143 0.8151515 0.8487523 0.8512279 0.8333333 0.8296703</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [15] 0.8165414 0.8084541 0.8184397 0.7926437 0.8245732 0.8392857 0.8405041</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [22] 0.8230108 0.8264127 0.8191898 0.8432836 0.8375428 0.8454545 0.8485378</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [29] 0.8353549 0.8234483 0.8033097 0.7910557 0.7764411 0.7830979 0.7830033</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [36] 0.7801256 0.7964090 0.7876756 0.7825000 0.7643021 0.7701149 0.7852941</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [43] 0.7775956 0.7816377 0.7849928 0.8149225 0.8689567 0.8120301 0.8740741</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [50]       NaN</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"loss_type")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "time-dependent"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $eval_times</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1]   1.00   2.72   7.00   8.00  10.60  12.32  15.00  17.52  18.48  20.00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [11]  21.00  24.00  25.00  27.16  30.00  32.04  37.44  43.96  48.68  51.00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [21]  52.00  53.84  57.68  65.52  80.00  82.72  87.00  92.48  96.76  99.60</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [31] 103.00 110.04 111.76 117.48 123.60 132.92 141.92 151.72 162.00 174.40</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [41] 193.28 218.88 231.00 256.80 284.60 342.04 383.04 402.64 562.52</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1]   1.5   4.0   7.0   8.0  10.0  12.0  13.0  16.0  18.0  19.0  21.0  24.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13]  25.0  27.0  30.0  33.0  36.0  44.0  49.0  51.0  52.0  54.0  59.0  72.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [25]  80.0  84.0  92.0  95.0 100.0 105.0 111.0 117.0 122.0 132.0 140.0 144.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [37] 156.0 162.0 186.0 201.0 228.0 250.0 278.0 287.0 340.0 384.0 392.0 467.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [49] 587.0 999.0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $event_times</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20 </span>
@@ -250,14 +261,14 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 123  97 153  59 117  16 151  22  56  21  18 139  20  31  52 287  18  51 122  27 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  41  42  43  44  45  46  47  48  49  50  51  52  53  54  55  56  57  58  59  60 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  54   7  63 392  10   8  92  35 117 132  12 162   3  95 177 162 216 553 278  12 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  61  62  63  64  65  66  67  68  69  71  72  73  74  76  77  79  80  81  82  83 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 260 200 156 182 143 105 103 250 100 112  87 231 242 111   1 389  33  25 357 467 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  84  85  86  87  88  89  90  91  92  93  94  95  96  97  98  99 100 101 102 103 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 201   1  30  44 283  15  25 103  21  13  87   2  20   7  24  99   8  99  61  25 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118 119 120 121 122 123 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  95  80  51  29  24  18  83  31  51  90  52  73   8  36  48   7 140 186  84  19 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 124 125 126 127 128 129 130 131 132 133 134 135 136 137 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  45  80  52 164  19  53  15  43 340 133 111 231 378  49 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  61  62  63  64  65  66  67  68  69  70  71  72  73  74  75  76  77  78  79  80 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 260 200 156 182 143 105 103 250 100 999 112  87 231 242 991 111   1 587 389  33 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  81  82  83  84  85  86  87  88  89  90  91  92  93  94  95  96  97  98  99 100 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  25 357 467 201   1  30  44 283  15  25 103  21  13  87   2  20   7  24  99   8 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118 119 120 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  99  61  25  95  80  51  29  24  18  83  31  51  90  52  73   8  36  48   7 140 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 121 122 123 124 125 126 127 128 129 130 131 132 133 134 135 136 137 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 186  84  19  45  80  52 164  19  53  15  43 340 133 111 231 378  49 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $event_statuses</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20 </span>
@@ -266,14 +277,14 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>   0   0   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  41  42  43  44  45  46  47  48  49  50  51  52  53  54  55  56  57  58  59  60 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  61  62  63  64  65  66  67  68  69  71  72  73  74  76  77  79  80  81  82  83 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1   1   1   0   1   1   1   1   1   1   0   0   1   1   1   1   1   1   1   1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  84  85  86  87  88  89  90  91  92  93  94  95  96  97  98  99 100 101 102 103 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1   1   1   1   1   1   1   0   1   1   1   1   1   1   1   1   1   1   1   1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118 119 120 121 122 123 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1   1   1   1   1   1   0   1   1   1   1   1   1   1   1   1   1   1   1   1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 124 125 126 127 128 129 130 131 132 133 134 135 136 137 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1   1   1   1   1   1   1   1   1   1   1   1   1   1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  61  62  63  64  65  66  67  68  69  70  71  72  73  74  75  76  77  78  79  80 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1   1   1   0   1   1   1   1   1   1   1   0   0   1   1   1   1   1   1   1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  81  82  83  84  85  86  87  88  89  90  91  92  93  94  95  96  97  98  99 100 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1   1   1   1   1   1   1   1   1   1   0   1   1   1   1   1   1   1   1   1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118 119 120 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1   1   1   1   1   1   1   1   1   0   1   1   1   1   1   1   1   1   1   1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 121 122 123 124 125 126 127 128 129 130 131 132 133 134 135 136 137 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "model_performance_survival" "surv_model_performance"    </span>
@@ -282,10 +293,13 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "coxph"</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">rsf_ranger_model_performance</span>, <span class="va">cph_model_performance</span>,</span></span>
-<span class="r-in"><span>     <span class="va">rsf_src_model_performance</span>, metrics_type <span class="op">=</span> <span class="st">"scalar"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="va">rsf_src_model_performance</span>,</span></span>
+<span class="r-in"><span>    metrics_type <span class="op">=</span> <span class="st">"scalar"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="model_performance.surv_explainer-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">rsf_ranger_model_performance</span>, <span class="va">cph_model_performance</span>, <span class="va">rsf_src_model_performance</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Removed 3 rows containing missing values (`geom_line()`).</span>
 <span class="r-plt img"><img src="model_performance.surv_explainer-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">cph_model_performance_roc</span> <span class="op">&lt;-</span> <span class="fu">model_performance</span><span class="op">(</span><span class="va">cph_exp</span>, type <span class="op">=</span> <span class="st">"roc"</span>, times <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">250</span>, <span class="fl">500</span><span class="op">)</span><span class="op">)</span></span></span>
@@ -302,7 +316,7 @@
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Mikołaj Spytek, Mateusz Krzyziński, Hubert Baniecki, Przemyslaw Biecek.</p>
+  <p></p><p>Developed by Mikołaj Spytek, Mateusz Krzyziński, Sophie Langbein, Hubert Baniecki, Przemyslaw Biecek.</p>
 </div>
 
 <div class="pkgdown">

@@ -43,7 +43,7 @@
         <div class="info">
           <span class="partof">part of the <a href="https://github.com/ModelOriented/DrWhy" class="external-link">DrWhy.AI</a>
            developed by the <a href="https://mi2.ai/" class="external-link">MI².AI</a> </span>
-          <span class="version version-default">1.0.0.9000</span>
+          <span class="version version-default">1.1.0</span>
         </div>
       </div>
     </div>
@@ -64,6 +64,12 @@
     </li>
     <li>
       <a href="../articles/custom-explainers.html">Creating custom explainers</a>
+    </li>
+    <li>
+      <a href="../articles/global-survshap.html">Global explanations with SurvSHAP(t)</a>
+    </li>
+    <li>
+      <a href="../articles/pdp.html">Partial Dependence Explanations</a>
     </li>
     <li>
       <a href="../articles/survex-usage.html">Package usage</a>
@@ -134,8 +140,8 @@ any additional steps.</p>
 <span><span class="co">#&gt;   -&gt; model label       :  coxph ( <span style="color: #BBBB00;"> default </span> ) </span></span>
 <span><span class="co">#&gt;   -&gt; data              :  137  rows  6  cols (  extracted from the model  ) </span></span>
 <span><span class="co">#&gt;   -&gt; target variable   :  137  values ( 128 events and 9 censored , censoring rate = 0.066 ) (  extracted from the model  ) </span></span>
-<span><span class="co">#&gt;   -&gt; times             :  49 unique time points , min = 1 , mean = 110.6971 , median = 80 , max = 562.52 </span></span>
-<span><span class="co">#&gt;   -&gt; times             :  (  generated from y as 50 time points being consecutive quantiles (0.00, 0.02, ..., 0.98)  ) </span></span>
+<span><span class="co">#&gt;   -&gt; times             :  50 unique time points , min = 1.5 , median survival time = 80 , max = 999 </span></span>
+<span><span class="co">#&gt;   -&gt; times             :  (  generated from y as uniformly distributed survival quantiles based on Kaplan-Meier estimator  ) </span></span>
 <span><span class="co">#&gt;   -&gt; predict function  :  predict.coxph with type = 'risk' will be used ( <span style="color: #BBBB00;"> default </span> ) </span></span>
 <span><span class="co">#&gt;   -&gt; predict survival function  :  predictSurvProb.coxph will be used ( <span style="color: #BBBB00;"> default </span> ) </span></span>
 <span><span class="co">#&gt;   -&gt; predict cumulative hazard function  :  -log(predict_survival_function) will be used ( <span style="color: #BBBB00;"> default </span> ) </span></span>
@@ -148,12 +154,35 @@ any additional steps.</p>
 <span><span class="co">#&gt;   -&gt; model label       :  rfsrc ( <span style="color: #BBBB00;"> default </span> ) </span></span>
 <span><span class="co">#&gt;   -&gt; data              :  137  rows  6  cols (  extracted from the model  ) </span></span>
 <span><span class="co">#&gt;   -&gt; target variable   :  137  values ( 128 events and 9 censored , censoring rate = 0.066 ) (  extracted from the model  ) </span></span>
-<span><span class="co">#&gt;   -&gt; times             :  49 unique time points , min = 1 , mean = 110.6971 , median = 80 , max = 562.52 </span></span>
-<span><span class="co">#&gt;   -&gt; times             :  (  generated from y as 50 time points being consecutive quantiles (0.00, 0.02, ..., 0.98)  ) </span></span>
+<span><span class="co">#&gt;   -&gt; times             :  50 unique time points , min = 1.5 , median survival time = 80 , max = 999 </span></span>
+<span><span class="co">#&gt;   -&gt; times             :  (  generated from y as uniformly distributed survival quantiles based on Kaplan-Meier estimator  ) </span></span>
 <span><span class="co">#&gt;   -&gt; predict function  :  sum over the predict_cumulative_hazard_function will be used ( <span style="color: #BBBB00;"> default </span> ) </span></span>
 <span><span class="co">#&gt;   -&gt; predict survival function  :  stepfun based on predict.rfsrc()$survival will be used ( <span style="color: #BBBB00;"> default </span> ) </span></span>
 <span><span class="co">#&gt;   -&gt; predict cumulative hazard function  :  stepfun based on predict.rfsrc()$chf will be used ( <span style="color: #BBBB00;"> default </span> ) </span></span>
-<span><span class="co">#&gt;   -&gt; model_info        :  package randomForestSRC , ver. 3.2.1 , task survival ( <span style="color: #BBBB00;"> default </span> ) </span></span>
+<span><span class="co">#&gt;   -&gt; model_info        :  package randomForestSRC , ver. 3.2.2 , task survival ( <span style="color: #BBBB00;"> default </span> ) </span></span>
+<span><span class="co">#&gt;   A new explainer has been created!</span></span></code></pre></div>
+<p>However, for some models, not all data can be extracted
+automatically. If we want to create an explainer for a Random Survival
+Forest from the <code>ranger</code> package, we need to supply
+<code>data</code>, and <code>y</code> on our own. It is important to
+remember, that we should supply the data parameter
+<strong>without</strong> the columns containing survival
+information.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/imbs-hl/ranger" class="external-link">ranger</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">ranger_rsf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ranger/man/ranger.html" class="external-link">ranger</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">time</span>, <span class="va">status</span><span class="op">)</span><span class="op">~</span><span class="va">.</span>, data <span class="op">=</span> <span class="va">vet</span><span class="op">)</span></span>
+<span><span class="va">ranger_rsf_exp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/explain_survival.html">explain</a></span><span class="op">(</span><span class="va">ranger_rsf</span>, data <span class="op">=</span> <span class="va">vet</span><span class="op">[</span>, <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>,<span class="fl">4</span><span class="op">)</span><span class="op">]</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">vet</span><span class="op">$</span><span class="va">time</span>, <span class="va">vet</span><span class="op">$</span><span class="va">status</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Preparation of a new explainer is initiated </span></span>
+<span><span class="co">#&gt;   -&gt; model label       :  ranger ( <span style="color: #BBBB00;"> default </span> ) </span></span>
+<span><span class="co">#&gt;   -&gt; data              :  137  rows  6  cols </span></span>
+<span><span class="co">#&gt;   -&gt; target variable   :  137  values ( 128 events and 9 censored ) </span></span>
+<span><span class="co">#&gt;   -&gt; times             :  50 unique time points , min = 1.5 , median survival time = 80 , max = 999 </span></span>
+<span><span class="co">#&gt;   -&gt; times             :  (  generated from y as uniformly distributed survival quantiles based on Kaplan-Meier estimator  ) </span></span>
+<span><span class="co">#&gt;   -&gt; predict function  :  sum over the predict_cumulative_hazard_function will be used ( <span style="color: #BBBB00;"> default </span> ) </span></span>
+<span><span class="co">#&gt;   -&gt; predict survival function  :  stepfun based on predict.ranger()$survival will be used ( <span style="color: #BBBB00;"> default </span> ) </span></span>
+<span><span class="co">#&gt;   -&gt; predict cumulative hazard function  :  stepfun based on predict.ranger()$chf will be used ( <span style="color: #BBBB00;"> default </span> ) </span></span>
+<span><span class="co">#&gt;   -&gt; model_info        :  package ranger , ver. 0.15.1 , task survival ( <span style="color: #BBBB00;"> default </span> ) </span></span>
 <span><span class="co">#&gt;   A new explainer has been created!</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -165,12 +194,12 @@ standardized wrappers for the models. A useful feature of an explainer
 is the ability to make predictions (of risk scores, as well as survival
 and cumulative hazard functions) in a unified way independently of the
 underlying model.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">cph_exp</span>, <span class="va">veteran</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>,<span class="op">]</span>, output_type<span class="op">=</span><span class="st">"risk"</span><span class="op">)</span></span>
 <span><span class="co">#&gt;         1         2 </span></span>
 <span><span class="co">#&gt; 0.7354128 0.5942155</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">rsf_exp</span>, <span class="va">veteran</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>,<span class="op">]</span>, output_type<span class="op">=</span><span class="st">"risk"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 29.44941 21.32999</span></span>
+<span><span class="co">#&gt; [1] 36.15437 28.03496</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">cph_exp</span>, <span class="va">veteran</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>,<span class="op">]</span>, output_type<span class="op">=</span><span class="st">"survival"</span>, times<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">600</span>, <span class="fl">100</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;           [,1]      [,2]      [,3]      [,4]      [,5]      [,6]</span></span>
@@ -198,16 +227,16 @@ metrics of the models. For this we use the
 <code><a href="../reference/model_performance.surv_explainer.html">model_performance()</a></code> function. It calculates a set of
 performance measures we can plot next to each other and easily
 compare.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mp_cph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/model_performance.surv_explainer.html">model_performance</a></span><span class="op">(</span><span class="va">cph_exp</span><span class="op">)</span></span>
 <span><span class="va">mp_rsf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/model_performance.surv_explainer.html">model_performance</a></span><span class="op">(</span><span class="va">rsf_exp</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mp_cph</span>, <span class="va">mp_rsf</span><span class="op">)</span></span></code></pre></div>
-<p><img src="survex-usage_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
+<p><img src="survex-usage_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
 <p>We can also plot the scalar metrics in the form of bar plots.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mp_cph</span>, <span class="va">mp_rsf</span>, metrics_type<span class="op">=</span><span class="st">"scalar"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="survex-usage_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
+<p><img src="survex-usage_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
 <p>From this comparison, we see that the Random Survival Forest model is
 better in the Brier score metric (lower is better), Cumulative/Dynamic
 AUC metric (higher is better), and their integrated versions, as well as
@@ -228,12 +257,12 @@ variable importance</a> with the difference being that the loss function
 is time-dependent (by default it is <code><a href="../reference/brier_score.html">loss_brier_score()</a></code>), so
 the influence of each variable can be different at each considered time
 point.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model_parts_rsf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/model_parts.surv_explainer.html">model_parts</a></span><span class="op">(</span><span class="va">rsf_exp</span><span class="op">)</span></span>
 <span><span class="va">model_parts_cph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/model_parts.surv_explainer.html">model_parts</a></span><span class="op">(</span><span class="va">cph_exp</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">model_parts_cph</span>,<span class="va">model_parts_rsf</span><span class="op">)</span></span></code></pre></div>
-<p><img src="survex-usage_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
+<p><img src="survex-usage_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 <p>For both models, the permutation of the <code>karno</code> variable
 leads to the highest increase in the loss function, with the second
 being <code>celltype</code>. These two variables are the most important
@@ -245,7 +274,7 @@ function after a given variable’s permutation and the loss of the full
 model with all variables. This means that the values on the y-axis
 represent only the change in the loss function after permuting each
 variable.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model_parts_rsf_auc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/model_parts.surv_explainer.html">model_parts</a></span><span class="op">(</span><span class="va">rsf_exp</span>, loss_function<span class="op">=</span><span class="va">loss_one_minus_cd_auc</span>, type<span class="op">=</span><span class="st">"difference"</span><span class="op">)</span></span>
 <span><span class="va">model_parts_cph_auc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/model_parts.surv_explainer.html">model_parts</a></span><span class="op">(</span><span class="va">cph_exp</span>, loss_function<span class="op">=</span><span class="va">loss_one_minus_cd_auc</span>, type<span class="op">=</span><span class="st">"difference"</span><span class="op">)</span></span>
 <span></span>
@@ -253,14 +282,22 @@ variable.</p>
 <span><span class="co"># progressr::with_progress(model_parts(rsf_exp, loss_function=loss_one_minus_cd_auc, type="difference"))</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">model_parts_cph_auc</span>,<span class="va">model_parts_rsf_auc</span><span class="op">)</span></span></code></pre></div>
-<p><img src="survex-usage_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
+<p><img src="survex-usage_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
 <p>We observe that the results are consistent with
 <code><a href="../reference/brier_score.html">loss_brier_score()</a></code>. That’s good news - a simple sanity
 check that these variables are the most important for these models.</p>
+<p><strong>Important note (new functionality):</strong> We can also
+measure the importance of variables using global SurvSHAP(t)
+explanations. Details on how to do so, are presented in this vignette:
+<code><a href="../articles/global-survshap.html">vignette("global-survshap")</a></code>.</p>
 </div>
 <div class="section level3">
 <h3 id="partial-dependence">Partial dependence<a class="anchor" aria-label="anchor" href="#partial-dependence"></a>
 </h3>
+<p><strong>Important note (new functionality):</strong> A more detailed
+description of the partial dependence explanation, with added
+functionality is presented in this vignette:
+<code><a href="../articles/pdp.html">vignette("pdp")</a></code>.</p>
 <p>The next type of global explanation this package provides is partial
 dependence plots. This is calculated using the
 <code><a href="../reference/model_profile.surv_explainer.html">model_profile()</a></code> function. These plots show how setting one
@@ -274,10 +311,10 @@ parameter in order to avoid nonsensical values, such as the treatment
 value of 0.5. All factors are automatically detected as categories, but
 if you want to treat a numerical variable as a categorical one, you need
 to set it here.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model_profile_cph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/model_profile.surv_explainer.html">model_profile</a></span><span class="op">(</span><span class="va">cph_exp</span>, categorical_variables<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"trt"</span>, <span class="st">"prior"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">model_profile_cph</span>, facet_ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
-<p><img src="survex-usage_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
+<p><img src="survex-usage_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
 <p>From the plot, we see that for the proportional hazards model, the
 <code>prior</code> and <code>diagtime</code> variables are not very
 important. The plotted bands are very thin, almost overlapping, so the
@@ -291,10 +328,10 @@ decreases quicker).</p>
 This time let’s change the way of plotting numerical variables, instead
 of the values of the variables being represented by the colors and
 survival function values on the y-axis, let’s swap them.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model_profile_rsf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/model_profile.surv_explainer.html">model_profile</a></span><span class="op">(</span><span class="va">rsf_exp</span>, categorical_variables<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"trt"</span>, <span class="st">"prior"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">model_profile_rsf</span>, facet_ncol <span class="op">=</span> <span class="fl">1</span>, numerical_plot_type <span class="op">=</span> <span class="st">"contour"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="survex-usage_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">model_profile_rsf</span>, facet_ncol <span class="op">=</span> <span class="fl">1</span>, numerical_plot_type <span class="op">=</span> <span class="st">"contours"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="survex-usage_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
 <p>This type of plot also gives us valuable insight that is easy to
 overlook in the other type. For example, we see a sharp drop in survival
 function values around <code>diagtime=25</code>. We also observe that
@@ -320,16 +357,16 @@ SurvLIME.</p>
 <p><a href="https://www.sciencedirect.com/science/article/pii/S0950705122013302" class="external-link">SurvSHAP(t)</a>
 explanations are an extension of SHAP values for survival models. They
 show a breakdown of the prediction into individual variables.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">predict_parts_cph_32</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/predict_parts.surv_explainer.html">predict_parts</a></span><span class="op">(</span><span class="va">cph_exp</span>, <span class="va">veteran</span><span class="op">[</span><span class="fl">32</span>,<span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">predict_parts_rsf_32</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/predict_parts.surv_explainer.html">predict_parts</a></span><span class="op">(</span><span class="va">rsf_exp</span>, <span class="va">veteran</span><span class="op">[</span><span class="fl">32</span>,<span class="op">]</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">predict_parts_cph_32</span>, <span class="va">predict_parts_rsf_32</span><span class="op">)</span></span></code></pre></div>
-<p><img src="survex-usage_files/figure-html/unnamed-chunk-15-1.png" width="700"></p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<p><img src="survex-usage_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">predict_parts_cph_12</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/predict_parts.surv_explainer.html">predict_parts</a></span><span class="op">(</span><span class="va">cph_exp</span>, <span class="va">veteran</span><span class="op">[</span><span class="fl">12</span>,<span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">predict_parts_rsf_12</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/predict_parts.surv_explainer.html">predict_parts</a></span><span class="op">(</span><span class="va">rsf_exp</span>, <span class="va">veteran</span><span class="op">[</span><span class="fl">12</span>,<span class="op">]</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">predict_parts_cph_12</span>, <span class="va">predict_parts_rsf_12</span><span class="op">)</span></span></code></pre></div>
-<p><img src="survex-usage_files/figure-html/unnamed-chunk-17-1.png" width="700"></p>
+<p><img src="survex-usage_files/figure-html/unnamed-chunk-18-1.png" width="700"></p>
 <p>On the first plot, we see that for observation 32 from the
 <code>veteran</code> data set, the value of <code>karno</code> variable
 improves the chances of survival of this individual. In contrast, the
@@ -351,14 +388,14 @@ method. It works by finding a surrogate proportional hazards model that
 approximates the survival model at the local area around an observation
 of interest. Variable importance is then attributed using the
 coefficients of the found model.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">predict_parts_cph_12_lime</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/predict_parts.surv_explainer.html">predict_parts</a></span><span class="op">(</span><span class="va">cph_exp</span>, <span class="va">veteran</span><span class="op">[</span><span class="fl">12</span>,<span class="op">]</span>, type<span class="op">=</span><span class="st">"survlime"</span><span class="op">)</span></span>
 <span><span class="va">predict_parts_rsf_12_lime</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/predict_parts.surv_explainer.html">predict_parts</a></span><span class="op">(</span><span class="va">rsf_exp</span>, <span class="va">veteran</span><span class="op">[</span><span class="fl">12</span>,<span class="op">]</span>, type<span class="op">=</span><span class="st">"survlime"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">predict_parts_cph_12_lime</span>, type<span class="op">=</span><span class="st">"local_importance"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="survex-usage_files/figure-html/unnamed-chunk-19-1.png" width="700"></p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<p><img src="survex-usage_files/figure-html/unnamed-chunk-20-1.png" width="700"></p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">predict_parts_rsf_12_lime</span>, type<span class="op">=</span><span class="st">"local_importance"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="survex-usage_files/figure-html/unnamed-chunk-21-1.png" width="700"></p>
+<p><img src="survex-usage_files/figure-html/unnamed-chunk-22-1.png" width="700"></p>
 <p>The left part of the plot shows which variables are most important
 and if their value increases or lowers the chances of survival, whereas
 the right shows the black-box model prediction together with the one
@@ -376,14 +413,14 @@ value of one variable at a time. We can think of them as the equivalent
 of partial dependence plots but applied to a single observation. The
 <code><a href="../reference/predict_profile.surv_explainer.html">predict_profile()</a></code> function is used to make these
 explanations.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">predict_profile_cph_32</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/predict_profile.surv_explainer.html">predict_profile</a></span><span class="op">(</span><span class="va">cph_exp</span>, <span class="va">veteran</span><span class="op">[</span><span class="fl">32</span>,<span class="op">]</span>, categorical_variables<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"trt"</span>, <span class="st">"prior"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">predict_profile_cph_32</span>, facet_ncol<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span></code></pre></div>
-<p><img src="survex-usage_files/figure-html/unnamed-chunk-23-1.png" width="700"></p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<p><img src="survex-usage_files/figure-html/unnamed-chunk-24-1.png" width="700"></p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">predict_profile_rsf_32</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/predict_profile.surv_explainer.html">predict_profile</a></span><span class="op">(</span><span class="va">rsf_exp</span>, <span class="va">veteran</span><span class="op">[</span><span class="fl">32</span>,<span class="op">]</span>, categorical_variables<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"trt"</span>, <span class="st">"prior"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">predict_profile_rsf_32</span>, facet_ncol<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span></code></pre></div>
-<p><img src="survex-usage_files/figure-html/unnamed-chunk-25-1.png" width="700"></p>
+<p><img src="survex-usage_files/figure-html/unnamed-chunk-26-1.png" width="700"></p>
 <p>These plots also give a lot of valuable insight. For example, we see
 that the <code>prior</code> variable does not influence the predictions
 very much, as the lines representing survival functions for its
@@ -412,7 +449,7 @@ seem to indicate lower chances of survival.</p>
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by Mikołaj Spytek, Mateusz Krzyziński, Hubert Baniecki, Przemyslaw Biecek.</p>
+<p>Developed by Mikołaj Spytek, Mateusz Krzyziński, Sophie Langbein, Hubert Baniecki, Przemyslaw Biecek.</p>
 </div>
 
 <div class="pkgdown">

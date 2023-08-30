@@ -25,7 +25,7 @@
         <div class="info">
           <span class="partof">part of the <a href="https://github.com/ModelOriented/DrWhy" class="external-link">DrWhy.AI</a>
            developed by the <a href="https://mi2.ai/" class="external-link">MI².AI</a> </span>
-          <span class="version version-default">1.0.0.9000</span>
+          <span class="version version-default">1.1.0</span>
         </div>
       </div>
     </div>
@@ -44,6 +44,12 @@
     </li>
     <li>
       <a href="../articles/custom-explainers.html">Creating custom explainers</a>
+    </li>
+    <li>
+      <a href="../articles/global-survshap.html">Global explanations with SurvSHAP(t)</a>
+    </li>
+    <li>
+      <a href="../articles/pdp.html">Partial Dependence Explanations</a>
     </li>
     <li>
       <a href="../articles/survex-usage.html">Package usage</a>
@@ -167,8 +173,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; model label       :  coxph ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; data              :  137  rows  6  cols ( <span style="color: #BBBB00;"> extracted from the model </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; target variable   :  137  values ( 128 events and 9 censored , censoring rate = 0.066 ) ( <span style="color: #BBBB00;"> extracted from the model </span> ) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  49 unique time points , min = 1 , mean = 110.6971 , median = 80 , max = 562.52 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  ( <span style="color: #BBBB00;"> generated from y as 50 time points being consecutive quantiles (0.00, 0.02, ..., 0.98) </span> ) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  50 unique time points , min = 1.5 , median survival time = 80 , max = 999 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  ( <span style="color: #BBBB00;"> generated from y as uniformly distributed survival quantiles based on Kaplan-Meier estimator </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict function  :  predict.coxph with type = 'risk' will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict survival function  :  predictSurvProb.coxph will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict cumulative hazard function  :  -log(predict_survival_function) will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
@@ -177,30 +183,33 @@
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">cph_predict_parts_survshap</span> <span class="op">&lt;-</span> <span class="fu">predict_parts</span><span class="op">(</span><span class="va">cph_exp</span>, new_observation <span class="op">=</span> <span class="va">veteran</span><span class="op">[</span><span class="fl">1</span>, <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cph_predict_parts_survshap</span><span class="op">$</span><span class="va">result</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 trt    celltype       karno      diagtime          age</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t=1     0.001358479 0.005752629 0.002400785 -1.753141e-05 0.0007519409</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t=2.72  0.002027078 0.008598547 0.003568979 -2.527619e-05 0.0011254760</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t=7     0.005360141 0.022931960 0.009247829 -5.480637e-05 0.0030211319</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t=8     0.007989085 0.034411531 0.013535810 -6.687523e-05 0.0045549833</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t=10.6  0.009277550 0.040094562 0.015567469 -6.898441e-05 0.0053188972</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t=12.32 0.011153127 0.048434497 0.018433696 -6.740775e-05 0.0064449115</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                prior</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t=1     0.0001596961</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t=2.72  0.0002392592</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t=7     0.0006457473</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t=8     0.0009784720</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t=10.6  0.0011456328</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> t=12.32 0.0013939562</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               trt    celltype       karno      diagtime          age</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t=1.5 0.001358479 0.005752629 0.002400785 -1.753141e-05 0.0007519409</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t=4   0.003364680 0.014321361 0.005877960 -3.897254e-05 0.0018795538</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t=7   0.005360141 0.022931960 0.009247829 -5.480637e-05 0.0030211319</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t=8   0.007989085 0.034411531 0.013535810 -6.687523e-05 0.0045549833</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t=10  0.009277550 0.040094562 0.015567469 -6.898441e-05 0.0053188972</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t=12  0.011153127 0.048434497 0.018433696 -6.740775e-05 0.0064449115</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              prior</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t=1.5 0.0001596961</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t=4   0.0004003893</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t=7   0.0006457473</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t=8   0.0009784720</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t=10  0.0011456328</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> t=12  0.0013939562</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cph_predict_parts_survshap</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="predict_parts.surv_explainer-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">cph_predict_parts_survlime</span> <span class="op">&lt;-</span> <span class="fu">predict_parts</span><span class="op">(</span><span class="va">cph_exp</span>, new_observation <span class="op">=</span> <span class="va">veteran</span><span class="op">[</span><span class="fl">1</span>, <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span><span class="op">]</span>,</span></span>
-<span class="r-in"><span>                                            type <span class="op">=</span> <span class="st">"survlime"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">cph_predict_parts_survlime</span> <span class="op">&lt;-</span> <span class="fu">predict_parts</span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="va">cph_exp</span>,</span></span>
+<span class="r-in"><span>    new_observation <span class="op">=</span> <span class="va">veteran</span><span class="op">[</span><span class="fl">1</span>, <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span><span class="op">]</span>,</span></span>
+<span class="r-in"><span>    type <span class="op">=</span> <span class="st">"survlime"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cph_predict_parts_survlime</span><span class="op">$</span><span class="va">result</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          trt         karno      diagtime          age       prior celltypelarge</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.01405853 -0.0008838242 -0.0005667744 0.0008429279 0.001720004    -0.0231181</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   celltypesmallcell celltypesquamous</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1      -0.006647854      -0.04168907</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          trt         karno     diagtime          age         prior</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.01408752 -0.0005928258 0.0002355338 0.0003335982 -0.0002506281</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   celltypelarge celltypesmallcell celltypesquamous</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 -0.0006632848       -0.01194452      -0.02617174</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cph_predict_parts_survlime</span>, type <span class="op">=</span> <span class="st">"local_importance"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="predict_parts.surv_explainer-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
@@ -215,7 +224,7 @@
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Mikołaj Spytek, Mateusz Krzyziński, Hubert Baniecki, Przemyslaw Biecek.</p>
+  <p></p><p>Developed by Mikołaj Spytek, Mateusz Krzyziński, Sophie Langbein, Hubert Baniecki, Przemyslaw Biecek.</p>
 </div>
 
 <div class="pkgdown">

@@ -10,10 +10,16 @@
     <loc>https://modeloriented.github.io/survex/articles/custom-explainers.html</loc>
   </url>
   <url>
+    <loc>https://modeloriented.github.io/survex/articles/global-survshap.html</loc>
+  </url>
+  <url>
     <loc>https://modeloriented.github.io/survex/articles/index.html</loc>
   </url>
   <url>
     <loc>https://modeloriented.github.io/survex/articles/mlr3proba-usage.html</loc>
+  </url>
+  <url>
+    <loc>https://modeloriented.github.io/survex/articles/pdp.html</loc>
   </url>
   <url>
     <loc>https://modeloriented.github.io/survex/articles/survex-usage.html</loc>
@@ -43,6 +49,9 @@
     <loc>https://modeloriented.github.io/survex/reference/explain_survival.html</loc>
   </url>
   <url>
+    <loc>https://modeloriented.github.io/survex/reference/extract_predict_survshap.html</loc>
+  </url>
+  <url>
     <loc>https://modeloriented.github.io/survex/reference/index.html</loc>
   </url>
   <url>
@@ -67,6 +76,9 @@
     <loc>https://modeloriented.github.io/survex/reference/loss_one_minus_integrated_cd_auc.html</loc>
   </url>
   <url>
+    <loc>https://modeloriented.github.io/survex/reference/model_diagnostics.surv_explainer.html</loc>
+  </url>
+  <url>
     <loc>https://modeloriented.github.io/survex/reference/model_parts.surv_explainer.html</loc>
   </url>
   <url>
@@ -76,13 +88,25 @@
     <loc>https://modeloriented.github.io/survex/reference/model_profile.surv_explainer.html</loc>
   </url>
   <url>
-    <loc>https://modeloriented.github.io/survex/reference/plot.feature_importance_explainer.html</loc>
+    <loc>https://modeloriented.github.io/survex/reference/model_profile_2d.surv_explainer.html</loc>
+  </url>
+  <url>
+    <loc>https://modeloriented.github.io/survex/reference/model_survshap.surv_explainer.html</loc>
+  </url>
+  <url>
+    <loc>https://modeloriented.github.io/survex/reference/plot.aggregated_surv_shap.html</loc>
+  </url>
+  <url>
+    <loc>https://modeloriented.github.io/survex/reference/plot.model_diagnostics_survival.html</loc>
   </url>
   <url>
     <loc>https://modeloriented.github.io/survex/reference/plot.model_parts_survival.html</loc>
   </url>
   <url>
     <loc>https://modeloriented.github.io/survex/reference/plot.model_performance_survival.html</loc>
+  </url>
+  <url>
+    <loc>https://modeloriented.github.io/survex/reference/plot.model_profile_2d_survival.html</loc>
   </url>
   <url>
     <loc>https://modeloriented.github.io/survex/reference/plot.model_profile_survival.html</loc>
@@ -92,9 +116,6 @@
   </url>
   <url>
     <loc>https://modeloriented.github.io/survex/reference/plot.predict_profile_survival.html</loc>
-  </url>
-  <url>
-    <loc>https://modeloriented.github.io/survex/reference/plot.surv_ceteris_paribus.html</loc>
   </url>
   <url>
     <loc>https://modeloriented.github.io/survex/reference/plot.surv_feature_importance.html</loc>
@@ -122,9 +143,6 @@
   </url>
   <url>
     <loc>https://modeloriented.github.io/survex/reference/risk_from_chf.html</loc>
-  </url>
-  <url>
-    <loc>https://modeloriented.github.io/survex/reference/surv_aggregate_profiles.html</loc>
   </url>
   <url>
     <loc>https://modeloriented.github.io/survex/reference/surv_ceteris_paribus.html</loc>

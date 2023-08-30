@@ -25,7 +25,7 @@
         <div class="info">
           <span class="partof">part of the <a href="https://github.com/ModelOriented/DrWhy" class="external-link">DrWhy.AI</a>
            developed by the <a href="https://mi2.ai/" class="external-link">MI².AI</a> </span>
-          <span class="version version-default">1.0.0.9000</span>
+          <span class="version version-default">1.1.0</span>
         </div>
       </div>
     </div>
@@ -44,6 +44,12 @@
     </li>
     <li>
       <a href="../articles/custom-explainers.html">Creating custom explainers</a>
+    </li>
+    <li>
+      <a href="../articles/global-survshap.html">Global explanations with SurvSHAP(t)</a>
+    </li>
+    <li>
+      <a href="../articles/pdp.html">Partial Dependence Explanations</a>
     </li>
     <li>
       <a href="../articles/survex-usage.html">Package usage</a>
@@ -160,8 +166,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; model label       :  coxph ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; data              :  137  rows  6  cols ( <span style="color: #BBBB00;"> extracted from the model </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; target variable   :  137  values ( 128 events and 9 censored , censoring rate = 0.066 ) ( <span style="color: #BBBB00;"> extracted from the model </span> ) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  49 unique time points , min = 1 , mean = 110.6971 , median = 80 , max = 562.52 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  ( <span style="color: #BBBB00;"> generated from y as 50 time points being consecutive quantiles (0.00, 0.02, ..., 0.98) </span> ) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  50 unique time points , min = 1.5 , median survival time = 80 , max = 999 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  ( <span style="color: #BBBB00;"> generated from y as uniformly distributed survival quantiles based on Kaplan-Meier estimator </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict function  :  predict.coxph with type = 'risk' will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict survival function  :  predictSurvProb.coxph will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict cumulative hazard function  :  -log(predict_survival_function) will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
@@ -176,8 +182,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; model label       :  ranger ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; data              :  137  rows  6  cols </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; target variable   :  137  values ( 128 events and 9 censored ) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  49 unique time points , min = 1 , mean = 110.6971 , median = 80 , max = 562.52 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  ( <span style="color: #BBBB00;"> generated from y as 50 time points being consecutive quantiles (0.00, 0.02, ..., 0.98) </span> ) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  50 unique time points , min = 1.5 , median survival time = 80 , max = 999 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  ( <span style="color: #BBBB00;"> generated from y as uniformly distributed survival quantiles based on Kaplan-Meier estimator </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict function  :  sum over the predict_cumulative_hazard_function will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict survival function  :  stepfun based on predict.ranger()$survival will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict cumulative hazard function  :  stepfun based on predict.ranger()$chf will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
@@ -187,39 +193,39 @@
 <span class="r-in"><span><span class="va">cph_model_parts_brier</span> <span class="op">&lt;-</span> <span class="fu">model_parts</span><span class="op">(</span><span class="va">cph_exp</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cph_model_parts_brier</span><span class="op">$</span><span class="va">result</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    _times_ _full_model_           trt      celltype        karno     diagtime</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     1.00            0  3.100926e-05 -0.0004409043 0.0001570423 2.615469e-07</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18    2.72            0  1.091490e-04 -0.0004681586 0.0003942038 1.683607e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24    7.00            0  5.320906e-05  0.0007188099 0.0048221350 2.336183e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 43    8.00            0 -5.629354e-04  0.0034673411 0.0088880999 8.736081e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 54   10.60            0 -1.155822e-03  0.0022932672 0.0117777706 1.023098e-05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 64   12.32            0 -2.164912e-03  0.0026902126 0.0145335477 1.118083e-05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             age         prior    _baseline_ _permutation_ label</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  2.313736e-05  1.755953e-05 -0.0000260294             0 coxph</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18 1.697887e-04  6.191233e-05  0.0002622289             0 coxph</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24 8.845211e-04 -3.607140e-05  0.0052562926             0 coxph</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 43 1.009567e-03  1.446386e-04  0.0102111948             0 coxph</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 54 1.161353e-03  2.142073e-04  0.0128774114             0 coxph</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 64 1.420643e-03  5.004512e-04  0.0132610556             0 coxph</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1      1.5            0  3.911505e-05 -0.0005587133 0.0001801563 2.405647e-07</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12     4.0            0  1.961981e-06 -0.0004489428 0.0014632387 1.521494e-06</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23     7.0            0  1.812018e-04  0.0001995575 0.0046716458 1.492646e-06</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35     8.0            0  3.784213e-05  0.0025875856 0.0090336400 7.275604e-06</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 48    10.0            0 -7.666111e-04  0.0012470294 0.0119897595 8.978030e-06</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 57    12.0            0 -1.796764e-03  0.0018226257 0.0144943009 8.623168e-06</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             age         prior   _baseline_ _permutation_ label</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  3.041017e-05  1.654401e-05 4.740940e-06             0 coxph</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12 5.709176e-04  8.078058e-05 1.926830e-03             0 coxph</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23 8.840603e-04 -2.424834e-05 6.188143e-03             0 coxph</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35 9.403269e-04  2.070384e-04 1.124630e-02             0 coxph</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 48 1.142927e-03  3.129793e-04 1.428724e-02             0 coxph</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 57 1.107676e-03  5.709428e-04 1.774475e-02             0 coxph</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cph_model_parts_brier</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="model_parts.surv_explainer-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">rsf_ranger_model_parts</span> <span class="op">&lt;-</span> <span class="fu">model_parts</span><span class="op">(</span><span class="va">rsf_ranger_exp</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">rsf_ranger_model_parts</span><span class="op">$</span><span class="va">result</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    _times_ _full_model_         trt    celltype       karno     diagtime</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     1.00            0 0.000393059 0.002160058 0.002909809 0.0009184139</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18    2.72            0 0.001037804 0.002237478 0.004627709 0.0027336926</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24    7.00            0 0.001407812 0.003428601 0.015028454 0.0036214440</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 43    8.00            0 0.001552034 0.005647708 0.022999922 0.0083292668</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 54   10.60            0 0.001848448 0.005885511 0.034614511 0.0101409603</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 64   12.32            0 0.002215411 0.007925849 0.040655513 0.0117593410</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    _times_ _full_model_          trt    celltype       karno    diagtime</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1      1.5            0 0.0003524385 0.001406859 0.002945718 0.001558958</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12     4.0            0 0.0011130154 0.002016696 0.007861604 0.003733738</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23     7.0            0 0.0015410381 0.002526279 0.013944716 0.004941416</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35     8.0            0 0.0018373932 0.005059545 0.022908337 0.011553699</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 48    10.0            0 0.0023055949 0.005448899 0.034424715 0.012528517</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 57    12.0            0 0.0025530423 0.007484314 0.040994727 0.015294324</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            age        prior  _baseline_ _permutation_  label</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  0.002938081 0.0002506471 0.006656696             0 ranger</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18 0.003579971 0.0007954216 0.009698786             0 ranger</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24 0.012110532 0.0006660035 0.026266748             0 ranger</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 43 0.012555588 0.0013803768 0.040264345             0 ranger</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 54 0.014280640 0.0022082747 0.052147805             0 ranger</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 64 0.014690396 0.0037887784 0.060305670             0 ranger</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  0.002556674 0.0002318349 0.005846558             0 ranger</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12 0.010362009 0.0003596904 0.018495630             0 ranger</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23 0.012637668 0.0004747044 0.025592340             0 ranger</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35 0.013378989 0.0015098235 0.041323563             0 ranger</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 48 0.014392064 0.0023371840 0.051598701             0 ranger</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 57 0.014284352 0.0032047193 0.057084780             0 ranger</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cph_model_parts_brier</span>, <span class="va">rsf_ranger_model_parts</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="model_parts.surv_explainer-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
@@ -233,7 +239,7 @@
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Mikołaj Spytek, Mateusz Krzyziński, Hubert Baniecki, Przemyslaw Biecek.</p>
+  <p></p><p>Developed by Mikołaj Spytek, Mateusz Krzyziński, Sophie Langbein, Hubert Baniecki, Przemyslaw Biecek.</p>
 </div>
 
 <div class="pkgdown">

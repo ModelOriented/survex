@@ -26,7 +26,7 @@ using the model_profile() function.'><!-- mathjax --><script src="https://cdnjs.
         <div class="info">
           <span class="partof">part of the <a href="https://github.com/ModelOriented/DrWhy" class="external-link">DrWhy.AI</a>
            developed by the <a href="https://mi2.ai/" class="external-link">MI².AI</a> </span>
-          <span class="version version-default">1.0.0.9000</span>
+          <span class="version version-default">1.1.0</span>
         </div>
       </div>
     </div>
@@ -45,6 +45,12 @@ using the model_profile() function.'><!-- mathjax --><script src="https://cdnjs.
     </li>
     <li>
       <a href="../articles/custom-explainers.html">Creating custom explainers</a>
+    </li>
+    <li>
+      <a href="../articles/global-survshap.html">Global explanations with SurvSHAP(t)</a>
+    </li>
+    <li>
+      <a href="../articles/pdp.html">Partial Dependence Explanations</a>
     </li>
     <li>
       <a href="../articles/survex-usage.html">Package usage</a>
@@ -83,11 +89,15 @@ using the <code><a href="model_profile.surv_explainer.html">model_profile()</a><
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
 <span>  <span class="va">...</span>,</span>
+<span>  geom <span class="op">=</span> <span class="st">"time"</span>,</span>
 <span>  variables <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  variable_type <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  facet_ncol <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  numerical_plot_type <span class="op">=</span> <span class="st">"lines"</span>,</span>
-<span>  title <span class="op">=</span> <span class="st">"Partial dependence survival profile"</span>,</span>
+<span>  times <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  marginalize_over_time <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  plot_type <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  title <span class="op">=</span> <span class="st">"default"</span>,</span>
 <span>  subtitle <span class="op">=</span> <span class="st">"default"</span>,</span>
 <span>  colors <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  rug <span class="op">=</span> <span class="st">"all"</span>,</span>
@@ -102,23 +112,39 @@ using the <code><a href="model_profile.surv_explainer.html">model_profile()</a><
 
 
 <dt>...</dt>
-<dd><p>additional objects of class <code>"model_profile_survival"</code> to be plotted together</p></dd>
+<dd><p>additional objects of class <code>model_profile_survival</code> to be plotted together. Only available for <code>geom = "time"</code>.</p></dd>
+
+
+<dt>geom</dt>
+<dd><p>character, either <code>"time"</code> or <code>"variable"</code>. Selects the type of plot to be prepared. If <code>"time"</code> then the x-axis represents survival times, and variable is denoted by colors, if <code>"variable"</code> then the x-axis represents the variable values, and y-axis represents the predictions at selected time points.</p></dd>
 
 
 <dt>variables</dt>
-<dd><p>character, names of the variables to be plotted</p></dd>
+<dd><p>character, names of the variables to be plotted. When <code>geom = "variable"</code> it needs to be a name of a single variable, when <code>geom = "time"</code> it can be a vector of variable names. If <code>NULL</code> (default) then first variable (for <code>geom = "variable"</code>) or all variables (for <code>geom = "time"</code>) are plotted.</p></dd>
 
 
 <dt>variable_type</dt>
-<dd><p>character, either <code>"numerical"</code>, <code>"categorical"</code> or <code>NULL</code> (default), select only one type of variable for plotting, or leave <code>NULL</code> for all</p></dd>
+<dd><p>character, either <code>"numerical"</code>, <code>"categorical"</code> or <code>NULL</code> (default), select only one type of variable for plotting, or leave <code>NULL</code> for all. Only used when <code>geom = "time"</code>.</p></dd>
 
 
 <dt>facet_ncol</dt>
-<dd><p>number of columns for arranging subplots</p></dd>
+<dd><p>number of columns for arranging subplots. Only used when <code>geom = "time"</code>.</p></dd>
 
 
 <dt>numerical_plot_type</dt>
-<dd><p>character, either <code>"lines"</code>, or <code>"contours"</code> selects the type of numerical variable plots</p></dd>
+<dd><p>character, either <code>"lines"</code>, or <code>"contours"</code> selects the type of numerical variable plots. Only used when <code>geom = "time"</code>.</p></dd>
+
+
+<dt>times</dt>
+<dd><p>numeric vector, times for which the profile should be plotted, the times must be present in the 'times' field of the explainer. If <code>NULL</code> (default) then the median survival time (if available) or the median time from the explainer object is used. Only used when <code>geom = "variable"</code> and <code>marginalize_over_time = FALSE</code>.</p></dd>
+
+
+<dt>marginalize_over_time</dt>
+<dd><p>logical, if <code>TRUE</code> then the profile is calculated for all times and then averaged over time, if <code>FALSE</code> (default) then the profile is calculated for each time separately. Only used when <code>geom = "variable"</code>.</p></dd>
+
+
+<dt>plot_type</dt>
+<dd><p>character, one of <code>"pdp"</code>, <code>"ice"</code>, <code>"pdp+ice"</code>, or <code>NULL</code> (default). If <code>NULL</code> then the type of plot is chosen automatically based on the number of variables to be plotted. Only used when <code>geom = "variable"</code>.</p></dd>
 
 
 <dt>title</dt>
@@ -126,15 +152,15 @@ using the <code><a href="model_profile.surv_explainer.html">model_profile()</a><
 
 
 <dt>subtitle</dt>
-<dd><p>character, subtitle of the plot, <code>'default'</code> automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels</p></dd>
+<dd><p>character, subtitle of the plot, <code>"default"</code> automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels</p></dd>
 
 
 <dt>colors</dt>
-<dd><p>character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")</p></dd>
+<dd><p>character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue").</p></dd>
 
 
 <dt>rug</dt>
-<dd><p>character, one of <code>"all"</code>, <code>"events"</code>, <code>"censors"</code>, <code>"none"</code> or <code>NULL</code>. Which times to mark on the x axis in <code>geom_rug()</code>.</p></dd>
+<dd><p>character, one of <code>"all"</code>, <code>"events"</code>, <code>"censors"</code>, <code>"none"</code> or <code>NULL</code>. Which times to mark on the x axis in <code>geom_rug()</code>. Only used when <code>geom = "time"</code>.</p></dd>
 
 
 <dt>rug_colors</dt>
@@ -160,12 +186,12 @@ using the <code><a href="model_profile.surv_explainer.html">model_profile()</a><
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; model label       :  rfsrc ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; data              :  137  rows  6  cols ( <span style="color: #BBBB00;"> extracted from the model </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; target variable   :  137  values ( 128 events and 9 censored , censoring rate = 0.066 ) ( <span style="color: #BBBB00;"> extracted from the model </span> ) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  49 unique time points , min = 1 , mean = 110.6971 , median = 80 , max = 562.52 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  ( <span style="color: #BBBB00;"> generated from y as 50 time points being consecutive quantiles (0.00, 0.02, ..., 0.98) </span> ) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  50 unique time points , min = 1.5 , median survival time = 80 , max = 999 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; times             :  ( <span style="color: #BBBB00;"> generated from y as uniformly distributed survival quantiles based on Kaplan-Meier estimator </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict function  :  sum over the predict_cumulative_hazard_function will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict survival function  :  stepfun based on predict.rfsrc()$survival will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict cumulative hazard function  :  stepfun based on predict.rfsrc()$chf will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; model_info        :  package randomForestSRC , ver. 3.2.1 , task survival ( <span style="color: #BBBB00;"> default </span> ) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; model_info        :  package randomForestSRC , ver. 3.2.2 , task survival ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  <span style="color: #00BB00;"> A new explainer has been created! </span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">m_prof</span> <span class="op">&lt;-</span> <span class="fu"><a href="model_profile.surv_explainer.html">model_profile</a></span><span class="op">(</span><span class="va">exp</span>, categorical_variables <span class="op">=</span> <span class="st">"trt"</span><span class="op">)</span></span></span>
@@ -178,6 +204,18 @@ using the <code><a href="model_profile.surv_explainer.html">model_profile()</a><
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">m_prof</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"trt"</span>, <span class="st">"age"</span><span class="op">)</span>, facet_ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plot.model_profile_survival-3.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">m_prof</span>, geom <span class="op">=</span> <span class="st">"variable"</span>, variables <span class="op">=</span> <span class="st">"karno"</span>, plot_type <span class="op">=</span> <span class="st">"pdp+ice"</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Plot will be prepared for the median survial time. For another time point, set the value of `times`.</span>
+<span class="r-plt img"><img src="plot.model_profile_survival-4.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">m_prof</span>, geom <span class="op">=</span> <span class="st">"variable"</span>, times <span class="op">=</span> <span class="va">exp</span><span class="op">$</span><span class="va">times</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">10</span><span class="op">)</span><span class="op">]</span>,</span></span>
+<span class="r-in"><span>     variables <span class="op">=</span> <span class="st">"karno"</span>, plot_type <span class="op">=</span> <span class="st">"pdp+ice"</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="plot.model_profile_survival-5.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">m_prof</span>, geom <span class="op">=</span> <span class="st">"variable"</span>, times <span class="op">=</span> <span class="va">exp</span><span class="op">$</span><span class="va">times</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">10</span><span class="op">)</span><span class="op">]</span>,</span></span>
+<span class="r-in"><span>     variables <span class="op">=</span> <span class="st">"trt"</span>, plot_type <span class="op">=</span> <span class="st">"pdp+ice"</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="plot.model_profile_survival-6.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
@@ -190,7 +228,7 @@ using the <code><a href="model_profile.surv_explainer.html">model_profile()</a><
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Mikołaj Spytek, Mateusz Krzyziński, Hubert Baniecki, Przemyslaw Biecek.</p>
+  <p></p><p>Developed by Mikołaj Spytek, Mateusz Krzyziński, Sophie Langbein, Hubert Baniecki, Przemyslaw Biecek.</p>
 </div>
 
 <div class="pkgdown">

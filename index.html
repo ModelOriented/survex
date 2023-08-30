@@ -49,7 +49,7 @@
         <div class="info">
           <span class="partof">part of the <a href="https://github.com/ModelOriented/DrWhy" class="external-link">DrWhy.AI</a>
            developed by the <a href="https://mi2.ai/" class="external-link">MI².AI</a> </span>
-          <span class="version version-default">1.0.0.9000</span>
+          <span class="version version-default">1.1.0</span>
         </div>
       </div>
     </div>
@@ -70,6 +70,12 @@
     </li>
     <li>
       <a href="articles/custom-explainers.html">Creating custom explainers</a>
+    </li>
+    <li>
+      <a href="articles/global-survshap.html">Global explanations with SurvSHAP(t)</a>
+    </li>
+    <li>
+      <a href="articles/pdp.html">Partial Dependence Explanations</a>
     </li>
     <li>
       <a href="articles/survex-usage.html">Package usage</a>
@@ -143,6 +149,13 @@
 <span></span>
 <span><span class="co"># explain one prediction with SurvSHAP(t)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="reference/predict_parts.surv_explainer.html">predict_parts</a></span><span class="op">(</span><span class="va">explainer</span>, <span class="va">veteran</span><span class="op">[</span><span class="fl">1</span>, <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="functionalities-and-roadmap">Functionalities and roadmap<a class="anchor" aria-label="anchor" href="#functionalities-and-roadmap"></a>
+</h2>
+<p>Existing functionalities: - [x] unified prediction interface using the explainer object - <code><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict()</a></code> - [x] calculation of performance metrics (Brier Score, Time-dependent C/D AUC, metrics from <code>mlr3proba</code>) - <code><a href="reference/model_performance.surv_explainer.html">model_performance()</a></code> - [x] calculation of feature importance (Permutation Feature Importance - PFI) - <code><a href="reference/model_parts.surv_explainer.html">model_parts()</a></code> - [x] calculation of partial dependence (Partial Dependence Profiles - PDP, Accumulated Local Effects - ALE) - <code><a href="reference/model_profile.surv_explainer.html">model_profile()</a></code> - [x] calculation of 2-dimensional partial dependence (2D PDP, 2D ALE) - <code><a href="reference/model_profile_2d.surv_explainer.html">model_profile_2d()</a></code> - [x] calculation of local feature attributions (SurvSHAP(t), SurvLIME) - <code><a href="reference/predict_parts.surv_explainer.html">predict_parts()</a></code> - [x] calculation of local ceteris paribus explanations (Ceteris Paribus profiles - CP/ Individual Conditional Expectations - ICE) - <code><a href="reference/predict_profile.surv_explainer.html">predict_profile()</a></code> - [x] calculation of global feature attributions using SurvSHAP(t) - <code><a href="reference/model_survshap.surv_explainer.html">model_survshap()</a></code></p>
+<p>Currently in develompment: - [ ] …</p>
+<p>Future plans: - [ ] … (raise an Issue on GitHub if you have any suggestions)</p>
 </div>
 <div class="section level2">
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
@@ -220,6 +233,7 @@
 <ul class="list-unstyled">
 <li>Mikołaj Spytek <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0001-7111-2286" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Mateusz Krzyziński <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-6143-488X" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Sophie Langbein <br><small class="roles"> Author </small>  </li>
 <li>Hubert Baniecki <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-6661-5364" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Przemyslaw Biecek <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-8423-1823" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 </ul>
@@ -233,7 +247,7 @@
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by Mikołaj Spytek, Mateusz Krzyziński, Hubert Baniecki, Przemyslaw Biecek.</p>
+<p>Developed by Mikołaj Spytek, Mateusz Krzyziński, Sophie Langbein, Hubert Baniecki, Przemyslaw Biecek.</p>
 </div>
 
 <div class="pkgdown">
