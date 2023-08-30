@@ -33,6 +33,7 @@ The function returns a function with three arguments, (\code{model}, \code{newda
 Some models return the survival function or cumulative hazard function prediction at the times of events present in the training data set. This is a convenient utility to allow the prediction to be evaluated at any time.
 }
 \examples{
+\donttest{
 library(survex)
 library(survival)
 
@@ -45,5 +46,5 @@ chf_function <- transform_to_stepfunction(predict,
 )
 
 explainer <- explain(rsf_src, predict_cumulative_hazard_function = chf_function)
-
+}
 }

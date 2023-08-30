@@ -22,12 +22,13 @@
 #' library(survival)
 #' library(survex)
 #'
+#' \donttest{
 #' model <- randomForestSRC::rfsrc(Surv(time, status) ~ ., data = veteran)
 #' exp <- explain(model)
 #'
 #' m_perf <- model_performance(exp)
 #' plot(m_perf)
-#'
+#' }
 #' @export
 plot.surv_model_performance <- function(x,
                                         ...,

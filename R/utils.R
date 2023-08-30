@@ -96,6 +96,7 @@ generate_discrete_color_scale <- function(n, colors = NULL) {
 #' @return The function returns a function with three arguments, (`model`, `newdata`, `times`), ready to supply it to an explainer.
 #'
 #' @examples
+#' \donttest{
 #' library(survex)
 #' library(survival)
 #'
@@ -108,7 +109,7 @@ generate_discrete_color_scale <- function(n, colors = NULL) {
 #' )
 #'
 #' explainer <- explain(rsf_src, predict_cumulative_hazard_function = chf_function)
-#'
+#' }
 #' @export
 transform_to_stepfunction <- function(predict_function, eval_times = NULL, ..., type = NULL, prediction_element = NULL, times_element = NULL) {
     function(model, newdata, times) {
@@ -153,6 +154,7 @@ transform_to_stepfunction <- function(predict_function, eval_times = NULL, ..., 
 #' @return A function of two arguments (`model`, `newdata`) returning a vector of risks.
 #'
 #' @examples
+#' \donttest{
 #' library(survex)
 #' library(survival)
 #'
@@ -169,7 +171,7 @@ transform_to_stepfunction <- function(predict_function, eval_times = NULL, ..., 
 #'     predict_cumulative_hazard_function = chf_function,
 #'     predict_function = risk_function
 #' )
-#'
+#' }
 #' @export
 risk_from_chf <- function(predict_cumulative_hazard_function, times) {
     function(model, newdata) rowSums(predict_cumulative_hazard_function(model, newdata, times))
