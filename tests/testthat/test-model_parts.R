@@ -33,6 +33,8 @@ test_that("C-index fpi works", {
                                 y = survival::Surv(rotterdam$rtime, rotterdam$recur), verbose = FALSE)
 
 
+
+    expect_error(model_parts(coxph_explainer, output_type = "nonexistent"))
     mp_cph_cind <- model_parts(coxph_explainer, loss = loss_one_minus_c_index, type = "variable_importance", output_type = "risk")
     mp_rsf_cind <- model_parts(forest_explainer, loss = loss_one_minus_c_index, output_type = "risk")
 
@@ -41,7 +43,7 @@ test_that("C-index fpi works", {
     expect_s3_class(mp_cph_cind, "model_parts")
 
 
-    cph_model_parts_dalex <- model_parts(cph_exp, loss_function = loss_one_minus_c_index,
+    cph_model_parts_dalex <- model_parts(cph_exp, loss = loss_one_minus_c_index,
                                          output_type = "risk", type = "raw")
 
     expect_true(all(cph_model_parts_dalex$dropout_loss <= 1))
@@ -52,10 +54,8 @@ test_that("C-index fpi works", {
     expect_error(model_parts(coxph_explainer, output_type = "nonexistent"))
 
     plot(cph_model_parts_dalex)
-    expect_error(plot(cph_model_parts_dalex, desc_sorting = "non-logical"))
     plot(cph_model_parts_dalex, show_boxplots = FALSE, max_vars = 2)
-
-
+    expect_error(plot(cph_model_parts_dalex, desc_sorting = "non-logical"))
 })
 
 
@@ -86,6 +86,7 @@ test_that("Brier score fpi works", {
     # specifying loss function brier
     rsf_src_model_parts_brier <- model_parts(rsf_src_exp, loss_function = loss_brier_score, output_type = "survival")
     plot(rsf_src_model_parts_brier)
+    expect_error(plot(rsf_src_model_parts_brier, desc_sorting = "non-logical"))
 
     expect_s3_class(rsf_src_model_parts_brier, "model_parts_survival")
     expect_equal(ncol(rsf_src_model_parts_brier$result), ncol(cph_exp$data) + 5) # times, full_model, permutation, baseline, label
@@ -94,13 +95,16 @@ test_that("Brier score fpi works", {
 
 
     ### groups
-    mp_groups_1 <- model_parts(cph_exp, type = "ratio", variable_groups = list(group1 = c("celltype", "trt"), group2 = c("age", "prior")))
+    mp_groups_1 <- model_parts(cph_exp, type = "ratio", variable_groups = list(group1 = c("celltype", "trt"), group2 = c("age", "prior")), N= 10)
     mp_groups_2 <- model_parts(cph_exp, type = "difference", variable_groups = list(group1 = c("celltype", "trt"), group2 = c("age", "prior")), N = 70)
     plot(mp_groups_2)
 
     expect_error(model_parts(cph_exp, variable_groups = list(group1 = c("sss", "ss"), group2 = c("f", "f"))))
     expect_error(model_parts(cph_exp, variable_groups = list(group1 = c("sss", "ss"), group2 = c("f", "f"))))
     expect_warning(model_parts(cph_exp, variable_groups = list(c("celltype", "trt"), c("age", "prior"))))
+
+    expect_error(model_parts(cph_exp, B = 10, type = "raw", variable_groups = "not a list"))
+    expect_error(model_parts(cph_exp, B = 10, type = "raw", variable_groups = list(group1 = c(1, 2))))
 
 })
 
@@ -147,7 +151,7 @@ test_that("integrated metrics fpi works", {
     rsf_src_exp <- explain(rsf_src, verbose = FALSE)
 
     # auc
-    cph_model_parts_int_auc <- model_parts(cph_exp, loss = loss_one_minus_integrated_cd_auc, B = 1, type = "raw")
+    cph_model_parts_int_auc <- model_parts(cph_exp, loss = loss_one_minus_integrated_cd_auc, B = 1, type = "raw", N = 10)
     rsf_ranger_model_parts_int_auc <- model_parts(rsf_ranger_exp, loss = loss_one_minus_integrated_cd_auc, B = 1, type = "raw")
 
     expect_equal(nrow(cph_model_parts_int_auc[cph_model_parts_int_auc$permutation == 0, ]), ncol(cph_exp$data) + 2)
@@ -191,5 +195,15 @@ test_that("integrated metrics fpi works", {
     mp_groups_1 <- model_parts(cph_exp, loss = loss_integrated_brier_score, type = "ratio", variable_groups = list(group1 = c("celltype", "trt"), group2 = c("age", "prior")))
     mp_groups_2 <- model_parts(cph_exp, loss = loss_integrated_brier_score, type = "difference", variable_groups = list(group1 = c("celltype", "trt"), group2 = c("age", "prior")), N = 70)
     plot(mp_groups_2)
+
+    expect_error(model_parts(rsf_ranger_exp, loss = loss_integrated_brier_score, B = 10, type = "raw", variable_groups = "not a list"))
+    expect_error(model_parts(rsf_ranger_exp, loss = loss_integrated_brier_score, B = 10, type = "raw", variable_groups = list(group1 = c(1, 2), group2 = c("f", "f"))))
+
+    rsf_ranger_exp$y <- NULL
+    expect_error(model_parts(rsf_ranger_exp, loss = loss_integrated_brier_score, B = 10, type = "raw"))
+
+    rsf_ranger_exp$data <- NULL
+    expect_error(model_parts(rsf_ranger_exp, loss = loss_integrated_brier_score, B = 10, type = "raw"))
+
 
 })

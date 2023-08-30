@@ -12,7 +12,9 @@ predict_profile(
   categorical_variables = NULL,
   ...,
   type = "ceteris_paribus",
-  variable_splits_type = "uniform"
+  output_type = "survival",
+  variable_splits_type = "uniform",
+  center = FALSE
 )
 
 \method{predict_profile}{surv_explainer}(
@@ -23,7 +25,8 @@ predict_profile(
   ...,
   type = "ceteris_paribus",
   output_type = "survival",
-  variable_splits_type = "uniform"
+  variable_splits_type = "uniform",
+  center = FALSE
 )
 }
 \arguments{
@@ -39,9 +42,11 @@ predict_profile(
 
 \item{type}{character, only \code{"ceteris_paribus"} is implemented}
 
+\item{output_type}{either \code{"survival"}, \code{"chf"} or \code{"risk"} the type of survival model output that should be considered for explanations. If \code{"survival"} the explanations are based on the survival function. If \code{"chf"} the explanations are based on the cumulative hazard function. Otherwise the scalar risk predictions are used by the \code{DALEX::predict_profile} function.}
+
 \item{variable_splits_type}{character, decides how variable grids should be calculated. Use \code{"quantiles"} for percentiles or \code{"uniform"} (default) to get uniform grid of points.}
 
-\item{output_type}{either \code{"survival"} or \code{"risk"} the type of survival model output that should be considered for explanations. If \code{"survival"} the explanations are based on the survival function. Otherwise the scalar risk predictions are used by the \code{DALEX::predict_profile} function.}
+\item{center}{logical, should profiles be centered around the average prediction}
 }
 \value{
 An object of class \code{c("predict_profile_survival", "surv_ceteris_paribus")}. It is a list with the final result in the \code{result} element.
@@ -61,8 +66,9 @@ cph_exp <- explain(cph)
 rsf_src_exp <- explain(rsf_src)
 
 cph_predict_profile <- predict_profile(cph_exp, veteran[2, -c(3, 4)],
-                                       variables = c("trt", "celltype", "karno", "age"),
-                                       categorical_variables = "trt")
+    variables = c("trt", "celltype", "karno", "age"),
+    categorical_variables = "trt"
+)
 plot(cph_predict_profile, facet_ncol = 2)
 
 

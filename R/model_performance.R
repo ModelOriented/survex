@@ -29,18 +29,22 @@
 #'
 #' cph <- coxph(Surv(time, status) ~ ., data = veteran, model = TRUE, x = TRUE, y = TRUE)
 #' rsf_ranger <- ranger::ranger(Surv(time, status) ~ .,
-#'                             data = veteran,
-#'                             respect.unordered.factors = TRUE,
-#'                             num.trees = 100,
-#'                             mtry = 3,
-#'                             max.depth = 5)
+#'     data = veteran,
+#'     respect.unordered.factors = TRUE,
+#'     num.trees = 100,
+#'     mtry = 3,
+#'     max.depth = 5
+#' )
 #'
 #' rsf_src <- randomForestSRC::rfsrc(Surv(time, status) ~ .,
-#'                                 data = veteran)
+#'     data = veteran
+#' )
 #'
 #' cph_exp <- explain(cph)
-#' rsf_ranger_exp <- explain(rsf_ranger, data = veteran[, -c(3, 4)],
-#'                           y = Surv(veteran$time, veteran$status))
+#' rsf_ranger_exp <- explain(rsf_ranger,
+#'     data = veteran[, -c(3, 4)],
+#'     y = Surv(veteran$time, veteran$status)
+#' )
 #' rsf_src_exp <- explain(rsf_src)
 #'
 #'
@@ -51,7 +55,9 @@
 #' print(cph_model_performance)
 #'
 #' plot(rsf_ranger_model_performance, cph_model_performance,
-#'      rsf_src_model_performance, metrics_type = "scalar")
+#'     rsf_src_model_performance,
+#'     metrics_type = "scalar"
+#' )
 #'
 #' plot(rsf_ranger_model_performance, cph_model_performance, rsf_src_model_performance)
 #'
@@ -64,11 +70,17 @@ model_performance <- function(explainer, ...) UseMethod("model_performance", exp
 
 #' @rdname model_performance.surv_explainer
 #' @export
-model_performance.surv_explainer <- function(explainer,  ..., type = "metrics", metrics = c("C-index" = c_index,
-                                                                                            "Integrated C/D AUC" = integrated_cd_auc,
-                                                                                            "Brier score" = brier_score,
-                                                                                            "Integrated Brier score" = integrated_brier_score,
-                                                                                            "C/D AUC" = cd_auc), times = NULL) {
+model_performance.surv_explainer <- function(explainer,
+                                             ...,
+                                             type = "metrics",
+                                             metrics = c(
+                                                 "C-index" = c_index,
+                                                 "Integrated C/D AUC" = integrated_cd_auc,
+                                                 "Brier score" = brier_score,
+                                                 "Integrated Brier score" = integrated_brier_score,
+                                                 "C/D AUC" = cd_auc
+                                             ),
+                                             times = NULL) {
     test_explainer(explainer, "model_performance", has_data = TRUE, has_y = TRUE, has_survival = TRUE, has_predict = TRUE)
 
     res <- surv_model_performance(explainer, ..., type = type, metrics = metrics, times = times)

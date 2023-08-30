@@ -1,11 +1,22 @@
 #' @export
 print.model_profile_survival <- function(x, ...) {
     res <- x$result
-
+    method_name <- ifelse(x$type == "partial", "Partial dependence", "Accumulated local effects")
     res <- res[order(res$`_vname_`), ]
-    text <- paste0("Partial dependence for the ", unique(res$`_label_`), " model:\n")
+    text <- paste0(method_name, " survival profiles for the ", unique(res$`_label_`), " model:\n")
     cat(text)
     print.data.frame(res[, !colnames(res) %in% c("_label_", "_ids_")], ...)
+}
+
+
+#' @export
+print.model_profile_2d_survival <- function(x, ...) {
+    res <- x$result
+    method_name <- ifelse(x$type == "partial", "Partial dependence", "Accumulated local effects")
+    res <- res[order(res$`_v1name_`), ]
+    text <- paste0(method_name, " survival profiles for the ", unique(res$`_label_`), " model:\n")
+    cat(text)
+    print.data.frame(res[, !colnames(res) %in% c("_label_", "_right_", "_left_", "_top_", "_bottom_")], ...)
 }
 
 
@@ -21,7 +32,6 @@ print.surv_ceteris_paribus <- function(x, ...) {
 
 #' @export
 print.surv_feature_importance <- function(x, ...) {
-
     res <- x$result
     text <- paste0("Permutational feature importance for the ", unique(res$label), " model:\n")
     cat(text)
@@ -43,10 +53,18 @@ print.surv_lime <- function(x, ...) {
 
 #' @export
 print.surv_shap <- function(x, ...) {
-
     res <- x$result
     cat("SurvSHAP(t) for observation:\n\n")
     print.data.frame(x$variable_values, row.names = FALSE)
     cat("\n")
     print(res, ...)
+}
+
+
+#' @export
+print.model_diagnostics_survival <- function(x, ...){
+    res <- x$result
+    text <- paste0("Survival residuals for the ", unique(res$label), " model:\n")
+    cat(text)
+    print.data.frame(res, ...)
 }

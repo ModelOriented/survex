@@ -84,8 +84,11 @@ cph_predict_parts_survshap <- predict_parts(cph_exp, new_observation = veteran[1
 head(cph_predict_parts_survshap$result)
 plot(cph_predict_parts_survshap)
 
-cph_predict_parts_survlime <- predict_parts(cph_exp, new_observation = veteran[1, -c(3, 4)],
-                                            type = "survlime")
+cph_predict_parts_survlime <- predict_parts(
+    cph_exp,
+    new_observation = veteran[1, -c(3, 4)],
+    type = "survlime"
+)
 head(cph_predict_parts_survlime$result)
 plot(cph_predict_parts_survlime, type = "local_importance")
 }

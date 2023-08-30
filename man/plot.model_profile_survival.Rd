@@ -7,11 +7,15 @@
 \method{plot}{model_profile_survival}(
   x,
   ...,
+  geom = "time",
   variables = NULL,
   variable_type = NULL,
   facet_ncol = NULL,
   numerical_plot_type = "lines",
-  title = "Partial dependence survival profile",
+  times = NULL,
+  marginalize_over_time = FALSE,
+  plot_type = NULL,
+  title = "default",
   subtitle = "default",
   colors = NULL,
   rug = "all",
@@ -21,23 +25,31 @@
 \arguments{
 \item{x}{an object of class \code{model_profile_survival} to be plotted}
 
-\item{...}{additional objects of class \code{"model_profile_survival"} to be plotted together}
+\item{...}{additional objects of class \code{model_profile_survival} to be plotted together. Only available for \code{geom = "time"}.}
 
-\item{variables}{character, names of the variables to be plotted}
+\item{geom}{character, either \code{"time"} or \code{"variable"}. Selects the type of plot to be prepared. If \code{"time"} then the x-axis represents survival times, and variable is denoted by colors, if \code{"variable"} then the x-axis represents the variable values, and y-axis represents the predictions at selected time points.}
 
-\item{variable_type}{character, either \code{"numerical"}, \code{"categorical"} or \code{NULL} (default), select only one type of variable for plotting, or leave \code{NULL} for all}
+\item{variables}{character, names of the variables to be plotted. When \code{geom = "variable"} it needs to be a name of a single variable, when \code{geom = "time"} it can be a vector of variable names. If \code{NULL} (default) then first variable (for \code{geom = "variable"}) or all variables (for \code{geom = "time"}) are plotted.}
 
-\item{facet_ncol}{number of columns for arranging subplots}
+\item{variable_type}{character, either \code{"numerical"}, \code{"categorical"} or \code{NULL} (default), select only one type of variable for plotting, or leave \code{NULL} for all. Only used when \code{geom = "time"}.}
 
-\item{numerical_plot_type}{character, either \code{"lines"}, or \code{"contours"} selects the type of numerical variable plots}
+\item{facet_ncol}{number of columns for arranging subplots. Only used when \code{geom = "time"}.}
+
+\item{numerical_plot_type}{character, either \code{"lines"}, or \code{"contours"} selects the type of numerical variable plots. Only used when \code{geom = "time"}.}
+
+\item{times}{numeric vector, times for which the profile should be plotted, the times must be present in the 'times' field of the explainer. If \code{NULL} (default) then the median survival time (if available) or the median time from the explainer object is used. Only used when \code{geom = "variable"} and \code{marginalize_over_time = FALSE}.}
+
+\item{marginalize_over_time}{logical, if \code{TRUE} then the profile is calculated for all times and then averaged over time, if \code{FALSE} (default) then the profile is calculated for each time separately. Only used when \code{geom = "variable"}.}
+
+\item{plot_type}{character, one of \code{"pdp"}, \code{"ice"}, \code{"pdp+ice"}, or \code{NULL} (default). If \code{NULL} then the type of plot is chosen automatically based on the number of variables to be plotted. Only used when \code{geom = "variable"}.}
 
 \item{title}{character, title of the plot}
 
-\item{subtitle}{character, subtitle of the plot, \code{'default'} automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels}
+\item{subtitle}{character, subtitle of the plot, \code{"default"} automatically generates "created for XXX, YYY models", where XXX and YYY are the explainer labels}
 
-\item{colors}{character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")}
+\item{colors}{character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue").}
 
-\item{rug}{character, one of \code{"all"}, \code{"events"}, \code{"censors"}, \code{"none"} or \code{NULL}. Which times to mark on the x axis in \code{geom_rug()}.}
+\item{rug}{character, one of \code{"all"}, \code{"events"}, \code{"censors"}, \code{"none"} or \code{NULL}. Which times to mark on the x axis in \code{geom_rug()}. Only used when \code{geom = "time"}.}
 
 \item{rug_colors}{character vector containing two colors (containing either hex codes "#FF69B4", or names "blue"). The first color (red by default) will be used to mark event times, whereas the second (grey by default) will be used to mark censor times.}
 }
@@ -63,6 +75,14 @@ plot(m_prof)
 plot(m_prof, numerical_plot_type = "contours")
 
 plot(m_prof, variables = c("trt", "age"), facet_ncol = 1)
+
+plot(m_prof, geom = "variable", variables = "karno", plot_type = "pdp+ice")
+
+plot(m_prof, geom = "variable", times = exp$times[c(5, 10)],
+     variables = "karno", plot_type = "pdp+ice")
+
+plot(m_prof, geom = "variable", times = exp$times[c(5, 10)],
+     variables = "trt", plot_type = "pdp+ice")
 }
 
 }

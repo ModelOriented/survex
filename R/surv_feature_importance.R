@@ -35,9 +35,7 @@ surv_feature_importance.surv_explainer <- function(x,
                                                    variable_groups = NULL,
                                                    N = NULL,
                                                    label = NULL) {
-    if (is.null(x$data)) stop("The feature_importance() function requires explainers created with specified 'data' parameter.")
-    if (is.null(x$y)) stop("The feature_importance() function requires explainers created with specified 'y' parameter.")
-    if (is.null(x$predict_survival_function)) stop("The feature_importance() function requires explainers created with specified 'predict_survival_function' parameter.")
+    test_explainer(x, "feature_importance", has_data = TRUE, has_y = TRUE, has_survival = TRUE)
 
     model <- x$model
     data <- x$data
@@ -51,21 +49,20 @@ surv_feature_importance.surv_explainer <- function(x,
 
 
     surv_feature_importance.default(model,
-                                    data,
-                                    y,
-                                    times,
-                                    predict_function = predict_function,
-                                    predict_survival_function = predict_survival_function,
-                                    loss_function = loss_function,
-                                    label = label,
-                                    type = type,
-                                    N = N,
-                                    B = B,
-                                    variables = variables,
-                                    variable_groups = variable_groups,
-                                    ...
+        data,
+        y,
+        times,
+        predict_function = predict_function,
+        predict_survival_function = predict_survival_function,
+        loss_function = loss_function,
+        label = label,
+        type = type,
+        N = N,
+        B = B,
+        variables = variables,
+        variable_groups = variable_groups,
+        ...
     )
-
 }
 
 
@@ -83,10 +80,6 @@ surv_feature_importance.default <- function(x,
                                             variables = NULL,
                                             N = NULL,
                                             variable_groups = NULL) {
-
-
-
-
     if (!is.null(variable_groups)) {
         if (!inherits(variable_groups, "list")) stop("variable_groups should be of class list")
 
@@ -94,8 +87,8 @@ surv_feature_importance.default <- function(x,
             all(variable_set %in% colnames(data))
         }))
 
-        if (wrong_names) stop("You have passed wrong variables names in variable_groups argument")
         if (!all(sapply(variable_groups, class) == "character")) stop("Elements of variable_groups argument should be of class character")
+        if (wrong_names) stop("You have passed wrong variables names in variable_groups argument")
         if (is.null(names(variable_groups))) warning("You have passed an unnamed list. The names of variable groupings will be created from variables names.")
     }
 
@@ -122,7 +115,11 @@ surv_feature_importance.default <- function(x,
 
     # start: actual calculations
     # one permutation round: subsample data, permute variables and compute losses
-    if (requireNamespace("progressr", quietly = TRUE)) prog <- progressr::progressor(along = 1:((length(variables) + 2) * B))
+    if (requireNamespace("progressr", quietly = TRUE)) {
+        prog <- progressr::progressor(steps = (length(variables) + 2) * B)
+    } else {
+        prog <- function() NULL
+    }
     sampled_rows <- 1:nrow(data)
     loss_after_permutation <- function() {
         if (!is.null(N)) {
@@ -139,17 +136,17 @@ surv_feature_importance.default <- function(x,
         risk_true <- predict_function(x, sampled_data)
         # loss on the full model or when outcomes are permuted
         loss_full <- loss_function(observed, risk_true, surv_true, times)
-        if (requireNamespace("progressr", quietly = TRUE)) prog()
+        prog()
         chosen <- sample(1:nrow(observed))
-        loss_baseline <- loss_function(observed[chosen, ],  risk_true, surv_true, times)
-        if (requireNamespace("progressr", quietly = TRUE)) prog()
+        loss_baseline <- loss_function(observed[chosen, ], risk_true, surv_true, times)
+        prog()
         # loss upon dropping a single variable (or a single group)
         loss_variables <- sapply(variables, function(variables_set) {
             ndf <- sampled_data
             ndf[, variables_set] <- ndf[sample(1:nrow(ndf)), variables_set]
             predicted <- predict_function(x, ndf)
             predicted_surv <- predict_survival_function(x, ndf, times)
-            if (requireNamespace("progressr", quietly = TRUE)) prog()
+            prog()
             loss_function(observed, predicted, predicted_surv, times)
         })
 
@@ -170,13 +167,11 @@ surv_feature_importance.default <- function(x,
         res_full <- res[res$`_permutation_` == 0, c("_times_", "_full_model_")]
         colnames(res_full) <- c("_times_", "_reference_")
         res <- merge(res, res_full, by = "_times_")
-        res <- res[order(res$`_permutation_`, res$`_times_`),]
+        res <- res[order(res$`_permutation_`, res$`_times_`), ]
     }
     if (type == "ratio") {
-
         res[, 2:(ncol(res) - 3)] <- res[, 2:(ncol(res) - 3)] / res[["_reference_"]]
         res$`_reference_` <- NULL
-
     }
     if (type == "difference") {
         res[, 2:(ncol(res) - 3)] <- res[, 2:(ncol(res) - 3)] - res[["_reference_"]]

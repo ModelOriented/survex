@@ -16,7 +16,7 @@
 )
 }
 \arguments{
-\item{x}{an object of class \code{"surv_shap"} to be plotted}
+\item{x}{an object of class \code{surv_shap} to be plotted}
 
 \item{...}{additional objects of class \code{surv_shap} to be plotted together}
 
