@@ -7,7 +7,6 @@
 #' @param y_true a two element numeric vector or matrix of one row and two columns, the first element being the true observed time and the second the status of the observation, used for plotting
 #' @param calculation_method a character, either `"kernelshap"` for use of `kernelshap` library (providing faster Kernel SHAP with refinements) or `"exact_kernel"` for exact Kernel SHAP estimation
 #' @param aggregation_method a character, either `"integral"`, `"integral_absolute"`, `"mean_absolute"`, `"max_absolute"`, or `"sum_of_squares"`
-#' @param observation_aggregation_method a function, if `new_observation` contains multiple observation this function is applied to the same time point of generated shap profiles for each observation. Defaults to `mean`.
 #'
 #' @return A list, containing the calculated SurvSHAP(t) results in the `result` field
 #'
