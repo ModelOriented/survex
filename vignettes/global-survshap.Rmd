@@ -37,7 +37,7 @@ We use the explainer and the `model_survshap()` function to calculate SurvSHAP(t
 shap <- model_survshap(exp, veteran[c(1:4, 17:20, 110:113, 126:129), -c(3,4)])
 ```
 
-We plot these explanations using the `plot.aggregated_surv_shap()` function.  By default the plot features 2 panels, the one on the left depicts overall importance of variables. The panel on the right demonstates the time-dependent importance of each variable calculated as the mean absolute SHAP value at each time point across all observations.
+We plot these explanations using the `plot.aggregated_surv_shap()` function.  By default the plot features 2 panels, the one on the left depicts overall importance of variables. The panel on the right demonstrates the time-dependent importance of each variable calculated as the mean absolute SHAP value at each time point across all observations.
 
 ```{r}
 plot(shap)
