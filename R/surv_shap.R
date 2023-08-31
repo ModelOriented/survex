@@ -250,12 +250,6 @@ use_kernelshap <- function(explainer, new_observation, output_type, observation_
         "new_observation must be a data.frame" = inherits(
             new_observation, "data.frame")
     )
-    # get explainer data to be able to make class checks and transformations
-    explainer_data <- explainer$data
-    # ensure that classes of explainer$data and new_observation are equal
-    if (!inherits(explainer_data, "data.frame")) {
-        explainer_data <- data.frame(explainer_data)
-    }
 
     shap_values <- sapply(
         X = as.character(seq_len(nrow(new_observation))),
@@ -263,7 +257,7 @@ use_kernelshap <- function(explainer, new_observation, output_type, observation_
             tmp_res <- kernelshap::kernelshap(
                 object = explainer$model,
                 X = as.matrix(new_observation[as.integer(i), ]),
-                bg_X = explainer$data,
+                bg_X = as.matrix(explainer$data),
                 pred_fun = predfun,
                 verbose = FALSE
             )
