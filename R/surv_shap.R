@@ -93,7 +93,7 @@ surv_shap <- function(explainer,
 
     if (calculation_method == "treeshap") {
         if (!inherits(explainer$model, "ranger")) {
-            stop("Calculation method `treeshap` is currently only implemented for `ranger`.")
+            stop("Calculation method `treeshap` is currently only implemented for `ranger` survival models.")
         }
     }
 
