@@ -251,16 +251,24 @@ use_kernelshap <- function(explainer, new_observation, output_type, observation_
             new_observation, "data.frame")
     )
 
+    # get explainer data to be able to make class checks and transformations
+    explainer_data <- explainer$data
+    # ensure that classes of explainer$data and new_observation are equal
+    if (!inherits(explainer_data, "data.frame")) {
+        explainer_data <- data.frame(explainer_data)
+    }
+
     shap_values <- sapply(
         X = as.character(seq_len(nrow(new_observation))),
         FUN = function(i) {
             tmp_res <- kernelshap::kernelshap(
                 object = explainer$model,
-                X = as.matrix(new_observation[as.integer(i), ]),
-                bg_X = as.matrix(explainer$data),
+                X = new_observation[as.integer(i), ], # data.frame
+                bg_X = explainer_data, # data.frame
                 pred_fun = predfun,
                 verbose = FALSE
             )
+            # kernelshap-test: is.matrix(X) == is.matrix(bg_X) should evaluate to `TRUE`
             tmp_shap_values <- data.frame(t(sapply(tmp_res$S, cbind)))
             colnames(tmp_shap_values) <- colnames(tmp_res$X)
             rownames(tmp_shap_values) <- paste("t=", explainer$times, sep = "")
