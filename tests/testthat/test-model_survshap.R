@@ -87,7 +87,7 @@ test_that("global survshap explanations with treeshap work for ranger", {
     plot(ranger_global_survshap_tree)
 
     expect_s3_class(ranger_global_survshap_tree, c("aggregated_surv_shap", "surv_shap"))
-    expect_equal(length(ranger_global_survshap_tree$eval_times), length(rsf_ranger_exp$times))
+    expect_equal(length(ranger_global_survshap_tree$eval_times), length(rsf_ranger_exp_matrix$times))
     expect_true(all(names(ranger_global_survshap_tree$variable_values) == colnames(rsf_ranger_exp_matrix$data)))
 
 })
