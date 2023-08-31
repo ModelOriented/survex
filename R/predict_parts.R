@@ -48,8 +48,11 @@
 #' head(cph_predict_parts_survshap$result)
 #' plot(cph_predict_parts_survshap)
 #'
-#' cph_predict_parts_survlime <- predict_parts(cph_exp, new_observation = veteran[1, -c(3, 4)],
-#'                                             type = "survlime")
+#' cph_predict_parts_survlime <- predict_parts(
+#'     cph_exp,
+#'     new_observation = veteran[1, -c(3, 4)],
+#'     type = "survlime"
+#' )
 #' head(cph_predict_parts_survlime$result)
 #' plot(cph_predict_parts_survlime, type = "local_importance")
 #' }
@@ -62,29 +65,28 @@ predict_parts <- function(explainer, ...) UseMethod("predict_parts", explainer)
 #' @export
 predict_parts.surv_explainer <- function(explainer, new_observation, ..., N = NULL, type = "survshap", output_type = "survival",
                                          explanation_label = NULL) {
-
     if (output_type == "risk") {
-        return (DALEX::predict_parts(explainer = explainer,
-                             new_observation = new_observation,
-                             ... = ...,
-                             N = N,
-                             type = type))
-    }
-    else {
-
+        return(DALEX::predict_parts(
+            explainer = explainer,
+            new_observation = new_observation,
+            ... = ...,
+            N = N,
+            type = type
+        ))
+    } else {
         res <- switch(type,
-               "survshap" = surv_shap(explainer, new_observation, ...),
-               "survlime" = surv_lime(explainer, new_observation, ...),
-               stop("Only `survshap` and `survlime` methods are implemented for now"))
-
+            "survshap" = surv_shap(explainer, new_observation, output_type, ...),
+            "survlime" = surv_lime(explainer, new_observation, ...),
+            stop("Only `survshap` and `survlime` methods are implemented for now")
+        )
     }
 
     attr(res, "label") <- ifelse(is.null(explanation_label), explainer$label, explanation_label)
+    res$output_type <- output_type
     res$event_times <- explainer$y[explainer$y[, 1] <= max(explainer$times), 1]
     res$event_statuses <- explainer$y[explainer$y[, 1] <= max(explainer$times), 2]
-    class(res) <- c('predict_parts_survival', class(res))
+    class(res) <- c("predict_parts_survival", class(res))
     res
-
 }
 
 

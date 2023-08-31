@@ -21,7 +21,7 @@ explain_survival(
   model_info = NULL,
   type = NULL,
   times = NULL,
-  times_generation = "quantiles",
+  times_generation = "survival_quantiles",
   predict_survival_function = NULL,
   predict_cumulative_hazard_function = NULL
 )
@@ -87,7 +87,7 @@ explain(
 
 \item{times}{numeric, a vector of times at which the survival function and cumulative hazard function should be evaluated for calculations}
 
-\item{times_generation}{either \code{"uniform"} or \code{"quantiles"}. Sets the way of generating the vector of times based on times provided in the \code{y} parameter. If \code{"uniform"} the vector contains 50 equally spaced points between the minimum and maximum observed times; if \code{"quantiles"} the vector contains 50 points between 0th and 98th percentiles of observed times. Ignored if \code{times} is not \code{NULL}.}
+\item{times_generation}{either \code{"survival_quantiles"}, \code{"uniform"} or \code{"quantiles"}. Sets the way of generating the vector of times based on times provided in the \code{y} parameter. If \code{"survival_quantiles"} the vector contains unique time points out of 50 uniformly distributed survival quantiles based on the Kaplan-Meier estimator, and additional time point being the median survival time (if possible); if \code{"uniform"} the vector contains 50 equally spaced time points between the minimum and maximum observed times; if \code{"quantiles"} the vector contains unique time points out of 50 time points between 0th and 98th percentiles of observed times. Ignored if \code{times} is not \code{NULL}.}
 
 \item{predict_survival_function}{function taking 3 arguments \code{model}, \code{newdata} and \code{times}, and returning a matrix whose each row is a survival function evaluated at \code{times} for one observation from \code{newdata}}
 
@@ -125,14 +125,20 @@ with \code{pec::predictSurvProb()} method.
 library(survival)
 library(survex)
 
-cph <- survival::coxph(survival::Surv(time, status) ~ ., data = veteran,
-                       model = TRUE, x = TRUE)
+cph <- survival::coxph(survival::Surv(time, status) ~ .,
+    data = veteran,
+    model = TRUE, x = TRUE
+)
 cph_exp <- explain(cph)
 
-rsf_ranger <- ranger::ranger(survival::Surv(time, status) ~ ., data = veteran,
- respect.unordered.factors = TRUE, num.trees = 100, mtry = 3, max.depth = 5)
-rsf_ranger_exp <- explain(rsf_ranger, data = veteran[, -c(3, 4)],
- y = Surv(veteran$time, veteran$status))
+rsf_ranger <- ranger::ranger(survival::Surv(time, status) ~ .,
+    data = veteran,
+    respect.unordered.factors = TRUE, num.trees = 100, mtry = 3, max.depth = 5
+)
+rsf_ranger_exp <- explain(rsf_ranger,
+    data = veteran[, -c(3, 4)],
+    y = Surv(veteran$time, veteran$status)
+)
 
 rsf_src <- randomForestSRC::rfsrc(Surv(time, status) ~ ., data = veteran)
 rsf_src_exp <- explain(rsf_src)
@@ -140,28 +146,30 @@ rsf_src_exp <- explain(rsf_src)
 library(censored, quietly = TRUE)
 
 bt <- parsnip::boost_tree() \%>\%
-   parsnip::set_engine("mboost") \%>\%
-   parsnip::set_mode("censored regression") \%>\%
-   generics::fit(survival::Surv(time, status) ~ ., data = veteran)
+    parsnip::set_engine("mboost") \%>\%
+    parsnip::set_mode("censored regression") \%>\%
+    generics::fit(survival::Surv(time, status) ~ ., data = veteran)
 bt_exp <- explain(bt, data = veteran[, -c(3, 4)], y = Surv(veteran$time, veteran$status))
 
 ###### explain_survival() ######
 
-cph <- coxph(Surv(time, status) ~ ., data=veteran)
+cph <- coxph(Surv(time, status) ~ ., data = veteran)
 
-veteran_data <- veteran[, -c(3,4)]
+veteran_data <- veteran[, -c(3, 4)]
 veteran_y <- Surv(veteran$time, veteran$status)
 risk_pred <- function(model, newdata) predict(model, newdata, type = "risk")
 surv_pred <- function(model, newdata, times) pec::predictSurvProb(model, newdata, times)
 chf_pred <- function(model, newdata, times) -log(surv_pred(model, newdata, times))
 
-manual_cph_explainer <- explain_survival(model = cph,
-                                         data = veteran_data,
-                                         y = veteran_y,
-                                         predict_function = risk_pred,
-                                         predict_survival_function = surv_pred,
-                                         predict_cumulative_hazard_function = chf_pred,
-                                         label = "manual coxph")
+manual_cph_explainer <- explain_survival(
+    model = cph,
+    data = veteran_data,
+    y = veteran_y,
+    predict_function = risk_pred,
+    predict_survival_function = surv_pred,
+    predict_cumulative_hazard_function = chf_pred,
+    label = "manual coxph"
+)
 }
 
 }

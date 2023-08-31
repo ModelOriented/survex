@@ -20,6 +20,7 @@
 #' @family functions for plotting 'model_parts_survival' objects
 #'
 #' @examples
+#' \donttest{
 #' library(survival)
 #' library(survex)
 #'
@@ -29,7 +30,7 @@
 #' mp <- model_parts(explainer)
 #'
 #' plot(mp)
-#'
+#' }
 #' @export
 plot.model_parts_survival <- function(x, ...) {
     class(x) <- class(x)[-1]

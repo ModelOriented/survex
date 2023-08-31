@@ -1,10 +1,11 @@
 Package: survex
 Title: Explainable Machine Learning in Survival Analysis
-Version: 1.0.0.9003
+Version: 1.1.1.9001
 Authors@R: 
     c(
         person("Mikołaj", "Spytek", email = "mikolajspytek@gmail.com", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-7111-2286")),
         person("Mateusz", "Krzyziński", role = c("aut"), comment = c(ORCID = "0000-0001-6143-488X")),
+        person("Sophie", "Langbein", role = c("aut")), 
         person("Hubert", "Baniecki", role = c("aut"), comment = c(ORCID = "0000-0001-6661-5364")),
         person("Przemyslaw", "Biecek", role = c("aut"), comment = c(ORCID = "0000-0001-8423-1823")),
         person("Lorenz A.", "Kapsner", role = c("ctb"), comment = c(ORCID = "0000-0003-1866-860X"))
@@ -23,27 +24,30 @@ RoxygenNote: 7.2.3
 Depends: R (>= 3.5.0)
 Imports:
     DALEX (>= 2.2.1),
-    ggplot2,
+    ggplot2 (>= 3.4.0),
+    kernelshap,
+    treeshap,
     pec,
     survival,
-    patchwork,
+    patchwork
 Suggests:
-    censored,
+    censored (>= 0.2.0),
     covr,
+    flexsurv,
     gbm,
     generics,
     glmnet,
     ingredients,
-    kernelshap,
-    knitr,
+    knitr (>= 1.42),
     mboost,
     parsnip,
     progressr,
     randomForestSRC,
     ranger,
+    reticulate,
     rmarkdown,
+    rms,
     testthat (>= 3.0.0),
-    treeshap,
     withr,
     xgboost
 Remotes:

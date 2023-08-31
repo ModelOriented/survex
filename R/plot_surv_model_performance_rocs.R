@@ -29,12 +29,11 @@
 #' @export
 plot.surv_model_performance_rocs <- function(x,
                                              ...,
-                                             title = "ROC curves for selected timepoints",
+                                             title = "ROC curves for selected time points",
                                              subtitle = "default",
                                              auc = TRUE,
                                              colors = NULL,
                                              facet_ncol = NULL) {
-
     dfl <- c(list(x), list(...))
 
     alldfs <- lapply(dfl, function(x) {
@@ -46,35 +45,45 @@ plot.surv_model_performance_rocs <- function(x,
     df <- do.call(rbind, alldfs)
 
     if (!is.null(subtitle) && subtitle == "default") {
-        subtitle <- paste0("created for the ", paste(unique(df$label), collapse = ", "), " model")
+        labels <- unique(df$label)
+        endword <- ifelse(length(labels) > 1, " models", " model")
+        subtitle <- paste0("created for the ", paste0(labels, collapse = ", "), endword)
     }
 
     num_colors <- length(unique(df$label))
 
-    base_plot <- with(df, {ggplot(data = df, aes(x = FPR, y = TPR, group = label, color = label)) +
-            geom_line(linewidth = 0.8, size = 0.8) +
+    base_plot <- with(df, {
+        ggplot(data = df, aes(x = FPR, y = TPR, group = label, color = label)) +
+            geom_line(linewidth = 0.8) +
             theme_default_survex() +
             xlab("1 - specificity (FPR)") +
             ylab("sensitivity (TPR)") +
             coord_fixed() +
-            theme(panel.grid.major.x = element_line(color = "grey90", linewidth = 0.5,  size = 0.5, linetype = 1),
-                  panel.grid.minor.x = element_line(color = "grey90", linewidth = 0.5, size = 0.5,  linetype = 1)) +
+            theme(
+                panel.grid.major.x = element_line(color = "grey90", linewidth = 0.5, linetype = 1),
+                panel.grid.minor.x = element_line(color = "grey90", linewidth = 0.5, linetype = 1)
+            ) +
             labs(title = title, subtitle = subtitle) +
             scale_color_manual("", values = generate_discrete_color_scale(num_colors, colors)) +
             facet_wrap(~time, ncol = facet_ncol, labeller = function(x) lapply(x, function(x) paste0("t=", x)))
     })
 
-    if (auc){
-        auc_df <- unique(df[,c("label", "time", "AUC")])
+    if (auc) {
+        auc_df <- unique(df[, c("label", "time", "AUC")])
         auc_df$AUC <- round(auc_df$AUC, 3)
-        auc_df$y <- rep((0:(num_colors-1)) * 0.1, each=length(unique(auc_df$time)))
+        auc_df$y <- rep((0:(num_colors - 1)) * 0.1, each = length(unique(auc_df$time)))
         return_plot <- base_plot +
-            with(auc_df, { geom_text(auc_df,
-                                     mapping=aes(x=0.75,
-                                                 y=y,
-                                                 label=paste("AUC =", AUC),
-                                                 color=label),
-                                     show.legend=FALSE)})
+            with(auc_df, {
+                geom_text(auc_df,
+                    mapping = aes(
+                        x = 0.75,
+                        y = y,
+                        label = paste("AUC =", AUC),
+                        color = label
+                    ),
+                    show.legend = FALSE
+                )
+            })
     } else {
         return_plot <- base_plot
     }

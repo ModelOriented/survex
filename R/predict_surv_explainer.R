@@ -17,16 +17,19 @@
 #'
 #' cph <- coxph(Surv(time, status) ~ ., data = veteran, model = TRUE, x = TRUE, y = TRUE)
 #' rsf_ranger <- ranger::ranger(Surv(time, status) ~ .,
-#'                              data = veteran,
-#'                              respect.unordered.factors = TRUE,
-#'                              num.trees = 100,
-#'                              mtry = 3,
-#'                              max.depth = 5)
+#'     data = veteran,
+#'     respect.unordered.factors = TRUE,
+#'     num.trees = 100,
+#'     mtry = 3,
+#'     max.depth = 5
+#' )
 #'
 #' cph_exp <- explain(cph)
 #'
-#' rsf_ranger_exp <- explain(rsf_ranger, data = veteran[, -c(3, 4)],
-#'                           y = Surv(veteran$time, veteran$status))
+#' rsf_ranger_exp <- explain(rsf_ranger,
+#'     data = veteran[, -c(3, 4)],
+#'     y = Surv(veteran$time, veteran$status)
+#' )
 #'
 #'
 #' predict(cph_exp, veteran[1, ], output_type = "survival")[, 1:10]
@@ -36,8 +39,7 @@
 #' predict(rsf_ranger_exp, veteran[1, ], output_type = "chf")[, 1:10]
 #'
 #' @export
-predict.surv_explainer <- function(object, newdata = NULL, output_type = "survival", times = NULL,  ...) {
-
+predict.surv_explainer <- function(object, newdata = NULL, output_type = "survival", times = NULL, ...) {
     if (is.null(newdata)) newdata <- object$data
     if (is.null(times)) times <- object$times
 

@@ -31,6 +31,7 @@ using the \code{model_parts()} function.
 }
 
 \examples{
+\donttest{
 library(survival)
 library(survex)
 
@@ -40,7 +41,7 @@ explainer <- explain(model)
 mp <- model_parts(explainer)
 
 plot(mp)
-
+}
 }
 \seealso{
 Other functions for plotting 'model_parts_survival' objects: 

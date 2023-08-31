@@ -36,16 +36,19 @@ plot.surv_lime <- function(x,
                            subtitle = "default",
                            max_vars = 7,
                            colors = NULL) {
-    if (!type %in% c("coefficients", "local_importance"))
+    if (!type %in% c("coefficients", "local_importance")) {
         stop("Type should be one of `coefficients`, `local_importance`")
+    }
 
     local_importance <- as.numeric(x$result) * as.numeric(x$variable_values)
-    df <- data.frame(variable_names = names(x$variable_values),
-                     variable_values = as.numeric(x$variable_values),
-                     beta = as.numeric(x$result),
-                     sign_beta = as.factor(sign(as.numeric(x$result))),
-                     sign_local_importance = as.factor(sign(local_importance)),
-                     local_importance = local_importance)
+    df <- data.frame(
+        variable_names = names(x$variable_values),
+        variable_values = as.numeric(x$variable_values),
+        beta = as.numeric(x$result),
+        sign_beta = as.factor(sign(as.numeric(x$result))),
+        sign_local_importance = as.factor(sign(local_importance)),
+        local_importance = local_importance
+    )
 
     if (!is.null(subtitle) && subtitle == "default") {
         subtitle <- paste0("created for the ", attr(x, "label"), " model")
@@ -54,11 +57,11 @@ plot.surv_lime <- function(x,
     if (type == "coefficients") {
         x_lab <- "SurvLIME coefficients"
         y_lab <- ""
-        df <- df[head(order(abs(df$beta), decreasing=TRUE), max_vars),]
+        df <- df[head(order(abs(df$beta), decreasing = TRUE), max_vars), ]
         pl <- with(df, {
-        ggplot(data = df, aes(x = beta, y = reorder(variable_names, beta, abs), fill = sign_beta)) +
-            geom_col() +
-            scale_fill_manual("", values = c("-1"="#f05a71", "0"="#ffffff", "1"="#8bdcbe"))
+            ggplot(data = df, aes(x = beta, y = reorder(variable_names, beta, abs), fill = sign_beta)) +
+                geom_col() +
+                scale_fill_manual("", values = c("-1" = "#f05a71", "0" = "#ffffff", "1" = "#8bdcbe"))
         })
     }
 
@@ -66,13 +69,11 @@ plot.surv_lime <- function(x,
     if (type == "local_importance") {
         x_lab <- "SurvLIME local importance"
         y_lab <- ""
-        df <- df[head(order(abs(df$local_importance), decreasing=TRUE), max_vars),]
-        pl <- with(df,{
-
+        df <- df[head(order(abs(df$local_importance), decreasing = TRUE), max_vars), ]
+        pl <- with(df, {
             ggplot(data = df, aes(x = local_importance, y = reorder(variable_names, local_importance, abs), fill = sign_local_importance)) +
-            geom_col() +
-            scale_fill_manual("", values = c("-1"="#f05a71", "0"="#ffffff", "1"="#8bdcbe"))
-
+                geom_col() +
+                scale_fill_manual("", values = c("-1" = "#f05a71", "0" = "#ffffff", "1" = "#8bdcbe"))
         })
     }
     pl <- pl + theme_vertical_default_survex() +
@@ -81,22 +82,21 @@ plot.surv_lime <- function(x,
         ylab(y_lab) +
         theme(legend.position = "none")
 
-    sf_df <- data.frame(times = c(x$black_box_sf_times, x$expl_sf_times),
-                        sfs = c(x$black_box_sf, x$expl_sf),
-                        type = c(rep("black box survival function", length(x$black_box_sf)), rep("SurvLIME explanation survival function", length(x$expl_sf))))
+    sf_df <- data.frame(
+        times = c(x$black_box_sf_times, x$expl_sf_times),
+        sfs = c(x$black_box_sf, x$expl_sf),
+        type = c(rep("black box survival function", length(x$black_box_sf)), rep("SurvLIME explanation survival function", length(x$expl_sf)))
+    )
     if (show_survival_function) {
-        pl2 <- with(sf_df,{
-
+        pl2 <- with(sf_df, {
             ggplot(data = sf_df, aes(x = times, y = sfs, group = type, color = type)) +
-            geom_line(linewidth = 0.8, size = 0.8) +
-            theme_default_survex() +
-            xlab("") +
-            xlim(c(0,NA))+
-            ylab("survival function value") +
-            scale_color_manual("", values = generate_discrete_color_scale(2, colors))
+                geom_line(linewidth = 0.8) +
+                theme_default_survex() +
+                labs(x = "time", y = "survival function value") +
+                xlim(c(0, NA)) +
+                scale_color_manual("", values = generate_discrete_color_scale(2, colors))
         })
         return(patchwork::wrap_plots(pl, pl2, nrow = 1, widths = c(3, 5)))
     }
-
-
+    pl
 }
