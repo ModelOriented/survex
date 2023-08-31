@@ -257,20 +257,12 @@ use_kernelshap <- function(explainer, new_observation, output_type, observation_
         explainer_data <- data.frame(explainer_data)
     }
 
-    predfun <- function(model, newdata){
-        explainer$predict_survival_function(
-            model,
-            newdata,
-            times = explainer$times
-        )
-    }
-
     shap_values <- sapply(
         X = as.character(seq_len(nrow(new_observation))),
         FUN = function(i) {
             tmp_res <- kernelshap::kernelshap(
                 object = explainer$model,
-                X = new_observation[as.integer(i), ],
+                X = as.matrix(new_observation[as.integer(i), ]),
                 bg_X = explainer$data,
                 pred_fun = predfun,
                 verbose = FALSE
