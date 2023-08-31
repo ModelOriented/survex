@@ -103,6 +103,10 @@ test_that("survshap explanations with output_type = 'chf' work", {
     plot(parts_cph, rug = "censors")
     plot(parts_cph, rug = "none")
 
+    # test global exact
+    parts_cph_glob <- predict_parts(cph_exp, veteran[1:3, !colnames(veteran) %in% c("time", "status")], y_true = as.matrix(veteran[1:3, c("time", "status")]), calculation_method = "exact_kernel", aggregation_method = "max_absolute", output_type = "chf")
+    plot(parts_cph_glob)
+
     parts_ranger <- predict_parts(rsf_ranger_exp, veteran[2, !colnames(veteran) %in% c("time", "status")], y_true = c(100, 1), aggregation_method = "mean_absolute", output_type = "chf")
     plot(parts_ranger)
 

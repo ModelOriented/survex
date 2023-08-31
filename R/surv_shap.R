@@ -28,7 +28,7 @@ surv_shap <- function(explainer,
 
     # make this code work for multiple observations
     stopifnot(
-        "`y_true` must be either a matrix with one per observation in `new_observation` or a vector of length == 2" = ifelse(
+        "`y_true` must be either a matrix with one row per observation in `new_observation` or a vector of length == 2" = ifelse(
             !is.null(y_true),
             ifelse(
                 is.matrix(y_true),
@@ -102,8 +102,8 @@ surv_shap <- function(explainer,
     # to display final object correctly, when is.matrix(new_observation) == TRUE
     res$variable_values <- as.data.frame(new_observation)
     res$result <- switch(calculation_method,
-                         "exact_kernel" = use_exact_shap(explainer, new_observation, ...),
-                         "kernelshap" = use_kernelshap(explainer, new_observation, ...),
+                         "exact_kernel" = use_exact_shap(explainer, new_observation, output_type, ...),
+                         "kernelshap" = use_kernelshap(explainer, new_observation, output_type, ...),
                          "treeshap" = use_treeshap(explainer, new_observation, ...),
                          stop("Only `exact_kernel`, `kernelshap` and `treeshap` calculation methods are implemented"))
     # quality-check here
@@ -129,7 +129,7 @@ surv_shap <- function(explainer,
     return(res)
 }
 
-use_exact_shap <- function(explainer, new_observation, output_type, observation_aggregation_method, ...) {
+use_exact_shap <- function(explainer, new_observation, output_type, ...) {
     shap_values <- sapply(
         X = as.character(seq_len(nrow(new_observation))),
         FUN = function(i) {
