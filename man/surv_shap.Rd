@@ -7,19 +7,19 @@
 surv_shap(
   explainer,
   new_observation,
+  output_type,
   ...,
   y_true = NULL,
   calculation_method = "kernelshap",
-  aggregation_method = "integral",
-  path = "average",
-  B = 25,
-  exact = FALSE
+  aggregation_method = "integral"
 )
 }
 \arguments{
 \item{explainer}{an explainer object - model preprocessed by the \code{explain()} function}
 
-\item{new_observation}{a new observation for which predictions need to be explained}
+\item{new_observation}{new observations for which predictions need to be explained}
+
+\item{output_type}{a character, either \code{"survival"} or \code{"chf"}. Determines which type of prediction should be used for explanations.}
 
 \item{...}{additional parameters, passed to internal functions}
 
@@ -27,7 +27,7 @@ surv_shap(
 
 \item{calculation_method}{a character, either \code{"kernelshap"} for use of \code{kernelshap} library (providing faster Kernel SHAP with refinements) or \code{"exact_kernel"} for exact Kernel SHAP estimation}
 
-\item{aggregation_method}{a character, either \code{"mean_absolute"} or \code{"integral"}, \code{"max_absolute"}, \code{"sum_of_squares"}}
+\item{aggregation_method}{a character, either \code{"integral"}, \code{"integral_absolute"}, \code{"mean_absolute"}, \code{"max_absolute"}, or \code{"sum_of_squares"}}
 }
 \value{
 A list, containing the calculated SurvSHAP(t) results in the \code{result} field

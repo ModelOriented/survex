@@ -27,5 +27,5 @@ jobs:
           needs: coverage
 
       - name: Test coverage
-        run: covr::codecov(quiet = FALSE, function_exclusions=c("surv_model_info\\.", "explain.LearnerSurv", "loss_adapt_mlr3proba"))
+        run: covr::codecov(quiet = FALSE, function_exclusions=c("surv_model_info\\.", "explain.LearnerSurv", "loss_adapt_mlr3proba", "explain.sksurv"))
         shell: Rscript {0}

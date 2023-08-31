@@ -18,19 +18,22 @@ A function of two arguments (\code{model}, \code{newdata}) returning a vector of
 Some models do not come with a ready to use risk prediction. This function allows for its generation based on the cumulative hazard function.
 }
 \examples{
+\donttest{
 library(survex)
 library(survival)
 
 rsf_src <- randomForestSRC::rfsrc(Surv(time, status) ~ ., data = veteran)
 
 chf_function <- transform_to_stepfunction(predict,
-                                          type = "chf",
-                                          prediction_element = "chf",
-                                          times_element = "time.interest")
+    type = "chf",
+    prediction_element = "chf",
+    times_element = "time.interest"
+)
 risk_function <- risk_from_chf(chf_function, unique(veteran$time))
 
 explainer <- explain(rsf_src,
-                     predict_cumulative_hazard_function = chf_function,
-                     predict_function = risk_function)
-
+    predict_cumulative_hazard_function = chf_function,
+    predict_function = risk_function
+)
+}
 }

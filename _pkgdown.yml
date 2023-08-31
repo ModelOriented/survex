@@ -7,7 +7,7 @@ reference:
   desc: Create a model agnostic explainer for further processing
 - contents: starts_with("explain")
 - title: Dataset level explanations
-- contents: starts_with("model_p")
+- contents: starts_with("model_")
 - title: Instance level explanations
 - contents: starts_with("predict")
 - title: Metrics and loss functions
@@ -28,20 +28,24 @@ reference:
 - contents:
   - plot.model_parts_survival
   - plot.surv_feature_importance
-  - plot.feature_importance_explainer
 - subtitle: Model Profile
-- contents: plot.model_profile_survival
+- contents:
+  - plot.model_profile_survival
+  - plot.model_profile_2d_survival
+- subtitle: Model SurvSHAP(t)
+- contents: plot.aggregated_surv_shap
+- subtitle: Model Diagnostics
+- contents: plot.model_diagnostics_survival
 - subtitle: Predict Parts
 - contents:
   - plot.predict_parts_survival
   - plot.surv_shap
   - plot.surv_lime
 - subtitle: Predict Profile
-- contents:
-  - plot.predict_profile_survival
-  - plot.surv_ceteris_paribus
+- contents: plot.predict_profile_survival
 - title: Utility functions
 - contents:
+  - extract_predict_survshap
   - transform_to_stepfunction
   - risk_from_chf
   - cumulative_hazard_to_survival

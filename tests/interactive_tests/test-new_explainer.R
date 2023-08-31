@@ -105,7 +105,7 @@ test_that("all functionality of a new explainer works correctly", {
 
     plot(m_profile)
     plot(m_profile, variable_type = "categorical")
-    plot(m_profile, variables = c("diagtime", "prior"), variable_type = "numerical", numerical_plot_type = "contour", facet_ncol = 1)
+    plot(m_profile, variables = c("diagtime", "prior"), variable_type = "numerical", numerical_plot_type = "contours", facet_ncol = 1)
 
     plot(m_profile_subset)
 

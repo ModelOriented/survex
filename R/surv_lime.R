@@ -30,19 +30,20 @@ surv_lime <- function(explainer, new_observation,
                       max_iter = 10000,
                       categorical_variables = NULL,
                       k = 1 + 1e-4) {
-
     test_explainer(explainer, "surv_lime", has_data = TRUE, has_y = TRUE, has_chf = TRUE)
     new_observation <- new_observation[, colnames(new_observation) %in% colnames(explainer$data)]
     if (ncol(explainer$data) != ncol(new_observation)) stop("New observation and data have different number of columns (variables)")
 
     predicted_sf <- explainer$predict_survival_function(explainer$model, new_observation, explainer$times)
 
-    neighbourhood <- generate_neighbourhood(explainer$data,
-                                            new_observation,
-                                            N,
-                                            categorical_variables,
-                                            sampling_method,
-                                            sample_around_instance)
+    neighbourhood <- generate_neighbourhood(
+        explainer$data,
+        new_observation,
+        N,
+        categorical_variables,
+        sampling_method,
+        sample_around_instance
+    )
 
 
     sc <- attr(neighbourhood$inverse, "scaled:scale")
@@ -69,7 +70,6 @@ surv_lime <- function(explainer, new_observation,
 
 
     loss <- function(beta) {
-
         multiplied <- as.matrix(neighbourhood$inverse_ohe) %*% as.matrix(beta)
         multiplied <- multiplied[, rep(1, times = ncol(model_chfs))]
 
@@ -79,9 +79,9 @@ surv_lime <- function(explainer, new_observation,
                 rowSums(
                     (weights_v^2) *
                         ((log_chfs - log_na_est - multiplied)^2)
-                    * t_diffs)
-            )
-
+                        * t_diffs
+                )
+        )
     }
 
     var_values <- neighbourhood$inverse_ohe[1, ]
@@ -90,17 +90,17 @@ surv_lime <- function(explainer, new_observation,
 
     beta <- data.frame(t(res$par))
     names(beta) <- colnames(neighbourhood$inverse_ohe)
-    ret_list <- list(result = beta,
-                     variable_values = var_values,
-                     black_box_sf_times = explainer$times,
-                     black_box_sf = as.numeric(explainer$predict_survival_function(explainer$model, new_observation, explainer$times)),
-                     expl_sf_times = na_est$time,
-                     expl_sf = exp(-na_est$hazard * exp(sum(var_values * res$par))))
+    ret_list <- list(
+        result = beta,
+        variable_values = var_values,
+        black_box_sf_times = explainer$times,
+        black_box_sf = as.numeric(explainer$predict_survival_function(explainer$model, new_observation, explainer$times)),
+        expl_sf_times = na_est$time,
+        expl_sf = exp(-na_est$hazard * exp(sum(var_values * res$par)))
+    )
 
     class(ret_list) <- c("surv_lime", class(ret_list))
     return(ret_list)
-
-
 }
 
 
@@ -117,7 +117,6 @@ generate_neighbourhood <- function(data_org,
     additional_categorical_variables <- categorical_variables
     factor_variables <- colnames(data_org)[sapply(data_org, is.factor)]
     categorical_variables <- unique(c(additional_categorical_variables, factor_variables))
-    if (is.null(ncol(data_row))) stop("The observation to be explained has to be data.frame")
     data_row <- data_row[colnames(data_org)]
 
     feature_frequencies <- list(length(categorical_variables))
@@ -130,7 +129,6 @@ generate_neighbourhood <- function(data_org,
         feature_count <- summary(column)
         frequencies <- feature_count / sum(feature_count)
         feature_frequencies[[feature]] <- frequencies
-
     }
 
     n_col <- ncol(data_org[, !colnames(data_org) %in% categorical_variables])
@@ -138,14 +136,14 @@ generate_neighbourhood <- function(data_org,
     me <- attr(scaled_data, "scaled:center")
 
     data <- switch(sampling_method,
-                   "gaussian" = matrix(rnorm(n_samples * n_col), nrow = n_samples, ncol = n_col),
-                   stop("Only `gaussian` sampling_method is implemented"))
+        "gaussian" = matrix(rnorm(n_samples * n_col), nrow = n_samples, ncol = n_col),
+        stop("Only `gaussian` sampling_method is implemented")
+    )
 
     if (sample_around_instance) {
-        to_add <- data_row[,  !colnames(data_row) %in% categorical_variables]
+        to_add <- data_row[, !colnames(data_row) %in% categorical_variables]
         data <- data %*% diag(sc) + to_add[col(data)]
-    }
-    else {
+    } else {
         data <- data %*% diag(sc) + me[col(data)]
     }
 
@@ -176,19 +174,14 @@ generate_neighbourhood <- function(data_org,
 
     data <- data[, colnames(data_row)]
 
-    if (length(categorical_variables) > 0){
+    if (length(categorical_variables) > 0) {
         expr <- paste0("~", paste(categorical_variables, collapse = "+"))
         categorical_matrix <- model.matrix(as.formula(expr), data = inverse)[, -1]
         inverse_ohe <- cbind(inverse, categorical_matrix)
         inverse_ohe[, factor_variables] <- NULL
-    } else{
+    } else {
         inverse_ohe <- inverse
     }
 
-
-
     list(data = data, inverse = inverse, inverse_ohe = inverse_ohe)
-
-
-
 }

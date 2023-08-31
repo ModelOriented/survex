@@ -49,12 +49,13 @@ metrics of different models created using the \code{model_performance(..., type=
 library(survival)
 library(survex)
 
+\donttest{
 model <- randomForestSRC::rfsrc(Surv(time, status) ~ ., data = veteran)
 exp <- explain(model)
 
 m_perf <- model_performance(exp)
 plot(m_perf)
-
+}
 }
 \seealso{
 Other functions for plotting 'model_performance_survival' objects: 
