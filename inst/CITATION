@@ -1,0 +1,14 @@
+bibentry(key = "spytek2023survex",
+    bibtype = "article",
+    author = c(
+        person("Mikołaj", "Spytek"),
+        person("Mateusz", "Krzyziński"),
+        person("Sophie Hanna", "Langbein"),
+        person("Hubert", "Baniecki"),
+        person("Marvin N.", "Wright"),
+        person("Przemyslaw", "Biecek")
+    ),
+    title = "survex: an {R} package for explaining machine learning survival models",
+    journal = "arXiv preprint arXiv:2308.16113",
+    year = "2023"
+)

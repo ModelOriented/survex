@@ -82,18 +82,17 @@ Future plans:
 
 ## Citation
 
-If you use `survex`, please cite it as
+If you use `survex`, please cite [our preprint](https://arxiv.org/abs/2308.16113):
 
-> M. Spytek, M. Krzyziński, H. Baniecki, P. Biecek. *survex: Explainable Machine Learning in Survival Analysis*. **R package version 1.0.0**, 2023. https://github.com/ModelOriented/survex
+> M. Spytek, M. Krzyziński, S. H. Langbein, H. Baniecki, M. N. Wright, P. Biecek. *survex: an R package for explaining machine learning survival models*. **arXiv preprint arXiv:2308.16113**, 2023.
 
 ```
 @article{spytek2023survex,
-    title   = {{survex: Explainable Machine Learning in Survival Analysis}},
-    author  = {Mikołaj Spytek and Mateusz Krzyziński and 
-               Hubert Baniecki and Przemysław Biecek},
-    journal = {R package version 1.0.0},
-    year    = {2023},
-    url     = {https://github.com/ModelOriented/survex}
+    title   = {{survex: an R package for explaining machine learning survival models}},
+    author  = {Mikołaj Spytek and Mateusz Krzyziński and Sophie Hanna Langbein and
+               Hubert Baniecki and Marvin N. Wright and Przemysław Biecek},
+    journal = {arXiv preprint arXiv:2308.16113},
+    year    = {2023}
 }
 ```
 
@@ -101,6 +100,7 @@ If you use `survex`, please cite it as
 
 - H. Baniecki, B. Sobieski, P. Bombiński, P. Szatkowski, P. Biecek. [Hospital Length of Stay Prediction Based on Multi-modal Data towards Trustworthy Human-AI Collaboration in Radiomics](https://arxiv.org/abs/2303.09817). *International Conference on Artificial Intelligence in Medicine*, 2023.
 - W. Chen, B. Zhou, C. Y. Jeon, F. Xie, Y-C. Lin, R. K. Butler, Y. Zhou, T. Q. Luong, E. Lustigova, J. R. Pisegna, B. U. Wu. [Machine learning versus regression for prediction of sporadic pancreatic cancer](https://doi.org/10.1016/j.pan.2023.04.009). *Pancreatology*, 2023.
+- M. Nachit, Y. Horsmans, R. M. Summers, I. A. Leclercq, P. J. Pickhardt. [AI-based CT Body Composition Identifies Myosteatosis as Key Mortality Predictor in Asymptomatic Adults](https://doi.org/10.1148/radiol.222008). *Radiology*, 2023.
 - Share it with us!
 
 ## Related work
