@@ -181,19 +181,19 @@ The explanations are calculated as an extension of Partial Dependence Profiles o
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cph_model_profile_2d</span><span class="op">$</span><span class="va">result</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   _v1name_ _v2name_  _v1type_    _v2type_        _v1value_ _v2value_ _times_</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1      age celltype numerical categorical               34     adeno     1.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2      age celltype numerical categorical 35.9583333333333     adeno     1.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3      age celltype numerical categorical 37.9166666666667     adeno     1.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4      age celltype numerical categorical           39.875     adeno     1.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5      age celltype numerical categorical 41.8333333333333     adeno     1.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6      age celltype numerical categorical 43.7916666666667     adeno     1.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1      age celltype numerical categorical               35     adeno     1.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2      age celltype numerical categorical 36.9166666666667     adeno     1.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3      age celltype numerical categorical 38.8333333333333     adeno     1.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4      age celltype numerical categorical            40.75     adeno     1.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5      age celltype numerical categorical 42.6666666666667     adeno     1.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6      age celltype numerical categorical 44.5833333333333     adeno     1.5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   _label_    _yhat_</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   coxph 0.9700746</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   coxph 0.9705686</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   coxph 0.9710547</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   coxph 0.9715330</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5   coxph 0.9720035</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6   coxph 0.9724665</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   coxph 0.9711229</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   coxph 0.9715903</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   coxph 0.9720503</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   coxph 0.9725029</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   coxph 0.9729484</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   coxph 0.9733869</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cph_model_profile_2d</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Plot will be prepared for the median survial time. For another time point, set the value of `times`.</span>
 <span class="r-plt img"><img src="model_profile_2d.surv_explainer-1.png" alt="" width="700" height="433"></span>
@@ -204,19 +204,19 @@ The explanations are calculated as an extension of Partial Dependence Profiles o
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cph_model_profile_2d_ale</span><span class="op">$</span><span class="va">result</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   _v1name_ _v2name_  _v1type_  _v2type_ _v1value_ _v2value_ _times_    _yhat_</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1      age    karno numerical numerical        34        20     1.5 0.9811331</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2      age    karno numerical numerical        34        20     4.0 0.9534903</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3      age    karno numerical numerical        34        20     7.0 0.9262469</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4      age    karno numerical numerical        34        20     8.0 0.8907137</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5      age    karno numerical numerical        34        20    10.0 0.8734353</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6      age    karno numerical numerical        34        20    12.0 0.8484253</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1      age    karno numerical numerical        35        20     1.5 0.9829435</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2      age    karno numerical numerical        35        20     4.0 0.9579111</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3      age    karno numerical numerical        35        20     7.0 0.9331868</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4      age    karno numerical numerical        35        20     8.0 0.9008495</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5      age    karno numerical numerical        35        20    10.0 0.8850845</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6      age    karno numerical numerical        35        20    12.0 0.8622128</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   _right_ _left_ _top_ _bottom_ _count_ _label_</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1      36     34    20       25       0   coxph</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2      36     34    20       25       0   coxph</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3      36     34    20       25       0   coxph</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4      36     34    20       25       0   coxph</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5      36     34    20       25       0   coxph</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6      36     34    20       25       0   coxph</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    36.5     35    20       25       0   coxph</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    36.5     35    20       25       0   coxph</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    36.5     35    20       25       0   coxph</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    36.5     35    20       25       0   coxph</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    36.5     35    20       25       0   coxph</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6    36.5     35    20       25       0   coxph</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cph_model_profile_2d_ale</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Plot will be prepared for the median survial time. For another time point, set the value of `times`.</span>
 <span class="r-plt img"><img src="model_profile_2d.surv_explainer-2.png" alt="" width="700" height="433"></span>
