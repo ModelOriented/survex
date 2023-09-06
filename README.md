@@ -20,12 +20,6 @@ Note that an explainer can be created for **any** survival model, using the `exp
 
 ## Installation
 
-```diff
-! Please note that that version v1.1.1 with new functionalities is still being processed by CRAN.
-+ To use all functionalities, for the time being, please install the most current version from GitHub!
-```
-
-
 The package is available on [CRAN](https://cran.r-project.org/package=survex):
 
 ```r
