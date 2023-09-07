@@ -1,13 +1,14 @@
 Package: survex
 Title: Explainable Machine Learning in Survival Analysis
-Version: 1.1.3
+Version: 1.1.3.9001
 Authors@R: 
     c(
         person("Mikołaj", "Spytek", email = "mikolajspytek@gmail.com", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-7111-2286")),
         person("Mateusz", "Krzyziński", role = c("aut"), comment = c(ORCID = "0000-0001-6143-488X")),
         person("Sophie", "Langbein", role = c("aut")), 
         person("Hubert", "Baniecki", role = c("aut"), comment = c(ORCID = "0000-0001-6661-5364")),
-        person("Przemyslaw", "Biecek", role = c("aut"), comment = c(ORCID = "0000-0001-8423-1823"))
+        person("Przemyslaw", "Biecek", role = c("aut"), comment = c(ORCID = "0000-0001-8423-1823")),
+        person("Lorenz A.", "Kapsner", role = c("ctb"), comment = c(ORCID = "0000-0003-1866-860X"))
     )
 Description: Survival analysis models are commonly used in medicine and other areas. Many of them
     are too complex to be interpreted by human. Exploration and explanation is needed, but
@@ -50,7 +51,7 @@ Suggests:
     withr,
     xgboost
 Remotes:
-    github::kapsner/treeshap
+    github::ModelOriented/treeshap
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 URL: https://modeloriented.github.io/survex/

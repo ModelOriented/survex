@@ -6,7 +6,7 @@ test_that("survshap explanations work", {
     rsf_src <- randomForestSRC::rfsrc(Surv(time, status) ~ ., data = veteran)
 
     cph_exp <- explain(cph, verbose = FALSE)
-    rsf_ranger_exp <- explain(rsf_ranger, data = veteran[, -c(3, 4)], y = Surv(veteran$time, veteran$status), verbose = FALSE)
+    rsf_ranger_exp <- explain(rsf_ranger, data = veteran[, -c(3, 4)], y = survival::Surv(veteran$time, veteran$status), verbose = FALSE)
     rsf_src_exp <- explain(rsf_src, verbose = FALSE)
 
     parts_cph <- predict_parts(cph_exp, veteran[1, !colnames(veteran) %in% c("time", "status")], y_true = matrix(c(100, 1), ncol = 2), aggregation_method = "sum_of_squares")
@@ -19,19 +19,18 @@ test_that("survshap explanations work", {
     parts_ranger <- predict_parts(rsf_ranger_exp, veteran[2, !colnames(veteran) %in% c("time", "status")], y_true = c(100, 1), aggregation_method = "mean_absolute")
     plot(parts_ranger)
 
-    # test ranger with treeshap (we need the data as matrix)
+    # test ranger with kernelshap when using a matrix as input for data and new observation
     rsf_ranger_matrix <- ranger::ranger(survival::Surv(time, status) ~ ., data = model.matrix(~ -1 + ., veteran), respect.unordered.factors = TRUE, num.trees = 100, mtry = 3, max.depth = 5)
-    rsf_ranger_exp_matrix <- explain(rsf_ranger_matrix, data = model.matrix(~ -1 + ., veteran[, -c(3, 4)]), y = Surv(veteran$time, veteran$status), verbose = FALSE)
+    rsf_ranger_exp_matrix <- explain(rsf_ranger_matrix, data = model.matrix(~ -1 + ., veteran[, -c(3, 4)]), y = survival::Surv(veteran$time, veteran$status), verbose = FALSE)
     new_obs <- model.matrix(~ -1 + ., veteran[2, !colnames(veteran) %in% c("time", "status")])
-    parts_ranger_treeshap <- predict_parts(
+    parts_ranger_kernelshap <- predict_parts(
         rsf_ranger_exp_matrix,
         new_observation = new_obs,
         y_true = c(100, 1),
         aggregation_method = "mean_absolute",
         calculation_method = "kernelshap"
     )
-    plot(parts_ranger_treeshap)
-
+    plot(parts_ranger_kernelshap)
 
     parts_src <- predict_parts(rsf_src_exp, veteran[3, !colnames(veteran) %in% c("time", "status")])
     plot(parts_src)
@@ -60,6 +59,29 @@ test_that("survshap explanations work", {
     expect_error(predict_parts(cph_exp, veteran[1, ], calculation_method = "nonexistent"))
     expect_error(predict_parts(cph_exp, veteran[1, c(1, 1, 1, 1, 1)], calculation_method = "nonexistent"))
 
+})
+
+test_that("local survshap explanations with treeshap work for ranger", {
+
+    veteran <- survival::veteran
+
+    rsf_ranger_matrix <- ranger::ranger(survival::Surv(time, status) ~ ., data = model.matrix(~ -1 + ., veteran), respect.unordered.factors = TRUE, num.trees = 100, mtry = 3, max.depth = 5)
+    rsf_ranger_exp_matrix <- explain(rsf_ranger_matrix, data = model.matrix(~ -1 + ., veteran[, -c(3, 4)]), y = survival::Surv(veteran$time, veteran$status), verbose = FALSE)
+
+
+    new_obs <- model.matrix(~ -1 + ., veteran[2, setdiff(colnames(veteran), c("time", "status"))])
+    parts_ranger <- model_survshap(
+        rsf_ranger_exp_matrix,
+        new_obs,
+        y_true = c(veteran$time[2], veteran$status[2]),
+        aggregation_method = "mean_absolute",
+        calculation_method = "treeshap"
+    )
+    plot(parts_ranger)
+
+    expect_s3_class(parts_ranger, c("predict_parts_survival", "surv_shap"))
+    expect_equal(nrow(parts_ranger$result), length(rsf_ranger_exp_matrix$times))
+    expect_true(all(colnames(parts_ranger$result) == colnames(rsf_ranger_exp_matrix$data)))
 
 })
 
@@ -80,6 +102,10 @@ test_that("survshap explanations with output_type = 'chf' work", {
     plot(parts_cph, rug = "events")
     plot(parts_cph, rug = "censors")
     plot(parts_cph, rug = "none")
+
+    # test global exact
+    parts_cph_glob <- predict_parts(cph_exp, veteran[1:3, !colnames(veteran) %in% c("time", "status")], y_true = as.matrix(veteran[1:3, c("time", "status")]), calculation_method = "exact_kernel", aggregation_method = "max_absolute", output_type = "chf")
+    plot(parts_cph_glob)
 
     parts_ranger <- predict_parts(rsf_ranger_exp, veteran[2, !colnames(veteran) %in% c("time", "status")], y_true = c(100, 1), aggregation_method = "mean_absolute", output_type = "chf")
     plot(parts_ranger)
