@@ -1,4 +1,4 @@
-# survex 1.1.0
+# survex 1.1.3
 
 * fixed not being able to plot or print SurvLIME results for the cph model sometimes. ([#72](https://github.com/ModelOriented/survex/issues/72))
 * added global explanations via the SurvSHAP(t) method (see `model_survshap()` function)
