@@ -20,12 +20,6 @@ Note that an explainer can be created for **any** survival model, using the `exp
 
 ## Installation
 
-```diff
-! Please note that that version v1.1.1 with new functionalities is still being processed by CRAN.
-+ To use all functionalities, for the time being, please install the most current version from GitHub!
-```
-
-
 The package is available on [CRAN](https://cran.r-project.org/package=survex):
 
 ```r
@@ -107,6 +101,7 @@ If you use `survex`, please cite [our preprint](https://arxiv.org/abs/2308.16113
 - H. Baniecki, B. Sobieski, P. Bombiński, P. Szatkowski, P. Biecek. [Hospital Length of Stay Prediction Based on Multi-modal Data towards Trustworthy Human-AI Collaboration in Radiomics](https://arxiv.org/abs/2303.09817). *International Conference on Artificial Intelligence in Medicine*, 2023.
 - W. Chen, B. Zhou, C. Y. Jeon, F. Xie, Y-C. Lin, R. K. Butler, Y. Zhou, T. Q. Luong, E. Lustigova, J. R. Pisegna, B. U. Wu. [Machine learning versus regression for prediction of sporadic pancreatic cancer](https://doi.org/10.1016/j.pan.2023.04.009). *Pancreatology*, 2023.
 - M. Nachit, Y. Horsmans, R. M. Summers, I. A. Leclercq, P. J. Pickhardt. [AI-based CT Body Composition Identifies Myosteatosis as Key Mortality Predictor in Asymptomatic Adults](https://doi.org/10.1148/radiol.222008). *Radiology*, 2023.
+- R. Passera, S. Zompi, J. Gill, A. Busca. [Explainable Machine Learning (XAI) for Survival in Bone Marrow Transplantation Trials: A Technical Report](https://doi.org/10.3390/biomedinformatics3030048). *BioMedInformatics*, 2023.
 - Share it with us!
 
 ## Related work

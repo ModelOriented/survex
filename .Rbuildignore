@@ -12,3 +12,5 @@ LICENSE
 ^misc$
 ^cran-comments\.md$
 ^vignettes/articles$
+^tests$
+^CRAN-SUBMISSION$
