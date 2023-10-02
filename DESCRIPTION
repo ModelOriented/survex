@@ -50,8 +50,6 @@ Suggests:
     testthat (>= 3.0.0),
     withr,
     xgboost
-Remotes:
-    github::ModelOriented/treeshap
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 URL: https://modeloriented.github.io/survex/
