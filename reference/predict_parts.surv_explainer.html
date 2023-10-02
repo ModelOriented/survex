@@ -25,7 +25,7 @@
         <div class="info">
           <span class="partof">part of the <a href="https://github.com/ModelOriented/DrWhy" class="external-link">DrWhy.AI</a>
            developed by the <a href="https://mi2.ai/" class="external-link">MI².AI</a> </span>
-          <span class="version version-default">1.1.3</span>
+          <span class="version version-default">1.1.3.9000</span>
         </div>
       </div>
     </div>
@@ -206,10 +206,10 @@
 <span class="r-in"><span>    type <span class="op">=</span> <span class="st">"survlime"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cph_predict_parts_survlime</span><span class="op">$</span><span class="va">result</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          trt        karno     diagtime         age        prior celltypelarge</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.03917608 -0.002033622 -0.002121222 0.001285151 0.0009849454    0.02490482</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          trt         karno     diagtime          age        prior celltypelarge</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.01505863 -0.0004214639 0.0004105179 0.0002023183 0.0003451851   -0.02199381</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   celltypesmallcell celltypesquamous</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1        0.03179823      0.003967288</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1       -0.01515999      -0.02799879</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cph_predict_parts_survlime</span>, type <span class="op">=</span> <span class="st">"local_importance"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="predict_parts.surv_explainer-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
