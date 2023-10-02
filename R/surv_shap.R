@@ -5,8 +5,7 @@
 #' @param output_type a character, either `"survival"` or `"chf"`. Determines which type of prediction should be used for explanations.
 #' @param ... additional parameters, passed to internal functions
 #' @param y_true a two element numeric vector or matrix of one row and two columns, the first element being the true observed time and the second the status of the observation, used for plotting
-#' @param calculation_method a character, either `"kernelshap"` for use of `kernelshap` library (providing faster Kernel SHAP with refinements), `"exact_kernel"` for exact Kernel SHAP estimation,
-#'   or `"treeshap"` for use of `treeshap` library (efficient implementation to compute SHAP values for tree-based models).
+#' @param calculation_method a character, either `"kernelshap"` for use of `kernelshap` library (providing faster Kernel SHAP with refinements), `"exact_kernel"` for exact Kernel SHAP estimation, or `"treeshap"` for use of `treeshap` library (efficient implementation to compute SHAP values for tree-based models).
 #' @param aggregation_method a character, either `"integral"`, `"integral_absolute"`, `"mean_absolute"`, `"max_absolute"`, or `"sum_of_squares"`
 #'
 #' @return A list, containing the calculated SurvSHAP(t) results in the `result` field
