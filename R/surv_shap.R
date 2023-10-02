@@ -318,7 +318,7 @@ use_treeshap <- function(explainer, new_observation, ...){
                 lapply(
                     tmp_unified,
                     function(m) {
-                        new_obs_mat <- as.matrix(new_observation[as.integer(i), ])
+                        new_obs_mat <- new_observation[as.integer(i), ]
                         # ensure that matrix has expected dimensions; as.integer is
                         # necessary for valid comparison with "identical"
                         stopifnot(identical(dim(new_obs_mat), as.integer(c(1L, ncol(new_observation)))))
