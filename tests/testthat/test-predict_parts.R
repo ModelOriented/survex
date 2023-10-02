@@ -69,7 +69,7 @@ test_that("local survshap explanations with treeshap work for ranger", {
     rsf_ranger_exp_matrix <- explain(rsf_ranger_matrix, data = model.matrix(~ -1 + ., veteran[, -c(3, 4)]), y = survival::Surv(veteran$time, veteran$status), verbose = FALSE)
 
 
-    new_obs <- model.matrix(~ -1 + ., veteran[2, setdiff(colnames(veteran), c("time", "status"))])
+    new_obs <- data.frame(model.matrix(~ -1 + ., veteran[2, setdiff(colnames(veteran), c("time", "status"))]))
     parts_ranger <- model_survshap(
         rsf_ranger_exp_matrix,
         new_obs,
