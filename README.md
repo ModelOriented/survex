@@ -102,7 +102,9 @@ If you use `survex`, please cite [our preprint](https://arxiv.org/abs/2308.16113
 - W. Chen, B. Zhou, C. Y. Jeon, F. Xie, Y-C. Lin, R. K. Butler, Y. Zhou, T. Q. Luong, E. Lustigova, J. R. Pisegna, B. U. Wu. [Machine learning versus regression for prediction of sporadic pancreatic cancer](https://doi.org/10.1016/j.pan.2023.04.009). *Pancreatology*, 2023.
 - M. Nachit, Y. Horsmans, R. M. Summers, I. A. Leclercq, P. J. Pickhardt. [AI-based CT Body Composition Identifies Myosteatosis as Key Mortality Predictor in Asymptomatic Adults](https://doi.org/10.1148/radiol.222008). *Radiology*, 2023.
 - R. Passera, S. Zompi, J. Gill, A. Busca. [Explainable Machine Learning (XAI) for Survival in Bone Marrow Transplantation Trials: A Technical Report](https://doi.org/10.3390/biomedinformatics3030048). *BioMedInformatics*, 2023.
+- P. Donizy, M. Spytek, M. Krzyziński, K. Kotowski, A. Markiewicz, B. Romanowska-Dixon, P. Biecek, M. P. Hoang. [Ki67 is a better marker than PRAME in risk stratification of BAP1-positive and BAP1-loss uveal melanomas](http://dx.doi.org/10.1136/bjo-2023-323816). *British Journal of Ophthalmology*, 2023.
 - X. Qi, Y. Ge, A. Yang, Y. Liu, Q. Wang & G. Wu. [Potential value of mitochondrial regulatory pathways in the clinical application of clear cell renal cell carcinoma: a machine learning-based study](https://doi.org/10.1007/s00432-023-05393-8). *Journal of Cancer Research and Clinical Oncology*, 2023.
+
 - Share it with us!
 
 ## Related work
