@@ -207,10 +207,12 @@ explanations of survival models created using the <code><a href="model_survshap.
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ranger_global_survshap</span>, geom <span class="op">=</span> <span class="st">"curves"</span>,</span></span>
 <span class="r-in"><span>     variable <span class="op">=</span> <span class="st">"age"</span>, boxplot <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Observations with outlying SurvSHAP(t) values:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    trt  celltype karno diagtime age prior</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    1  squamous    60        7  69     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3    1  squamous    60        3  38     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18   1 smallcell    40        2  35     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     trt  celltype karno diagtime age prior</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     1  squamous    60        7  69     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     1  squamous    60        3  38     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18    1 smallcell    40        2  35     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 127   2     large    70       15  68    10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 128   2     large    30        4  39    10</span>
 <span class="r-plt img"><img src="plot.aggregated_surv_shap-5.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
