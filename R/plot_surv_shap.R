@@ -293,7 +293,7 @@ plot_shap_global_beeswarm <- function(x,
                                       max_vars = 7,
                                       colors = NULL) {
     df <- as.data.frame(do.call(rbind, x$aggregate))
-    cols <- names(sort(colMeans(abs(df))))[1:min(max_vars, length(df))]
+    cols <- names(sort(colMeans(abs(df)), decreasing = TRUE))[1:min(max_vars, length(df))]
     df <- df[, cols]
     df <- stack(df)
     colnames(df) <- c("shap_value", "variable")
