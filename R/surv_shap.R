@@ -102,8 +102,8 @@ surv_shap <- function(explainer,
     # to display final object correctly, when is.matrix(new_observation) == TRUE
     res$variable_values <- as.data.frame(new_observation)
     res$result <- switch(calculation_method,
-                         "exact_kernel" = use_exact_shap(explainer, new_observation, output_type, ...),
-                         "kernelshap" = use_kernelshap(explainer, new_observation, output_type, ...),
+                         "exact_kernel" = use_exact_shap(explainer, new_observation, output_type, N, ...),
+                         "kernelshap" = use_kernelshap(explainer, new_observation, output_type, N, ...),
                          "treeshap" = use_treeshap(explainer, new_observation, ...),
                          stop("Only `exact_kernel`, `kernelshap` and `treeshap` calculation methods are implemented"))
     # quality-check here
