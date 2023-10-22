@@ -252,15 +252,13 @@ use_kernelshap <- function(explainer, new_observation, output_type, N, ...) {
             new_observation, "data.frame")
     )
 
-    # get explainer data to be able to make class checks and transformations
-    explainer_data <- explainer$data
+    background_data <- explainer$data[sample(1:nrow(explainer$data), N),]
     # ensure that classes of explainer$data and new_observation are equal
-    if (!inherits(explainer_data, "data.frame")) {
-        explainer_data <- data.frame(explainer_data)
+    if (!inherits(background_data, "data.frame")) {
+        background_data <- data.frame(background_data)
     }
 
     if (is.null(N)) N <- nrow(explainer$data)
-    background_data <- explainer$data[sample(1:nrow(explainer$data), N),]
 
     shap_values <- sapply(
         X = as.character(seq_len(nrow(new_observation))),
@@ -268,7 +266,7 @@ use_kernelshap <- function(explainer, new_observation, output_type, N, ...) {
             tmp_res <- kernelshap::kernelshap(
                 object = explainer$model,
                 X = new_observation[as.integer(i), ], # data.frame
-                bg_X = explainer_data, # data.frame
+                bg_X = background_data, # data.frame
                 pred_fun = predfun,
                 verbose = FALSE
             )
