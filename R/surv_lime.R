@@ -57,7 +57,7 @@ surv_lime <- function(explainer, new_observation,
 
     distances <- apply(scaled_data, 1, dist, scaled_data[1, ])
 
-    if (is.null(kernel_width)) kernel_width <- sqrt(ncol(scaled_data) * 0.75)
+    if (is.null(kernel_width)) kernel_width <- sqrt(ncol(scaled_data)) * 0.75
 
     weights <- sqrt(exp(-(distances^2) / (kernel_width^2)))
     na_est <- survival::basehaz(survival::coxph(explainer$y ~ 1))
