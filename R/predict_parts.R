@@ -5,9 +5,9 @@
 #' @param explainer an explainer object - model preprocessed by the `explain()` function
 #' @param new_observation a new observation for which prediction need to be explained
 #' @param ... other parameters which are passed to `iBreakDown::break_down` if `output_type=="risk"`, or if `output_type=="survival"` to `surv_shap()` or `surv_lime()` functions depending on the selected type
-#' @param N the maximum number of observations used for calculation of attributions. If `NULL` (default) all observations will be used.
+#' @param N the number of observations used for calculation of attributions. If `NULL` (default) all explainer data will be used for SurvSHAP(t) and 100 neigbours for SurvLIME.
 #' @param type if `output_type == "survival"` must be either `"survshap"` or `"survlime"`, otherwise refer to the `DALEX::predict_parts`
-#' @param output_type either `"survival"` or `"risk"` the type of survival model output that should be considered for explanations. If `"survival"` the explanations are based on the survival function. Otherwise the scalar risk predictions are used by the `DALEX::predict_parts` function.
+#' @param output_type either `"survival"`, `"chf"` or `"risk"` the type of survival model output that should be considered for explanations. If `"survival"` the explanations are based on the survival function. If `"chf"` the explanations are based on the cumulative hazard function. Otherwise the scalar risk predictions are used by the `DALEX::predict_parts` function.
 #' @param explanation_label a label that can overwrite explainer label (useful for multiple explanations for the same explainer/model)
 #'
 #' @return An object of class `"predict_parts_survival"` and additional classes depending on the type of explanations. It is a list with the element `result` containing the results of the calculation.
@@ -27,7 +27,6 @@
 #'     * `categorical_variables` -  character vector, names of variables that should be treated as categories (factors are included by default)
 #'     * `k` -  a small positive number > 1, added to chf before taking log, so that weigths aren't negative
 #' * for `survshap`
-#'     * `timestamps` -  a numeric vector, time points at which the survival function will be evaluated
 #'     * `y_true` -  a two element numeric vector or matrix of one row and two columns, the first element being the true observed time and the second the status of the observation, used for plotting
 #'     * `calculation_method` -  a character, either `"kernelshap"` for use of `kernelshap` library (providing faster Kernel SHAP with refinements) or `"exact_kernel"` for exact Kernel SHAP estimation
 #'     * `aggregation_method` -  a character, either `"mean_absolute"` or `"integral"`, `"max_absolute"`, `"sum_of_squares"`

@@ -33,7 +33,7 @@ surv_lime <- function(explainer, new_observation,
     test_explainer(explainer, "surv_lime", has_data = TRUE, has_y = TRUE, has_chf = TRUE)
     new_observation <- new_observation[, colnames(new_observation) %in% colnames(explainer$data)]
     if (ncol(explainer$data) != ncol(new_observation)) stop("New observation and data have different number of columns (variables)")
-    if (is.null(N)) N <- nrow(explainer$data)
+    if (is.null(N)) N <- 100
 
     predicted_sf <- explainer$predict_survival_function(explainer$model, new_observation, explainer$times)
 
