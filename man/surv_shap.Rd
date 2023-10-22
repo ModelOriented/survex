@@ -9,6 +9,7 @@ surv_shap(
   new_observation,
   output_type,
   ...,
+  N = NULL,
   y_true = NULL,
   calculation_method = "kernelshap",
   aggregation_method = "integral"
@@ -22,6 +23,8 @@ surv_shap(
 \item{output_type}{a character, either \code{"survival"} or \code{"chf"}. Determines which type of prediction should be used for explanations.}
 
 \item{...}{additional parameters, passed to internal functions}
+
+\item{N}{a positive integer, number of observations used as the background data}
 
 \item{y_true}{a two element numeric vector or matrix of one row and two columns, the first element being the true observed time and the second the status of the observation, used for plotting}
 

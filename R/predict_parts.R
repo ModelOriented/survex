@@ -75,8 +75,8 @@ predict_parts.surv_explainer <- function(explainer, new_observation, ..., N = NU
         ))
     } else {
         res <- switch(type,
-            "survshap" = surv_shap(explainer, new_observation, output_type, ...),
-            "survlime" = surv_lime(explainer, new_observation, ...),
+            "survshap" = surv_shap(explainer, new_observation, output_type, ..., N = N),
+            "survlime" = surv_lime(explainer, new_observation, ..., N = N),
             stop("Only `survshap` and `survlime` methods are implemented for now")
         )
     }
