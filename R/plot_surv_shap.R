@@ -121,11 +121,11 @@ plot.surv_shap <- function(x,
 #' * `color_variable` - variable used to denote the color, by default equal to `variable`
 #'
 #'
-#'#' ## `plot.aggregated_surv_shap(geom = "curves")`
+#' ## `plot.aggregated_surv_shap(geom = "curves")`
 #'
 #' * `variable` - variable for which SurvSHAP(t) curves are to be plotted, by default first from result data
 #' * `boxplot` - whether to plot functional boxplot with marked outliers or all curves colored by variable value
-#'
+#' * `coef` - length of the functional boxplot's whiskers as multiple of IQR, by default 1.5
 #'
 #' @examples
 #' \donttest{
