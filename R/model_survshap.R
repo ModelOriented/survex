@@ -102,7 +102,8 @@ model_survshap.surv_explainer <- function(explainer,
         N = N,
         y_true = y_true,
         calculation_method = calculation_method,
-        aggregation_method = aggregation_method
+        aggregation_method = aggregation_method,
+        ...
     )
 
     attr(shap_values, "label") <- explainer$label
