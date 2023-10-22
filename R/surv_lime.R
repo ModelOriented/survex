@@ -62,7 +62,6 @@ surv_lime <- function(explainer, new_observation,
     weights <- sqrt(exp(-(distances^2) / (kernel_width^2)))
     na_est <- survival::basehaz(survival::coxph(explainer$y ~ 1))
 
-
     model_chfs <- explainer$predict_cumulative_hazard_function(explainer$model, neighbourhood$inverse, na_est$time) + k
     log_chfs <- log(model_chfs)
     weights_v <- model_chfs / log_chfs
@@ -175,10 +174,13 @@ generate_neighbourhood <- function(data_org,
     data <- data[, colnames(data_row)]
 
     if (length(categorical_variables) > 0) {
+        inverse_as_factor <- inverse
+        inverse_as_factor[additional_categorical_variables] <-
+            lapply(inverse_as_factor[additional_categorical_variables], as.factor)
         expr <- paste0("~", paste(categorical_variables, collapse = "+"))
-        categorical_matrix <- model.matrix(as.formula(expr), data = inverse)[, -1]
+        categorical_matrix <- model.matrix(as.formula(expr), data = inverse_as_factor)[, -1]
         inverse_ohe <- cbind(inverse, categorical_matrix)
-        inverse_ohe[, factor_variables] <- NULL
+        inverse_ohe[, categorical_variables] <- NULL
     } else {
         inverse_ohe <- inverse
     }
