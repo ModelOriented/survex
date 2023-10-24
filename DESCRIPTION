@@ -1,6 +1,6 @@
 Package: survex
 Title: Explainable Machine Learning in Survival Analysis
-Version: 1.1.3.9002
+Version: 1.2.0
 Authors@R: 
     c(
         person("Mikołaj", "Spytek", email = "mikolajspytek@gmail.com", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-7111-2286")),
@@ -26,7 +26,6 @@ Imports:
     DALEX (>= 2.2.1),
     ggplot2 (>= 3.4.0),
     kernelshap,
-    treeshap,
     pec,
     survival,
     patchwork
@@ -48,6 +47,7 @@ Suggests:
     rmarkdown,
     rms,
     testthat (>= 3.0.0),
+    treeshap (>= 0.3.0),
     withr,
     xgboost
 Config/testthat/edition: 3
