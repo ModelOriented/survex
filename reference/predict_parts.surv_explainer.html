@@ -25,7 +25,7 @@
         <div class="info">
           <span class="partof">part of the <a href="https://github.com/ModelOriented/DrWhy" class="external-link">DrWhy.AI</a>
            developed by the <a href="https://mi2.ai/" class="external-link">MI².AI</a> </span>
-          <span class="version version-default">1.1.3.9000</span>
+          <span class="version version-default">1.2.0</span>
         </div>
       </div>
     </div>
@@ -112,7 +112,7 @@
 
 
 <dt>N</dt>
-<dd><p>the maximum number of observations used for calculation of attributions. If <code>NULL</code> (default) all observations will be used.</p></dd>
+<dd><p>the number of observations used for calculation of attributions. If <code>NULL</code> (default) all explainer data will be used for SurvSHAP(t) and 100 neigbours for SurvLIME.</p></dd>
 
 
 <dt>type</dt>
@@ -120,7 +120,7 @@
 
 
 <dt>output_type</dt>
-<dd><p>either <code>"survival"</code> or <code>"risk"</code> the type of survival model output that should be considered for explanations. If <code>"survival"</code> the explanations are based on the survival function. Otherwise the scalar risk predictions are used by the <code><a href="https://modeloriented.github.io/DALEX/reference/predict_parts.html" class="external-link">DALEX::predict_parts</a></code> function.</p></dd>
+<dd><p>either <code>"survival"</code>, <code>"chf"</code> or <code>"risk"</code> the type of survival model output that should be considered for explanations. If <code>"survival"</code> the explanations are based on the survival function. If <code>"chf"</code> the explanations are based on the cumulative hazard function. Otherwise the scalar risk predictions are used by the <code><a href="https://modeloriented.github.io/DALEX/reference/predict_parts.html" class="external-link">DALEX::predict_parts</a></code> function.</p></dd>
 
 
 <dt>explanation_label</dt>
@@ -147,8 +147,7 @@
 <li><p><code>categorical_variables</code> -  character vector, names of variables that should be treated as categories (factors are included by default)</p></li>
 <li><p><code>k</code> -  a small positive number &gt; 1, added to chf before taking log, so that weigths aren't negative</p></li>
 </ul></li>
-<li><p>for <code>survshap</code></p><ul><li><p><code>timestamps</code> -  a numeric vector, time points at which the survival function will be evaluated</p></li>
-<li><p><code>y_true</code> -  a two element numeric vector or matrix of one row and two columns, the first element being the true observed time and the second the status of the observation, used for plotting</p></li>
+<li><p>for <code>survshap</code></p><ul><li><p><code>y_true</code> -  a two element numeric vector or matrix of one row and two columns, the first element being the true observed time and the second the status of the observation, used for plotting</p></li>
 <li><p><code>calculation_method</code> -  a character, either <code>"kernelshap"</code> for use of <code>kernelshap</code> library (providing faster Kernel SHAP with refinements) or <code>"exact_kernel"</code> for exact Kernel SHAP estimation</p></li>
 <li><p><code>aggregation_method</code> -  a character, either <code>"mean_absolute"</code> or <code>"integral"</code>, <code>"max_absolute"</code>, <code>"sum_of_squares"</code></p></li>
 </ul></li>
@@ -206,10 +205,10 @@
 <span class="r-in"><span>    type <span class="op">=</span> <span class="st">"survlime"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cph_predict_parts_survlime</span><span class="op">$</span><span class="va">result</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           trt        karno      diagtime         age        prior celltypelarge</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 -0.03469248 -0.001903851 -5.022977e-05 0.002085759 0.0005119294    0.00931774</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   celltypesmallcell celltypesquamous</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1        0.02788239     -0.002751905</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            trt         karno      diagtime          age       prior</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 -0.002017738 -0.0009651749 -0.0001565814 0.0007578033 0.001391971</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   celltypelarge celltypesmallcell celltypesquamous</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   -0.03618306      -0.002838358      -0.01624022</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cph_predict_parts_survlime</span>, type <span class="op">=</span> <span class="st">"local_importance"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="predict_parts.surv_explainer-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
