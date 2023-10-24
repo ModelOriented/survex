@@ -20,8 +20,8 @@ a numeric vector of length equal to the length of the times vector, each value (
 
 #' @section References:
 \itemize{
-\item [1] Uno, Hajime, et al. \href{https://www.jstor.org/stable/27639883}{"Evaluating prediction rules for t-year survivors with censored regression models."} Journal of the American Statistical Association 102.478 (2007): 527-537.
-\item [2] Hung, Hung, and Chin‐Tsang Chiang. \href{https://www.jstor.org/stable/41000414}{"Optimal composite markers for time‐dependent receiver operating characteristic curves with censored survival data."} Scandinavian Journal of Statistics 37.4 (2010): 664-679.
+\item [1] Uno, Hajime, et al. "Evaluating prediction rules for t-year survivors with censored regression models." Journal of the American Statistical Association 102.478 (2007): 527-537.
+\item [2] Hung, Hung, and Chin‐Tsang Chiang. "Optimal composite markers for time‐dependent receiver operating characteristic curves with censored survival data." Scandinavian Journal of Statistics 37.4 (2010): 664-679.
 }
 }
 \description{

@@ -30,8 +30,8 @@ Brier score is used to evaluate the performance of a survival model, based on th
 \section{References}{
 
 \itemize{
-\item [1] Brier, Glenn W. \href{https://journals.ametsoc.org/view/journals/mwre/78/1/1520-0493_1950_078_0001_vofeit_2_0_co_2.xml}{"Verification of forecasts expressed in terms of probability."} Monthly Weather Review 78.1 (1950): 1-3.
-\item [2] Graf, Erika, et al. \href{https://onlinelibrary.wiley.com/doi/10.1002/(SICI)1097-0258(19990915/30)18:17/18\%3C2529::AID-SIM274\%3E3.0.CO;2-5}{"Assessment and comparison of prognostic classification schemes for survival data."} Statistics in Medicine 18.17‐18 (1999): 2529-2545.
+\item [1] Brier, Glenn W. "Verification of forecasts expressed in terms of probability." Monthly Weather Review 78.1 (1950): 1-3.
+\item [2] Graf, Erika, et al. "Assessment and comparison of prognostic classification schemes for survival data." Statistics in Medicine 18.17‐18 (1999): 2529-2545.
 }
 }
 
