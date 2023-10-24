@@ -1,18 +1,8 @@
-## Resubmission  05/09/2023 v.1.1.3
-
-* Fix notes about long running examples by wrapping
-  in \donttest{} blocks.
-* Fix notes about CPU time being much longer than elapsed
-  time when running tests and building vignettes.
+## Submission 24/10/2023 v.1.2.0
   
 ## R CMD check results
 
-0 errors | 0 warnings | 1 note
-
-* Found possibly invalid URLs -- the URLs were
-  checked to be valid and working, seems to be
-  a false positive
-
+0 errors | 0 warnings | 0 notes
 
 ## Reverse dependencies
 
