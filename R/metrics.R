@@ -458,6 +458,7 @@ attr(loss_integrated_brier_score, "loss_type") <- "integrated"
 #'
 #' @return a function with standardized parameters (`y_true`, `risk`, `surv`, `times`) that can be used to calculate loss
 #'
+#' @examples
 #' if(FALSE){
 #'   measure <- msr("surv.calib_beta")
 #'   mlr_measure <- loss_adapt_mlr3proba(measure)
@@ -483,7 +484,6 @@ loss_adapt_mlr3proba <- function(measure, reverse = FALSE, ...) {
 
         return(output)
     }
-
     if (reverse) {
         attr(loss_function, "loss_name") <- paste("one minus", measure$id)
     } else {
