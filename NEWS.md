@@ -1,4 +1,8 @@
 # survex (development version)
+* added new `calculation_method` for `surv_shap()` called `"treeshap"` that use `treeshap` package  ([#75](https://github.com/ModelOriented/survex/issues/75))
+* enable to calculate SurvSHAP(t) explanations based on subsample of explainer's data
+* changed default kernel width in SurvLIME from sqrt(p * 0.75) to sqrt(p) * 0.75 
+* fixed error in SurvLIME when non-factor `categorical_variables` were provided
 
 # survex 1.1.3
 
