@@ -121,11 +121,11 @@ plot.surv_shap <- function(x,
 #' * `color_variable` - variable used to denote the color, by default equal to `variable`
 #'
 #'
-#'#' ## `plot.aggregated_surv_shap(geom = "curves")`
+#' ## `plot.aggregated_surv_shap(geom = "curves")`
 #'
 #' * `variable` - variable for which SurvSHAP(t) curves are to be plotted, by default first from result data
 #' * `boxplot` - whether to plot functional boxplot with marked outliers or all curves colored by variable value
-#'
+#' * `coef` - length of the functional boxplot's whiskers as multiple of IQR, by default 1.5
 #'
 #' @examples
 #' \donttest{
@@ -293,7 +293,7 @@ plot_shap_global_beeswarm <- function(x,
                                       max_vars = 7,
                                       colors = NULL) {
     df <- as.data.frame(do.call(rbind, x$aggregate))
-    cols <- names(sort(colMeans(abs(df))))[1:min(max_vars, length(df))]
+    cols <- names(sort(colMeans(abs(df)), decreasing = TRUE))[1:min(max_vars, length(df))]
     df <- df[, cols]
     df <- stack(df)
     colnames(df) <- c("shap_value", "variable")
@@ -325,6 +325,7 @@ plot_shap_global_beeswarm <- function(x,
         ggplot(data = df, aes(x = shap_value, y = variable, color = var_value)) +
             geom_vline(xintercept = 0, color = "#ceced9", linetype = "solid") +
             geom_jitter(width = 0, height = 0.15) +
+            scale_y_discrete(limits=rev) +
             scale_color_gradient2(
                 name = "Variable value",
                 low = colors[1],

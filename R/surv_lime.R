@@ -33,6 +33,7 @@ surv_lime <- function(explainer, new_observation,
     test_explainer(explainer, "surv_lime", has_data = TRUE, has_y = TRUE, has_chf = TRUE)
     new_observation <- new_observation[, colnames(new_observation) %in% colnames(explainer$data)]
     if (ncol(explainer$data) != ncol(new_observation)) stop("New observation and data have different number of columns (variables)")
+    if (is.null(N)) N <- 100
 
     predicted_sf <- explainer$predict_survival_function(explainer$model, new_observation, explainer$times)
 
@@ -57,11 +58,10 @@ surv_lime <- function(explainer, new_observation,
 
     distances <- apply(scaled_data, 1, dist, scaled_data[1, ])
 
-    if (is.null(kernel_width)) kernel_width <- sqrt(ncol(scaled_data) * 0.75)
+    if (is.null(kernel_width)) kernel_width <- sqrt(ncol(scaled_data)) * 0.75
 
     weights <- sqrt(exp(-(distances^2) / (kernel_width^2)))
     na_est <- survival::basehaz(survival::coxph(explainer$y ~ 1))
-
 
     model_chfs <- explainer$predict_cumulative_hazard_function(explainer$model, neighbourhood$inverse, na_est$time) + k
     log_chfs <- log(model_chfs)
@@ -175,10 +175,13 @@ generate_neighbourhood <- function(data_org,
     data <- data[, colnames(data_row)]
 
     if (length(categorical_variables) > 0) {
+        inverse_as_factor <- inverse
+        inverse_as_factor[additional_categorical_variables] <-
+            lapply(inverse_as_factor[additional_categorical_variables], as.factor)
         expr <- paste0("~", paste(categorical_variables, collapse = "+"))
-        categorical_matrix <- model.matrix(as.formula(expr), data = inverse)[, -1]
+        categorical_matrix <- model.matrix(as.formula(expr), data = inverse_as_factor)[, -1]
         inverse_ohe <- cbind(inverse, categorical_matrix)
-        inverse_ohe[, factor_variables] <- NULL
+        inverse_ohe[, categorical_variables] <- NULL
     } else {
         inverse_ohe <- inverse
     }

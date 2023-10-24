@@ -59,6 +59,7 @@ model_survshap <- function(explainer, ...) {
 model_survshap.surv_explainer <- function(explainer,
                                           new_observation = NULL,
                                           y_true = NULL,
+                                          N = NULL,
                                           calculation_method = "kernelshap",
                                           aggregation_method = "integral",
                                           output_type = "survival",
@@ -98,9 +99,11 @@ model_survshap.surv_explainer <- function(explainer,
         explainer = explainer,
         new_observation = observations,
         output_type = output_type,
+        N = N,
         y_true = y_true,
         calculation_method = calculation_method,
-        aggregation_method = aggregation_method
+        aggregation_method = aggregation_method,
+        ...
     )
 
     attr(shap_values, "label") <- explainer$label

@@ -9,9 +9,10 @@ surv_shap(
   new_observation,
   output_type,
   ...,
+  N = NULL,
   y_true = NULL,
-  calculation_method = "kernelshap",
-  aggregation_method = "integral"
+  calculation_method = c("kernelshap", "exact_kernel", "treeshap"),
+  aggregation_method = c("integral", "mean_absolute", "max_absolute", "sum_of_squares")
 )
 }
 \arguments{
@@ -23,9 +24,11 @@ surv_shap(
 
 \item{...}{additional parameters, passed to internal functions}
 
+\item{N}{a positive integer, number of observations used as the background data}
+
 \item{y_true}{a two element numeric vector or matrix of one row and two columns, the first element being the true observed time and the second the status of the observation, used for plotting}
 
-\item{calculation_method}{a character, either \code{"kernelshap"} for use of \code{kernelshap} library (providing faster Kernel SHAP with refinements) or \code{"exact_kernel"} for exact Kernel SHAP estimation}
+\item{calculation_method}{a character, either \code{"kernelshap"} for use of \code{kernelshap} library (providing faster Kernel SHAP with refinements), \code{"exact_kernel"} for exact Kernel SHAP estimation, or \code{"treeshap"} for use of \code{treeshap} library (efficient implementation to compute SHAP values for tree-based models).}
 
 \item{aggregation_method}{a character, either \code{"integral"}, \code{"integral_absolute"}, \code{"mean_absolute"}, \code{"max_absolute"}, or \code{"sum_of_squares"}}
 }

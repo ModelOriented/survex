@@ -1,12 +1,13 @@
 Package: survex
 Title: Explainable Machine Learning in Survival Analysis
-Version: 1.1.3.9000
+Version: 1.2.0
 Authors@R: 
     c(
         person("Mikołaj", "Spytek", email = "mikolajspytek@gmail.com", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-7111-2286")),
         person("Mateusz", "Krzyziński", role = c("aut"), comment = c(ORCID = "0000-0001-6143-488X")),
         person("Sophie", "Langbein", role = c("aut")), 
         person("Hubert", "Baniecki", role = c("aut"), comment = c(ORCID = "0000-0001-6661-5364")),
+        person("Lorenz A.", "Kapsner", role = c("ctb"), comment = c(ORCID = "0000-0003-1866-860X")),
         person("Przemyslaw", "Biecek", role = c("aut"), comment = c(ORCID = "0000-0001-8423-1823"))
     )
 Description: Survival analysis models are commonly used in medicine and other areas. Many of them
@@ -46,6 +47,7 @@ Suggests:
     rmarkdown,
     rms,
     testthat (>= 3.0.0),
+    treeshap (>= 0.3.0),
     withr,
     xgboost
 Config/testthat/edition: 3

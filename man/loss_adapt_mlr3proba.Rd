@@ -21,12 +21,14 @@ loss_adapt_mlr3proba(measure, reverse = FALSE, ...)
 }
 \value{
 a function with standardized parameters (\code{y_true}, \code{risk}, \code{surv}, \code{times}) that can be used to calculate loss
-
-if(FALSE){
-measure <- msr("surv.calib_beta")
-mlr_measure <- loss_adapt_mlr3proba(measure)
-}
 }
 \description{
 This function allows for usage of standardized measures from the mlr3proba package with \code{survex}.
+}
+\examples{
+if(FALSE){
+  measure <- msr("surv.calib_beta")
+  mlr_measure <- loss_adapt_mlr3proba(measure)
+}
+
 }

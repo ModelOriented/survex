@@ -192,7 +192,7 @@ plot2_cp <- function(x,
     if (!is.null(subtitle) && subtitle == "default") {
         subtitle <- paste0("created for the ", unique(variable), " variable")
         if (single_timepoint && !marginalize_over_time) {
-            subtitle <- paste0(subtitle, " and time =", times)
+            subtitle <- paste0(subtitle, " and time = ", times)
         }
     }
 

@@ -24,7 +24,7 @@ A function to compute the Harrell's concordance index of a survival model.
 \section{References}{
 
 \itemize{
-\item [1] Harrell, F.E., Jr., et al. \href{https://onlinelibrary.wiley.com/doi/10.1002/sim.4780030207}{"Regression modelling strategies for improved prognostic prediction."} Statistics in Medicine 3.2 (1984): 143-152.
+\item [1] Harrell, F.E., Jr., et al. "Regression modelling strategies for improved prognostic prediction." Statistics in Medicine 3.2 (1984): 143-152.
 }
 }
 

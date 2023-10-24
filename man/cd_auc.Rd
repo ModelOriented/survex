@@ -20,8 +20,8 @@ a numeric vector of length equal to the length of the times vector, each value (
 }
 \description{
 This function calculates the Cumulative/Dynamic AUC metric for a survival model. It is done using the
-estimator proposed proposed by Uno et al. [\href{https://www.jstor.org/stable/27639883}{1}],
-and Hung and Chang [\href{https://www.jstor.org/stable/41000414}{2}].
+estimator proposed proposed by Uno et al. [1],
+and Hung and Chang [2].
 }
 \details{
 C/D AUC is an extension of the AUC metric known from classification models.
@@ -31,8 +31,8 @@ It can be integrated over the considered time range.
 \section{References}{
 
 \itemize{
-\item [1] Uno, Hajime, et al. \href{https://www.jstor.org/stable/27639883}{"Evaluating prediction rules for t-year survivors with censored regression models."} Journal of the American Statistical Association 102.478 (2007): 527-537.
-\item [2] Hung, Hung, and Chin‐Tsang Chiang. \href{https://www.jstor.org/stable/41000414}{"Optimal composite markers for time dependent receiver operating characteristic curves with censored survival data."} Scandinavian Journal of Statistics 37.4 (2010): 664-679.
+\item [1] Uno, Hajime, et al. "Evaluating prediction rules for t-year survivors with censored regression models." Journal of the American Statistical Association 102.478 (2007): 527-537.
+\item [2] Hung, Hung, and Chin‐Tsang Chiang. "Optimal composite markers for time dependent receiver operating characteristic curves with censored survival data." Scandinavian Journal of Statistics 37.4 (2010): 664-679.
 }
 }
 

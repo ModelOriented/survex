@@ -57,11 +57,13 @@ explanations of survival models created using the \code{model_survshap()} functi
 \item \code{variable} - variable for which the profile is to be plotted, by default first from result data
 \item \code{color_variable} - variable used to denote the color, by default equal to \code{variable}
 }
+}
 
-#' ## \code{plot.aggregated_surv_shap(geom = "curves")}
+\subsection{\code{plot.aggregated_surv_shap(geom = "curves")}}{
 \itemize{
 \item \code{variable} - variable for which SurvSHAP(t) curves are to be plotted, by default first from result data
 \item \code{boxplot} - whether to plot functional boxplot with marked outliers or all curves colored by variable value
+\item \code{coef} - length of the functional boxplot's whiskers as multiple of IQR, by default 1.5
 }
 }
 }

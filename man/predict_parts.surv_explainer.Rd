@@ -24,11 +24,11 @@ predict_parts(explainer, ...)
 
 \item{new_observation}{a new observation for which prediction need to be explained}
 
-\item{N}{the maximum number of observations used for calculation of attributions. If \code{NULL} (default) all observations will be used.}
+\item{N}{the number of observations used for calculation of attributions. If \code{NULL} (default) all explainer data will be used for SurvSHAP(t) and 100 neigbours for SurvLIME.}
 
 \item{type}{if \code{output_type == "survival"} must be either \code{"survshap"} or \code{"survlime"}, otherwise refer to the \code{DALEX::predict_parts}}
 
-\item{output_type}{either \code{"survival"} or \code{"risk"} the type of survival model output that should be considered for explanations. If \code{"survival"} the explanations are based on the survival function. Otherwise the scalar risk predictions are used by the \code{DALEX::predict_parts} function.}
+\item{output_type}{either \code{"survival"}, \code{"chf"} or \code{"risk"} the type of survival model output that should be considered for explanations. If \code{"survival"} the explanations are based on the survival function. If \code{"chf"} the explanations are based on the cumulative hazard function. Otherwise the scalar risk predictions are used by the \code{DALEX::predict_parts} function.}
 
 \item{explanation_label}{a label that can overwrite explainer label (useful for multiple explanations for the same explainer/model)}
 }
@@ -56,7 +56,6 @@ There are additional parameters that are passed to internal functions
 }
 \item for \code{survshap}
 \itemize{
-\item \code{timestamps} -  a numeric vector, time points at which the survival function will be evaluated
 \item \code{y_true} -  a two element numeric vector or matrix of one row and two columns, the first element being the true observed time and the second the status of the observation, used for plotting
 \item \code{calculation_method} -  a character, either \code{"kernelshap"} for use of \code{kernelshap} library (providing faster Kernel SHAP with refinements) or \code{"exact_kernel"} for exact Kernel SHAP estimation
 \item \code{aggregation_method} -  a character, either \code{"mean_absolute"} or \code{"integral"}, \code{"max_absolute"}, \code{"sum_of_squares"}

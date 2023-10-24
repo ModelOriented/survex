@@ -32,7 +32,7 @@ This function allows for creating a function for calculation of integrated metri
 \section{References}{
 
 \itemize{
-\item [1] Graf, Erika, et al. \href{https://onlinelibrary.wiley.com/doi/abs/10.1002/\%28SICI\%291097-0258\%2819990915/30\%2918\%3A17/18\%3C2529\%3A\%3AAID-SIM274\%3E3.0.CO\%3B2-5}{"Assessment and comparison of prognostic classification schemes for survival data."} Statistics in Medicine 18.17‐18 (1999): 2529-2545.
+\item [1] Graf, Erika, et al. "Assessment and comparison of prognostic classification schemes for survival data." Statistics in Medicine 18.17‐18 (1999): 2529-2545.
 }
 }
 
