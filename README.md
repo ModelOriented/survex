@@ -74,6 +74,7 @@ Currently in develompment:
 
 Future plans:
 - [ ] ... (raise an Issue on GitHub if you have any suggestions)
+- [ ] examples for sursvm and survboost (https://github.com/ModelOriented/survex/issues/88)
 
 ## Usage
 
