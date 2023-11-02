@@ -177,7 +177,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict function  :  predict.coxph with type = 'risk' will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict survival function  :  predictSurvProb.coxph will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; predict cumulative hazard function  :  -log(predict_survival_function) will be used ( <span style="color: #BBBB00;"> default </span> ) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; model_info        :  package survival , ver. 3.5.5 , task survival ( <span style="color: #BBBB00;"> default </span> ) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -&gt; model_info        :  package survival , ver. 3.5.7 , task survival ( <span style="color: #BBBB00;"> default </span> ) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  <span style="color: #00BB00;"> A new explainer has been created! </span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">cph_predict_parts_survshap</span> <span class="op">&lt;-</span> <span class="fu">predict_parts</span><span class="op">(</span><span class="va">cph_exp</span>, new_observation <span class="op">=</span> <span class="va">veteran</span><span class="op">[</span><span class="fl">1</span>, <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></span>
@@ -205,10 +205,10 @@
 <span class="r-in"><span>    type <span class="op">=</span> <span class="st">"survlime"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cph_predict_parts_survlime</span><span class="op">$</span><span class="va">result</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          trt        karno     diagtime         age       prior celltypelarge</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.03141601 -0.002646798 0.0004528845 0.002646209 0.002380806   -0.08812856</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          trt        karno     diagtime         age         prior celltypelarge</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.01278846 -0.001209915 -0.001188828 0.001097867 -0.0006638924   -0.01593537</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   celltypesmallcell celltypesquamous</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1       -0.03838122      -0.09017215</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1       0.002885486         -0.03778</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cph_predict_parts_survlime</span>, type <span class="op">=</span> <span class="st">"local_importance"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="predict_parts.surv_explainer-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
