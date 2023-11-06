@@ -20,7 +20,7 @@
 #' * for `survlime`
 #'     * `N` -  a positive integer, number of observations generated in the neighbourhood
 #'     * `distance_metric` -  character, name of the distance metric to be used, only `"euclidean"` is implemented
-#'     * `kernel_width` -  a numeric, parameter used for calculating weights, by default it's `sqrt(ncol(data)*0.75)`
+#'     * `kernel_width` - a numeric or `"silverman"`, parameter used for calculating weights, by default it's `sqrt(ncol(data)\*0.75)`. If `"silverman"` the kernel width is calculated using the method proposed by Silverman and used in the Python implementation \[3\].
 #'     * `sampling_method` -  character, name of the method of generating neighbourhood, only `"gaussian"` is implemented
 #'     * `sample_around_instance` -  logical, if the neighbourhood should be generated with the new observation as the center (default), or should the mean of the whole dataset be used as the center
 #'     * `max_iter` -  a numeric, maximal number of iteration for the optimization problem
@@ -34,6 +34,7 @@
 #' @section References:
 #' - \[1\] Krzyziński, Mateusz, et al. ["SurvSHAP(t): Time-dependent explanations of machine learning survival models."](https://www.sciencedirect.com/science/article/pii/S0950705122013302) Knowledge-Based Systems 262 (2023): 110234
 #' - \[2\] Kovalev, Maxim S., et al. ["SurvLIME: A method for explaining machine learning survival models."](https://www.sciencedirect.com/science/article/pii/S0950705120304044?casa_token=6e9cyk_ji3AAAAAA:tbqo33MsZvNC9nrSGabZdLfPtZTsvsvZTHYQCM2aEhumLI5D46U7ovhr37EaYUhmKZrw45JzDhg) Knowledge-Based Systems 203 (2020): 106164.
+#' - \[3\] Pachón-García, Cristian, et al. ["SurvLIMEpy: A Python package implementing SurvLIME."](https://www.sciencedirect.com/science/article/pii/S095741742302122X) Expert Systems with Applications 237 (2024): 121620.
 #'
 #' @examples
 #' \donttest{
