@@ -25,7 +25,7 @@
         <div class="info">
           <span class="partof">part of the <a href="https://github.com/ModelOriented/DrWhy" class="external-link">DrWhy.AI</a>
            developed by the <a href="https://mi2.ai/" class="external-link">MI².AI</a> </span>
-          <span class="version version-default">1.2.0</span>
+          <span class="version version-default">1.2.0.9001</span>
         </div>
       </div>
     </div>
@@ -121,7 +121,7 @@
 
 
 <dt>kernel_width</dt>
-<dd><p>a numeric, parameter used for calculating weights, by default it's <code>sqrt(ncol(data)*0.75)</code></p></dd>
+<dd><p>a numeric or <code>"silverman"</code>, parameter used for calculating weights, by default it's <code>sqrt(ncol(data)*0.75)</code>. If <code>"silverman"</code> the kernel width is calculated using the method proposed by Silverman and used in the SurvLIMEpy Python package.</p></dd>
 
 
 <dt>sampling_method</dt>
@@ -155,6 +155,7 @@
     
 
 <ul><li><p>[1] Kovalev, Maxim S., et al. <a href="https://www.sciencedirect.com/science/article/pii/S0950705120304044?casa_token=6e9cyk_ji3AAAAAA:tbqo33MsZvNC9nrSGabZdLfPtZTsvsvZTHYQCM2aEhumLI5D46U7ovhr37EaYUhmKZrw45JzDhg" class="external-link">"SurvLIME: A method for explaining machine learning survival models."</a> Knowledge-Based Systems 203 (2020): 106164.</p></li>
+<li><p>[2] Pachón-García, Cristian, et al. <a href="https://www.sciencedirect.com/science/article/pii/S095741742302122X" class="external-link">"SurvLIMEpy: A Python package implementing SurvLIME."</a> Expert Systems with Applications 237 (2024): 121620.</p></li>
 </ul></div>
 
   </div>
