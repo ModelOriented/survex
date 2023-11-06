@@ -1,3 +1,6 @@
+# survex (development)
+* added a new estimation method for the `kernel_width` parameter for the SurvLIME method. 
+
 # survex 1.2.0
 * added new `calculation_method` for `surv_shap()` called `"treeshap"` that uses the `treeshap` package  ([#75](https://github.com/ModelOriented/survex/issues/75))
 * enable to calculate SurvSHAP(t) explanations based on subsample of the explainer's data
