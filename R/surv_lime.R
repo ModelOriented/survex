@@ -6,7 +6,7 @@
 #' @param ... additional parameters, passed to internal functions
 #' @param N a positive integer, number of observations generated in the neighbourhood
 #' @param distance_metric character, name of the distance metric to be used, only `"euclidean"` is implemented
-#' @param kernel_width a numeric or `"silverman"`, parameter used for calculating weights, by default it's `sqrt(ncol(data)*0.75)`. If `"silverman"` the kernel width is calculated using the method proposed by Silverman and used in the Python implementation \[2\].
+#' @param kernel_width a numeric or `"silverman"`, parameter used for calculating weights, by default it's `sqrt(ncol(data)*0.75)`. If `"silverman"` the kernel width is calculated using the method proposed by Silverman and used in the SurvLIMEpy Python package.
 #' @param sampling_method character, name of the method of generating neighbourhood, only `"gaussian"` is implemented
 #' @param sample_around_instance logical, if the neighbourhood should be generated with the new observation as the center (default), or should the mean of the whole dataset be used as the center
 #' @param max_iter a numeric, maximal number of iteration for the optimization problem

@@ -47,7 +47,7 @@ There are additional parameters that are passed to internal functions
 \itemize{
 \item \code{N} -  a positive integer, number of observations generated in the neighbourhood
 \item \code{distance_metric} -  character, name of the distance metric to be used, only \code{"euclidean"} is implemented
-\item \code{kernel_width} - a numeric or \code{"silverman"}, parameter used for calculating weights, by default it's \code{sqrt(ncol(data)*0.75)}. If \code{"silverman"} the kernel width is calculated using the method proposed by Silverman and used in the Python implementation [3].
+\item \code{kernel_width} - a numeric or \code{"silverman"}, parameter used for calculating weights, by default it's \code{sqrt(ncol(data)*0.75)}. If \code{"silverman"} the kernel width is calculated using the method proposed by Silverman and used in the SurvLIMEpy Python package.
 \item \code{sampling_method} -  character, name of the method of generating neighbourhood, only \code{"gaussian"} is implemented
 \item \code{sample_around_instance} -  logical, if the neighbourhood should be generated with the new observation as the center (default), or should the mean of the whole dataset be used as the center
 \item \code{max_iter} -  a numeric, maximal number of iteration for the optimization problem

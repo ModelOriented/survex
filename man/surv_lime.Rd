@@ -29,7 +29,7 @@ surv_lime(
 
 \item{distance_metric}{character, name of the distance metric to be used, only \code{"euclidean"} is implemented}
 
-\item{kernel_width}{a numeric or \code{"silverman"}, parameter used for calculating weights, by default it's \code{sqrt(ncol(data)*0.75)}. If \code{"silverman"} the kernel width is calculated using the method proposed by Silverman and used in the Python implementation [2].}
+\item{kernel_width}{a numeric or \code{"silverman"}, parameter used for calculating weights, by default it's \code{sqrt(ncol(data)*0.75)}. If \code{"silverman"} the kernel width is calculated using the method proposed by Silverman and used in the SurvLIMEpy Python package.}
 
 \item{sampling_method}{character, name of the method of generating neighbourhood, only \code{"gaussian"} is implemented}
 
