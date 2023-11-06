@@ -6,7 +6,7 @@
 #' @param ... additional parameters, passed to internal functions
 #' @param N a positive integer, number of observations generated in the neighbourhood
 #' @param distance_metric character, name of the distance metric to be used, only `"euclidean"` is implemented
-#' @param kernel_width a numeric, parameter used for calculating weights, by default it's `sqrt(ncol(data)*0.75)`
+#' @param kernel_width a numeric or `"silverman"`, parameter used for calculating weights, by default it's `sqrt(ncol(data)*0.75)`. If `"silverman"` the kernel width is calculated using the method proposed by Silverman and used in the SurvLIMEpy Python package.
 #' @param sampling_method character, name of the method of generating neighbourhood, only `"gaussian"` is implemented
 #' @param sample_around_instance logical, if the neighbourhood should be generated with the new observation as the center (default), or should the mean of the whole dataset be used as the center
 #' @param max_iter a numeric, maximal number of iteration for the optimization problem
@@ -17,7 +17,7 @@
 #'
 #' @section References:
 #' - \[1\] Kovalev, Maxim S., et al. ["SurvLIME: A method for explaining machine learning survival models."](https://www.sciencedirect.com/science/article/pii/S0950705120304044?casa_token=6e9cyk_ji3AAAAAA:tbqo33MsZvNC9nrSGabZdLfPtZTsvsvZTHYQCM2aEhumLI5D46U7ovhr37EaYUhmKZrw45JzDhg) Knowledge-Based Systems 203 (2020): 106164.
-#'
+#' - \[2\] Pachón-García, Cristian, et al. ["SurvLIMEpy: A Python package implementing SurvLIME."](https://www.sciencedirect.com/science/article/pii/S095741742302122X) Expert Systems with Applications 237 (2024): 121620.
 #' @keywords internal
 #' @importFrom stats optim
 surv_lime <- function(explainer, new_observation,
@@ -43,7 +43,8 @@ surv_lime <- function(explainer, new_observation,
         N,
         categorical_variables,
         sampling_method,
-        sample_around_instance
+        sample_around_instance,
+        kernel_width
     )
 
 
@@ -59,6 +60,18 @@ surv_lime <- function(explainer, new_observation,
     distances <- apply(scaled_data, 1, dist, scaled_data[1, ])
 
     if (is.null(kernel_width)) kernel_width <- sqrt(ncol(scaled_data)) * 0.75
+
+    if (is.character(kernel_width)) {
+        if (kernel_width == "silverman") {
+            n <- nrow(scaled_data)
+            p <- ncol(scaled_data)
+
+            kernel_width <- (4/(n*(p+2)))^(1/(p+4))
+
+        } else {
+            stop("`kernel_width` must be either NULL, numeric or \"silverman\"")
+        }
+    }
 
     weights <- sqrt(exp(-(distances^2) / (kernel_width^2)))
     na_est <- survival::basehaz(survival::coxph(explainer$y ~ 1))
@@ -110,7 +123,8 @@ generate_neighbourhood <- function(data_org,
                                    n_samples = 100,
                                    categorical_variables = NULL,
                                    sampling_method = "gaussian",
-                                   sample_around_instance = TRUE) {
+                                   sample_around_instance = TRUE,
+                                   kernel_width = NULL) {
 
     # change categorical_variables to column names
     if (is.numeric(categorical_variables)) categorical_variables <- colnames(data_org)[categorical_variables]
@@ -118,6 +132,13 @@ generate_neighbourhood <- function(data_org,
     factor_variables <- colnames(data_org)[sapply(data_org, is.factor)]
     categorical_variables <- unique(c(additional_categorical_variables, factor_variables))
     data_row <- data_row[colnames(data_org)]
+
+    if  (is.character(kernel_width) && kernel_width == "silverman"){
+        p <- ncol(data_org)
+        b <- (4/(n_samples*(p+2)))^(1/(p+4))
+    } else {
+        b <- 1
+    }
 
     feature_frequencies <- list(length(categorical_variables))
     scaled_data <- scale(data_org[, !colnames(data_org) %in% categorical_variables])
@@ -142,9 +163,9 @@ generate_neighbourhood <- function(data_org,
 
     if (sample_around_instance) {
         to_add <- data_row[, !colnames(data_row) %in% categorical_variables]
-        data <- data %*% diag(sc) + to_add[col(data)]
+        data <- data %*% (b * diag(sc)) + to_add[col(data)]
     } else {
-        data <- data %*% diag(sc) + me[col(data)]
+        data <- data %*% (b * diag(sc)) + me[col(data)]
     }
 
     data <- as.data.frame(data)

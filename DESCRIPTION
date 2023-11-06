@@ -1,6 +1,6 @@
 Package: survex
 Title: Explainable Machine Learning in Survival Analysis
-Version: 1.2.0
+Version: 1.2.0.9001
 Authors@R: 
     c(
         person("Mikołaj", "Spytek", email = "mikolajspytek@gmail.com", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-7111-2286")),

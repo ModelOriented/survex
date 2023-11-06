@@ -29,7 +29,7 @@ surv_lime(
 
 \item{distance_metric}{character, name of the distance metric to be used, only \code{"euclidean"} is implemented}
 
-\item{kernel_width}{a numeric, parameter used for calculating weights, by default it's \code{sqrt(ncol(data)*0.75)}}
+\item{kernel_width}{a numeric or \code{"silverman"}, parameter used for calculating weights, by default it's \code{sqrt(ncol(data)*0.75)}. If \code{"silverman"} the kernel width is calculated using the method proposed by Silverman and used in the SurvLIMEpy Python package.}
 
 \item{sampling_method}{character, name of the method of generating neighbourhood, only \code{"gaussian"} is implemented}
 
@@ -51,6 +51,7 @@ Helper functions for \code{predict_parts.R}
 
 \itemize{
 \item [1] Kovalev, Maxim S., et al. \href{https://www.sciencedirect.com/science/article/pii/S0950705120304044?casa_token=6e9cyk_ji3AAAAAA:tbqo33MsZvNC9nrSGabZdLfPtZTsvsvZTHYQCM2aEhumLI5D46U7ovhr37EaYUhmKZrw45JzDhg}{"SurvLIME: A method for explaining machine learning survival models."} Knowledge-Based Systems 203 (2020): 106164.
+\item [2] Pachón-García, Cristian, et al. \href{https://www.sciencedirect.com/science/article/pii/S095741742302122X}{"SurvLIMEpy: A Python package implementing SurvLIME."} Expert Systems with Applications 237 (2024): 121620.
 }
 }
 

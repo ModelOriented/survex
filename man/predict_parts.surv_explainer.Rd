@@ -47,7 +47,7 @@ There are additional parameters that are passed to internal functions
 \itemize{
 \item \code{N} -  a positive integer, number of observations generated in the neighbourhood
 \item \code{distance_metric} -  character, name of the distance metric to be used, only \code{"euclidean"} is implemented
-\item \code{kernel_width} -  a numeric, parameter used for calculating weights, by default it's \code{sqrt(ncol(data)*0.75)}
+\item \code{kernel_width} - a numeric or \code{"silverman"}, parameter used for calculating weights, by default it's \code{sqrt(ncol(data)*0.75)}. If \code{"silverman"} the kernel width is calculated using the method proposed by Silverman and used in the SurvLIMEpy Python package.
 \item \code{sampling_method} -  character, name of the method of generating neighbourhood, only \code{"gaussian"} is implemented
 \item \code{sample_around_instance} -  logical, if the neighbourhood should be generated with the new observation as the center (default), or should the mean of the whole dataset be used as the center
 \item \code{max_iter} -  a numeric, maximal number of iteration for the optimization problem
@@ -68,6 +68,7 @@ There are additional parameters that are passed to internal functions
 \itemize{
 \item [1] Krzyziński, Mateusz, et al. \href{https://www.sciencedirect.com/science/article/pii/S0950705122013302}{"SurvSHAP(t): Time-dependent explanations of machine learning survival models."} Knowledge-Based Systems 262 (2023): 110234
 \item [2] Kovalev, Maxim S., et al. \href{https://www.sciencedirect.com/science/article/pii/S0950705120304044?casa_token=6e9cyk_ji3AAAAAA:tbqo33MsZvNC9nrSGabZdLfPtZTsvsvZTHYQCM2aEhumLI5D46U7ovhr37EaYUhmKZrw45JzDhg}{"SurvLIME: A method for explaining machine learning survival models."} Knowledge-Based Systems 203 (2020): 106164.
+\item [3] Pachón-García, Cristian, et al. \href{https://www.sciencedirect.com/science/article/pii/S095741742302122X}{"SurvLIMEpy: A Python package implementing SurvLIME."} Expert Systems with Applications 237 (2024): 121620.
 }
 }
 

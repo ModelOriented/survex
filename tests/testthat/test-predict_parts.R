@@ -75,7 +75,8 @@ test_that("local survshap explanations with treeshap work for ranger", {
         new_obs,
         y_true = c(veteran$time[2], veteran$status[2]),
         aggregation_method = "mean_absolute",
-        calculation_method = "treeshap"
+        calculation_method = "treeshap",
+        verbose = FALSE
     )
     plot(parts_ranger)
 
@@ -181,6 +182,40 @@ test_that("survlime explanations work", {
     expect_output(print(cph_survlime))
 
 })
+
+
+test_that("survlime silverman kernel works", {
+
+    veteran <- survival::veteran
+
+    cph <- survival::coxph(survival::Surv(time, status) ~ ., data = veteran, model = TRUE, x = TRUE, y = TRUE)
+    rsf_ranger <- ranger::ranger(survival::Surv(time, status) ~ ., data = veteran, respect.unordered.factors = TRUE, num.trees = 100, mtry = 3, max.depth = 5)
+    rsf_src <- randomForestSRC::rfsrc(Surv(time, status) ~ ., data = veteran)
+
+    cph_exp <- explain(cph, verbose = FALSE)
+
+    cph_survlime <- predict_parts(cph_exp, new_observation = veteran[1, -c(3, 4)], type = "survlime", kernel_width = "silverman")
+
+    expect_error(predict_parts(cph_exp, new_observation = veteran[1, -c(3, 4)], type = "survlime", kernel_width = "nonexistent"))
+    # error on to few columns
+    expect_error(predict_parts(rsf_src_exp, new_observation = veteran[1, -c(1, 2 ,3, 4)], type = "survlime"))
+
+    plot(cph_survlime, type = "coefficients")
+    plot(cph_survlime, type = "local_importance")
+    plot(cph_survlime, show_survival_function = FALSE)
+
+    expect_error(plot(cph_survlime, type = "nonexistent"))
+
+    expect_s3_class(cph_survlime, c("predict_parts_survival", "surv_lime"))
+
+    expect_gte(length(cph_survlime$result), ncol(cph_exp$data))
+
+    expect_setequal(cph_survlime$black_box_sf_times, cph_exp$times)
+
+    expect_output(print(cph_survlime))
+
+})
+
 
 test_that("default DALEX::predict_parts is ok", {
 
