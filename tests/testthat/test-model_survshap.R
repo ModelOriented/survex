@@ -82,7 +82,8 @@ test_that("global survshap explanations with treeshap work for ranger", {
         new_observation = new_obs,
         y_true = survival::Surv(veteran$time[1:40], veteran$status[1:40]),
         aggregation_method = "mean_absolute",
-        calculation_method = "treeshap"
+        calculation_method = "treeshap",
+        verbose = FALSE
     )
     plot(ranger_global_survshap_tree)
 

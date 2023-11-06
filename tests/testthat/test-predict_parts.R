@@ -75,7 +75,8 @@ test_that("local survshap explanations with treeshap work for ranger", {
         new_obs,
         y_true = c(veteran$time[2], veteran$status[2]),
         aggregation_method = "mean_absolute",
-        calculation_method = "treeshap"
+        calculation_method = "treeshap",
+        verbose = FALSE
     )
     plot(parts_ranger)
 
