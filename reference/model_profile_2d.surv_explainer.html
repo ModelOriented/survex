@@ -188,12 +188,12 @@ The explanations are calculated as an extension of Partial Dependence Profiles o
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5      age celltype numerical categorical 42.6666666666667     adeno     1.5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6      age celltype numerical categorical 44.5833333333333     adeno     1.5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   _label_    _yhat_</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   coxph 0.9736357</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   coxph 0.9740630</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   coxph 0.9744836</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   coxph 0.9748974</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5   coxph 0.9753047</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6   coxph 0.9757055</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   coxph 0.9703714</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   coxph 0.9708502</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   coxph 0.9713214</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   coxph 0.9717853</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   coxph 0.9722417</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   coxph 0.9726910</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cph_model_profile_2d</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Plot will be prepared for the median survial time. For another time point, set the value of `times`.</span>
 <span class="r-plt img"><img src="model_profile_2d.surv_explainer-1.png" alt="" width="700" height="433"></span>
@@ -204,19 +204,19 @@ The explanations are calculated as an extension of Partial Dependence Profiles o
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cph_model_profile_2d_ale</span><span class="op">$</span><span class="va">result</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   _v1name_ _v2name_  _v1type_  _v2type_ _v1value_ _v2value_ _times_    _yhat_</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1      age    karno numerical numerical        34        20     1.5 0.9854455</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2      age    karno numerical numerical        34        20     4.0 0.9638948</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3      age    karno numerical numerical        34        20     7.0 0.9423778</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4      age    karno numerical numerical        34        20     8.0 0.9138712</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5      age    karno numerical numerical        34        20    10.0 0.8998183</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6      age    karno numerical numerical        34        20    12.0 0.8792435</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1      age    karno numerical numerical        35        20     1.5 0.9830789</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2      age    karno numerical numerical        35        20     4.0 0.9581485</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3      age    karno numerical numerical        35        20     7.0 0.9334103</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4      age    karno numerical numerical        35        20     8.0 0.9008817</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5      age    karno numerical numerical        35        20    10.0 0.8849525</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6      age    karno numerical numerical        35        20    12.0 0.8617614</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   _right_ _left_ _top_ _bottom_ _count_ _label_</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1      36     34    20       25       0   coxph</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2      36     34    20       25       0   coxph</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3      36     34    20       25       0   coxph</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4      36     34    20       25       0   coxph</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5      36     34    20       25       0   coxph</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6      36     34    20       25       0   coxph</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    36.5     35    20       25       0   coxph</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    36.5     35    20       25       0   coxph</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    36.5     35    20       25       0   coxph</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    36.5     35    20       25       0   coxph</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    36.5     35    20       25       0   coxph</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6    36.5     35    20       25       0   coxph</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cph_model_profile_2d_ale</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Plot will be prepared for the median survial time. For another time point, set the value of `times`.</span>
 <span class="r-plt img"><img src="model_profile_2d.surv_explainer-2.png" alt="" width="700" height="433"></span>

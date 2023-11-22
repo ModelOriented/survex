@@ -172,19 +172,19 @@ using the <code><a href="model_profile_2d.surv_explainer.html">model_profile_2d(
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cph_model_profile_2d</span><span class="op">$</span><span class="va">result</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   _v1name_ _v2name_  _v1type_    _v2type_        _v1value_ _v2value_ _times_</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1      age celltype numerical categorical               34     adeno     1.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2      age celltype numerical categorical 35.9583333333333     adeno     1.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3      age celltype numerical categorical 37.9166666666667     adeno     1.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4      age celltype numerical categorical           39.875     adeno     1.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5      age celltype numerical categorical 41.8333333333333     adeno     1.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6      age celltype numerical categorical 43.7916666666667     adeno     1.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1      age celltype numerical categorical               35     adeno     1.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2      age celltype numerical categorical 36.9166666666667     adeno     1.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3      age celltype numerical categorical 38.8333333333333     adeno     1.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4      age celltype numerical categorical            40.75     adeno     1.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5      age celltype numerical categorical 42.6666666666667     adeno     1.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6      age celltype numerical categorical 44.5833333333333     adeno     1.5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   _label_    _yhat_</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   coxph 0.9698618</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   coxph 0.9703590</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   coxph 0.9708482</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   coxph 0.9713295</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5   coxph 0.9718031</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6   coxph 0.9722690</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   coxph 0.9706948</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   coxph 0.9711685</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   coxph 0.9716346</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   coxph 0.9720935</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   coxph 0.9725450</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   coxph 0.9729894</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cph_model_profile_2d</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"age"</span>, <span class="st">"celltype"</span><span class="op">)</span><span class="op">)</span>, times <span class="op">=</span> <span class="va">cph_exp</span><span class="op">$</span><span class="va">times</span><span class="op">[</span><span class="fl">20</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plot.model_profile_2d_survival-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
@@ -194,19 +194,19 @@ using the <code><a href="model_profile_2d.surv_explainer.html">model_profile_2d(
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cph_model_profile_2d_ale</span><span class="op">$</span><span class="va">result</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   _v1name_ _v2name_  _v1type_  _v2type_ _v1value_ _v2value_ _times_    _yhat_</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1      age    karno numerical numerical        34        10     1.5 0.9808424</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2      age    karno numerical numerical        34        10     4.0 0.9530135</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3      age    karno numerical numerical        34        10     7.0 0.9258522</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4      age    karno numerical numerical        34        10     8.0 0.8907921</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5      age    karno numerical numerical        34        10    10.0 0.8738805</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6      age    karno numerical numerical        34        10    12.0 0.8495425</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1      age    karno numerical numerical        35        10     1.5 0.9805963</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2      age    karno numerical numerical        35        10     4.0 0.9525898</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3      age    karno numerical numerical        35        10     7.0 0.9254586</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4      age    karno numerical numerical        35        10     8.0 0.8907241</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5      age    karno numerical numerical        35        10    10.0 0.8740787</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6      age    karno numerical numerical        35        10    12.0 0.8502386</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   _right_ _left_ _top_ _bottom_ _count_ _label_</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    36.5     34    10       15       0   coxph</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2    36.5     34    10       15       0   coxph</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3    36.5     34    10       15       0   coxph</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4    36.5     34    10       15       0   coxph</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5    36.5     34    10       15       0   coxph</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6    36.5     34    10       15       0   coxph</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    36.5     35    10       15       0   coxph</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    36.5     35    10       15       0   coxph</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    36.5     35    10       15       0   coxph</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    36.5     35    10       15       0   coxph</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    36.5     35    10       15       0   coxph</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6    36.5     35    10       15       0   coxph</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cph_model_profile_2d_ale</span>, times <span class="op">=</span> <span class="va">cph_exp</span><span class="op">$</span><span class="va">times</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">20</span><span class="op">)</span><span class="op">]</span>, marginalize_over_time <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plot.model_profile_2d_survival-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>

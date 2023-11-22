@@ -149,7 +149,7 @@ global SHAP values are computed for the data, the <code>explainer</code> was tra
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="va">veteran</span> <span class="op">&lt;-</span> <span class="fu">survival</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/survival/man/veteran.html" class="external-link">veteran</a></span></span></span>
-<span class="r-in"><span><span class="va">rsf_ranger</span> <span class="op">&lt;-</span> <span class="fu">ranger</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ranger/man/ranger.html" class="external-link">ranger</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span><span class="va">rsf_ranger</span> <span class="op">&lt;-</span> <span class="fu">ranger</span><span class="fu">::</span><span class="fu"><a href="http://imbs-hl.github.io/ranger/reference/ranger.html" class="external-link">ranger</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    <span class="fu">survival</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">time</span>, <span class="va">status</span><span class="op">)</span> <span class="op">~</span> <span class="va">.</span>,</span></span>
 <span class="r-in"><span>    data <span class="op">=</span> <span class="va">veteran</span>,</span></span>
 <span class="r-in"><span>    respect.unordered.factors <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
