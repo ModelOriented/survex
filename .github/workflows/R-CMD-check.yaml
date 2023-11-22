@@ -29,10 +29,6 @@ jobs:
       R_KEEP_PKG_SOURCE: yes
 
     steps:
-    # added for builds failing on macos when generating vignette outputs     
-      - if: runner.os == 'macOS'
-        run: brew install --cask xquartz && brew tap homebrew/cask && brew tap homebrew/cask-fonts && brew install font-arial 
-        
       - uses: actions/checkout@v2
 
       - uses: r-lib/actions/setup-pandoc@v2
