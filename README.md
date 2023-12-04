@@ -83,17 +83,19 @@ Future plans:
 
 ## Citation
 
-If you use `survex`, please cite [our preprint](https://arxiv.org/abs/2308.16113):
+If you use `survex`, please cite [our article](https://doi.org/10.1093/bioinformatics/btad723):
 
-> M. Spytek, M. Krzyziński, S. H. Langbein, H. Baniecki, M. N. Wright, P. Biecek. *survex: an R package for explaining machine learning survival models*. **arXiv preprint arXiv:2308.16113**, 2023.
+> M. Spytek, M. Krzyziński, S. H. Langbein, H. Baniecki, M. N. Wright, P. Biecek. *survex: an R package for explaining machine learning survival models*. **Bioinformatics**, 2023.
 
 ```
 @article{spytek2023survex,
-    title   = {{survex: an R package for explaining machine learning survival models}},
-    author  = {Mikołaj Spytek and Mateusz Krzyziński and Sophie Hanna Langbein and
-               Hubert Baniecki and Marvin N. Wright and Przemysław Biecek},
-    journal = {arXiv preprint arXiv:2308.16113},
-    year    = {2023}
+    author  = {Mikołaj Spytek and Mateusz Krzyziński and Sophie Hanna Langbein and 
+               Hubert Baniecki and Marvin N Wright and Przemysław Biecek},
+    title   = {survex: an {R} package for explaining machine learning survival models},
+    journal = {Bioinformatics},
+    pages   = {btad723},
+    year    = {2023},
+    doi     = {10.1093/bioinformatics/btad723}
 }
 ```
 
