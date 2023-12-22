@@ -93,11 +93,11 @@ If you use `survex`, please cite [our article](https://doi.org/10.1093/bioinform
                Hubert Baniecki and Marvin N Wright and Przemysław Biecek},
     title   = {survex: an {R} package for explaining machine learning survival models},
     journal = {Bioinformatics},
-    volume = {39},
-    number = {12},
-    pages = {btad723},
-    year = {2023},
-    month = {12},
+    volume  = {39},
+    number  = {12},
+    pages   = {btad723},
+    year    = {2023},
+    month   = {12},
     doi     = {10.1093/bioinformatics/btad723}
 }
 ```
