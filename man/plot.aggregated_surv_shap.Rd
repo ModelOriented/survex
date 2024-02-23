@@ -27,7 +27,7 @@
 
 \item{max_vars}{maximum number of variables to be plotted (least important variables are ignored), by default 7}
 
-\item{colors}{character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue")}
+\item{colors}{character vector containing the colors to be used for plotting variables (containing either hex codes "#FF69B4", or names "blue"). If \code{geom = "importance"}, the first color will be used for the barplot, the rest for the lines.}
 }
 \value{
 An object of the class \code{ggplot}.
