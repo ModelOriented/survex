@@ -60,13 +60,13 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/mlr3proba-usage.html">How to use survex with mlr3proba</a>
-    </li>
-    <li>
       <a href="../articles/custom-explainers.html">Creating custom explainers</a>
     </li>
     <li>
       <a href="../articles/global-survshap.html">Global explanations with SurvSHAP(t)</a>
+    </li>
+    <li>
+      <a href="../articles/mlr3proba-usage.html">How to use survex with mlr3proba</a>
     </li>
     <li>
       <a href="../articles/pdp.html">Partial Dependence Explanations</a>
@@ -145,7 +145,7 @@ any additional steps.</p>
 <span><span class="co">#&gt;   -&gt; predict function  :  predict.coxph with type = 'risk' will be used ( <span style="color: #BBBB00;"> default </span> ) </span></span>
 <span><span class="co">#&gt;   -&gt; predict survival function  :  predictSurvProb.coxph will be used ( <span style="color: #BBBB00;"> default </span> ) </span></span>
 <span><span class="co">#&gt;   -&gt; predict cumulative hazard function  :  -log(predict_survival_function) will be used ( <span style="color: #BBBB00;"> default </span> ) </span></span>
-<span><span class="co">#&gt;   -&gt; model_info        :  package survival , ver. 3.5.7 , task survival ( <span style="color: #BBBB00;"> default </span> ) </span></span>
+<span><span class="co">#&gt;   -&gt; model_info        :  package survival , ver. 3.5.8 , task survival ( <span style="color: #BBBB00;"> default </span> ) </span></span>
 <span><span class="co">#&gt;   A new explainer has been created!</span></span>
 <span></span>
 <span><span class="va">rsf</span> <span class="op">&lt;-</span> <span class="fu">randomForestSRC</span><span class="fu">::</span><span class="fu"><a href="https://www.randomforestsrc.org//reference/rfsrc.html" class="external-link">rfsrc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">time</span>, <span class="va">status</span><span class="op">)</span><span class="op">~</span><span class="va">.</span>, data <span class="op">=</span> <span class="va">vet</span><span class="op">)</span></span>
@@ -454,7 +454,7 @@ seem to indicate lower chances of survival.</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.8.</p>
 </div>
 
       </footer>

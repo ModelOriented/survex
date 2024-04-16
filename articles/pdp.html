@@ -60,13 +60,13 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/mlr3proba-usage.html">How to use survex with mlr3proba</a>
-    </li>
-    <li>
       <a href="../articles/custom-explainers.html">Creating custom explainers</a>
     </li>
     <li>
       <a href="../articles/global-survshap.html">Global explanations with SurvSHAP(t)</a>
+    </li>
+    <li>
+      <a href="../articles/mlr3proba-usage.html">How to use survex with mlr3proba</a>
     </li>
     <li>
       <a href="../articles/pdp.html">Partial Dependence Explanations</a>
@@ -163,7 +163,8 @@ is demonstrated by the example below. For the rest of the vignette we
 only focus on PD explanations.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ale</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Removed 6 rows containing missing values (`geom_line()`).</span></span></code></pre></div>
+<span><span class="co">#&gt; Warning: Removed 6 rows containing missing values or values outside the scale range</span></span>
+<span><span class="co">#&gt; (`geom_line()`).</span></span></code></pre></div>
 <p><img src="pdp_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
 <p>The <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> function can also be used to plot the
 explanations for a subset of variables. The <code>variables</code>
@@ -209,7 +210,9 @@ distribution of individual ceteris paribus profiles, and the line
 represents the mean prediction (survival function), which is the PD
 explanation.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pdp</span>, geom <span class="op">=</span> <span class="st">"variable"</span>, variables <span class="op">=</span> <span class="st">"celltype"</span>, times <span class="op">=</span> <span class="va">exp</span><span class="op">$</span><span class="va">median_survival_time</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pdp</span>, geom <span class="op">=</span> <span class="st">"variable"</span>, variables <span class="op">=</span> <span class="st">"celltype"</span>, times <span class="op">=</span> <span class="va">exp</span><span class="op">$</span><span class="va">median_survival_time</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: No shared levels found between `names(values)` of the manual scale and the</span></span>
+<span><span class="co">#&gt; data's <span style="color: #00BB00;">colour</span> values.</span></span></code></pre></div>
 <p><img src="pdp_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
 <p>Of course, the plots can be prepared for multiple time points, at the
 same time and presented on one plot.</p>
@@ -258,7 +261,7 @@ set to <code>"partial"</code> (default) or
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.8.</p>
 </div>
 
       </footer>

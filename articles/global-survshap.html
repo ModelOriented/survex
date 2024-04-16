@@ -60,13 +60,13 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/mlr3proba-usage.html">How to use survex with mlr3proba</a>
-    </li>
-    <li>
       <a href="../articles/custom-explainers.html">Creating custom explainers</a>
     </li>
     <li>
       <a href="../articles/global-survshap.html">Global explanations with SurvSHAP(t)</a>
+    </li>
+    <li>
+      <a href="../articles/mlr3proba-usage.html">How to use survex with mlr3proba</a>
     </li>
     <li>
       <a href="../articles/pdp.html">Partial Dependence Explanations</a>
@@ -133,7 +133,7 @@ survex i.e. we create a model, and an explainer.</p>
 <span><span class="co">#&gt;   -&gt; predict function  :  predict.coxph with type = 'risk' will be used ( <span style="color: #BBBB00;"> default </span> ) </span></span>
 <span><span class="co">#&gt;   -&gt; predict survival function  :  predictSurvProb.coxph will be used ( <span style="color: #BBBB00;"> default </span> ) </span></span>
 <span><span class="co">#&gt;   -&gt; predict cumulative hazard function  :  -log(predict_survival_function) will be used ( <span style="color: #BBBB00;"> default </span> ) </span></span>
-<span><span class="co">#&gt;   -&gt; model_info        :  package survival , ver. 3.5.7 , task survival ( <span style="color: #BBBB00;"> default </span> ) </span></span>
+<span><span class="co">#&gt;   -&gt; model_info        :  package survival , ver. 3.5.8 , task survival ( <span style="color: #BBBB00;"> default </span> ) </span></span>
 <span><span class="co">#&gt;   A new explainer has been created!</span></span></code></pre></div>
 <p>We use the explainer and the <code><a href="../reference/model_survshap.surv_explainer.html">model_survshap()</a></code> function
 to calculate SurvSHAP(t) explanations. We can specify the observations
@@ -191,7 +191,7 @@ to assess the distribution of SHAP values for each variable.</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.8.</p>
 </div>
 
       </footer>

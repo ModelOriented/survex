@@ -60,13 +60,13 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/mlr3proba-usage.html">How to use survex with mlr3proba</a>
-    </li>
-    <li>
       <a href="../articles/custom-explainers.html">Creating custom explainers</a>
     </li>
     <li>
       <a href="../articles/global-survshap.html">Global explanations with SurvSHAP(t)</a>
+    </li>
+    <li>
+      <a href="../articles/mlr3proba-usage.html">How to use survex with mlr3proba</a>
     </li>
     <li>
       <a href="../articles/pdp.html">Partial Dependence Explanations</a>
@@ -190,7 +190,7 @@ The following chunk loads all required packages for this vignette.</p>
 <span><span class="co">#&gt;   -&gt; predict function  :  predict_newdata()$crank will be used ( <span style="color: #BBBB00;"> default </span> ) </span></span>
 <span><span class="co">#&gt;   -&gt; predict survival function  :  predict_newdata()$distr$survival will be used ( <span style="color: #BBBB00;"> default </span> ) </span></span>
 <span><span class="co">#&gt;   -&gt; predict cumulative hazard function  :  predict_newdata()$distr$cumHazard will be used ( <span style="color: #BBBB00;"> default </span> ) </span></span>
-<span><span class="co">#&gt;   -&gt; model_info        :  package mlr3proba , ver. 0.6.0 , task survival ( <span style="color: #BBBB00;"> default </span> ) </span></span>
+<span><span class="co">#&gt;   -&gt; model_info        :  package mlr3proba , ver. 0.6.0.9000 , task survival ( <span style="color: #BBBB00;"> default </span> ) </span></span>
 <span><span class="co">#&gt;   A new explainer has been created!</span></span></code></pre></div>
 <div class="section level4">
 <h4 id="example-explanation">Example explanation<a class="anchor" aria-label="anchor" href="#example-explanation"></a>
@@ -240,11 +240,12 @@ manually.</p>
 <span><span class="co">#&gt;   -&gt; predict function  :  predict_newdata()$crank will be used ( <span style="color: #BBBB00;"> default </span> ) </span></span>
 <span><span class="co">#&gt;   -&gt; predict survival function  :  predict_newdata()$distr$survival will be used ( <span style="color: #BBBB00;"> default </span> ) </span></span>
 <span><span class="co">#&gt;   -&gt; predict cumulative hazard function  :  predict_newdata()$distr$cumHazard will be used ( <span style="color: #BBBB00;"> default </span> ) </span></span>
-<span><span class="co">#&gt;   -&gt; model_info        :  package mlr3proba , ver. 0.6.0 , task survival ( <span style="color: #BBBB00;"> default </span> ) </span></span>
+<span><span class="co">#&gt;   -&gt; model_info        :  package mlr3proba , ver. 0.6.0.9000 , task survival ( <span style="color: #BBBB00;"> default </span> ) </span></span>
 <span><span class="co">#&gt;   A new explainer has been created!</span></span>
 <span></span>
 <span><span class="va">gbm_composite_learner_explainer</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/model_parts.surv_explainer.html">model_parts</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"ratio"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>subtitle <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Removed 7 rows containing missing values (`geom_line()`).</span></span></code></pre></div>
+<span><span class="co">#&gt; Warning: Removed 7 rows containing missing values or values outside the scale range</span></span>
+<span><span class="co">#&gt; (`geom_line()`).</span></span></code></pre></div>
 <p><img src="mlr3proba-usage_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
 </div>
 <div class="section level3">
@@ -289,7 +290,7 @@ functions.</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.8.</p>
 </div>
 
       </footer>

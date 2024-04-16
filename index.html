@@ -14,13 +14,7 @@
 <link href="dalexverse-2.css" rel="stylesheet">
 <!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="Explainable Machine Learning in Survival Analysis">
-<meta property="og:description" content="Survival analysis models are commonly used in medicine and other areas. Many of them
-    are too complex to be interpreted by human. Exploration and explanation is needed, but
-    standard methods do not give a broad enough picture. survex provides easy-to-apply
-    methods for explaining survival models, both complex black-boxes and simpler statistical models.
-    They include methods specific to survival analysis such as SurvSHAP(t) introduced in Krzyzinski et al., (2023)
-    &lt;doi:10.1016/j.knosys.2022.110234&gt;, SurvLIME described in Kovalev et al., (2020) &lt;doi:10.1016/j.knosys.2020.106164&gt; as well as
-    extensions of existing ones described in Biecek et al., (2021) &lt;doi:10.1201/9780429027192&gt;.">
+<meta property="og:description" content="Survival analysis models are commonly used in medicine and other areas. Many of them are too complex to be interpreted by human. Exploration and explanation is needed, but standard methods do not give a broad enough picture. survex provides easy-to-apply methods for explaining survival models, both complex black-boxes and simpler statistical models. They include methods specific to survival analysis such as SurvSHAP(t) introduced in Krzyzinski et al., (2023) &lt;doi:10.1016/j.knosys.2022.110234&gt;, SurvLIME described in Kovalev et al., (2020) &lt;doi:10.1016/j.knosys.2020.106164&gt; as well as extensions of existing ones described in Biecek et al., (2021) &lt;doi:10.1201/9780429027192&gt;.">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -66,13 +60,13 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="articles/mlr3proba-usage.html">How to use survex with mlr3proba</a>
-    </li>
-    <li>
       <a href="articles/custom-explainers.html">Creating custom explainers</a>
     </li>
     <li>
       <a href="articles/global-survshap.html">Global explanations with SurvSHAP(t)</a>
+    </li>
+    <li>
+      <a href="articles/mlr3proba-usage.html">How to use survex with mlr3proba</a>
     </li>
     <li>
       <a href="articles/pdp.html">Partial Dependence Explanations</a>
@@ -187,13 +181,16 @@
 <a class="anchor" aria-label="anchor" href="#applications-of-survex"></a>
 </h2>
 <ul>
-<li>H. Baniecki, B. Sobieski, P. Bombiński, P. Szatkowski, P. Biecek. <a href="https://arxiv.org/abs/2303.09817" class="external-link">Hospital Length of Stay Prediction Based on Multi-modal Data towards Trustworthy Human-AI Collaboration in Radiomics</a>. <em>International Conference on Artificial Intelligence in Medicine</em>, 2023.</li>
-<li>W. Chen, B. Zhou, C. Y. Jeon, F. Xie, Y-C. Lin, R. K. Butler, Y. Zhou, T. Q. Luong, E. Lustigova, J. R. Pisegna, B. U. Wu. <a href="https://doi.org/10.1016/j.pan.2023.04.009" class="external-link">Machine learning versus regression for prediction of sporadic pancreatic cancer</a>. <em>Pancreatology</em>, 2023.</li>
-<li>M. Nachit, Y. Horsmans, R. M. Summers, I. A. Leclercq, P. J. Pickhardt. <a href="https://doi.org/10.1148/radiol.222008" class="external-link">AI-based CT Body Composition Identifies Myosteatosis as Key Mortality Predictor in Asymptomatic Adults</a>. <em>Radiology</em>, 2023.</li>
-<li>R. Passera, S. Zompi, J. Gill, A. Busca. <a href="https://doi.org/10.3390/biomedinformatics3030048" class="external-link">Explainable Machine Learning (XAI) for Survival in Bone Marrow Transplantation Trials: A Technical Report</a>. <em>BioMedInformatics</em>, 2023.</li>
-<li>P. Donizy, M. Spytek, M. Krzyziński, K. Kotowski, A. Markiewicz, B. Romanowska-Dixon, P. Biecek, M. P. Hoang. <a href="http://dx.doi.org/10.1136/bjo-2023-323816" class="external-link">Ki67 is a better marker than PRAME in risk stratification of BAP1-positive and BAP1-loss uveal melanomas</a>. <em>British Journal of Ophthalmology</em>, 2023.</li>
-<li>X. Qi, Y. Ge, A. Yang, Y. Liu, Q. Wang &amp; G. Wu. <a href="https://doi.org/10.1007/s00432-023-05393-8" class="external-link">Potential value of mitochondrial regulatory pathways in the clinical application of clear cell renal cell carcinoma: a machine learning-based study</a>. <em>Journal of Cancer Research and Clinical Oncology</em>, 2023.</li>
-<li>Share it with us!</li>
+<li><p>H. Baniecki, B. Sobieski, P. Bombiński, P. Szatkowski, P. Biecek. <a href="https://arxiv.org/abs/2303.09817" class="external-link">Hospital Length of Stay Prediction Based on Multi-modal Data towards Trustworthy Human-AI Collaboration in Radiomics</a>. <em>International Conference on Artificial Intelligence in Medicine</em>, 2023.</p></li>
+<li><p>W. Chen, B. Zhou, C. Y. Jeon, F. Xie, Y.-C. Lin, R. K. Butler, Y. Zhou, T. Q. Luong, E. Lustigova, J. R. Pisegna, B. U. Wu. <a href="https://doi.org/10.1016/j.pan.2023.04.009" class="external-link">Machine learning versus regression for prediction of sporadic pancreatic cancer</a>. <em>Pancreatology</em>, 2023.</p></li>
+<li><p>M. Nachit, Y. Horsmans, R. M. Summers, I. A. Leclercq, P. J. Pickhardt. <a href="https://doi.org/10.1148/radiol.222008" class="external-link">AI-based CT Body Composition Identifies Myosteatosis as Key Mortality Predictor in Asymptomatic Adults</a>. <em>Radiology</em>, 2023.</p></li>
+<li><p>R. Passera, S. Zompi, J. Gill, A. Busca. <a href="https://doi.org/10.3390/biomedinformatics3030048" class="external-link">Explainable Machine Learning (XAI) for Survival in Bone Marrow Transplantation Trials: A Technical Report</a>. <em>BioMedInformatics</em>, 2023.</p></li>
+<li><p>P. Donizy, M. Spytek, M. Krzyziński, K. Kotowski, A. Markiewicz, B. Romanowska-Dixon, P. Biecek, M. P. Hoang. <a href="http://dx.doi.org/10.1136/bjo-2023-323816" class="external-link">Ki67 is a better marker than PRAME in risk stratification of BAP1-positive and BAP1-loss uveal melanomas</a>. <em>British Journal of Ophthalmology</em>, 2023.</p></li>
+<li><p>X. Qi, Y. Ge, A. Yang, Y. Liu, Q. Wang, G. Wu. <a href="https://doi.org/10.1007/s00432-023-05393-8" class="external-link">Potential value of mitochondrial regulatory pathways in the clinical application of clear cell renal cell carcinoma: a machine learning-based study</a>. <em>Journal of Cancer Research and Clinical Oncology</em>, 2023.</p></li>
+<li><p>C. C. Lee, S. Y. Su, S. F. Sung. <a href="https://doi.org/10.1016/j.ijmedinf.2024.105422" class="external-link">Machine learning-based survival analysis approaches for predicting the risk of pneumonia post-stroke discharge</a>. <em>International Journal of Medical Informatics</em>, 2024.</p></li>
+<li><p>P. Wang, X. Qian, W. Jiang, H. Wang, Y. Wang, Y. Zhou, Y. Zhang, Y. Huang, X. Zhai. <a href="https://doi.org/10.1007/s10875-024-01669-x" class="external-link">Cord Blood Transplantation for Very Early‑Onset Inflammatory Bowel Disease Caused by Interleukin‑10 Receptor Deficiency</a>. <em>Journal of Clinical Immunology</em>, 2024.</p></li>
+<li><p>E. Ruiz, J. Honles, R. Fernández, K. Uribe, J. P. Cerapio, K. Cancino, J. Contreras-Mancilla, S. Casavilca-Zambrano, F. Berrospi, P. Pineau, S. Bertani. <a href="https://doi.org/10.1016/j.hpb.2024.02.010" class="external-link">A preoperative risk score based on early recurrence for estimating outcomes after resection of hepatocellular carcinoma in the non-cirrhotic liver</a>. <em>HPB</em>, 2024.</p></li>
+<li><p>Share it with us!</p></li>
 </ul>
 </div>
 <div class="section level2">
@@ -261,7 +258,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.8.</p>
 </div>
 
       </footer>
