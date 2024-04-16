@@ -105,11 +105,15 @@ If you use `survex`, please cite [our article](https://doi.org/10.1093/bioinform
 ## Applications of `survex`
 
 - H. Baniecki, B. Sobieski, P. Bombiński, P. Szatkowski, P. Biecek. [Hospital Length of Stay Prediction Based on Multi-modal Data towards Trustworthy Human-AI Collaboration in Radiomics](https://arxiv.org/abs/2303.09817). *International Conference on Artificial Intelligence in Medicine*, 2023.
-- W. Chen, B. Zhou, C. Y. Jeon, F. Xie, Y-C. Lin, R. K. Butler, Y. Zhou, T. Q. Luong, E. Lustigova, J. R. Pisegna, B. U. Wu. [Machine learning versus regression for prediction of sporadic pancreatic cancer](https://doi.org/10.1016/j.pan.2023.04.009). *Pancreatology*, 2023.
+- W. Chen, B. Zhou, C. Y. Jeon, F. Xie, Y.-C. Lin, R. K. Butler, Y. Zhou, T. Q. Luong, E. Lustigova, J. R. Pisegna, B. U. Wu. [Machine learning versus regression for prediction of sporadic pancreatic cancer](https://doi.org/10.1016/j.pan.2023.04.009). *Pancreatology*, 2023.
 - M. Nachit, Y. Horsmans, R. M. Summers, I. A. Leclercq, P. J. Pickhardt. [AI-based CT Body Composition Identifies Myosteatosis as Key Mortality Predictor in Asymptomatic Adults](https://doi.org/10.1148/radiol.222008). *Radiology*, 2023.
 - R. Passera, S. Zompi, J. Gill, A. Busca. [Explainable Machine Learning (XAI) for Survival in Bone Marrow Transplantation Trials: A Technical Report](https://doi.org/10.3390/biomedinformatics3030048). *BioMedInformatics*, 2023.
 - P. Donizy, M. Spytek, M. Krzyziński, K. Kotowski, A. Markiewicz, B. Romanowska-Dixon, P. Biecek, M. P. Hoang. [Ki67 is a better marker than PRAME in risk stratification of BAP1-positive and BAP1-loss uveal melanomas](http://dx.doi.org/10.1136/bjo-2023-323816). *British Journal of Ophthalmology*, 2023.
-- X. Qi, Y. Ge, A. Yang, Y. Liu, Q. Wang & G. Wu. [Potential value of mitochondrial regulatory pathways in the clinical application of clear cell renal cell carcinoma: a machine learning-based study](https://doi.org/10.1007/s00432-023-05393-8). *Journal of Cancer Research and Clinical Oncology*, 2023.
+- X. Qi, Y. Ge, A. Yang, Y. Liu, Q. Wang, G. Wu. [Potential value of mitochondrial regulatory pathways in the clinical application of clear cell renal cell carcinoma: a machine learning-based study](https://doi.org/10.1007/s00432-023-05393-8). *Journal of Cancer Research and Clinical Oncology*, 2023.
+- C. C. Lee, S. Y. Su, S. F. Sung. [Machine learning-based survival analysis approaches for predicting the risk of pneumonia post-stroke discharge](https://doi.org/10.1016/j.ijmedinf.2024.105422). *International Journal of Medical Informatics*, 2024.
+- P. Wang, X. Qian, W. Jiang, H. Wang, Y. Wang, Y. Zhou, Y. Zhang, Y. Huang, X. Zhai. [Cord Blood Transplantation for Very Early‑Onset Inflammatory Bowel Disease Caused by Interleukin‑10 Receptor Deficiency](https://doi.org/10.1007/s10875-024-01669-x). *Journal of Clinical Immunology*, 2024.
+- E. Ruiz, J. Honles, R. Fernández, K. Uribe, J. P. Cerapio, K. Cancino, J. Contreras-Mancilla, S. Casavilca-Zambrano, F. Berrospi, P. Pineau, S. Bertani. [A preoperative risk score based on early recurrence for estimating outcomes after resection of hepatocellular carcinoma in the non-cirrhotic liver](https://doi.org/10.1016/j.hpb.2024.02.010). *HPB*, 2024.
+
 - Share it with us!
 
 ## Related work
