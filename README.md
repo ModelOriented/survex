@@ -9,7 +9,7 @@
 
 ## Overview 
 
-Survival analysis is a task dealing with time-to-event prediction. Aside from the well-understood models like CPH, many more complex models have recently emerged, but most lack interpretability. Due to a functional type of prediction, either in the form of survival function or cumulative hazard function, standard model-agnostic explanations cannot be applied directly.
+Survival analysis is a task dealing with time-to-event prediction. Aside from the well-understood models like CPH, many more complex models have recently emerged, but most lack interpretability. Due to a functional type of prediction, either in the form of a survival function or a cumulative hazard function, standard model-agnostic explanations cannot be applied directly.
 
 The `survex` package provides model-agnostic explanations for machine learning survival models. It is based on the [`DALEX` package](https://github.com/ModelOriented/DALEX). If you're unfamiliar with explainable machine learning, consider referring to the [Explanatory Model Analysis](https://ema.drwhy.ai) book -- most of the methods included in `survex` extend these described in EMA and implemented in `DALEX` but to models with functional output. 
 
@@ -113,7 +113,6 @@ If you use `survex`, please cite [our article](https://doi.org/10.1093/bioinform
 - C. C. Lee, S. Y. Su, S. F. Sung. [Machine learning-based survival analysis approaches for predicting the risk of pneumonia post-stroke discharge](https://doi.org/10.1016/j.ijmedinf.2024.105422). *International Journal of Medical Informatics*, 2024.
 - P. Wang, X. Qian, W. Jiang, H. Wang, Y. Wang, Y. Zhou, Y. Zhang, Y. Huang, X. Zhai. [Cord Blood Transplantation for Very Early‑Onset Inflammatory Bowel Disease Caused by Interleukin‑10 Receptor Deficiency](https://doi.org/10.1007/s10875-024-01669-x). *Journal of Clinical Immunology*, 2024.
 - E. Ruiz, J. Honles, R. Fernández, K. Uribe, J. P. Cerapio, K. Cancino, J. Contreras-Mancilla, S. Casavilca-Zambrano, F. Berrospi, P. Pineau, S. Bertani. [A preoperative risk score based on early recurrence for estimating outcomes after resection of hepatocellular carcinoma in the non-cirrhotic liver](https://doi.org/10.1016/j.hpb.2024.02.010). *HPB*, 2024.
-
 - Share it with us!
 
 ## Related work
