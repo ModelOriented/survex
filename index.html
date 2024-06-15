@@ -104,7 +104,7 @@
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p>Survival analysis is a task dealing with time-to-event prediction. Aside from the well-understood models like CPH, many more complex models have recently emerged, but most lack interpretability. Due to a functional type of prediction, either in the form of survival function or cumulative hazard function, standard model-agnostic explanations cannot be applied directly.</p>
+<p>Survival analysis is a task dealing with time-to-event prediction. Aside from the well-understood models like CPH, many more complex models have recently emerged, but most lack interpretability. Due to a functional type of prediction, either in the form of a survival function or a cumulative hazard function, standard model-agnostic explanations cannot be applied directly.</p>
 <p>The <code>survex</code> package provides model-agnostic explanations for machine learning survival models. It is based on the <a href="https://github.com/ModelOriented/DALEX" class="external-link"><code>DALEX</code> package</a>. If you’re unfamiliar with explainable machine learning, consider referring to the <a href="https://ema.drwhy.ai" class="external-link">Explanatory Model Analysis</a> book – most of the methods included in <code>survex</code> extend these described in EMA and implemented in <code>DALEX</code> but to models with functional output.</p>
 <p>The main <code><a href="reference/explain_survival.html">explain()</a></code> function uses a model and data to create a standardized <code>explainer</code> object, which is further used as an interface for calculating predictions. We automate creating explainers from the following packages: <code>mlr3proba</code>, <code>censored</code>, <code>ranger</code>, <code>randomForestSRC</code>, and <code>survival</code>. <strong>Raise an Issue on GitHub if you find models from other packages that we can incorporate into the <code><a href="reference/explain_survival.html">explain()</a></code> interface.</strong></p>
 <p>Note that an explainer can be created for <strong>any</strong> survival model, using the <code><a href="reference/explain_survival.html">explain_survival()</a></code> function by passing <code>model</code>, <code>data</code>, <code>y</code>, and <code>predict_survival_function</code> arguments.</p>
@@ -181,16 +181,16 @@
 <a class="anchor" aria-label="anchor" href="#applications-of-survex"></a>
 </h2>
 <ul>
-<li><p>H. Baniecki, B. Sobieski, P. Bombiński, P. Szatkowski, P. Biecek. <a href="https://arxiv.org/abs/2303.09817" class="external-link">Hospital Length of Stay Prediction Based on Multi-modal Data towards Trustworthy Human-AI Collaboration in Radiomics</a>. <em>International Conference on Artificial Intelligence in Medicine</em>, 2023.</p></li>
-<li><p>W. Chen, B. Zhou, C. Y. Jeon, F. Xie, Y.-C. Lin, R. K. Butler, Y. Zhou, T. Q. Luong, E. Lustigova, J. R. Pisegna, B. U. Wu. <a href="https://doi.org/10.1016/j.pan.2023.04.009" class="external-link">Machine learning versus regression for prediction of sporadic pancreatic cancer</a>. <em>Pancreatology</em>, 2023.</p></li>
-<li><p>M. Nachit, Y. Horsmans, R. M. Summers, I. A. Leclercq, P. J. Pickhardt. <a href="https://doi.org/10.1148/radiol.222008" class="external-link">AI-based CT Body Composition Identifies Myosteatosis as Key Mortality Predictor in Asymptomatic Adults</a>. <em>Radiology</em>, 2023.</p></li>
-<li><p>R. Passera, S. Zompi, J. Gill, A. Busca. <a href="https://doi.org/10.3390/biomedinformatics3030048" class="external-link">Explainable Machine Learning (XAI) for Survival in Bone Marrow Transplantation Trials: A Technical Report</a>. <em>BioMedInformatics</em>, 2023.</p></li>
-<li><p>P. Donizy, M. Spytek, M. Krzyziński, K. Kotowski, A. Markiewicz, B. Romanowska-Dixon, P. Biecek, M. P. Hoang. <a href="http://dx.doi.org/10.1136/bjo-2023-323816" class="external-link">Ki67 is a better marker than PRAME in risk stratification of BAP1-positive and BAP1-loss uveal melanomas</a>. <em>British Journal of Ophthalmology</em>, 2023.</p></li>
-<li><p>X. Qi, Y. Ge, A. Yang, Y. Liu, Q. Wang, G. Wu. <a href="https://doi.org/10.1007/s00432-023-05393-8" class="external-link">Potential value of mitochondrial regulatory pathways in the clinical application of clear cell renal cell carcinoma: a machine learning-based study</a>. <em>Journal of Cancer Research and Clinical Oncology</em>, 2023.</p></li>
-<li><p>C. C. Lee, S. Y. Su, S. F. Sung. <a href="https://doi.org/10.1016/j.ijmedinf.2024.105422" class="external-link">Machine learning-based survival analysis approaches for predicting the risk of pneumonia post-stroke discharge</a>. <em>International Journal of Medical Informatics</em>, 2024.</p></li>
-<li><p>P. Wang, X. Qian, W. Jiang, H. Wang, Y. Wang, Y. Zhou, Y. Zhang, Y. Huang, X. Zhai. <a href="https://doi.org/10.1007/s10875-024-01669-x" class="external-link">Cord Blood Transplantation for Very Early‑Onset Inflammatory Bowel Disease Caused by Interleukin‑10 Receptor Deficiency</a>. <em>Journal of Clinical Immunology</em>, 2024.</p></li>
-<li><p>E. Ruiz, J. Honles, R. Fernández, K. Uribe, J. P. Cerapio, K. Cancino, J. Contreras-Mancilla, S. Casavilca-Zambrano, F. Berrospi, P. Pineau, S. Bertani. <a href="https://doi.org/10.1016/j.hpb.2024.02.010" class="external-link">A preoperative risk score based on early recurrence for estimating outcomes after resection of hepatocellular carcinoma in the non-cirrhotic liver</a>. <em>HPB</em>, 2024.</p></li>
-<li><p>Share it with us!</p></li>
+<li>H. Baniecki, B. Sobieski, P. Bombiński, P. Szatkowski, P. Biecek. <a href="https://arxiv.org/abs/2303.09817" class="external-link">Hospital Length of Stay Prediction Based on Multi-modal Data towards Trustworthy Human-AI Collaboration in Radiomics</a>. <em>International Conference on Artificial Intelligence in Medicine</em>, 2023.</li>
+<li>W. Chen, B. Zhou, C. Y. Jeon, F. Xie, Y.-C. Lin, R. K. Butler, Y. Zhou, T. Q. Luong, E. Lustigova, J. R. Pisegna, B. U. Wu. <a href="https://doi.org/10.1016/j.pan.2023.04.009" class="external-link">Machine learning versus regression for prediction of sporadic pancreatic cancer</a>. <em>Pancreatology</em>, 2023.</li>
+<li>M. Nachit, Y. Horsmans, R. M. Summers, I. A. Leclercq, P. J. Pickhardt. <a href="https://doi.org/10.1148/radiol.222008" class="external-link">AI-based CT Body Composition Identifies Myosteatosis as Key Mortality Predictor in Asymptomatic Adults</a>. <em>Radiology</em>, 2023.</li>
+<li>R. Passera, S. Zompi, J. Gill, A. Busca. <a href="https://doi.org/10.3390/biomedinformatics3030048" class="external-link">Explainable Machine Learning (XAI) for Survival in Bone Marrow Transplantation Trials: A Technical Report</a>. <em>BioMedInformatics</em>, 2023.</li>
+<li>P. Donizy, M. Spytek, M. Krzyziński, K. Kotowski, A. Markiewicz, B. Romanowska-Dixon, P. Biecek, M. P. Hoang. <a href="http://dx.doi.org/10.1136/bjo-2023-323816" class="external-link">Ki67 is a better marker than PRAME in risk stratification of BAP1-positive and BAP1-loss uveal melanomas</a>. <em>British Journal of Ophthalmology</em>, 2023.</li>
+<li>X. Qi, Y. Ge, A. Yang, Y. Liu, Q. Wang, G. Wu. <a href="https://doi.org/10.1007/s00432-023-05393-8" class="external-link">Potential value of mitochondrial regulatory pathways in the clinical application of clear cell renal cell carcinoma: a machine learning-based study</a>. <em>Journal of Cancer Research and Clinical Oncology</em>, 2023.</li>
+<li>C. C. Lee, S. Y. Su, S. F. Sung. <a href="https://doi.org/10.1016/j.ijmedinf.2024.105422" class="external-link">Machine learning-based survival analysis approaches for predicting the risk of pneumonia post-stroke discharge</a>. <em>International Journal of Medical Informatics</em>, 2024.</li>
+<li>P. Wang, X. Qian, W. Jiang, H. Wang, Y. Wang, Y. Zhou, Y. Zhang, Y. Huang, X. Zhai. <a href="https://doi.org/10.1007/s10875-024-01669-x" class="external-link">Cord Blood Transplantation for Very Early‑Onset Inflammatory Bowel Disease Caused by Interleukin‑10 Receptor Deficiency</a>. <em>Journal of Clinical Immunology</em>, 2024.</li>
+<li>E. Ruiz, J. Honles, R. Fernández, K. Uribe, J. P. Cerapio, K. Cancino, J. Contreras-Mancilla, S. Casavilca-Zambrano, F. Berrospi, P. Pineau, S. Bertani. <a href="https://doi.org/10.1016/j.hpb.2024.02.010" class="external-link">A preoperative risk score based on early recurrence for estimating outcomes after resection of hepatocellular carcinoma in the non-cirrhotic liver</a>. <em>HPB</em>, 2024.</li>
+<li>Share it with us!</li>
 </ul>
 </div>
 <div class="section level2">
@@ -258,7 +258,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.8.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.</p>
 </div>
 
       </footer>

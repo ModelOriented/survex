@@ -1,5 +1,5 @@
 pandoc: 3.1.11
-pkgdown: 2.0.8
+pkgdown: 2.0.9
 pkgdown_sha: ~
 articles:
   custom-explainers: custom-explainers.html
@@ -7,7 +7,7 @@ articles:
   mlr3proba-usage: mlr3proba-usage.html
   pdp: pdp.html
   survex-usage: survex-usage.html
-last_built: 2024-04-16T08:28Z
+last_built: 2024-06-15T13:08Z
 urls:
   reference: https://modeloriented.github.io/survex/reference
   article: https://modeloriented.github.io/survex/articles
